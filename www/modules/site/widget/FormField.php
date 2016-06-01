@@ -17,7 +17,7 @@
  *
  * @package GO.site.widget
  * @copyright Copyright Intermesh
- * @version $Id: FormField.php 17269 2014-04-07 12:31:39Z wilmar1980 $
+ * @version $Id: FormField.php 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @author Michael de Hart <mdehart@intermesh.nl> 
  */
 
@@ -37,12 +37,12 @@ class FormField extends \GO\Site\Components\Widget {
 	public $model;
 
 	/**
-	 * @var string the attribute of the model this field represents
+	 * @var StringHelper the attribute of the model this field represents
 	 */
 	public $attribute;
 
 	/**
-	 * @var string the template that is used to arrange the label, the input field, the error message and the hint text.
+	 * @var StringHelper the template that is used to arrange the label, the input field, the error message and the hint text.
 	 * The following tokens will be replaced when [[render()]] is called: `{label}`, `{input}`, `{error}` and `{hint}`.
 	 */
 	public $template = "{label}\n{input}\n{error}\n{hint}";
@@ -72,7 +72,7 @@ class FormField extends \GO\Site\Components\Widget {
 
 	/**
 	 * Renders the open tag of the form field.
-	 * @return string the rendering result.
+	 * @return StringHelper the rendering result.
 	 */
 	public function begin() {
 		list($tag, $options) = $this->stripTag();
@@ -90,7 +90,7 @@ class FormField extends \GO\Site\Components\Widget {
 
 	/**
 	 * Renders the closing tag of the form field.
-	 * @return string the rendering result.
+	 * @return StringHelper the rendering result.
 	 */
 	public function end() {
 		list($tag, $options) = $this->stripTag();
@@ -99,7 +99,7 @@ class FormField extends \GO\Site\Components\Widget {
 
 	/**
 	 * Generates a label tag
-	 * @param string $label the label to use. If null, it will be generated with the models:getAttributeLabel().
+	 * @param StringHelper $label the label to use. If null, it will be generated with the models:getAttributeLabel().
 	 * @param array $options the tag options in terms of name-value pairs.
 	 * @return static the field object itself
 	 */
@@ -113,7 +113,7 @@ class FormField extends \GO\Site\Components\Widget {
 
 	/**
 	 * Renders the hint tag.
-	 * @param string $content the hint content. It will NOT be HTML-encoded.
+	 * @param StringHelper $content the hint content. It will NOT be HTML-encoded.
 	 * @param array $options the tag options in terms of name-value pairs.tag: 
 	 * the 'tag' option specifies the tag name. If not set, "div" will be used.
 	 *
@@ -132,7 +132,7 @@ class FormField extends \GO\Site\Components\Widget {
 
 	/**
 	 * Renders an input tag.
-	 * @param string $type the input type (e.g. 'text', 'password')
+	 * @param StringHelper $type the input type (e.g. 'text', 'password')
 	 * @param array $options the tag options in terms of name-value pairs.
 	 * @return static the field object itself
 	 */
@@ -155,7 +155,7 @@ class FormField extends \GO\Site\Components\Widget {
 	 * Hidden field is ntop chainable but only renders a field.
 	 * It is here for completion
 	 * @param extra html option in input field $options
-	 * @return string the rendered output
+	 * @return StringHelper the rendered output
 	 */
 	public function hidden($options = array()) {
 		return $this->form->hiddenField($this->model, $this->attribute, $options);

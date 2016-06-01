@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: InstallationDialog.js 16251 2013-11-15 08:39:41Z mschering $
+ * @version $Id: InstallationDialog.js 17503 2014-05-21 07:56:17Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -481,7 +481,7 @@ Ext.extend(GO.servermanager.InstallationDialog, GO.Window,{
 						store: firstWeekdayData,
 						displayField: 'first_weekday',
 						valueField: 'id',
-						hiddenName: 'first_weekday',
+						hiddenName: 'default_first_weekday',
 						mode: 'local',
 						triggerAction: 'all',
 						editable: false,

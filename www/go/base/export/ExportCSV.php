@@ -26,10 +26,17 @@ class ExportCSV extends AbstractExport {
 	public static $showInView = true;
 	public static $name = "CSV";
 	public static $useOrientation=false;
+	private $_fp;
 	
-	private function _sendHeaders(){		
-		$file = new \GO\Base\Fs\File($this->title.'.csv');
-		\GO\Base\Util\Http::outputDownloadHeaders($file);
+	public function setFilePointer($value){
+		$this->_fp = $value;
+	}
+	
+	private function _sendHeaders(){	
+		if(!isset($this->_fp)){
+			$file = new \GO\Base\Fs\File($this->title.'.csv');
+			\GO\Base\Util\Http::outputDownloadHeaders($file);
+		}
 	}
 
 	private function _write($data){

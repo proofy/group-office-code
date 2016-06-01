@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: TaskPanel.js 16932 2014-02-28 08:06:18Z mschering $
+ * @version $Id: TaskPanel.js 17728 2014-07-03 08:25:10Z wilmar1980 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -52,7 +52,15 @@ GO.tasks.TaskPanel = Ext.extend(GO.DisplayPanel,{
 						'<td>{status_text}</td>'+
 					'</tr>';
 				
-				if(GO.projects){
+				if(GO.projects2){
+					this.template +=
+					'<tpl if="project_name">'+
+						'<tr>'+
+							'<td>'+GO.projects2.lang.project+':</td>'+
+							'<td><a href="#" onclick="GO.linkHandlers[\'GO\\\\\\\\Projects2\\\\\\\\Model\\\\\\\\Project\'].call(this, {project_id});">{project_name}</a></td>'+
+						'</tr>'+
+					'</tpl>';
+				} else if(GO.projects){
 					this.template +=
 					'<tpl if="project_name">'+
 						'<tr>'+

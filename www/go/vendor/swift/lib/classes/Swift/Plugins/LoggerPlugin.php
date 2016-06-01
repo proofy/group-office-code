@@ -33,7 +33,7 @@ class Swift_Plugins_LoggerPlugin implements Swift_Events_CommandListener, Swift_
     /**
      * Add a log entry.
      *
-     * @param string $entry
+     * @param StringHelper $entry
      */
     public function add($entry)
     {
@@ -51,7 +51,7 @@ class Swift_Plugins_LoggerPlugin implements Swift_Events_CommandListener, Swift_
     /**
      * Get this log as a string.
      *
-     * @return string
+     * @return StringHelper
      */
     public function dump()
     {

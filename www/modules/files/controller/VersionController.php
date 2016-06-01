@@ -20,6 +20,8 @@
 
 namespace GO\files\Controller;
 
+use \GO\Base\Db\FindParams;
+use \GO\Files\Model\Version;
 
 class VersionController extends \GO\Base\Controller\AbstractModelController {
 
@@ -28,8 +30,29 @@ class VersionController extends \GO\Base\Controller\AbstractModelController {
 	protected function actionDownload($params){
 		$version = \GO\Files\Model\Version::model()->findByPk($params['id']);
 		$file = $version->getFilesystemFile();
-	  \GO\Base\Util\Http::outputDownloadHeaders($file);		
+		\GO\Base\Util\Http::outputDownloadHeaders($file);
 		$file->output();
+	}
+	
+	/**
+	 * Will find all versioning files and put the filesize in the database
+	 */
+	protected function actionRecalculate() {
+		$fp = FindParams::newInstance()->ignoreAcl();
+		$stmt = Version::model()->find($fp);
+		
+		$success = 0; $failed = 0;
+		while($version = $stmt->fetch()) {
+			$path = \GO::config()->file_storage_path.$version->path;
+			if(file_exists($path)) {
+				$pdo_statement = \GO::$db->query('UPDATE '.Version::model()->tableName(). ' SET `size_bytes` = '.filesize($path).';');
+				if($pdo_statement->execute()) {
+					$success++;
+				} else
+					$failed++;
+			}
+		}
+		echo $success.' Done<br> '.$failed. ' Failed';
 	}
 	
 	protected function getStoreParams($params) {		

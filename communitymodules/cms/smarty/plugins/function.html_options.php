@@ -24,7 +24,7 @@
  * @author Monte Ohrt <monte at ohrt dot com>
  * @param array
  * @param Smarty
- * @return string
+ * @return StringHelper
  * @uses smarty_function_escape_special_chars()
  */
 function smarty_function_html_options($params, &$smarty)

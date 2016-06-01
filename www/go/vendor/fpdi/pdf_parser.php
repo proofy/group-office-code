@@ -52,7 +52,7 @@ if (!class_exists('pdf_parser', false)) {
     	
     	/**
          * Filename
-         * @var string
+         * @var StringHelper
          */
         var $filename;
         
@@ -82,7 +82,7 @@ if (!class_exists('pdf_parser', false)) {
     	
         /**
          * PDF version of the loaded document
-         * @var string
+         * @var StringHelper
          */
         var $pdfVersion;
         
@@ -96,7 +96,7 @@ if (!class_exists('pdf_parser', false)) {
         /**
          * Constructor
          *
-         * @param string $filename  Source-Filename
+         * @param StringHelper $filename  Source-Filename
          */
     	function pdf_parser($filename) {
             $this->filename = $filename;
@@ -134,7 +134,7 @@ if (!class_exists('pdf_parser', false)) {
         /**
          * Print Error and die
          *
-         * @param string $msg  Error-Message
+         * @param StringHelper $msg  Error-Message
          */
         function error($msg) {
         	die('<b>PDF-Parser Error:</b> ' . $msg);	
@@ -325,7 +325,7 @@ if (!class_exists('pdf_parser', false)) {
          * Reads an Value
          *
          * @param object $c pdf_context
-         * @param string $token a Token
+         * @param StringHelper $token a Token
          * @return mixed
          */
         function pdf_read_value(&$c, $token = null) {

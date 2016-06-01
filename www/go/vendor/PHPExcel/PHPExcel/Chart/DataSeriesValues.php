@@ -47,28 +47,28 @@ class PHPExcel_Chart_DataSeriesValues
 	/**
 	 * Series Data Type
 	 *
-	 * @var	string
+	 * @var	StringHelper
 	 */
 	private $_dataType = null;
 
 	/**
 	 * Series Data Source
 	 *
-	 * @var	string
+	 * @var	StringHelper
 	 */
 	private $_dataSource = null;
 
 	/**
 	 * Format Code
 	 *
-	 * @var	string
+	 * @var	StringHelper
 	 */
 	private $_formatCode = null;
 
 	/**
 	 * Series Point Marker
 	 *
-	 * @var	string
+	 * @var	StringHelper
 	 */
 	private $_marker = null;
 
@@ -102,7 +102,7 @@ class PHPExcel_Chart_DataSeriesValues
 	/**
 	 * Get Series Data Type
 	 *
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public function getDataType() {
 		return $this->_dataType;
@@ -131,7 +131,7 @@ class PHPExcel_Chart_DataSeriesValues
 	/**
 	 * Get Series Data Source (formula)
 	 *
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public function getDataSource() {
 		return $this->_dataSource;
@@ -156,7 +156,7 @@ class PHPExcel_Chart_DataSeriesValues
 	/**
 	 * Get Point Marker
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getPointMarker() {
 		return $this->_marker;
@@ -177,7 +177,7 @@ class PHPExcel_Chart_DataSeriesValues
 	/**
 	 * Get Series Format Code
 	 *
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public function getFormatCode() {
 		return $this->_formatCode;

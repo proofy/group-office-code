@@ -48,7 +48,7 @@ class CronExpression
     /**
      * Factory method to create a new CronExpression.
      *
-     * @param string $expression The CRON expression to create.  There are
+     * @param StringHelper $expression The CRON expression to create.  There are
      *      several special predefined values which can be used to substitute the
      *      CRON expression:
      *
@@ -82,7 +82,7 @@ class CronExpression
     /**
      * Parse a CRON expression
      *
-     * @param string $expression CRON expression (e.g. '8 * * * *')
+     * @param StringHelper $expression CRON expression (e.g. '8 * * * *')
      * @param FieldFactory $fieldFactory Factory to create cron fields
      */
     public function __construct($expression, FieldFactory $fieldFactory)
@@ -94,7 +94,7 @@ class CronExpression
     /**
      * Set or change the CRON expression
      *
-     * @param string $schedule CRON expression (e.g. 8 * * * *)
+     * @param StringHelper $schedule CRON expression (e.g. 8 * * * *)
      *
      * @return CronExpression
      * @throws InvalidArgumentException if not a valid CRON expression
@@ -119,7 +119,7 @@ class CronExpression
      * Set part of the CRON expression
      *
      * @param int $position The position of the CRON expression to set
-     * @param string $value The value to set
+     * @param StringHelper $value The value to set
      *
      * @return CronExpression
      * @throws InvalidArgumentException if the value is not valid for the part
@@ -140,7 +140,7 @@ class CronExpression
     /**
      * Get a next run date relative to the current date or a specific date
      *
-     * @param string|DateTime $currentTime (optional) Relative calculation date
+     * @param StringHelper|DateTime $currentTime (optional) Relative calculation date
      * @param int $nth (optional) Number of matches to skip before returning a
      *     matching next run date.  0, the default, will return the current
      *     date and time if the next run date falls on the current date and
@@ -161,7 +161,7 @@ class CronExpression
     /**
      * Get a previous run date relative to the current date or a specific date
      *
-     * @param string|DateTime $currentTime (optional) Relative calculation date
+     * @param StringHelper|DateTime $currentTime (optional) Relative calculation date
      * @param int $nth (optional) Number of matches to skip before returning
      * @param bool $allowCurrentDate (optional) Set to TRUE to return the
      *     current date if it matches the cron expression
@@ -179,7 +179,7 @@ class CronExpression
      * Get multiple run dates starting at the current date or a specific date
      *
      * @param int $total Set the total number of dates to calculate
-     * @param string|DateTime $currentTime (optional) Relative calculation date
+     * @param StringHelper|DateTime $currentTime (optional) Relative calculation date
      * @param bool $invert (optional) Set to TRUE to retrieve previous dates
      * @param bool $allowCurrentDate (optional) Set to TRUE to return the
      *     current date if it matches the cron expression
@@ -199,10 +199,10 @@ class CronExpression
     /**
      * Get all or part of the CRON expression
      *
-     * @param string $part (optional) Specify the part to retrieve or NULL to
+     * @param StringHelper $part (optional) Specify the part to retrieve or NULL to
      *      get the full cron schedule string.
      *
-     * @return string|null Returns the CRON expression, a part of the
+     * @return StringHelper|null Returns the CRON expression, a part of the
      *      CRON expression, or NULL if the part was specified but not found
      */
     public function getExpression($part = null)
@@ -219,7 +219,7 @@ class CronExpression
     /**
      * Helper method to output the full expression.
      *
-     * @return string Full CRON expression
+     * @return StringHelper Full CRON expression
      */
     public function __toString()
     {
@@ -231,7 +231,7 @@ class CronExpression
      * specific date.  This method assumes that the current number of
      * seconds are irrelevant, and should be called once per minute.
      *
-     * @param string|DateTime $currentTime (optional) Relative calculation date
+     * @param StringHelper|DateTime $currentTime (optional) Relative calculation date
      *
      * @return bool Returns TRUE if the cron is due to run or FALSE if not
      */
@@ -256,7 +256,7 @@ class CronExpression
     /**
      * Get the next or previous run date of the expression relative to a date
      *
-     * @param string|DateTime $currentTime (optional) Relative calculation date
+     * @param StringHelper|DateTime $currentTime (optional) Relative calculation date
      * @param int $nth (optional) Number of matches to skip before returning
      * @param bool $invert (optional) Set to TRUE to go backwards in time
      * @param bool $allowCurrentDate (optional) Set to TRUE to return the

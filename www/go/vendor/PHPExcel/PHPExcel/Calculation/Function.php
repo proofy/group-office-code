@@ -50,21 +50,21 @@ class PHPExcel_Calculation_Function {
 	/**
 	 * Category (represented by CATEGORY_*)
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_category;
 
 	/**
 	 * Excel name
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_excelName;
 
 	/**
 	 * PHPExcel name
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_phpExcelName;
 
@@ -91,7 +91,7 @@ class PHPExcel_Calculation_Function {
     /**
      * Get Category (represented by CATEGORY_*)
      *
-     * @return string
+     * @return StringHelper
      */
     public function getCategory() {
     	return $this->_category;
@@ -114,7 +114,7 @@ class PHPExcel_Calculation_Function {
     /**
      * Get Excel name
      *
-     * @return string
+     * @return StringHelper
      */
     public function getExcelName() {
     	return $this->_excelName;
@@ -132,7 +132,7 @@ class PHPExcel_Calculation_Function {
     /**
      * Get PHPExcel name
      *
-     * @return string
+     * @return StringHelper
      */
     public function getPHPExcelName() {
     	return $this->_phpExcelName;

@@ -38,7 +38,7 @@ class PHPExcel_CachedObjectStorage_Memcache extends PHPExcel_CachedObjectStorage
 	/**
 	 * Prefix used to uniquely identify cache data for this worksheet
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_cachePrefix = null;
 
@@ -132,7 +132,7 @@ class PHPExcel_CachedObjectStorage_Memcache extends PHPExcel_CachedObjectStorage
 	/**
      * Get cell at a specific coordinate
      *
-     * @param 	string 			$pCoord		Coordinate of the cell
+     * @param 	StringHelper 			$pCoord		Coordinate of the cell
      * @throws 	PHPExcel_Exception
      * @return 	PHPExcel_Cell 	Cell that was found, or null if not found
      */

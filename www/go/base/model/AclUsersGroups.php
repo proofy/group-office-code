@@ -70,14 +70,24 @@ class AclUsersGroups extends \GO\Base\Db\ActiveRecord {
 		));
 	}
 	
-	protected function afterSave($wasNew) {
+	protected function afterDelete() {
 		
-		//Add log message for activitylog here
-		if(\GO::modules()->isInstalled("log")){
-			\GO\Log\Model\Log::create("acl", $this->aclItem->description,$this->aclItem->className(),$this->aclItem->id);
+		if($this->aclItem){
+			$this->aclItem->touch();
 		}
-
-		$this->aclItem->touch();
+		
+		return parent::afterDelete();
+	}
+	
+	protected function afterSave($wasNew) {
+		if($this->aclItem){
+			//Add log message for activitylog here
+			if(\GO::modules()->isInstalled("log")){
+				\GO\Log\Model\Log::create("acl", $this->aclItem->description,$this->aclItem->className(),$this->aclItem->id);
+			}
+		
+			$this->aclItem->touch();
+		}
 		
 		return parent::afterSave($wasNew);
 	}

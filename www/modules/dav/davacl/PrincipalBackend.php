@@ -48,7 +48,7 @@ class PrincipalBackend implements \Sabre\DAVACL\PrincipalBackend\BackendInterfac
      *     field that's actualy injected in a number of other properties. If
      *     you have an email address, use this property.
      * 
-     * @param string $prefixPath 
+     * @param StringHelper $prefixPath 
      * @return array 
      */
     public function getPrincipalsByPrefix($prefixPath) {
@@ -66,7 +66,7 @@ class PrincipalBackend implements \Sabre\DAVACL\PrincipalBackend\BackendInterfac
      * The returned structure should be the exact same as from 
      * getPrincipalsByPrefix. 
      * 
-     * @param string $path 
+     * @param StringHelper $path 
      * @return array 
      */
 		public function getPrincipalByPath($path) {
@@ -100,7 +100,7 @@ class PrincipalBackend implements \Sabre\DAVACL\PrincipalBackend\BackendInterfac
     /**
      * Returns the list of members for a group-principal 
      * 
-     * @param string $principal 
+     * @param StringHelper $principal 
      * @return array 
      */
     public function getGroupMemberSet($principal) {
@@ -125,7 +125,7 @@ class PrincipalBackend implements \Sabre\DAVACL\PrincipalBackend\BackendInterfac
     /**
      * Returns the list of groups a principal is a member of 
      * 
-     * @param string $principal 
+     * @param StringHelper $principal 
      * @return array 
      */
     public function getGroupMembership($principal) {
@@ -151,7 +151,7 @@ class PrincipalBackend implements \Sabre\DAVACL\PrincipalBackend\BackendInterfac
      *
      * The principals should be passed as a list of uri's. 
      * 
-     * @param string $principal 
+     * @param StringHelper $principal 
      * @param array $members 
      * @return void
      */
@@ -186,11 +186,11 @@ class PrincipalBackend implements \Sabre\DAVACL\PrincipalBackend\BackendInterfac
 
     }
 		
-		function updatePrincipal($path, $mutations){
+		function updatePrincipal($path, \Sabre\DAV\PropPatch $mutations){
 			return false;
 		}
 		
-		function searchPrincipals($prefixPath, array $searchProperties) {
+		function searchPrincipals($prefixPath, array $searchProperties, $test = 'allof') {
 			
 			\GO::debug("searchPrincipals");
 
@@ -230,6 +230,10 @@ class PrincipalBackend implements \Sabre\DAVACL\PrincipalBackend\BackendInterfac
 		}
 
 		return $principals;
+	}
+
+	public function findByUri($uri, $principalPrefix) {
+		
 	}
 
 }

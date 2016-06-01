@@ -40,7 +40,7 @@ class PHPExcel_Shared_CodePage
 	 * and mbstring understands
 	 *
 	 * @param integer $codePage Microsoft Code Page Indentifier
-	 * @return string Code Page Name
+	 * @return StringHelper Code Page Name
 	 * @throws PHPExcel_Exception
 	 */
 	public static function NumberToName($codePage = 1252)

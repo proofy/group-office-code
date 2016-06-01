@@ -11,7 +11,7 @@ abstract class Widget extends \GO\Base\Object {
 	private static $_counter=0;
 	/**
 	 * Id will be set automaticaly is setId() is never called
-	 * @var string id of the widget.
+	 * @var StringHelper id of the widget.
 	 */
 	private $_id;
 	
@@ -47,7 +47,7 @@ abstract class Widget extends \GO\Base\Object {
 	/**
 	 * Returns the ID of the widget or generates a new one if requested.
 	 * @param boolean $autoGenerate whether to generate an ID if it is not set previously
-	 * @return string id of the widget.
+	 * @return StringHelper id of the widget.
 	 */
 	public function getId()
 	{
@@ -58,7 +58,7 @@ abstract class Widget extends \GO\Base\Object {
 	
 	/**
 	 * Sets the ID of the widget.
-	 * @param string $value id of the widget.
+	 * @param StringHelper $value id of the widget.
 	 */
 	public function setId($value)
 	{
@@ -68,7 +68,7 @@ abstract class Widget extends \GO\Base\Object {
 	/**
 	 * PHP magic method that returns the string representation of this object.
 	 * __toString cannot throw exception use trigger_error to bypass this limitation
-	 * @return string the string representation of this object.
+	 * @return StringHelper the string representation of this object.
 	 */
 	public function __toString() {
 		try {

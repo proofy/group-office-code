@@ -35,14 +35,14 @@ class Swift_CharacterStream_NgCharacterStream implements Swift_CharacterStream
     /**
      * The character set this stream is using.
      *
-     * @var string
+     * @var StringHelper
      */
     private $_charset;
 
     /**
      * The data's stored as-is.
      *
-     * @var string
+     * @var StringHelper
      */
     private $_datas = '';
 
@@ -85,7 +85,7 @@ class Swift_CharacterStream_NgCharacterStream implements Swift_CharacterStream
      * Constructor.
      *
      * @param Swift_CharacterReaderFactory $factory
-     * @param string                       $charset
+     * @param StringHelper                       $charset
      */
     public function __construct(Swift_CharacterReaderFactory $factory, $charset)
     {
@@ -98,7 +98,7 @@ class Swift_CharacterStream_NgCharacterStream implements Swift_CharacterStream
     /**
      * Set the character set used in this CharacterStream.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      */
     public function setCharacterSet($charset)
     {
@@ -146,7 +146,7 @@ class Swift_CharacterStream_NgCharacterStream implements Swift_CharacterStream
     /**
      * @see Swift_CharacterStream::importString()
      *
-     * @param string $string
+     * @param StringHelper $string
      */
     public function importString($string)
     {
@@ -159,7 +159,7 @@ class Swift_CharacterStream_NgCharacterStream implements Swift_CharacterStream
      *
      * @param integer $length
      *
-     * @return string
+     * @return StringHelper
      */
     public function read($length)
     {
@@ -255,7 +255,7 @@ class Swift_CharacterStream_NgCharacterStream implements Swift_CharacterStream
     /**
      * @see Swift_CharacterStream::write()
      *
-     * @param string $chars
+     * @param StringHelper $chars
      */
     public function write($chars)
     {

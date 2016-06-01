@@ -37,7 +37,7 @@ class PHPExcel_Shared_OLE_PPS
 
 	/**
 	* The PPS name (in Unicode)
-	* @var string
+	* @var StringHelper
 	*/
 	public $Name;
 
@@ -91,7 +91,7 @@ class PHPExcel_Shared_OLE_PPS
 
 	/**
 	* The PPS's data (only used if it's not using a temporary file)
-	* @var string
+	* @var StringHelper
 	*/
 	public $_data;
 
@@ -112,14 +112,14 @@ class PHPExcel_Shared_OLE_PPS
 	*
 	* @access public
 	* @param integer $No   The PPS index
-	* @param string  $name The PPS name
+	* @param StringHelper  $name The PPS name
 	* @param integer $type The PPS type. Dir, Root or File
 	* @param integer $prev The index of the previous PPS
 	* @param integer $next The index of the next PPS
 	* @param integer $dir  The index of it's first child if this is a Dir or Root PPS
 	* @param integer $time_1st A timestamp
 	* @param integer $time_2nd A timestamp
-	* @param string  $data  The (usually binary) source data of the PPS
+	* @param StringHelper  $data  The (usually binary) source data of the PPS
 	* @param array   $children Array containing children PPS for this PPS
 	*/
 	public function __construct($No, $name, $type, $prev, $next, $dir, $time_1st, $time_2nd, $data, $children)
@@ -165,7 +165,7 @@ class PHPExcel_Shared_OLE_PPS
 	* Returns a string with the PPS's WK (What is a WK?)
 	*
 	* @access public
-	* @return string The binary string
+	* @return StringHelper The binary string
 	*/
 	public function _getPpsWk()
 	{

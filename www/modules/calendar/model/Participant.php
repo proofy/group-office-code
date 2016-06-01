@@ -28,7 +28,7 @@
  * @property int $is_organizer
  * @property string $role
  * 
- * @property Event $event
+ * @property \GO\Calendar\Model\Event $event
  * @property string $statusName;
  * 
  * 
@@ -48,6 +48,8 @@ class Participant extends \GO\Base\Db\ActiveRecord {
 	
 	
 	public $updateRelatedParticipants=true;
+	
+	public $dontCreateEvent = false;
 	
 	
 	public $notifyRecurrenceTime=false;
@@ -374,7 +376,8 @@ class Participant extends \GO\Base\Db\ActiveRecord {
 		if($wasNew && $this->event->is_organizer){
 			
 			//add this participant to each existing event.
-			if ($this->user_id > 0 && !$this->is_organizer) {
+			if (!$this->dontCreateEvent && $this->user_id > 0 && !$this->is_organizer) {
+//			if ($this->user_id > 0 && !$this->is_organizer) {
 				$newEvent = $this->event->createCopyForParticipant($this);					
 			}
 			
@@ -384,21 +387,21 @@ class Participant extends \GO\Base\Db\ActiveRecord {
 			foreach($stmt as $event){
 				if(empty($newEvent) || $event->id!=$newEvent->id){
 					
-//					$p = Participant::model()->findSingleByAttributes(array(
-//							'event_id'=>$event->id,
-//							'email'=>$this->email
-//					));
-//					if(!$p){
+					$p = Participant::model()->findSingleByAttributes(array(
+							'event_id'=>$event->id,
+							'email'=>$this->email
+					));
+					if(!$p){
 						$p = new Participant();
 						$p->setAttributes($this->getAttributes('raw'), false);
 						$p->event_id=$event->id;
 						$p->id=null;
 						$p->save();
-//					}
+					}
 				}
 			}
 			
-			if(!$this->is_organizer && $this->contact){
+			if(!$this->is_organizer && $this->contact && \GO::config()->calendar_autolink_participants){
 				$this->contact->link($this->event);
 			}
 		}

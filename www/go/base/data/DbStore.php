@@ -42,14 +42,14 @@ class DbStore extends AbstractStore {
 
 	/**
 	 * The column name to sort the resulting record set on
-	 * @var string
+	 * @var StringHelper
 	 */
 	public $sort;
 	public $defaultSort = '';
 
 	/**
 	 * The sort direction, ASC or DESC
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	public $direction;
 	public $defaultDirection = 'ASC';
@@ -69,7 +69,7 @@ class DbStore extends AbstractStore {
 	/**
 	 * Find only record that contain this word
 	 * Is used by the quick search bar on top of a grid
-	 * @var string word to search for
+	 * @var StringHelper word to search for
 	 */
 	public $query = '';
 
@@ -81,7 +81,7 @@ class DbStore extends AbstractStore {
 
 	/**
 	 * The name of the model this db store contains record from
-	 * @var string name of model (eg. \GO\Base\User)
+	 * @var StringHelper name of model (eg. \GO\Base\User)
 	 */
 	protected $_modelClass;
 
@@ -128,7 +128,7 @@ class DbStore extends AbstractStore {
 
 	/**
 	 * Create a new store
-	 * @param string $modelClass the classname of the model to execute the find() method on
+	 * @param StringHelper $modelClass the classname of the model to execute the find() method on
 	 * @param ColumnModel $columnModel the column model object for formatting this store's columns
 	 * @param array $storeParams the $_POST params to set to this store @see setStoreParams()
 	 * @param \GO\Base\Db\FindParams $findParams extra findParams to be added to the store
@@ -142,12 +142,13 @@ class DbStore extends AbstractStore {
 		if ($findParams instanceof \GO\Base\Db\FindParams){
 			$this->_extraFindParams = $findParams;
 		}elseif($findParams!=null){
-			throw new Exception("FindParams must be an instance of '\GO\Base\Db\FindParams'. '".get_class($findParams)."' given.");
+			throw new \Exception("FindParams must be an instance of '\GO\Base\Db\FindParams'. '".get_class($findParams)."' given.");
 		}else{
 			$this->_extraFindParams = \GO\Base\Db\FindParams::newInstance();
 		}
 		
 		$this->_readRequestParams();
+				
 	}
 
 	/**
@@ -273,6 +274,9 @@ class DbStore extends AbstractStore {
 	 * @return \GO\Base\Db\FindParams
 	 */
 	public function getFindParams(){
+		
+		$this->_readRequestParams();
+				
 		if(!isset($this->_findParams)){
 			$this->_findParams=$this->createFindParams();
 		}
@@ -443,7 +447,7 @@ class DbStore extends AbstractStore {
 					$key = is_array($model->pk) ? implode('-', $model->pk) : $model->pk;
 					if(!$model->delete())
 						$errors[$key] = $model->getValidationErrors();
-				} catch (\GO\Base\Exception\AccessDenied $e) {
+				} catch (\Exception $e) {
 					$errors[$key] = array('access_denied'=>$e->getMessage());
 				}
 			}
@@ -455,7 +459,7 @@ class DbStore extends AbstractStore {
 			$error_string = '';
 			foreach($errors as $error)
 				$error_string .= implode("<br>", $error)."<br>";
-			$this->response['feedback'] = str_replace("{count}", count($errors), \GO::t('deleteErrors')) . "<br><br>" . $error_string;
+			$this->response['deleteFeedback'] = str_replace("{count}", count($errors), \GO::t('deleteErrors')) . "<br><br>" . $error_string;
 		}
 		return empty($errors);
 	}
@@ -565,16 +569,16 @@ class DbStore extends AbstractStore {
 	/**
 	 * Select Items that belong to one of the selected Models
 	 * Call this in the grids that get filterable by other selectable stores
-	 * @param string $requestParamName That key that will hold the seleted item in go_setting table
-	 * @param string $selectClassName Name of the related model (eg. \GO\Notes\Model\Category)
-	 * @param string $foreignKey column name to match the related models PK (eg. category_id)
+	 * @param StringHelper $requestParamName That key that will hold the seleted item in go_setting table
+	 * @param StringHelper $selectClassName Name of the related model (eg. \GO\Notes\Model\Category)
+	 * @param StringHelper $foreignKey column name to match the related models PK (eg. category_id)
 	 * @param boolean $checkPermissions check Permission for item defaults to true
-	 * @param string $prefix a prefix for the request param that can change every store load
+	 * @param StringHelper $prefix a prefix for the request param that can change every store load
 	 * @param array $extraPks valid pks of models not in the database
 	 * 
 	 * @return \GO\Base\Component\MultiSelectGrid
 	 */
-	public function multiSelect($requestParamName, $selectClassName, $foreignKey, $checkPermissions = null,$prefix="",$extraPks=array()) {
+	public function multiSelect($requestParamName, $selectClassName, $foreignKey, $checkPermissions = null,$prefix="",$extraPks=array(), $keyTableAlias='t') {
 		$this->_multiSel = new \GO\Base\Component\MultiSelectGrid(
 										$requestParamName,
 										$selectClassName,
@@ -584,7 +588,7 @@ class DbStore extends AbstractStore {
 										$prefix,
 										$extraPks
 		);
-		$this->_multiSel->addSelectedToFindCriteria($this->_extraFindParams, $foreignKey);
+		$this->_multiSel->addSelectedToFindCriteria($this->_extraFindParams, $foreignKey, $keyTableAlias);
 		$this->_multiSel->setStoreTitle();
 		
 		
@@ -595,16 +599,17 @@ class DbStore extends AbstractStore {
 
 	/**
 	 * Call this in the selectable stores that effect other grids by selecting values
-	 * @param string $requestParamName
+	 * @param StringHelper $requestParamName
 	 * @param boolean $checkPermissions check Permission for item defaults to true
-	 * @param string $prefix a prefix for the request param that can change every store load
+	 * @param StringHelper $prefix a prefix for the request param that can change every store load
 	 * @param array $extraPks valid pks of models not in the database
-	 * 
+	 * @param boolean $defaultSelect Set  to false if you do not when to select the first item when nothing is selected
 	 * @return \GO\Base\Component\MultiSelectGrid
 	 */
-	public function multiSelectable($requestParamName,$checkPermissions = null,$prefix="",$extraPks=array()) {
+	public function multiSelectable($requestParamName,$checkPermissions = null,$prefix="",$extraPks=array(),$defaultSelect=true) {
 		$this->_multiSel = new \GO\Base\Component\MultiSelectGrid($requestParamName, $this->_modelClass, $this, $this->_requestParams, $checkPermissions,$prefix,$extraPks);
-		$this->_multiSel->setFindParamsForDefaultSelection($this->_extraFindParams);
+		if($defaultSelect)
+			$this->_multiSel->setFindParamsForDefaultSelection($this->_extraFindParams);
 		$this->_multiSel->formatCheckedColumn();
 		
 		return $this->_multiSel;

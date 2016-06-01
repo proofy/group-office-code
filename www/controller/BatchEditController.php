@@ -47,12 +47,81 @@ class BatchEditController extends \GO\Base\Controller\AbstractController {
 		if(is_array($keys)) {
 			foreach($keys as $key) {
 				$model = \GO::getModel($params['model_name'])->findByPk($key);
-				if(!empty($model))
+				if(!empty($model)) {
+					foreach ($data as &$item) {
+						if($item['mergeable'] && !$item['replace']) {
+							
+							if($item['gotype']=='customfield') {
+								
+								switch ($item['customfieldtype']) {
+									case 'GO\Customfields\Customfieldtype\Select':
+										if($item['multiselect']) {
+											$type = 'multiselect';
+										}
+										break;
+									case 'GO\Customfields\Customfieldtype\Textarea':
+
+										$type = 'textarea';
+										break;
+
+									case 'GO\\Customfields\\Customfieldtype\\Text':
+										$type = 'textfield';
+										break;
+
+									default:
+										break;
+								}
+								$existing = $model->customfieldsRecord->{$item['name']};
+								
+							} else {
+								$type = $item['gotype'];
+								$existing = $model->{$item['name']};
+							}
+							
+							if(!empty($existing)) {
+								switch ($type) {
+									case 'textfield':
+
+										$item['value'] = $existing .' ; '. $item['value'];
+
+										break;
+									case 'textarea':
+										$item['value'] = $existing."\n". $item['value'];
+
+										break;
+
+									case 'multiselect':
+
+										$existing = explode('|', $existing);
+										$new = explode('|', $item['value']);
+										$existing = array_merge($existing, $new);
+										$existing = array_unique($existing);
+										sort($existing);
+										$item['value'] = implode('|', $existing);									
+
+										break;
+
+									default:
+										break;
+								}
+							}
+						}
+					}
+					// @TODO need valadasen !!!
 					$this->_updateModel($model, $data);
+				}
 			}
 		}
 		
 		$response['success'] = true;
+		
+		$this->fireEvent('submit', array(
+				&$this,
+				&$response,
+				&$model,
+				&$params
+		));
+		
 		return $response;
 	}
 	
@@ -68,7 +137,7 @@ class BatchEditController extends \GO\Base\Controller\AbstractController {
 		$changeAttributes = array();
 		
 		foreach($data as $attr=>$value){
-			if($value['edit']){
+			if($value['value'] || $value['replace']) {
 				$changeAttributes[$value['name']] = $value['value'];
 			}
 		}
@@ -92,6 +161,8 @@ class BatchEditController extends \GO\Base\Controller\AbstractController {
 		if(empty($params['model_name']))
 			return false;
 		
+		$mergeableTypes = array('textfield', 'textarea');
+		
 		$tmpModel = new $params['model_name']();
 		$columns = $tmpModel->getColumns();
 		
@@ -110,6 +181,8 @@ class BatchEditController extends \GO\Base\Controller\AbstractController {
 				$row['label']= $tmpModel->getAttributeLabel($key);
 				$row['value']='';
 				$row['edit']='';
+				$row['customfield'] = false;
+				$row['multiselect'] = false;
 				$row['gotype']=!empty($value['gotype'])?$value['gotype']:'';
 				if(!empty($value['regex'])){
 					$regexDelimiter = substr($value['regex'], 0,1);
@@ -122,6 +195,13 @@ class BatchEditController extends \GO\Base\Controller\AbstractController {
 					$row['regex']='';
 				}
 				
+				
+				$row['has_data'] = false;
+				if(in_array($row['gotype'], $mergeableTypes)) {
+					$row['mergeable'] = true;
+				} else {
+					$row['mergeable'] = false;
+				}
 				
 
 				$rows[] = $row;
@@ -137,18 +217,41 @@ class BatchEditController extends \GO\Base\Controller\AbstractController {
 			foreach($cfcolumns as $key=>$value) {
 				if(!in_array($key, $params['excludeColumns']) && !empty($value['gotype'])) {
 					$row = array();
-
+					
 					$row['name']= $key;
 					$row['label']= $cf->getAttributeLabel($key);
 					$row['value']='';
 					$row['edit']='';
+					$row['customfield'] = true;
 					$row['gotype']=$value['gotype'];
+					$row['category_id']=$value['customfield']->category->id;
 					$row['category_name']=$value['customfield']->category->name;
-
+					$row['customfieldtype']=$value['customfield']->datatype;
+					$row['multiselect']=$value['customfield']->multiselect;
+					
+					$row['has_data'] = false;
+					
+					if($value['customfield']->multiselect || in_array($value['customfield']->datatype , array('GO\Customfields\Customfieldtype\Textarea', 'GO\Customfields\Customfieldtype\Text'))) {
+						$row['mergeable'] = true;
+					} else {
+						$row['mergeable'] = false;
+					}
+				
 					$cfrows[] = $row;
 				}
 			}
 		
+			
+			$module = call_user_func_array($params['model_name'].'::model', array());
+			$stmt = call_user_func_array(array($module, 'find'), 
+							array(\GO\Base\Db\FindParams::newInstance()->debugSql()->ignoreAcl()
+							->criteria(
+											\GO\Base\Db\FindCriteria::newInstance()
+											->addInCondition($params['primaryKey'], json_decode($params['keys']))
+											)
+									)
+							);		
+			
 			
 			usort($cfrows,function ($a,$b) {
 				if ($a['category_name']==$b['category_name'])
@@ -158,9 +261,34 @@ class BatchEditController extends \GO\Base\Controller\AbstractController {
 			});
 			
 			$rows = array_merge($rows,$cfrows);
+			
+			
+			foreach ($stmt as $value) {
+
+				foreach ($rows as &$field) {
+					if (!$field['customfield']) {
+						if (!empty($value->{$field['name']})) {
+							$field['has_data'] = true;
+						}
+					} else {
+						if (!empty($value->customfieldsRecord->{$field['name']})) {
+							$field['has_data'] = true;
+						}
+					}
+				}
+			}
 		}
 		$response['results'] = $rows;
-						
+				
+		
+		$this->fireEvent('store', array(
+				&$this,
+				&$response,
+				&$tmpModel,
+				&$params
+			)
+		);	
+		
 		return $response;
 	}
 }

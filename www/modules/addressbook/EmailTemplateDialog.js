@@ -7,7 +7,7 @@
  * If you have questions write an e-mail to info@intermesh.nl
  * 
  * @copyright Copyright Intermesh
- * @version $Id: EmailTemplateDialog.js 16919 2014-02-26 14:12:07Z mschering $
+ * @version $Id: EmailTemplateDialog.js 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @author Merijn Schering <mschering@intermesh.nl>
  * @author Wilmar van Beusekom <wilmar@intermesh.nl>
  */
@@ -193,6 +193,7 @@ Ext.extend(GO.addressbook.EmailTemplateDialog, Ext.Window,{
 		['{contact:home_phone}',GO.lang['strPhone']],
 		['{contact:fax}',GO.lang['strFax']],
 		['{contact:cellular}',GO.lang['strCellular']],
+		['{contact:cellular2}',GO.lang['cellular2']],
 		['{contact:address}',GO.lang['strAddress']],
 		['{contact:address_no}',GO.lang['strAddressNo']],
 		['{contact:zip}',GO.lang['strZip']],
@@ -229,6 +230,7 @@ Ext.extend(GO.addressbook.EmailTemplateDialog, Ext.Window,{
 		['{user:work_phone}',GO.lang['strWorkPhone']+' ('+GO.lang.strUser+')'],
 		['{user:work_fax}',GO.lang['strWorkFax']+' ('+GO.lang.strUser+')'],
 		['{user:cellular}',GO.lang['strCellular']+' ('+GO.lang.strUser+')'],
+		['{user:cellular2}',GO.lang['cellular2']+' ('+GO.lang.strUser+')'],
 		['{user:address}',GO.lang['strAddress']+' ('+GO.lang.strUser+')'],
 		['{user:address_no}',GO.lang['strAddressNo']+' ('+GO.lang.strUser+')'],
 		['{user:zip}',GO.lang['strZip']+' ('+GO.lang.strUser+')'],
@@ -248,7 +250,8 @@ Ext.extend(GO.addressbook.EmailTemplateDialog, Ext.Window,{
 		['{usercompany:country}',GO.lang['strWorkCountry']+' ('+GO.lang.strUser+')'],
 		['{user:homepage}',GO.lang.strHomepage+' ('+GO.lang.strUser+')'],
 		['{unsubscribe_link}',GO.addressbook.lang.unsubscribeLink],
-		['%unsubscribe_href%',GO.addressbook.lang.unsubscribeHref]
+		['%unsubscribe_href%',GO.addressbook.lang.unsubscribeHref],
+		['{link}',GO.lang.cmdLink]
 		];
    	
 		var items = [new Ext.Panel({
@@ -367,13 +370,22 @@ Ext.extend(GO.addressbook.EmailTemplateDialog, Ext.Window,{
 				layout:'form',
 				border: false,
 				cls:'go-form-panel',			
-				items:[{
+				items:[
+					{
 					xtype: 'textfield',
 					name: 'name',
 					anchor: '100%',
 					allowBlank:false,
 					fieldLabel: GO.lang.strName
-				}]
+				},
+				{
+					xtype: 'textfield',
+					name: 'subject',
+					anchor: '100%',
+					allowBlank: true,
+					fieldLabel: GO.lang.strSubject
+				}
+			]
 			},
 			this.htmlEditPanel = new GO.base.email.EmailEditorPanel({
 				region:'center'

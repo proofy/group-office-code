@@ -38,11 +38,11 @@ class Swift_Encoder_Rfc2231Encoder implements Swift_Encoder
      * Takes an unencoded string and produces a string encoded according to
      * RFC 2231 from it.
      *
-     * @param string  $string
+     * @param StringHelper  $string
      * @param integer $firstLineOffset
      * @param integer $maxLineLength   optional, 0 indicates the default of 75 bytes
      *
-     * @return string
+     * @return StringHelper
      */
     public function encodeString($string, $firstLineOffset = 0, $maxLineLength = 0)
     {
@@ -77,7 +77,7 @@ class Swift_Encoder_Rfc2231Encoder implements Swift_Encoder
     /**
      * Updates the charset used.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      */
     public function charsetChanged($charset)
     {

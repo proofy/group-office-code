@@ -23,7 +23,7 @@ GO.favorites.favoritesAddressbookStore = new GO.data.JsonStore({
 	root: 'results',
 	id: 'id',
 	totalProperty:'total',
-	fields: ['user_id', 'addressbook_id','name','files_folder_id','users','default_salutation','shared_acl','acl_id','checked'],
+	fields: ['user_id', 'id','name','files_folder_id','users','default_salutation','shared_acl','acl_id','checked'],
 	remoteSort: true,
 	model:"GO\\Favorites\\Model\\Addressbook"
 });

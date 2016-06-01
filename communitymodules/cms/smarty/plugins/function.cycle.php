@@ -39,7 +39,7 @@
  * @version  1.3
  * @param array
  * @param Smarty
- * @return string|null
+ * @return StringHelper|null
  */
 function smarty_function_cycle($params, &$smarty)
 {

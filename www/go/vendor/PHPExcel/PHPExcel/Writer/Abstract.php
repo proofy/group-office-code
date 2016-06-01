@@ -62,7 +62,7 @@ abstract class PHPExcel_Writer_Abstract implements PHPExcel_Writer_IWriter
 	/**
 	 * Disk caching directory
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_diskCachingDirectory	= './';
 
@@ -150,7 +150,7 @@ abstract class PHPExcel_Writer_Abstract implements PHPExcel_Writer_IWriter
 	/**
 	 * Get disk caching directory
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getDiskCachingDirectory() {
 		return $this->_diskCachingDirectory;

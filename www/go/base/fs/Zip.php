@@ -9,7 +9,7 @@
  * If you have questions write an e-mail to info@intermesh.nl
  * 
  * @package GO.base.fs
- * @version $Id: Zip.php 16754 2014-01-30 10:06:43Z mschering $
+ * @version $Id: Zip.php 18000 2014-08-18 13:31:23Z wilmar1980 $
  * @author Merijn Schering <mschering@intermesh.nl>
  * @copyright Copyright Intermesh BV.
  */
@@ -18,7 +18,7 @@
  * Static function to create a ZIP archive
  * 
  * @package GO.base.fs
- * @version $Id: Zip.php 16754 2014-01-30 10:06:43Z mschering $
+ * @version $Id: Zip.php 18000 2014-08-18 13:31:23Z wilmar1980 $
  * @author Merijn Schering <mschering@intermesh.nl>
  * @copyright Copyright Intermesh BV.
  */
@@ -41,11 +41,11 @@ class Zip {
 	 */
 	public static function create(File $archiveFile, Folder $workingFolder, $sources, $utf8=false) {
 	
-		if (class_exists("ZipArchive") && !$utf8) {
+		if (class_exists("\ZipArchive") && !$utf8) {
 		
 			\GO::debug("Using PHP ZipArchive");
-			$zip = new ZipArchive();
-			$zip->open($archiveFile->path(), ZIPARCHIVE::CREATE);
+			$zip = new \ZipArchive();
+			$zip->open($archiveFile->path(), \ZipArchive::CREATE);
 			for ($i = 0; $i < count($sources); $i++) {
 				if ($sources[$i]->isFolder()) {
 					self::_zipDir($sources[$i], $zip, str_replace($workingFolder->path() . '/', '', $sources[$i]->path()) . '/');
@@ -91,7 +91,7 @@ class Zip {
 		}
 	}
 
-	private static function _zipDir(Folder $dir, ZipArchive $zip, $relative_path) {
+	private static function _zipDir(Folder $dir, \ZipArchive $zip, $relative_path) {
 		
 		$items = $dir->ls();
 		if(count($items)){

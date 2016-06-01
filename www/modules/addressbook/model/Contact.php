@@ -67,6 +67,7 @@
  * @property string $url_twitter
  * @property string $skype_name
  * @property int $last_email_time
+ * @property string $color
  */
 
 namespace GO\Addressbook\Model;
@@ -78,7 +79,7 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * if user typed in a new company name manually we set this attribute so a new company will be autocreated.
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	public $company_name;
 	
@@ -87,6 +88,34 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 	
 	
 	private $_photoFile;
+		
+	/**
+	 * This property is used to temporary store the photo file object when removing the photo from the contact model.
+	 * 
+	 * @var File object / Boolean false 
+	 */
+	private $_removePhotoFile = false;
+	
+	
+	public function getUri() {
+		if(isset($this->_setUri)) {
+			return $this->_setUri;
+		}
+		
+		return str_replace('/','+',$this->uuid).'-'.$this->id;
+	}
+	
+	private $_setUri;
+	
+	public function setUri($uri) {
+		$this->_setUri = $uri;					
+	}
+	
+	
+	public function getETag() {
+		return '"' . date('Ymd H:i:s', $this->mtime). '-'.$this->id.'"';
+	}
+	
 	/**
 	 * Returns a static model of itself
 	 * 
@@ -114,8 +143,29 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 		return true;
 	}
 	
+	public function attributeLabels() {
+		
+		$labels = parent::attributeLabels();
+		
+		$labels['url_facebook'] = \GO::t('facebookUrl','addressbook');
+		$labels['url_linkedin'] = \GO::t('linkedinUrl','addressbook');
+		$labels['url_twitter'] = \GO::t('twitterUrl','addressbook');
+		$labels['skype_name'] = \GO::t('skypeName','addressbook');
+		$labels['photo'] = \GO::t('photo','addressbook');
+		$labels['action_date'] = \GO::t('actionDate','addressbook');
+		
+		return $labels;
+	}
+	
 	public function defaultAttributes() {
+		
+		$ab = false;
+		if(\GO::user()){
+			$ab = Addressbook::model()->getDefault(\GO::user());
+		}
+		
 		return array(
+				'addressbook_id' => $ab ? $ab->id : null,
 				'country'=>\GO::config()->default_country
 		);
 	}
@@ -123,9 +173,9 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 	protected function init() {
 		
 		$this->columns['addressbook_id']['required']=true;
-		$this->columns['email']['regex']=\GO\Base\Util\String::get_email_validation_regex();
-		$this->columns['email2']['regex']=\GO\Base\Util\String::get_email_validation_regex();
-		$this->columns['email3']['regex']=\GO\Base\Util\String::get_email_validation_regex();
+		$this->columns['email']['regex']=\GO\Base\Util\StringHelper::get_email_validation_regex();
+		$this->columns['email2']['regex']=\GO\Base\Util\StringHelper::get_email_validation_regex();
+		$this->columns['email3']['regex']=\GO\Base\Util\StringHelper::get_email_validation_regex();
 		
 //		$this->columns['home_phone']['gotype']='phone';
 //		$this->columns['work_phone']['gotype']='phone';
@@ -185,13 +235,13 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 			}
 		}
 		
-		return \GO\Base\Util\String::format_name($this->last_name, $this->first_name, $this->middle_name,$sort_name);
+		return \GO\Base\Util\StringHelper::format_name($this->last_name, $this->first_name, $this->middle_name,$sort_name);
 	}
 	
 	/**
 	 * Get the full address formatted according to the country standards.
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getFormattedAddress()
 	{
@@ -288,7 +338,11 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 			$this->company_id=$company->id;			
 		}
 				
+		
 		$this->_prefixSocialMediaLinks();
+		
+		if (empty($this->color))
+			$this->color = "000000";
 		
 		return parent::beforeSave();
 	}
@@ -343,6 +397,11 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 			//make sure company is in the same addressbook.
 			$company->addressbook_id=$this->addressbook_id;
 			$company->save();
+		}
+		
+		//If the _removePhotoFile property is set and the photo property is an empty string, then remove the photo file from disk.
+		if(!empty($this->_removePhotoFile) && empty($this->photo)){
+			$this->_removePhotoFile->delete();
 		}
 		
 		if(!$this->skip_user_update &&  $this->isModified(array('first_name','middle_name','last_name','email')) && $this->goUser){
@@ -423,7 +482,7 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Get the URL to the original photo.
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getPhotoURL(){
 		return $this->photoFile->exists() 
@@ -431,7 +490,7 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 						: \GO::config()->host.'modules/addressbook/themes/Default/images/unknown-person.png';
 	}
 	
-	public function getPhotoThumbURL($urlParams=array("w"=>90, "h"=>120, "zc"=>1)) {
+	public function getPhotoThumbURL($urlParams=array("w"=>120, "h"=>160, "zc"=>1)) {
 		
 		if($this->getPhotoFile()->exists()){
 			$urlParams['filemtime']=$this->getPhotoFile()->mtime();
@@ -488,8 +547,9 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 		
 		
 //		if(strtolower($file->extension())!='jpg'){
-		$filename = $photoPath->path().'/'.$this->id.'.jpg';
+		$filename = $photoPath->path().'/con_'.$this->id.'.jpg';
 		$img = new \GO\Base\Util\Image();
+		\GO::debug($file->path());
 		if(!$img->load($file->path())){
 			throw new \Exception(\GO::t('imageNotSupported','addressbook'));
 		}
@@ -519,7 +579,7 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Import a contact (with or without company) from a VObject 
 	 * 
-	 * @param Sabre_VObject_Component $vobject
+	 * @param Sabre\VObject\Component $vobject
 	 * @param array $attributes Extra attributes to apply to the contact. Raw values should be past. No input formatting is applied.
 	 * @return Contact
 	 */
@@ -535,34 +595,30 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 			$attributes['uuid'] = $uid;
 		
 		$emails = array();
-//		$remainingVcardProps = array(); // format: $remainingVcardProps[$integer] = array('name'=>$vobjName, 'parameters'=>$vobjParams, 'value'=>$vobjValue)
-//		$deletedPropertiesPrefixes_nonGO = array(); // This is to keep track of the prefixes occurring in the current VCard.
-																	// Every time a new prefix is encountered during the current sync,
-																	// all of this contact's properties starting with this prefix will
-																	// be removed to make place for the ones in the imported VCard.
-
-		// Remove this contact's non-GO VCard properties.
-		// (We assume they will be updated by the client during the current sync process).
-//		if (!empty($this->id)) {
-//			$nonGO_PropModels_toDelete = ContactVcardProperty::model()
-//				->find(
-//					\GO\Base\Db\FindParams::newInstance()
-//						->criteria(
-//							\GO\Base\Db\FindCriteria::newInstance()
-//								->addCondition('contact_id',$this->id)
-//								->addCondition('name','X-%','NOT LIKE')
-//						)
-//				);
-//			while ($contactVcardProp = $nonGO_PropModels_toDelete->fetch())
-//				$contactVcardProp->delete();
-//		}
 		
-		foreach ($vobject->children as $vobjProp) {
+		// Is the PHOTO attribute set as Vcard property?
+		$photoAttrSet = false;
+		
+		foreach ($vobject->children() as $vobjProp) {
+			
+			// Set this variable to true when the PHOTO attribute is set.
+			if($vobjProp->name == 'PHOTO'){
+				$photoAttrSet = true;
+			}
+			
 			switch ($vobjProp->name) {
 				case 'PHOTO':					
 					if($vobjProp->getValue()){
-						$photoFile = \GO\Base\Fs\File::tempFile('','jpg');
-						$photoFile->putContents($vobjProp->getValue());
+						if($vobjProp->getValueType() === 'URI') { //vCard 4.0 uses URI type with base64 (no binary)
+							$data = $vobjProp->getValue();
+							$data = str_replace('data:image/jpeg;base64,','',$data); // Todo: work for other formats
+							
+							$photoFile = \GO\Base\Fs\File::tempFile('','jpg');
+							$photoFile->putContents(base64_decode($data));
+						} else {
+							$photoFile = \GO\Base\Fs\File::tempFile('','jpg');
+							$photoFile->putContents($vobjProp->getValue());
+						}
 					}
 					break;
 				case 'N':
@@ -602,11 +658,11 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 							}
 						}
 						
-						if(in_array('work',$types) && ( in_array('voice',$types) || count($types)==1 ) ) {
+						if(in_array('work',$types) && ( in_array('voice',$types) || count($types)==1 || in_array('pref',$types)) ) {
 							$attributes['work_phone'] = $vobjProp->getValue();
 							$companyAttributes['phone'] = $vobjProp->getValue();
 						}
-						if(in_array('cell',$types) && ( in_array('voice',$types) || count($types)==1 ) ) {
+						if(in_array('cell',$types) && ( in_array('voice',$types) || count($types)==1 || in_array('pref',$types)) ) {
 							if (empty($attributes['cellular']))
 								$attributes['cellular'] = $vobjProp->getValue();
 							elseif (empty($attributes['cellular2']))
@@ -618,7 +674,7 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 							$companyAttributes['fax'] = $vobjProp->getValue();
 							$attributes['work_fax'] = $vobjProp->getValue();
 						}
-						if(in_array('home',$types) && ( in_array('voice',$types) || count($types)==1 ) )
+						if(in_array('home',$types) && ( in_array('voice',$types) || count($types)==1 || in_array('pref',$types)) )
 							$attributes['home_phone'] = $vobjProp->getValue();
 					}
 //					foreach ($vobjProp->parameters as $param) {
@@ -644,6 +700,8 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 							$types = explode(',',strtolower($param->getValue()));			
 					}
 					
+					\GO::debug($types);
+					
 					if(in_array('work',$types)) {
 						$addrArr = explode(';',$vobjProp->getValue());
 						if(isset($addrArr[2]))
@@ -658,7 +716,11 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 							$companyAttributes['country'] = $addrArr[6];
 					}
 					if(in_array('home',$types)) {
+						
+					
 						$addrArr = explode(';',$vobjProp->getValue());
+						
+							\GO::debug($addrArr);
 						if(isset($addrArr[2]))
 							$attributes['address'] = $addrArr[2];
 						if(isset($addrArr[3]))
@@ -710,9 +772,17 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 					$attributes['function'] = $vobjProp->getValue();
 					break;
 				case 'BDAY':
-					if($vobjProp->getValue())
-						$attributes['birthday'] = substr($vobjProp->getValue(),0,4).'-'.substr($vobjProp->getValue(),5,2).'-'.substr($vobjProp->getValue(),8,2);
-					break;				
+					if($vobjProp->getValue()) {
+						// is already formatted in GO\Base\VObject\Reader::convertVCard21ToVCard30
+						// $attributes['birthday'] = substr($vobjProp->getValue(),0,4).'-'.substr($vobjProp->getValue(),5,2).'-'.substr($vobjProp->getValue(),8,2);
+						$attributes['birthday'] = $vobjProp->getValue();
+					}
+					break;			
+					
+				case 'URL':
+					$attributes['homepage'] = $vobjProp->getValue();
+					break;
+				
 				case 'NOTE':
 					$attributes['comment'] = $vobjProp->getValue();
 					break;
@@ -729,6 +799,11 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 			}
 		}
 		
+		if(!$photoAttrSet){
+			$this->removePhoto();
+		}
+		
+		$attributes['email']=$attributes['email2']=$attributes['email3']=null;
 		foreach($emails as $email){
 			if(!isset($attributes['email']))
 				$attributes['email']=$email;
@@ -840,15 +915,18 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 	private function _splitAddress($attributes){
 		if(isset($attributes['address'])){
 			$attributes['address_no']='';
-			$attributes['address']=  \GO\Base\Util\String::normalizeCrlf($attributes['address'], "\n");
+			$attributes['address']=  \GO\Base\Util\StringHelper::normalizeCrlf($attributes['address'], "\n");
 			$lines = explode("\n", $attributes['address']);
 			if(count($lines)>1){
 				$attributes['address']=$lines[0];
 				$attributes['address_no']=$lines[1];
 			}else
 			{
-				$attributes['address']=$this->_getAddress($lines[0]);
-				$attributes['address_no']=$this->_getAddressNo($lines[0]);
+				$address = $this->_getAddress($lines[0]);
+				if(!empty($address)) {
+					$attributes['address']=$this->_getAddress($lines[0]);
+					$attributes['address_no']=$this->_getAddressNo($lines[0]);
+				}
 			}
 		}
 		
@@ -860,7 +938,7 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 	*
 	* @param  string	$address Contains the address (street-name and house-number)
 	* @access private
-	* @return string
+	* @return StringHelper
 	*/
 	function _getAddress($address) {
 		if (!$address = substr($address, 0, strrpos($address, " "))) {
@@ -875,7 +953,7 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 	*
 	* @param  string	$address Contains the address (street-name and house-number)
 	* @access private
-	* @return string
+	* @return StringHelper
 	*/
 	function _getAddressNo($address) {
 		if (!$address_no = strrchr($address, " ")) {
@@ -890,27 +968,33 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 	 * 
 	 * @return Sabre_VObject_Component 
 	 */
-	public function toVObject(){
+	public function toVObject($card=null){
 		
-		
-		$e=new Sabre\VObject\Component\VCard();
+		if(!isset($card)) {
+			$card=new Sabre\VObject\Component\VCard();
+		}
 				
-		$e->prodid='-//Intermesh//NONSGML Group-Office '.\GO::config()->version.'//EN';		
+		$card->prodid='-//Intermesh//NONSGML Group-Office '.\GO::config()->version.'//EN';		
 		
 		if(empty($this->uuid)){
 			$this->uuid=\GO\Base\Util\UUID::create('contact', $this->id);
 			$this->save(true);
 		}
 		
-		$e->uid=$this->uuid;
-		$e->add('N',array($this->last_name,$this->first_name,$this->middle_name,$this->title,$this->suffix));
-		$e->add('FN',$this->name);
+		$card->uid=$this->uuid;
 		
+		$card->remove('N');
+		$card->remove('FN');
+		
+		$card->add('N',array($this->last_name,$this->first_name,$this->middle_name,$this->title,$this->suffix));
+		$card->add('FN',$this->name);
+		
+		$card->remove('email');
 		if (!empty($this->email)) {
 //			$p = new Sabre\VObject\Property('EMAIL',$this->email);
 //			$p->add(new \GO\Base\VObject\Parameter('TYPE','INTERNET'));
 //			$e->add($p);
-			$e->add('email',$this->email, array('type'=>array('INTERNET')));
+			$card->add('email',$this->email, array('type'=>array('INTERNET')));
 			
 		}
 		if (!empty($this->email2)) {
@@ -918,64 +1002,84 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 //			$p->add(new \GO\Base\VObject\Parameter('TYPE','HOME,INTERNET'));
 //			$e->add($p);
 			
-			$e->add('email',$this->email2, array('type'=>array('HOME','INTERNET')));
+			$card->add('email',$this->email2, array('type'=>array('HOME','INTERNET')));
 		}
 		if (!empty($this->email3)) {
 //			$p = new Sabre\VObject\Property('EMAIL',$this->email3);
 //			$p->add(new \GO\Base\VObject\Parameter('TYPE','WORK,INTERNET'));
 //			$e->add($p);
 			
-			$e->add('email',$this->email3, array('type'=>array('WORK','INTERNET')));
+			$card->add('email',$this->email3, array('type'=>array('WORK','INTERNET')));
 		}
 		
-		if (!empty($this->function))
-			$e->add('TITLE',$this->function);
 		
+		$card->remove('TITLE');
+		if (!empty($this->function))
+			$card->add('TITLE',$this->function);
+		
+		
+		$card->remove('TEL');
 		if (!empty($this->home_phone)) {
 //			$p = new Sabre\VObject\Property('TEL',$this->home_phone);
 //			$p->add(new \GO\Base\VObject\Parameter('TYPE','HOME,VOICE'));
 //			$e->add($p);
 			
-			$e->add('TEL',$this->home_phone, array('type'=>array('HOME','VOICE')));
+			$card->add('TEL',$this->home_phone, array('type'=>array('HOME','VOICE')));
 		}
 		if (!empty($this->work_phone)) {
 //			$p = new Sabre\VObject\Property('TEL',$this->work_phone);
 //			$p->add(new \GO\Base\VObject\Parameter('TYPE','WORK,VOICE'));
 //			$e->add($p);	
 			
-			$e->add('TEL',$this->work_phone, array('type'=>array('WORK','VOICE')));
+			$card->add('TEL',$this->work_phone, array('type'=>array('WORK','VOICE')));
 		}
 		if (!empty($this->work_fax)) {
 //			$p = new Sabre\VObject\Property('TEL',$this->work_fax);
 //			$p->add(new \GO\Base\VObject\Parameter('TYPE','WORK,FAX'));
 //			$e->add($p);	
 			
-			$e->add('TEL',$this->work_fax, array('type'=>array('WORK','FAX')));
+			$card->add('TEL',$this->work_fax, array('type'=>array('WORK','FAX')));
 		}
+		
+
 		if (!empty($this->fax)) {
 //			$p = new Sabre\VObject\Property('TEL',$this->fax);
 //			$p->add(new \GO\Base\VObject\Parameter('TYPE','HOME,FAX'));
 //			$e->add($p);	
 			
-			$e->add('TEL',$this->fax, array('type'=>array('HOME','FAX')));
+			$card->add('TEL',$this->fax, array('type'=>array('HOME','FAX')));
 		}
+		
 		if (!empty($this->cellular)) {
 //			$p = new Sabre\VObject\Property('TEL',$this->cellular);
 //			$p->add(new \GO\Base\VObject\Parameter('TYPE','CELL,VOICE'));
 //			$e->add($p);	
 			
-			$e->add('TEL',$this->cellular, array('type'=>array('CELL','VOICE')));
+			$card->add('TEL',$this->cellular, array('type'=>array('CELL','VOICE')));
 		}
+		
+		
 		if (!empty($this->cellular2)) {
 //			$p = new Sabre\VObject\Property('TEL',$this->cellular2);
 //			$p->add(new \GO\Base\VObject\Parameter('TYPE','CELL,VOICE'));
 //			$e->add($p);	
 			
-			$e->add('TEL',$this->cellular2, array('type'=>array('CELL','VOICE')));
+			$card->add('TEL',$this->cellular2, array('type'=>array('CELL','VOICE')));
 		}
+		
+		$card->remove('BDAY');
 		if (!empty($this->birthday)) {
-			$e->add('BDAY',$this->birthday);
+			$card->add('BDAY',$this->birthday);
 		}
+		
+		$card->remove('URL');
+		if (!empty($this->homepage)) {
+			$card->add('URL',$this->homepage);
+		}
+		
+		$card->remove('ORG');
+		$card->remove('ADR');
+		
 		
 		if (!empty($this->company)) {
 //			$e->add('ORG',$this->company->name,$this->department,$this->company->name2);
@@ -984,14 +1088,14 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 //			$p->add('TYPE','WORK');
 //			$e->add($p);
 			
-			$e->add('ORG',array($this->company->name,$this->department,$this->company->name2));
-			$e->add('ADR',array('','',$this->company->address.' '.$this->company->address_no,$this->company->city,$this->company->state,$this->company->zip,$this->company->country),array('type'=>'WORK'));
+			$card->add('ORG',array($this->company->name,$this->department,$this->company->name2));
+			$card->add('ADR',array('','',$this->company->address.' '.$this->company->address_no,$this->company->city,$this->company->state,$this->company->zip,$this->company->country),array('type'=>'WORK'));
 			
 //			$p = new Sabre\VObject\Property('ADR',';;'.$this->company->post_address.' '.$this->company->post_address_no,
 //				$this->company->post_city,$this->company->post_state,$this->company->post_zip,$this->company->post_country);
 //			$e->add($p);
-			$e->add('ADR',array('','',$this->company->post_address.' '.$this->company->post_address_no,
-				$this->company->post_city,$this->company->post_state,$this->company->post_zip,$this->company->post_country),array('type'=>'WORK'));
+			$card->add('ADR',array('','',$this->company->post_address.' '.$this->company->post_address_no,
+				$this->company->post_city,$this->company->post_state,$this->company->post_zip,$this->company->post_country),array('type'=>'POSTAL'));
 			
 		}
 		
@@ -1000,11 +1104,13 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 //		$p->add('TYPE','HOME');
 //		$e->add($p);
 //		
-		$e->add('ADR',array('','',$this->address.' '.$this->address_no,
+		$card->add('ADR',array('','',$this->address.' '.$this->address_no,
 			$this->city,$this->state,$this->zip,$this->country),array('type'=>'HOME'));
 		
 		if(!empty($this->comment)){
-			$e->note=$this->comment;
+			$card->note=$this->comment;
+		}  else {
+			$card->remove('photo');
 		}
 		
 //		$mtimeDateTime = new \DateTime('@'.$this->mtime);
@@ -1012,12 +1118,15 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 //		$rev->setDateTime($mtimeDateTime, Sabre_VObject_Element_DateTime::UTC);		
 //		$e->add($rev);
 		
-		$e->rev=gmdate("Y-m-d\TH:m:s\Z", $this->mtime);
+		$card->rev=gmdate("Y-m-d\TH:m:s\Z", $this->mtime);
 		
 		
 		if($this->getPhotoFile()->exists()){
-			$e->add('photo', $this->getPhotoFile()->getContents(),array('type'=>'JPEG','encoding'=>'b'));	
-		}  
+			$card->add('photo', $this->getPhotoFile()->getContents(),array('type'=>'JPEG','encoding'=>'b'));	
+		}else
+		{
+			$card->remove('photo');
+		}
 
 		
 //		$propModels = $this->vcardProperties->fetchAll(PDO::FETCH_ASSOC);
@@ -1040,13 +1149,13 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 //			$e->add($p);
 //		}
 		
-		return $e;
+		return $card;
 	}
 	
 	/**
 	 * Find contacts by e-mail address
 	 * 
-	 * @param string $email
+	 * @param StringHelper $email
 	 * @param \GO\Base\Db\FindParams $findParams Optional
 	 * @return \GO\Base\Db\ActiveStatement 
 	 */
@@ -1067,7 +1176,7 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Find contacts by e-mail address
 	 * 
-	 * @param string $email
+	 * @param StringHelper $email
 	 * @param \GO\Base\Db\FindParams $findParams Optional
 	 * @return \GO\Base\Db\ActiveStatement 
 	 */
@@ -1094,7 +1203,7 @@ class Contact extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Find contacts by e-mail address
 	 * 
-	 * @param string $email
+	 * @param StringHelper $email
 	 * @return \GO\Base\Db\ActiveStatement 
 	 */
 	public function findSingleByEmail($email, \GO\Base\Db\FindParams $findParams = null){

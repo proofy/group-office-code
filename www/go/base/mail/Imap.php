@@ -31,7 +31,7 @@ class Imap extends ImapBodyStruct {
 
 	var $delimiter=false;
 
-	var $sort_count = false;
+	var $sort_count = 0;
 
 	var $gmail_server = false;
 
@@ -105,14 +105,28 @@ class Imap extends ImapBodyStruct {
 		$this->username=$username;
 		$this->password=$password;
 
-		$server = $this->ssl ? 'ssl://'.$this->server : $this->server;
+//		$server = $this->ssl ? 'ssl://'.$this->server : $this->server;
 
 
-		$this->handle = fsockopen($server, $this->port, $errorno, $errorstr, 10);
+//		$this->handle = fsockopen($server, $this->port, $errorno, $errorstr, 10);
+//		if (!is_resource($this->handle)) {
+//			throw new \Exception('Failed to open socket #'.$errorno.'. '.$errorstr);
+//		}
+		
+		$streamContext = stream_context_create(array('ssl' => array(
+				"verify_peer"=>false,
+				"verify_peer_name"=>false
+		)));
+
+		$errorno = null;
+		$errorstr = null;
+		$remote = $this->ssl ? 'ssl://' : '';			
+		$remote .=  $this->server.":".$this->port;
+
+		$this->handle = @stream_socket_client($remote, $errorno, $errorstr, 10, STREAM_CLIENT_CONNECT, $streamContext);
 		if (!is_resource($this->handle)) {
 			throw new \Exception('Failed to open socket #'.$errorno.'. '.$errorstr);
 		}
-
 
 		$authed = $this->authenticate($username, $password);
 
@@ -278,7 +292,7 @@ class Imap extends ImapBodyStruct {
 	 * Check if the IMAP server has a particular capability.
 	 * eg. QUOTA, ACL, LIST-EXTENDED etc.
 	 *
-	 * @param string $str
+	 * @param StringHelper $str
 	 * @return boolean
 	 */
 	public function has_capability($str){
@@ -1071,7 +1085,7 @@ class Imap extends ImapBodyStruct {
 		}
 		elseif (stristr($this->capability, 'SORT')) {
 			$uids=$this->server_side_sort($sort, $reverse, $filter);
-			$this->sort_count = count($uids);
+			$this->sort_count = count($uids); // <-- BAD
 			return $uids;
 		}
 		else {
@@ -1087,9 +1101,10 @@ class Imap extends ImapBodyStruct {
 		$this->clean($sort, 'keyword');
 		//$this->clean($filter, 'keyword');
 
-		$charset = $forceAscii || !\GO\Base\Util\String::isUtf8($filter) ? 'US-ASCII' : 'UTF-8';
+		$charset = $forceAscii || !\GO\Base\Util\StringHelper::isUtf8($filter) ? 'US-ASCII' : 'UTF-8';
 
-		$command = 'UID SORT ('.$sort.') '.$charset.' '.$filter."\r\n";
+		$command = 'UID SORT ('.$sort.') '.$charset.' '.trim($filter)."\r\n";
+		
 		$this->send_command($command);
 		/*if ($this->disable_sort_speedup) {
 			$speedup = false;
@@ -1510,7 +1525,8 @@ class Imap extends ImapBodyStruct {
 					'answered'=>0,
 					'forwarded'=>0,
 					'has_attachments'=>0,
-					'labels'=>array()
+					'labels'=>array(),
+					'deleted'=>0,
 				);
 
 				$count = count($vals);
@@ -1605,6 +1621,11 @@ class Imap extends ImapBodyStruct {
 					$message['to']=$this->mime_header_decode($message['to']);
 					$message['reply_to']=$this->mime_header_decode($message['reply_to']);
 					$message['disposition_notification_to']=$this->mime_header_decode($message['disposition_notification_to']);
+					
+					//remove non ascii stuff. Incredimail likes iso encoded chars too :(
+					if(isset($message['message_id'])) {
+						$message['message_id']= preg_replace('/[[:^print:]]/', '', $message['message_id']);
+					}
 
 					if(isset($message['cc']))
 						$message['cc']=$this->mime_header_decode($message['cc']);
@@ -1904,7 +1925,7 @@ class Imap extends ImapBodyStruct {
 					$vals['number'] = $id;
 					//\GO::debug($vals);
 
-					if ($vals['type'] == $type && $subtype == $vals['subtype'] && $vals['disposition']!='attachment' && empty($vals['name'])) {
+					if ($vals['type'] == $type && $subtype == $vals['subtype'] && strtolower($vals['disposition'])!='attachment' && empty($vals['name'])) {
 
 						$parts['text_found']=true;
 						$parts['parts'][] = $vals;
@@ -2052,8 +2073,9 @@ class Imap extends ImapBodyStruct {
 			//if(!is_array($vals) || in_array($id, $skip_ids))
 			if(!is_array($vals))
 				continue;
-
-			if(isset($vals['type']) && !in_array($id, $skip_ids)){
+//var_dump($vals);
+			// Strict must be true as 2.1 == 2.10 if false
+			if(isset($vals['type']) && !in_array($id, $skip_ids, true)){
 				$vals['number'] = $id;
 
 				//sometimes NIL is returned from Dovecot?!?
@@ -2094,112 +2116,158 @@ class Imap extends ImapBodyStruct {
 			if($charset=='us-ascii')
 				$charset = 'windows-1252';
 
-			$str = \GO\Base\Util\String::clean_utf8($str, $charset);
+			$str = \GO\Base\Util\StringHelper::clean_utf8($str, $charset);
 			if($charset != 'utf-8') {
 				$str = str_replace($charset, 'utf-8', $str);
 			}
 		}
 		return $str;
 	}
+	
+	/**
+	 * Decode an uuencoded attachment
+	 * 
+	 * @param int $uid
+	 * @param int $part_no
+	 * @param boolean $peek
+	 * @param type $fp
+	 * @return type
+	 * @throws \Exception
+	 */
+	private function _uudecode($uid, $part_no, $peek, $fp) {
+		$regex = "/(begin ([0-7]{1,3}) (.+))\n/";
+		
+		$body = $this->get_message_part($uid, $part_no, $peek);
+
+		if (preg_match($regex, $body, $matches, PREG_OFFSET_CAPTURE)) {
+
+			$offset = $matches[3][1] + strlen($matches[3][0]) + 1;
+
+			$endpos = strpos($body, 'end', $offset) - $offset - 1;
+
+
+			if(!$endpos){					
+				throw new \Exception("Invalid UUEncoded attachment in uid: ".$uid);
+			}
+
+			if(!isset($startPosAtts))
+				$startPosAtts= $matches[0][1];
+
+			$att = str_replace(array("\r"), "", substr($body, $offset, $endpos));
+
+			$data = convert_uudecode($att);
+
+			if(!$fp){
+				return $data;
+			}else{
+				fputs($fp, $data);
+			}
+		}
+	}
 
 	/**
 	 * Get's a message part and returned in binary form or UTF-8 charset.
 	 *
 	 * @param int $uid
-	 * @param string $part_no
+	 * @param StringHelper $part_no
 	 * @param stirng $encoding
-	 * @param string $charset
+	 * @param StringHelper $charset
 	 * @param boolean $peek
-	 * @return string
+	 * @return StringHelper
 	 */
 
 	public function get_message_part_decoded($uid, $part_no, $encoding, $charset=false, $peek=false, $cutofflength=false, $fp=false) {
 		\GO::debug("get_message_part_decoded($uid, $part_no, $encoding, $charset)");
+		
+		
+		if($encoding == 'uuencode') {
+			return $this->_uudecode($uid, $part_no, $peek, $fp);
+		}
 
 		$str = '';
-		if($this->get_message_part_start($uid, $part_no, $peek)){
+		$this->get_message_part_start($uid, $part_no, $peek);
 
 
-			$leftOver='';
+		$leftOver='';
 
-			while ($line = $this->get_message_part_line()) {
+		while ($line = $this->get_message_part_line()) {
 
-				switch (strtolower($encoding)) {
-					case 'base64':
-						$line = trim($leftOver.$line);
-						$leftOver = "";
+			switch (strtolower($encoding)) {
+				case 'base64':
+					$line = trim($leftOver.$line);
+					$leftOver = "";
 
-						if(strlen($line) % 4 == 0){
+					if(strlen($line) % 4 == 0){
 
-							if(!$fp){
-								$str .= base64_decode($line);
-							}  else {
-								fputs($fp, base64_decode($line));
-							}
-						}else{
-
-							$buffer = "";
-							while(strlen($line)>4){
-								$buffer .= substr($line, 0, 4);
-								$line = substr($line, 4);
-							}
-
-							if(!$fp){
-								$str .= base64_decode($buffer);
-							}  else {
-								fputs($fp, base64_decode($buffer));
-							}
-
-							if(strlen($line)){
-								$leftOver = $line;
-							}
-						}
-						break;
-					case 'quoted-printable':
 						if(!$fp){
-							$str .= quoted_printable_decode($line);
-						}else{
-							fputs($fp, quoted_printable_decode($line));
+							$str .= base64_decode($line);
+						}  else {
+							fputs($fp, base64_decode($line));
 						}
-						break;
-					default:
-						if(!$fp){
-							$str .= $line;
-						}else{
-							fputs($fp, $line);
-						}
-						break;
-				}
+					}else{
 
-				if($cutofflength && strlen($line)>$cutofflength){
+						$buffer = "";
+						while(strlen($line)>4){
+							$buffer .= substr($line, 0, 4);
+							$line = substr($line, 4);
+						}
+
+						if(!$fp){
+							$str .= base64_decode($buffer);
+						}  else {
+							fputs($fp, base64_decode($buffer));
+						}
+
+						if(strlen($line)){
+							$leftOver = $line;
+						}
+					}
 					break;
-				}
+				case 'quoted-printable':
+					if(!$fp){
+						$str .= quoted_printable_decode($line);
+					}else{
+						fputs($fp, quoted_printable_decode($line));
+					}
+					break;				
+				default:
+					if(!$fp){
+						$str .= $line;
+					}else{
+						fputs($fp, $line);
+					}
+					break;
 			}
 
-			if(!empty($leftOver))
-			{
-				\GO::debug($leftOver);
-
-				if(!$fp){
-					$str .= base64_decode($leftOver);
-				}  else {
-					fputs($fp, base64_decode($leftOver));
-				}
-			}
-
-
-			if($charset){
-
-				//some clients don't send the charset.
-				if($charset=='us-ascii')
-					$charset = 'windows-1252';
-
-				$str = \GO\Base\Util\String::clean_utf8($str, $charset);
-				if($charset != 'utf-8') {
-					$str = str_replace($charset, 'utf-8', $str);
-				}
+			if($cutofflength && strlen($line)>$cutofflength){
+				break;
 			}
 		}
+
+		if(!empty($leftOver))
+		{
+			\GO::debug($leftOver);
+
+			if(!$fp){
+				$str .= base64_decode($leftOver);
+			}  else {
+				fputs($fp, base64_decode($leftOver));
+			}
+		}
+
+
+		if($charset){
+
+			//some clients don't send the charset.
+			if($charset=='us-ascii')
+				$charset = 'windows-1252';
+
+			$str = \GO\Base\Util\StringHelper::clean_utf8($str, $charset);
+			if($charset != 'utf-8') {
+				$str = str_replace($charset, 'utf-8', $str);
+			}
+		}
+		
 
 		return $fp ? true : $str;
 
@@ -2286,14 +2354,14 @@ class Imap extends ImapBodyStruct {
 		}
 		$this->send_command($command);
 		$result = fgets($this->handle);
-
+		
 		$size = false;
 		if (preg_match("/\{(\d+)\}\r\n/", $result, $matches)) {
 			$size = $matches[1];
 		}
 
-		if(!$size)
-			return false;
+//		if(!$size)
+//			return false;
 
 		$this->message_part_size=$size;
 		$this->message_part_read=0;
@@ -2360,7 +2428,7 @@ class Imap extends ImapBodyStruct {
 		}
 
 
-		$this->get_message_part_decoded($uid, $imap_part_id, $encoding, false, false, false, $fp);
+		$this->get_message_part_decoded($uid, $imap_part_id, $encoding, false, $peek, false, $fp);
 
 //		$size = $this->get_message_part_start($uid,$imap_part_id, $peek);
 //
@@ -2389,7 +2457,7 @@ class Imap extends ImapBodyStruct {
 	/**
 	 * Runs $command multiple times, with $uids split up in chunks of 500 UIDs
 	 * for each run of $command.
-	 * @param string $command IMAP command
+	 * @param StringHelper $command IMAP command
 	 * @param array $uids Array of UIDs
 	 * @param boolean $trackErrors passed as third argument to $this->check_response()
 	 * @return boolean
@@ -2654,7 +2722,7 @@ class Imap extends ImapBodyStruct {
 	/**
 	 * Get the next UID for the selected mailbox
 	 *
-	 * @return string the next UID on the IMAP server
+	 * @return StringHelper the next UID on the IMAP server
 	 */
 
 	public function get_uidnext(){
@@ -2682,13 +2750,17 @@ class Imap extends ImapBodyStruct {
 	 *
 	 * array('messages'=>2, 'unseen'=>1);
 	 *
-	 * @param string $mailbox
+	 * @param StringHelper $mailbox
 	 * @return array
 	 */
 	public function get_status($mailbox){
 		$command = 'STATUS "'.$this->addslashes($this->utf7_encode($mailbox)).'" (MESSAGES UNSEEN)'."\r\n";
 		$this->send_command($command);
-		$result = $this->get_response(false, true);
+		$result = $this->get_response(false, true);		
+		
+		if($result[0][1] === 'NO'){
+			return false;
+		}
 
 		$vals = array_shift($result);
 
@@ -2768,9 +2840,9 @@ class Imap extends ImapBodyStruct {
 	/**
 	 * Append a message to a mailbox
 	 *
-	 * @param string $mailbox
-	 * @param string|\Swift_Message $data
-	 * @param string $flags See set_message_flag
+	 * @param StringHelper $mailbox
+	 * @param StringHelper|\Swift_Message $data
+	 * @param StringHelper $flags See set_message_flag
 	 * @return boolean
 	 */
 	public function append_message($mailbox, $data, $flags=""){
@@ -2784,6 +2856,7 @@ class Imap extends ImapBodyStruct {
 			$data->toByteStream($is);
 
 			unset($data);
+			unset($is);
 
 
 			if(!$this->append_start($mailbox, $tmpfile->size(), $flags))

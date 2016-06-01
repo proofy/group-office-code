@@ -63,7 +63,7 @@ namespace GO\Addressbook\Model;
 	/**
 	 * Get's a unique URI for the calendar. This is used by CalDAV
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getUri(){
 		return preg_replace('/[^\w-]*/', '', (strtolower(str_replace(' ', '-', $this->name)))).'-'.$this->id;

@@ -38,7 +38,7 @@ class Net_SMTP
 {
     /**
      * The server to connect to.
-     * @var string
+     * @var StringHelper
      * @access public
      */
     var $host = 'localhost';
@@ -52,7 +52,7 @@ class Net_SMTP
 
     /**
      * The value to give when sending EHLO or HELO.
-     * @var string
+     * @var StringHelper
      * @access public
      */
     var $localhost = 'localhost';
@@ -121,7 +121,7 @@ class Net_SMTP
 
     /**
      * Stores the SMTP server's greeting string.
-     * @var string
+     * @var StringHelper
      * @access private
      */
     var $_greeting = null;
@@ -144,9 +144,9 @@ class Net_SMTP
      *   $smtp = new Net_SMTP('ssl://mail.host.com', 465);
      *   $smtp->connect();
      *
-     * @param string  $host       The server to connect to.
+     * @param StringHelper  $host       The server to connect to.
      * @param integer $port       The port to connect to.
-     * @param string  $localhost  The value to give when sending EHLO or HELO.
+     * @param StringHelper  $localhost  The value to give when sending EHLO or HELO.
      * @param boolean $pipeling   Use SMTP command pipelining
      *
      * @access  public
@@ -195,7 +195,7 @@ class Net_SMTP
     /**
      * Write the given debug text to the current debug output handler.
      *
-     * @param   string  $message    Debug mesage text.
+     * @param   StringHelper  $message    Debug mesage text.
      *
      * @access  private
      * @since   1.3.3
@@ -215,7 +215,7 @@ class Net_SMTP
     /**
      * Send the given string of data to the server.
      *
-     * @param   string  $data       The string of data to send.
+     * @param   StringHelper  $data       The string of data to send.
      *
      * @return  mixed   True on success or a PEAR_Error object on failure.
      *
@@ -243,8 +243,8 @@ class Net_SMTP
      * already contains any newline characters. Use _send() for
      * commands that must contain newlines.
      *
-     * @param   string  $command    The SMTP command to send to the server.
-     * @param   string  $args       A string of optional arguments to append
+     * @param   StringHelper  $command    The SMTP command to send to the server.
+     * @param   StringHelper  $args       A string of optional arguments to append
      *                              to the command.
      *
      * @return  mixed   The result of the _send() call.
@@ -354,7 +354,7 @@ class Net_SMTP
     /**
      * Return the SMTP server's greeting string.
      *
-     * @return  string  A string containing the greeting string, or null if a 
+     * @return  StringHelper  A string containing the greeting string, or null if a 
      *                  greeting has not been received.
      *
      * @access  public
@@ -499,9 +499,9 @@ class Net_SMTP
     /**
      * Attempt to do SMTP authentication.
      *
-     * @param string The userid to authenticate as.
-     * @param string The password to authenticate with.
-     * @param string The requested authentication method.  If none is
+     * @param StringHelper The userid to authenticate as.
+     * @param StringHelper The password to authenticate with.
+     * @param StringHelper The requested authentication method.  If none is
      *               specified, the best supported method will be used.
      * @param bool   Flag indicating whether or not TLS should be attempted.
      *
@@ -589,8 +589,8 @@ class Net_SMTP
     /**
      * Authenticates the user using the DIGEST-MD5 method.
      *
-     * @param string The userid to authenticate as.
-     * @param string The password to authenticate with.
+     * @param StringHelper The userid to authenticate as.
+     * @param StringHelper The password to authenticate with.
      *
      * @return mixed Returns a PEAR_Error with an error message on any
      *               kind of failure, or true on success.
@@ -639,8 +639,8 @@ class Net_SMTP
     /**
      * Authenticates the user using the CRAM-MD5 method.
      *
-     * @param string The userid to authenticate as.
-     * @param string The password to authenticate with.
+     * @param StringHelper The userid to authenticate as.
+     * @param StringHelper The password to authenticate with.
      *
      * @return mixed Returns a PEAR_Error with an error message on any
      *               kind of failure, or true on success.
@@ -678,8 +678,8 @@ class Net_SMTP
     /**
      * Authenticates the user using the LOGIN method.
      *
-     * @param string The userid to authenticate as.
-     * @param string The password to authenticate with.
+     * @param StringHelper The userid to authenticate as.
+     * @param StringHelper The password to authenticate with.
      *
      * @return mixed Returns a PEAR_Error with an error message on any
      *               kind of failure, or true on success.
@@ -723,8 +723,8 @@ class Net_SMTP
     /**
      * Authenticates the user using the PLAIN method.
      *
-     * @param string The userid to authenticate as.
-     * @param string The password to authenticate with.
+     * @param StringHelper The userid to authenticate as.
+     * @param StringHelper The password to authenticate with.
      *
      * @return mixed Returns a PEAR_Error with an error message on any
      *               kind of failure, or true on success.
@@ -762,7 +762,7 @@ class Net_SMTP
     /**
      * Send the HELO command.
      *
-     * @param string The domain name to say we are.
+     * @param StringHelper The domain name to say we are.
      *
      * @return mixed Returns a PEAR_Error with an error message on any
      *               kind of failure, or true on success.
@@ -796,8 +796,8 @@ class Net_SMTP
     /**
      * Send the MAIL FROM: command.
      *
-     * @param string $sender    The sender (reverse path) to set.
-     * @param string $params    String containing additional MAIL parameters,
+     * @param StringHelper $sender    The sender (reverse path) to set.
+     * @param StringHelper $params    String containing additional MAIL parameters,
      *                          such as the NOTIFY flags defined by RFC 1891
      *                          or the VERP protocol.
      *
@@ -843,8 +843,8 @@ class Net_SMTP
     /**
      * Send the RCPT TO: command.
      *
-     * @param string $recipient The recipient (forward path) to add.
-     * @param string $params    String containing additional RCPT parameters,
+     * @param StringHelper $recipient The recipient (forward path) to add.
+     * @param StringHelper $params    String containing additional RCPT parameters,
      *                          such as the NOTIFY flags defined by RFC 1891.
      *
      * @return mixed Returns a PEAR_Error with an error message on any
@@ -877,7 +877,7 @@ class Net_SMTP
      * easier overloading for the cases where it is desirable to
      * customize the quoting behavior.
      *
-     * @param string $data  The message text to quote. The string must be passed
+     * @param StringHelper $data  The message text to quote. The string must be passed
      *                      by reference, and the text will be modified in place.
      *
      * @access public
@@ -900,7 +900,7 @@ class Net_SMTP
      *
      * @param mixed $data     The message data, either as a string or an open
      *                        file resource.
-     * @param string $headers The message headers.  If $headers is provided,
+     * @param StringHelper $headers The message headers.  If $headers is provided,
      *                        $data is assumed to contain only body data.
      *
      * @return mixed Returns a PEAR_Error with an error message on any
@@ -994,7 +994,7 @@ class Net_SMTP
     /**
      * Send the SEND FROM: command.
      *
-     * @param string The reverse path to send.
+     * @param StringHelper The reverse path to send.
      *
      * @return mixed Returns a PEAR_Error with an error message on any
      *               kind of failure, or true on success.
@@ -1016,7 +1016,7 @@ class Net_SMTP
     /**
      * Backwards-compatibility wrapper for sendFrom().
      *
-     * @param string The reverse path to send.
+     * @param StringHelper The reverse path to send.
      *
      * @return mixed Returns a PEAR_Error with an error message on any
      *               kind of failure, or true on success.
@@ -1033,7 +1033,7 @@ class Net_SMTP
     /**
      * Send the SOML FROM: command.
      *
-     * @param string The reverse path to send.
+     * @param StringHelper The reverse path to send.
      *
      * @return mixed Returns a PEAR_Error with an error message on any
      *               kind of failure, or true on success.
@@ -1055,7 +1055,7 @@ class Net_SMTP
     /**
      * Backwards-compatibility wrapper for somlFrom().
      *
-     * @param string The reverse path to send.
+     * @param StringHelper The reverse path to send.
      *
      * @return mixed Returns a PEAR_Error with an error message on any
      *               kind of failure, or true on success.
@@ -1072,7 +1072,7 @@ class Net_SMTP
     /**
      * Send the SAML FROM: command.
      *
-     * @param string The reverse path to send.
+     * @param StringHelper The reverse path to send.
      *
      * @return mixed Returns a PEAR_Error with an error message on any
      *               kind of failure, or true on success.
@@ -1094,7 +1094,7 @@ class Net_SMTP
     /**
      * Backwards-compatibility wrapper for samlFrom().
      *
-     * @param string The reverse path to send.
+     * @param StringHelper The reverse path to send.
      *
      * @return mixed Returns a PEAR_Error with an error message on any
      *               kind of failure, or true on success.
@@ -1131,7 +1131,7 @@ class Net_SMTP
     /**
      * Send the VRFY command.
      *
-     * @param string The string to verify
+     * @param StringHelper The string to verify
      *
      * @return mixed Returns a PEAR_Error with an error message on any
      *               kind of failure, or true on success.

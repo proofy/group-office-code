@@ -84,8 +84,8 @@ class FPDF extends TCPDF {
     /**
      * Unescapes a PDF string
      *
-     * @param string $s
-     * @return string
+     * @param StringHelper $s
+     * @return StringHelper
      */
     function _unescape($s) {
         $out = '';
@@ -149,8 +149,8 @@ class FPDF extends TCPDF {
     /**
      * Hexadecimal to string
      *
-     * @param string $hex
-     * @return string
+     * @param StringHelper $hex
+     * @return StringHelper
      */
     function hex2str($hex) {
     	return pack('H*', str_replace(array("\r", "\n", ' '), '', $hex));
@@ -159,8 +159,8 @@ class FPDF extends TCPDF {
     /**
      * String to hexadecimal
      *
-     * @param string $str
-     * @return string
+     * @param StringHelper $str
+     * @return StringHelper
      */
     function str2hex($str) {
         return current(unpack('H*', $str));

@@ -33,7 +33,7 @@
  * @author Monte Ohrt <monte at ohrt dot com>
  * @param array
  * @param Smarty
- * @return string
+ * @return StringHelper
  */
 function smarty_function_html_select_date($params, &$smarty)
 {

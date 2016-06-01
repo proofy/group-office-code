@@ -70,7 +70,7 @@ class FindParams{
 	 * Fetch a stored findparams object for export purposes.
 	 * You can save it with ->export('name');
 	 * 
-	 * @param string $name
+	 * @param StringHelper $name
 	 * @return \GO\Base\Db\FindParams
 	 */
 	public static function loadExportFindParams($name){
@@ -159,12 +159,53 @@ class FindParams{
 	 * 
 	 * Remember the model table is aliased with 't'. Using this may result in incomplete models.
 	 * 
-	 * @param string $fields
+	 * @param StringHelper $fields
 	 * @return FindParams 
 	 */					
 	public function select($fields='t.*'){
 		$this->_params['fields']=$fields;
 		return $this;
+	}
+	
+	/**
+	 * Makes sure all fields from the table/alias are selected.
+	 * 
+	 * For example it replaces all t.field, t.field2 with t.* and leaves all other parts of the select query alone.
+	 * 
+	 * @param StringHelper $table
+	 * @return \GO\Base\Db\FindParams
+	 */
+	public function selectAllFromTable($table='t'){
+		
+		
+
+		// Fields can be empty, if they are empty then we fill it with 't.*'
+		if(empty($this->_params['fields']))
+			$this->_params['fields'] = 't.*';
+		
+		if(preg_match('/[^\.`]*\s*\*/', $this->_params['fields']))
+			return $this;
+		
+		$parts = explode(',', $this->_params['fields']);
+
+		$new = array($table.'.*');
+
+		foreach($parts as $part){
+			
+			if(preg_match('/\sAS\s/i',$part)){
+				//leave aliases alone
+				$new[]=$part;
+			}elseif(!preg_match('/'.preg_quote ($table,'/').'\..*/', $part) && !preg_match('/'.preg_quote ('`'.$table.'`','/').'\..*/', $part)){
+
+				//remove all t.something parts				
+				$new[]=$part;
+			}
+		}
+		
+		$this->_params['fields']=implode(', ', $new);
+		
+		return $this;
+		
 	}
 	
 	/**
@@ -184,7 +225,7 @@ class FindParams{
 	/**
 	 * Insert a plain join SQL string
 	 * 
-	 * @param string $tableName
+	 * @param StringHelper $tableName
 	 * @param FindCriteria $criteria
 	 * @param String $tableAlias
 	 * @param String $type INNER or LEFT etc.
@@ -221,8 +262,8 @@ class FindParams{
 	 * Join a relation in the find query. Relation models are fetched together and
 	 * can be accessed without the need for an extra select query.
 	 * 
-	 * @param string $name
-	 * @param string $type
+	 * @param StringHelper $name
+	 * @param StringHelper $type
 	 */
 	public function joinRelation($name, $type='INNER'){
 		
@@ -255,8 +296,8 @@ class FindParams{
 	 *			echo '<hr>';
 	 *		}
 	 * 
-	 * @param string $name Name of the HAS_MANY relation
-	 * @param string $select The select string to add. eg. count(events.id) AS eventCount Note that 'events' must match the name of the relation
+	 * @param StringHelper $name Name of the HAS_MANY relation
+	 * @param StringHelper $select The select string to add. eg. count(events.id) AS eventCount Note that 'events' must match the name of the relation
 	 */
 	public function groupRelation($name, $select, $joinType='INNER'){
 		$this->joinRelation($name, $joinType);
@@ -268,7 +309,7 @@ class FindParams{
 	/**
 	 * Check if a table has been joined
 	 * 
-	 * @param string $tableName
+	 * @param StringHelper $tableName
 	 * @return mixed false or table alias used for join 
 	 */
 	public function tableIsJoined($tableName){
@@ -315,7 +356,7 @@ class FindParams{
 	 * It will be stored in the session so that 
 	 * \GO\Base\Controller\AbstractModelController can reuse the params.
 	 * 
-	 * @param string $name
+	 * @param StringHelper $name
 	 * @return FindParams 
 	 */
 	public function export($name, $totalizeColumns=array()){
@@ -327,7 +368,7 @@ class FindParams{
 	/**
 	 * Execute a simple search query
 	 * 
-	 * @param string $query
+	 * @param StringHelper $query
 	 * @param array $fields When you ommit this it will search all text fields
 	 * @return FindParams 
 	 */
@@ -408,7 +449,7 @@ class FindParams{
 	 * Adds a having clause. Warning. RAW SQL is passed to the query. Be careful
 	 * with user input.
 	 * 
-	 * @param string $rawSQL
+	 * @param StringHelper $rawSQL
 	 * @return FindParams 
 	 */
 	public function having($rawSQL){
@@ -549,7 +590,7 @@ class FindParams{
 	 * For internal use by ActiveRecord only. This will be set to the 
 	 * relation name when a relational query is made.
 	 * 
-	 * @param string $name
+	 * @param StringHelper $name
 	 * @return FindParams 
 	 */
 	public function relation($name){
@@ -562,8 +603,8 @@ class FindParams{
 	 * For internal use by ActiveRecord only. This is set with 
 	 * MANY_MANY relations that use a link table with a model.
 	 * 
-	 * @param string $modelName The model name
-	 * @param string $localPkField Attribute field that holds the pk of the other model.
+	 * @param StringHelper $modelName The model name
+	 * @param StringHelper $localPkField Attribute field that holds the pk of the other model.
 	 * @param int $localPk Primary key of the model
 	 * @return FindParams 
 	 */

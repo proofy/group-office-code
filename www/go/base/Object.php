@@ -36,18 +36,18 @@ namespace GO\Base;
 abstract class Object extends Observable{
 
 	/**
-	 * Returns the name of this object
-	 * 
-	 * @return string Name
-	 */
-	public function className(){
-		return get_class($this);
-	}
+     * Returns the name of this class.
+     * @return StringHelper the name of this class.
+     */
+    public static function className()
+    {
+        return get_called_class();
+    }
 	
 	/**
 	 * Magic getter that calls get<NAME> functions in objects
 	 
-	 * @param string $name property name
+	 * @param StringHelper $name property name
 	 * @return mixed property value
 	 * @throws Exception If the property setter does not exist
 	 */
@@ -83,7 +83,7 @@ abstract class Object extends Observable{
 	/**
 	 * Magic setter that calls set<NAME> functions in objects
 	 * 
-	 * @param string $name property name
+	 * @param StringHelper $name property name
 	 * @param mixed $value property value
 	 * @throws Exception If the property getter does not exist
 	 */

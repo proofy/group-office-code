@@ -71,7 +71,7 @@ class AclUserController extends \GO\Base\Controller\AbstractMultiSelectModelCont
 	 * @return $response for the client. 
 	 */
 	protected function actionSelectedStore($params) {
-		$currentPermissionLevel = \GO\Base\Model\Acl::getUserPermissionLevel($params['model_id'],\GO::user()->id);
+		$currentPermissionLevel = \GO\Base\Model\Acl::getUserPermissionLevel($params['model_id'],\GO::user()->id);	
 		$response['manage_permission'] = $params['currentUserHasManagePermission'] =  \GO\Base\Model\Acl::hasPermission($currentPermissionLevel,\GO\Base\Model\Acl::MANAGE_PERMISSION);
 		$response = array_merge($response,parent::actionSelectedStore($params));
 		return $response;

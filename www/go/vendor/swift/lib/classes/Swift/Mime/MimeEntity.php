@@ -41,7 +41,7 @@ interface Swift_Mime_MimeEntity extends Swift_Mime_CharsetObserver, Swift_Mime_E
 
     /**
      * Get the qualified content-type of this mime entity.
-     * @return string
+     * @return StringHelper
      */
     public function getContentType();
 
@@ -55,7 +55,7 @@ interface Swift_Mime_MimeEntity extends Swift_Mime_CharsetObserver, Swift_Mime_E
      * If a Content-ID header is present, this value SHOULD match the value of
      * the header.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getId();
 
@@ -89,22 +89,22 @@ interface Swift_Mime_MimeEntity extends Swift_Mime_CharsetObserver, Swift_Mime_E
      *
      * Returns NULL if no body has been set.
      *
-     * @return string|null
+     * @return StringHelper|null
      */
     public function getBody();
 
     /**
      * Set the body content of this entity as a string.
      *
-     * @param string $body
-     * @param string $contentType optional
+     * @param StringHelper $body
+     * @param StringHelper $contentType optional
      */
     public function setBody($body, $contentType = null);
 
     /**
      * Get this entire entity in its string form.
      *
-     * @return string
+     * @return StringHelper
      */
     public function toString();
 

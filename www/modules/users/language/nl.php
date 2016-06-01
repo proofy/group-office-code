@@ -103,6 +103,8 @@ $l["firstName"]= 'Voornaam';
 $l["sendInvitation"]='Verstuur uitnodiging';
 $l["contactInfo"]='Contact information';
 $l["popupNotification"]='Toon een popup scherm wanneer een herinnering actief wordt of e-mail arriveert';
+$l["popupReminderNotification"] = 'Toon een popup scherm wanneer een herinnering actief wordt';
+$l["popupEmailNotification"] = 'Toon een popup scherm wanneer een e-mail arriveert';
 $l["muteNewMailSound"]='Demp geluid bij inkomende mail';
 $l["muteReminderSound"]='Demp geluid bij herinneringen';
 $l["showSmilies"]='Toon smilies';
@@ -133,3 +135,6 @@ $l['show_addresslists_panel']= 'Toon addresslijsten paneel';
 $l['enabled_cf_tabs']= 'Ingeschakelde extra velden';
 
 $l['cmdFormLabelHolidaySet'] = 'Vakantiedagen';
+
+$l['noReminders'] = 'Maak geen herinneringen voor mij aan';
+$l['desktopNotificationsActive'] = 'Bureaublad meldingen actief';

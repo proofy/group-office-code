@@ -20,42 +20,42 @@ class Swift_Signers_DKIMSigner implements Swift_Signers_HeaderSigner
     /**
      * PrivateKey
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_privateKey;
 
     /**
      * DomainName
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_domainName;
 
     /**
      * Selector
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_selector;
 
     /**
      * Hash algorithm used
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_hashAlgorithm = 'rsa-sha1';
 
     /**
      * Body canon method
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_bodyCanon = 'simple';
 
     /**
      * Header canon method
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_headerCanon = 'simple';
 
@@ -127,14 +127,14 @@ class Swift_Signers_DKIMSigner implements Swift_Signers_HeaderSigner
     /**
      * If debugHeaders is set store debugDatas here
      *
-     * @var string
+     * @var StringHelper
      */
     private $_debugHeadersData = '';
 
     /**
      * Stores the bodyHash
      *
-     * @var string
+     * @var StringHelper
      */
     private $_bodyHash = '';
 
@@ -173,9 +173,9 @@ class Swift_Signers_DKIMSigner implements Swift_Signers_HeaderSigner
     /**
      * Constructor
      *
-     * @param string $privateKey
-     * @param string $domainName
-     * @param string $selector
+     * @param StringHelper $privateKey
+     * @param StringHelper $domainName
+     * @param StringHelper $selector
      */
     public function __construct($privateKey, $domainName, $selector)
     {
@@ -208,7 +208,7 @@ class Swift_Signers_DKIMSigner implements Swift_Signers_HeaderSigner
      * This method returns the sequence ID of the write (i.e. 1 for first, 2 for
      * second, etc etc).
      *
-     * @param string $bytes
+     * @param StringHelper $bytes
      * @return int
      * @throws Swift_IoException
      */
@@ -283,7 +283,7 @@ class Swift_Signers_DKIMSigner implements Swift_Signers_HeaderSigner
     /**
      * Set hash_algorithm, must be one of rsa-sha256 | rsa-sha1 defaults to rsa-sha256
      *
-     * @param string $hash
+     * @param StringHelper $hash
      * @return Swift_Signers_DKIMSigner
      */
     public function setHashAlgorithm($hash)
@@ -301,7 +301,7 @@ class Swift_Signers_DKIMSigner implements Swift_Signers_HeaderSigner
     /**
      * Set the body canonicalization algorithm
      *
-     * @param string $canon
+     * @param StringHelper $canon
      * @return Swift_Signers_DKIMSigner
      */
     public function setBodyCanon($canon)
@@ -318,7 +318,7 @@ class Swift_Signers_DKIMSigner implements Swift_Signers_HeaderSigner
     /**
      * Set the header canonicalization algorithm
      *
-     * @param string $canon
+     * @param StringHelper $canon
      * @return Swift_Signers_DKIMSigner
      */
     public function setHeaderCanon($canon)
@@ -335,7 +335,7 @@ class Swift_Signers_DKIMSigner implements Swift_Signers_HeaderSigner
     /**
      * Set the signer identity
      *
-     * @param string $identity
+     * @param StringHelper $identity
      * @return Swift_Signers_DKIMSigner
      */
     public function setSignerIdentity($identity)
@@ -450,7 +450,7 @@ class Swift_Signers_DKIMSigner implements Swift_Signers_HeaderSigner
     /**
      * Adds an ignored Header
      *
-     * @param string $header_name
+     * @param StringHelper $header_name
      * @return Swift_Signers_DKIMSigner
      */
     public function ignoreHeader($header_name)

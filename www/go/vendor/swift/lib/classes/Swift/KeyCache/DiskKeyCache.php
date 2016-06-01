@@ -36,7 +36,7 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
     /**
      * A path to write to.
      *
-     * @var string
+     * @var StringHelper
      */
     private $_path;
 
@@ -59,7 +59,7 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
      * InputByteStreams, and the given $path to save to.
      *
      * @param Swift_KeyCache_KeyCacheInputStream $stream
-     * @param string                             $path   to save to
+     * @param StringHelper                             $path   to save to
      */
     public function __construct(Swift_KeyCache_KeyCacheInputStream $stream, $path)
     {
@@ -76,9 +76,9 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
      *
      * @see MODE_WRITE, MODE_APPEND
      *
-     * @param string  $nsKey
-     * @param string  $itemKey
-     * @param string  $string
+     * @param StringHelper  $nsKey
+     * @param StringHelper  $itemKey
+     * @param StringHelper  $string
      * @param integer $mode
      *
      * @throws Swift_IoException
@@ -109,8 +109,8 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
      *
      * @see MODE_WRITE, MODE_APPEND
      *
-     * @param string                 $nsKey
-     * @param string                 $itemKey
+     * @param StringHelper                 $nsKey
+     * @param StringHelper                 $itemKey
      * @param Swift_OutputByteStream $os
      * @param integer                $mode
      *
@@ -144,8 +144,8 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
      *
      * NOTE: The stream will always write in append mode.
      *
-     * @param string                $nsKey
-     * @param string                $itemKey
+     * @param StringHelper                $nsKey
+     * @param StringHelper                $itemKey
      * @param Swift_InputByteStream $writeThrough
      *
      * @return Swift_InputByteStream
@@ -166,10 +166,10 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
     /**
      * Get data back out of the cache as a string.
      *
-     * @param string $nsKey
-     * @param string $itemKey
+     * @param StringHelper $nsKey
+     * @param StringHelper $itemKey
      *
-     * @return string
+     * @return StringHelper
      *
      * @throws Swift_IoException
      */
@@ -197,8 +197,8 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
     /**
      * Get data back out of the cache as a ByteStream.
      *
-     * @param string                $nsKey
-     * @param string                $itemKey
+     * @param StringHelper                $nsKey
+     * @param StringHelper                $itemKey
      * @param Swift_InputByteStream $is      to write the data to
      */
     public function exportToByteStream($nsKey, $itemKey, Swift_InputByteStream $is)
@@ -221,8 +221,8 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
     /**
      * Check if the given $itemKey exists in the namespace $nsKey.
      *
-     * @param string $nsKey
-     * @param string $itemKey
+     * @param StringHelper $nsKey
+     * @param StringHelper $itemKey
      *
      * @return boolean
      */
@@ -234,8 +234,8 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
     /**
      * Clear data for $itemKey in the namespace $nsKey if it exists.
      *
-     * @param string $nsKey
-     * @param string $itemKey
+     * @param StringHelper $nsKey
+     * @param StringHelper $itemKey
      */
     public function clearKey($nsKey, $itemKey)
     {
@@ -248,7 +248,7 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
     /**
      * Clear all data in the namespace $nsKey if it exists.
      *
-     * @param string $nsKey
+     * @param StringHelper $nsKey
      */
     public function clearAll($nsKey)
     {
@@ -268,7 +268,7 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
     /**
      * Initialize the namespace of $nsKey if needed.
      *
-     * @param string $nsKey
+     * @param StringHelper $nsKey
      */
     private function _prepareCache($nsKey)
     {
@@ -284,8 +284,8 @@ class Swift_KeyCache_DiskKeyCache implements Swift_KeyCache
     /**
      * Get a file handle on the cache item.
      *
-     * @param string  $nsKey
-     * @param string  $itemKey
+     * @param StringHelper  $nsKey
+     * @param StringHelper  $itemKey
      * @param integer $position
      *
      * @return resource

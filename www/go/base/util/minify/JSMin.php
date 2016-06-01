@@ -78,9 +78,9 @@ class JSMin {
     /**
      * Minify Javascript.
      *
-     * @param string $js Javascript to be minified
+     * @param StringHelper $js Javascript to be minified
      *
-     * @return string
+     * @return StringHelper
      */
     public static function minify($js)
     {
@@ -89,7 +89,7 @@ class JSMin {
     }
 
     /**
-     * @param string $input
+     * @param StringHelper $input
      */
     public function __construct($input)
     {
@@ -99,7 +99,7 @@ class JSMin {
     /**
      * Perform minification, return result
      *
-     * @return string
+     * @return StringHelper
      */
     public function min()
     {
@@ -300,7 +300,7 @@ class JSMin {
      * Return the next character from stdin. Watch out for lookahead. If the character is a control character,
      * translate it to a space or linefeed.
      *
-     * @return string
+     * @return StringHelper
      */
     protected function get()
     {
@@ -327,7 +327,7 @@ class JSMin {
     /**
      * Does $a indicate end of input?
      *
-     * @param string $a
+     * @param StringHelper $a
      * @return bool
      */
     protected function isEOF($a)
@@ -338,7 +338,7 @@ class JSMin {
     /**
      * Get next char (without getting it). If is ctrl character, translate to a space or newline.
      *
-     * @return string
+     * @return StringHelper
      */
     protected function peek()
     {
@@ -349,7 +349,7 @@ class JSMin {
     /**
      * Return true if the character is a letter, digit, underscore, dollar sign, or non-ASCII character.
      *
-     * @param string $c
+     * @param StringHelper $c
      *
      * @return bool
      */
@@ -415,7 +415,7 @@ class JSMin {
     /**
      * Get the next character, skipping over comments. Some comments may be preserved.
      *
-     * @return string
+     * @return StringHelper
      */
     protected function next()
     {

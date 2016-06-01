@@ -61,7 +61,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	/**
 	 * Fill type
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_fillType	= PHPExcel_Style_Fill::FILL_NONE;
 
@@ -189,7 +189,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	/**
 	 * Get Fill Type
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getFillType() {
 		if ($this->_isSupervisor) {
@@ -201,7 +201,7 @@ class PHPExcel_Style_Fill extends PHPExcel_Style_Supervisor implements PHPExcel_
 	/**
 	 * Set Fill Type
 	 *
-	 * @param string $pValue	PHPExcel_Style_Fill fill type
+	 * @param StringHelper $pValue	PHPExcel_Style_Fill fill type
 	 * @return PHPExcel_Style_Fill
 	 */
 	public function setFillType($pValue = PHPExcel_Style_Fill::FILL_NONE) {

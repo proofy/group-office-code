@@ -24,7 +24,7 @@ class Reader extends Sabre\VObject\Reader{
 //		
 //		
 //		//remove quoted printable line breaks
-//		$dataString = \GO\Base\Util\String::normalizeCrlf($dataString,"\n");
+//		$dataString = \GO\Base\Util\StringHelper::normalizeCrlf($dataString,"\n");
 //		$dataString = str_replace("=0D=0A=\n", "=0D=0A=",$dataString);
 //		
 //		$lines = explode("\n",$dataString);
@@ -112,7 +112,7 @@ class Reader extends Sabre\VObject\Reader{
 	/**
 	 * Convert a vcalendar 2.0 duration into seconds.
 	 * 
-	 * @param string $duration
+	 * @param StringHelper $duration
 	 * @return int Seconds
 	 */
 	public static function parseDuration($duration){
@@ -190,7 +190,17 @@ class Reader extends Sabre\VObject\Reader{
 						$rrule = new \GO\Base\Util\Icalendar\Rrule();
 						$rrule->readIcalendarRruleString($child->dtstart->getDateTime()->format('U'), (string) $child->rrule);			
 						$child->rrule = str_replace('RRULE:','',$rrule->createRrule());
-					}					
+					}
+					
+					if(isset($child->exdate)){
+						
+						$exdates = explode(';', (string) $child->exdate);						
+						$child->exdate = $exdates[0];
+						
+						for($i=1;$i<count($exdates);$i++){
+							$child->add('exdate',$exdates[$i]);
+						}
+					}
 				}					
 			}
 		}
@@ -222,7 +232,14 @@ class Reader extends Sabre\VObject\Reader{
 					
 					if(isset($child->{"X-GO-REMINDER-TIME"})){
 						unset($child->valarm);
-						$child->aalarm=(string) $child->{"X-GO-REMINDER-TIME"}.";;0;";
+						
+						
+						$prop = new Sabre\VObject\Property\Text($vobject, 'AALARM', array((string) $child->{"X-GO-REMINDER-TIME"},'','0'));
+						$prop->delimiter=';';
+						$child->add($prop);
+						
+						
+										//$child->{"X-GO-REMINDER-TIME"}.";;0;";
 					}
 				}
 			}
@@ -244,7 +261,7 @@ class Reader extends Sabre\VObject\Reader{
 //					$value = quoted_printable_decode($property->getValue());
 //					$value = str_replace("\r","",$value);
 ////					\GO::debug($value);
-////					$value = \GO\Base\Util\String::to_utf8($value);
+////					$value = \GO\Base\Util\StringHelper::to_utf8($value);
 //					$property->setValue($value);				
 //					unset($property['ENCODING']);
 //				}
@@ -308,7 +325,7 @@ class Reader extends Sabre\VObject\Reader{
 		}
 	}
 	
-	public static function read($data, $options = 0) {
+	public static function read($data, $options = 0, $charset = 'UTF-8') {
 		
 		
 		//parsing of rrule is done by GO. SabreDAV fails on vcalendar 1.0 rrules
@@ -321,7 +338,7 @@ class Reader extends Sabre\VObject\Reader{
 		}
 		
 		//remove quoted printable line breaks
-		$data = \GO\Base\Util\String::normalizeCrlf($data,"\n");
+		$data = \GO\Base\Util\StringHelper::normalizeCrlf($data,"\n");
 		
 		
 		if(strpos($data,'QUOTED-PRINTABLE')){		
@@ -332,7 +349,7 @@ class Reader extends Sabre\VObject\Reader{
 		
 		$options = \Sabre\VObject\Reader::OPTION_FORGIVING + \Sabre\VObject\Reader::OPTION_IGNORE_INVALID_LINES;
 		
-		return parent::read($data, $options);
+		return parent::read($data, $options, $charset);
 	}
 
 	/**

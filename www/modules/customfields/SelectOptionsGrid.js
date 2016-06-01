@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: SelectOptionsGrid.js 14816 2013-05-21 08:31:20Z mschering $
+ * @version $Id: SelectOptionsGrid.js 19873 2016-03-01 10:55:30Z michaelhart86 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -31,6 +31,9 @@ GO.customfields.SelectOptionsGrid = function(config){
 	var fields ={
 		fields:['id','text'],
 		columns:[	{
+			sortable:false,
+			hideable:false,
+			menuDisabled:true,
 			header: GO.lang.strText,
 			dataIndex: 'text',
 			editor: new Ext.form.TextField()

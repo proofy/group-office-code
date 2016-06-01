@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: ScheduleCallDialog.js 16895 2014-02-21 15:05:23Z mschering $
+ * @version $Id: ScheduleCallDialog.js 19324 2015-08-18 10:17:13Z wsmits $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -33,8 +33,10 @@ GO.tasks.ScheduleCallDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 	show : function (remoteModelId, config) {
 		this.selectContact.clearLastSearch();
 		GO.tasks.ScheduleCallDialog.superclass.show.call(this,remoteModelId, config);
-		if(config && config.link_config)
+
+		if(config && config.link_config){
 			this.setContact(config.link_config.model_id,config.link_config.name);
+		}
 		
 		this.setCurrentDateAndTime();
 	},
@@ -111,6 +113,28 @@ GO.tasks.ScheduleCallDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 				remoteSort: true
 			})
 		});
+		//copied from GO.addressbook.SelectContact
+		this.selectContact.selectContactById = function(contact_id, callback, scope){
+			this.getStore().load({
+				params:{
+					contact_id:contact_id
+				},
+				callback:function(){
+					this.setValue(contact_id);
+
+					if(callback){
+
+						var record = this.store.getAt(0);
+
+						if(!scope)
+							scope=this;
+						callback.call(scope, this, record);
+					}
+				},
+				scope:this
+			});
+
+		};
 		
 				
 		this.contactIdField = new Ext.form.Hidden({
@@ -204,7 +228,7 @@ GO.tasks.ScheduleCallDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 			new_val = record ? new_val :  0;
 
 			this.contactIdField.setValue(new_val);
-			this.populatePhoneFields();
+			this.populatePhoneFieldsWithoutRecord(new_val);
 			this.btnAddContact.setDisabled(new_val!=0);
 
 		},this);
@@ -269,7 +293,7 @@ GO.tasks.ScheduleCallDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 					this.selectContact,
 					this.phoneNumberField,
 					this.savePhoneNumberField,
-					this.btnAddContact,
+					this.btnAddContact
 				]}
 			]			
 		});
@@ -277,8 +301,8 @@ GO.tasks.ScheduleCallDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 		this.addPanel(this.propertiesPanel);
 	},
 
-	populatePhoneFields : function(){
-
+	populatePhoneFields : function(record){
+		
 		var order = [
 			'work_phone',
 			'home_phone',
@@ -286,18 +310,20 @@ GO.tasks.ScheduleCallDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 			'cellular2'
 		];
 		
-		var record = this.selectContact.store.getById(this.contactIdField.getValue());
-	
 		if(GO.util.empty(record)){
-			record = {};
-			record.data = {};
-			
-			for(var i=0; i <order.length; i++)
-				record.data[order[i]] = '';
-			
-			this.savePhoneNumberField.setDisabled(false);
-		} else {
-			this.savePhoneNumberField.setDisabled(true);
+		var record = this.selectContact.store.getById(this.contactIdField.getValue());
+
+			if(GO.util.empty(record)){
+				record = {};
+				record.data = {};
+
+				for(var i=0; i <order.length; i++)
+					record.data[order[i]] = '';
+
+				this.savePhoneNumberField.setDisabled(false);
+			} else {
+				this.savePhoneNumberField.setDisabled(true);
+			}
 		}
 		
 		// Select the first found attribute that is not empty
@@ -313,11 +339,11 @@ GO.tasks.ScheduleCallDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 				replaceNumbers.push(new Ext.data.Record({'id':order[i],'label':this.createReplaceNumberLabel(order[i],''),'number':''},order[i]));
 			}
 		}
-		
+
 		// Clear both stores
 		this.phoneNumberField.getStore().removeAll();
 		this.savePhoneNumberField.getStore().removeAll();
-		
+
 		// Fill the store for the phoneNumberField 
 		if(foundNumbers.length > 0){
 			this.phoneNumberField.getStore().add(foundNumbers);
@@ -325,7 +351,7 @@ GO.tasks.ScheduleCallDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 		}
 		// Fill the store for the savePhoneNumberField
 		this.savePhoneNumberField.getStore().add(replaceNumbers);
-		this.savePhoneNumberField.setRawValue('');
+		this.savePhoneNumberField.setRawValue('');		
 	},
 	createReplaceNumberLabel: function(field,oldvalue){
 		
@@ -349,18 +375,47 @@ GO.tasks.ScheduleCallDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 	setContactFromDialog : function(dialog,contact_id){
 		this.setContact(contact_id,this.getNameFromContactDialog(dialog));
 	},
-	setContact : function(contact_id){
+	setContact : function(contact_id, contact_name){
 		this.selectContact.selectContactById(contact_id,function(combo,record){
 
 			this.contactIdField.setValue(contact_id);
-			this.populatePhoneFields();
+			this.populatePhoneFieldsWithoutRecord(contact_id);
 			this.btnAddContact.setDisabled(true);
 			this.disableSavePhoneNumberField();
+			
+			var f = this.formPanel.form.findField('contact_name');
+			f.setRemoteText(contact_name);
 		},this);
-
+		
 		this.btnAddContact.setDisabled(true);
 		this.disableSavePhoneNumberField();
 	},
+	
+	populatePhoneFieldsWithoutRecord : function(contact_id){
+		
+		if(!GO.util.empty(contact_id)){
+			// First check for the record in the available store
+			var record = this.selectContact.store.getById(contact_id);
+
+			if(!Ext.isDefined(record)){
+				// Record is not available in the store
+				// Retreive record with a request
+				GO.request({
+					url: 'addressbook/contact/load',
+					params: {
+						id:contact_id
+					},
+					success: function(response,options,result) {
+						this.populatePhoneFields(result);
+					},
+					scope: this
+				});
+			} else {
+				this.populatePhoneFields(record);
+			}
+		}
+	},
+	
 	disableSavePhoneNumberField : function(){
 		this.savePhoneNumberField.setDisabled(true);
 		this.savePhoneNumberField.setRawValue('');

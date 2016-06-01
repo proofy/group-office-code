@@ -36,10 +36,10 @@ class Swift_SignedMessage extends Swift_Message
     /**
      * Create a new Message.
      *
-     * @param string $subject
-     * @param string $body
-     * @param string $contentType
-     * @param string $charset
+     * @param StringHelper $subject
+     * @param StringHelper $body
+     * @param StringHelper $contentType
+     * @param StringHelper $charset
      *
      * @return Swift_SignedMessage
      */
@@ -69,7 +69,7 @@ class Swift_SignedMessage extends Swift_Message
     /**
      * Get this message as a complete string.
      *
-     * @return string
+     * @return StringHelper
      */
     public function toString()
     {

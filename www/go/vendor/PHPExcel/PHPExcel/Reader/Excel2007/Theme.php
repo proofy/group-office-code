@@ -38,14 +38,14 @@ class PHPExcel_Reader_Excel2007_Theme
 	/**
 	 * Theme Name
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_themeName;
 
 	/**
 	 * Colour Scheme Name
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_colourSchemeName;
 
@@ -80,7 +80,7 @@ class PHPExcel_Reader_Excel2007_Theme
 	/**
 	 * Get Theme Name
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getThemeName()
 	{
@@ -90,7 +90,7 @@ class PHPExcel_Reader_Excel2007_Theme
     /**
      * Get colour Scheme Name
      *
-     * @return string
+     * @return StringHelper
      */
     public function getColourSchemeName() {
 		return $this->_colourSchemeName;
@@ -99,7 +99,7 @@ class PHPExcel_Reader_Excel2007_Theme
     /**
      * Get colour Map Value by Position
      *
-     * @return string
+     * @return StringHelper
      */
     public function getColourByIndex($index=0) {
     	if (isset($this->_colourMap[$index])) {

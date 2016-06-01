@@ -130,7 +130,7 @@ $l["strState"]='Bundesland';
 $l["strCountry"]='Land';
 $l["strAddressFormat"]='Adressformat';
 $l["strHomepage"]='Webseite';
-$l["strCompany"]='Firma';
+$l["strCompany"]='Organisation';
 $l["strDepartment"]='Abteilung';
 $l["strFunction"]='Funktion';
 $l["strSalutation"]='Anrede';
@@ -420,7 +420,7 @@ $l['phone']='Telefon';
 $l['workphone']='Telefon';
 $l['cellular']='Mobiltelefon';
 $l['cellular2'] = 'Zweites Mobiltelefon';
-$l['company']='Firma';
+$l['company']='Organisation';
 $l['department']='Abteilung';
 $l['function']='Funktion';
 $l['question']='Geheime Frage';
@@ -563,7 +563,7 @@ $l['queued']="Anstehend";
 $l['uploadQueueEmpty']="Warteschlange für Uploads ist leer";
 $l['logFiles']='Logdateien';
 $l['exportDialog']='Export Dialog';
-$l['cliOnly']= "Das Skript kann nur durch das Group-Office Command Line Interface (CLI) ausgeführt werden.";
+$l['cliOnly']= "Das Skript kann nur durch das RuhrMAIL Command Line Interface (CLI) ausgeführt werden.";
 $l['unnamed']='Unbenannt';
 
 $l['month_times'][1]='am Ersten';
@@ -626,6 +626,7 @@ $l['removeDuplicatesAreYouSure']='Sind Sie sicher, dass Sie alle doppelten Eintr
 
 $l['folderUpload']='Ordner (benötigt Java)';
 
+$l['bn_BD']= 'Bangladesch';
 $l['cs'] = 'Tschechien';
 $l['de-at'] = 'Österreich';
 $l['de-ch'] = 'Schweiz';
@@ -633,8 +634,10 @@ $l['de'] = 'Deutschland';
 $l['en-au'] = 'Australien';
 $l['en'] = 'U.S.A.';
 $l['en_UK'] = 'United Kingdom';
+$l['es']='Spanien';
 $l['fr'] = 'Frankreich';
 $l['hr'] = 'Kroatien';
+$l['hu'] = 'Ungarn';
 $l['it'] = 'Italien';
 $l['ja'] = 'Japan';
 $l['nb'] = 'Norwegen';
@@ -642,6 +645,7 @@ $l['nl'] = 'Niederlande';
 $l['pt'] = 'Portugal';
 $l['sv'] = 'Schweden';
 $l['th'] = 'Thailand';
+$l['pt_BR']='Brasilien';
 
 $l["report"]='Report';
 
@@ -657,3 +661,22 @@ $l['pspell_lang']='DE_de';
 $l['dependenciesCannotDelete']="Das ausgewählte Modul kann nicht gelöscht werden, da die folgenden (installierten) Module davon abhängen: %s.";
 
 $l['MailboxNotFoundException'] = "Der Ordner \"%s\" kann nicht geöffnet werden. Bitte überprüfen Sie die Einstellungen Ihres E-Mail-Accounts.";
+
+$l['columns']= 'Spalten';
+$l['savedExport']= 'Gespeicherter Export';
+$l['savedExports']= 'Gespeicherte Exports';
+$l['includeColumnNames']= 'Spaltennamen mit einbeziehen';
+$l['manageSavedExports']= 'Gespeicherte Exporte verwalten';
+$l['noSavedExports']= 'Keine gespeicherten Exporte vorhanden';
+$l['overwriteAcl']= 'Standardberechtigungen für dieses Objekt überschreiben (Zum Aktivieren auf Übernehmen klicken)';
+$l['cantDeleteDefault']= "Das Standardobjekt kann nicht gelöscht werden.";
+
+$l['updateWithMatchingAttributes']= 'Einträge updaten mit den folgenden Attributen:';
+$l['zipFilesizeTooBig']= 'Die Gesamtgröße der zu archivierenden Dateien ist zu groß. (Max. %s ist möglich.)';
+$l['selectedColumns']= 'Gewählte Spalten';
+$l['availableColumns']= 'Verfügbare Spalten';
+$l['exportSelectHelpText']= 'Ziehen Sie die zu exportierenden Spalten vom linken zum rechten Raster oder wählen Sie per Doppelclick aus.';
+$l['moduleNotInstalled']= 'Modul ist nicht installiert';
+$l['handlerNotInstalled']= 'Der mit diesem Modul verknüpfte Handler gehört zu einem Modul, das augenblicklich nicht installiert ist.';
+$l['newEmail']= 'Neue eMail';
+$l['unreadEmailMessage']= 'Sie haben %d ungelesene eMail(s)';

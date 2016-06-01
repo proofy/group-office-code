@@ -90,8 +90,7 @@ abstract class AbstractCron extends \GO\Base\Model{
 	 * $user parameter is null and the run function will be called only once.
 	 * 
 	 * @param CronJob $cronJob
-	 * @param \GO\Base\Model_User $user [OPTIONAL]
 	 */
-	public abstract function run(CronJob $cronJob,\GO\Base\Model\User $user = null);
+	public abstract function run(CronJob $cronJob);
 		
 }

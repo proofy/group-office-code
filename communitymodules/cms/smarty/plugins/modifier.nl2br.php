@@ -22,8 +22,8 @@
  *          nl2br (Smarty online manual)
  * @version  1.0
  * @author   Monte Ohrt <monte at ohrt dot com>
- * @param string
- * @return string
+ * @param StringHelper
+ * @return StringHelper
  */
 function smarty_modifier_nl2br($string)
 {

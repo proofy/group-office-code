@@ -57,14 +57,14 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 	/**
 	 * ARGB - Alpha RGB
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_argb	= NULL;
 
 	/**
 	 * Parent property name
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_parentPropertyName;
 
@@ -95,7 +95,7 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 	 * Bind parent. Only used for supervisor
 	 *
 	 * @param mixed $parent
-	 * @param string $parentPropertyName
+	 * @param StringHelper $parentPropertyName
 	 * @return PHPExcel_Style_Color
 	 */
 	public function bindParent($parent, $parentPropertyName=NULL)
@@ -178,7 +178,7 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 	/**
 	 * Get ARGB
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getARGB() {
 		if ($this->_isSupervisor) {
@@ -190,7 +190,7 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 	/**
 	 * Set ARGB
 	 *
-	 * @param string $pValue
+	 * @param StringHelper $pValue
 	 * @return PHPExcel_Style_Color
 	 */
 	public function setARGB($pValue = PHPExcel_Style_Color::COLOR_BLACK) {
@@ -209,7 +209,7 @@ class PHPExcel_Style_Color extends PHPExcel_Style_Supervisor implements PHPExcel
 	/**
 	 * Get RGB
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getRGB() {
 		if ($this->_isSupervisor) {

@@ -9,7 +9,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: MainPanel.js 15954 2013-10-17 12:04:36Z mschering $
+ * @version $Id: MainPanel.js 19308 2015-08-13 07:47:19Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -82,26 +82,11 @@ GO.log.MainPanel = function(config) {
 	    xtype:'htmlcomponent',
 			html:GO.log.lang.name,
 			cls:'go-module-title-tbar'
-		},{
-			iconCls: 'btn-export',
-			text: GO.lang.cmdExport,
-			cls: 'x-btn-text-icon',
-			handler:function(){
-				
-				if(!this.exportDialog)
-				{
-					this.exportDialog = new GO.ExportGridDialog({
-						url: 'log/log/export',
-						name: 'log',
-						documentTitle:this.title,
-						colModel: this.getColumnModel()
-					});
-				}				
-				this.exportDialog.show();
-
-			},
-			scope: this
-		},'-',GO.lang['strSearch'] + ':', this.searchField], cls:'go-head-tb'});
+		},
+		this.exportMenu = new GO.base.ExportMenu({className:'GO\\Log\\Export\\CurrentGrid'})
+			,'-',GO.lang['strSearch'] + ':', this.searchField], cls:'go-head-tb'});
+	
+	this.exportMenu.setColumnModel(columnModel);
 			
 	GO.log.MainPanel.superclass.constructor.call(this, config);
 };

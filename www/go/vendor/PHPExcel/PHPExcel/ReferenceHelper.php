@@ -72,8 +72,8 @@ class PHPExcel_ReferenceHelper
 	 * Compare two column addresses
 	 * Intended for use as a Callback function for sorting column addresses by column
 	 *
-	 * @param   string   $a  First column to test (e.g. 'AA')
-	 * @param   string   $b  Second column to test (e.g. 'Z')
+	 * @param   StringHelper   $a  First column to test (e.g. 'AA')
+	 * @param   StringHelper   $b  Second column to test (e.g. 'Z')
 	 * @return  integer
 	 */
 	public static function columnSort($a, $b) {
@@ -84,8 +84,8 @@ class PHPExcel_ReferenceHelper
 	 * Compare two column addresses
 	 * Intended for use as a Callback function for reverse sorting column addresses by column
 	 *
-	 * @param   string   $a  First column to test (e.g. 'AA')
-	 * @param   string   $b  Second column to test (e.g. 'Z')
+	 * @param   StringHelper   $a  First column to test (e.g. 'AA')
+	 * @param   StringHelper   $b  Second column to test (e.g. 'Z')
 	 * @return  integer
 	 */
 	public static function columnReverseSort($a, $b) {
@@ -96,8 +96,8 @@ class PHPExcel_ReferenceHelper
 	 * Compare two cell addresses
 	 * Intended for use as a Callback function for sorting cell addresses by column and row
 	 *
-	 * @param   string   $a  First cell to test (e.g. 'AA1')
-	 * @param   string   $b  Second cell to test (e.g. 'Z1')
+	 * @param   StringHelper   $a  First cell to test (e.g. 'AA1')
+	 * @param   StringHelper   $b  Second cell to test (e.g. 'Z1')
 	 * @return  integer
 	 */
 	public static function cellSort($a, $b) {
@@ -114,8 +114,8 @@ class PHPExcel_ReferenceHelper
 	 * Compare two cell addresses
 	 * Intended for use as a Callback function for sorting cell addresses by column and row
 	 *
-	 * @param   string   $a  First cell to test (e.g. 'AA1')
-	 * @param   string   $b  Second cell to test (e.g. 'Z1')
+	 * @param   StringHelper   $a  First cell to test (e.g. 'AA1')
+	 * @param   StringHelper   $b  Second cell to test (e.g. 'Z1')
 	 * @return  integer
 	 */
 	public static function cellReverseSort($a, $b) {
@@ -131,7 +131,7 @@ class PHPExcel_ReferenceHelper
 	/**
 	 * Test whether a cell address falls within a defined range of cells
 	 *
-	 * @param   string     $cellAddress        Address of the cell we're testing
+	 * @param   StringHelper     $cellAddress        Address of the cell we're testing
 	 * @param   integer    $beforeRow          Number of the row we're inserting/deleting before
 	 * @param   integer    $pNumRows           Number of rows to insert/delete (negative values indicate deletion)
 	 * @param   integer    $beforeColumnIndex  Index number of the column we're inserting/deleting before
@@ -158,7 +158,7 @@ class PHPExcel_ReferenceHelper
 	 * Update page breaks when inserting/deleting rows/columns
 	 *
 	 * @param   PHPExcel_Worksheet  $pSheet             The worksheet that we're editing
-	 * @param   string              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
+	 * @param   StringHelper              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
 	 * @param   integer             $beforeColumnIndex  Index number of the column we're inserting/deleting before
 	 * @param   integer             $pNumCols           Number of columns to insert/delete (negative values indicate deletion)
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
@@ -192,7 +192,7 @@ class PHPExcel_ReferenceHelper
 	 * Update cell comments when inserting/deleting rows/columns
 	 *
 	 * @param   PHPExcel_Worksheet  $pSheet             The worksheet that we're editing
-	 * @param   string              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
+	 * @param   StringHelper              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
 	 * @param   integer             $beforeColumnIndex  Index number of the column we're inserting/deleting before
 	 * @param   integer             $pNumCols           Number of columns to insert/delete (negative values indicate deletion)
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
@@ -219,7 +219,7 @@ class PHPExcel_ReferenceHelper
 	 * Update hyperlinks when inserting/deleting rows/columns
 	 *
 	 * @param   PHPExcel_Worksheet  $pSheet             The worksheet that we're editing
-	 * @param   string              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
+	 * @param   StringHelper              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
 	 * @param   integer             $beforeColumnIndex  Index number of the column we're inserting/deleting before
 	 * @param   integer             $pNumCols           Number of columns to insert/delete (negative values indicate deletion)
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
@@ -245,7 +245,7 @@ class PHPExcel_ReferenceHelper
 	 * Update data validations when inserting/deleting rows/columns
 	 *
 	 * @param   PHPExcel_Worksheet  $pSheet             The worksheet that we're editing
-	 * @param   string              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
+	 * @param   StringHelper              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
 	 * @param   integer             $beforeColumnIndex  Index number of the column we're inserting/deleting before
 	 * @param   integer             $pNumCols           Number of columns to insert/delete (negative values indicate deletion)
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
@@ -270,7 +270,7 @@ class PHPExcel_ReferenceHelper
 	 * Update merged cells when inserting/deleting rows/columns
 	 *
 	 * @param   PHPExcel_Worksheet  $pSheet             The worksheet that we're editing
-	 * @param   string              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
+	 * @param   StringHelper              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
 	 * @param   integer             $beforeColumnIndex  Index number of the column we're inserting/deleting before
 	 * @param   integer             $pNumCols           Number of columns to insert/delete (negative values indicate deletion)
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
@@ -291,7 +291,7 @@ class PHPExcel_ReferenceHelper
 	 * Update protected cells when inserting/deleting rows/columns
 	 *
 	 * @param   PHPExcel_Worksheet  $pSheet             The worksheet that we're editing
-	 * @param   string              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
+	 * @param   StringHelper              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
 	 * @param   integer             $beforeColumnIndex  Index number of the column we're inserting/deleting before
 	 * @param   integer             $pNumCols           Number of columns to insert/delete (negative values indicate deletion)
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
@@ -316,7 +316,7 @@ class PHPExcel_ReferenceHelper
 	 * Update column dimensions when inserting/deleting rows/columns
 	 *
 	 * @param   PHPExcel_Worksheet  $pSheet             The worksheet that we're editing
-	 * @param   string              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
+	 * @param   StringHelper              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
 	 * @param   integer             $beforeColumnIndex  Index number of the column we're inserting/deleting before
 	 * @param   integer             $pNumCols           Number of columns to insert/delete (negative values indicate deletion)
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
@@ -341,7 +341,7 @@ class PHPExcel_ReferenceHelper
 	 * Update row dimensions when inserting/deleting rows/columns
 	 *
 	 * @param   PHPExcel_Worksheet  $pSheet             The worksheet that we're editing
-	 * @param   string              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
+	 * @param   StringHelper              $pBefore            Insert/Delete before this cell address (e.g. 'A1')
 	 * @param   integer             $beforeColumnIndex  Index number of the column we're inserting/deleting before
 	 * @param   integer             $pNumCols           Number of columns to insert/delete (negative values indicate deletion)
 	 * @param   integer             $beforeRow          Number of the row we're inserting/deleting before
@@ -374,7 +374,7 @@ class PHPExcel_ReferenceHelper
 	/**
 	 * Insert a new column or row, updating all possible related data
 	 *
-	 * @param   string              $pBefore    Insert before this cell address (e.g. 'A1')
+	 * @param   StringHelper              $pBefore    Insert before this cell address (e.g. 'A1')
 	 * @param   integer             $pNumCols   Number of columns to insert/delete (negative values indicate deletion)
 	 * @param   integer             $pNumRows   Number of rows to insert/delete (negative values indicate deletion)
 	 * @param   PHPExcel_Worksheet  $pSheet     The worksheet that we're editing
@@ -641,7 +641,7 @@ class PHPExcel_ReferenceHelper
 	 * @param	int		$pBefore	Insert before this one
 	 * @param	int		$pNumCols	Number of columns to insert
 	 * @param	int		$pNumRows	Number of rows to insert
-	 * @param   string  $sheetName  Worksheet name/title
+	 * @param   StringHelper  $sheetName  Worksheet name/title
 	 * @return	string	Updated formula
 	 * @throws	PHPExcel_Exception
 	 */
@@ -805,8 +805,8 @@ class PHPExcel_ReferenceHelper
 	 * Update named formulas (i.e. containing worksheet references / named ranges)
 	 *
 	 * @param PHPExcel $pPhpExcel	Object to update
-	 * @param string $oldName		Old name (name to replace)
-	 * @param string $newName		New name
+	 * @param StringHelper $oldName		Old name (name to replace)
+	 * @param StringHelper $newName		New name
 	 */
 	public function updateNamedFormulas(PHPExcel $pPhpExcel, $oldName = '', $newName = '') {
 		if ($oldName == '') {

@@ -48,7 +48,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	 * Input encoding
 	 *
 	 * @access	private
-	 * @var	string
+	 * @var	StringHelper
 	 */
 	private $_inputEncoding	= 'UTF-8';
 
@@ -56,7 +56,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	 * Delimiter
 	 *
 	 * @access	private
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_delimiter		= ',';
 
@@ -64,7 +64,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	 * Enclosure
 	 *
 	 * @access	private
-	 * @var	string
+	 * @var	StringHelper
 	 */
 	private $_enclosure		= '"';
 
@@ -72,7 +72,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	 * Line ending
 	 *
 	 * @access	private
-	 * @var	string
+	 * @var	StringHelper
 	 */
 	private $_lineEnding	= PHP_EOL;
 
@@ -120,7 +120,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	/**
 	 * Set input encoding
 	 *
-	 * @param string $pValue Input encoding
+	 * @param StringHelper $pValue Input encoding
 	 */
 	public function setInputEncoding($pValue = 'UTF-8')
 	{
@@ -131,7 +131,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	/**
 	 * Get input encoding
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getInputEncoding()
 	{
@@ -175,7 +175,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	/**
 	 * Return worksheet info (Name, Last Column Letter, Last Column Index, Total Rows, Total Columns)
 	 *
-	 * @param 	string 		$pFilename
+	 * @param 	StringHelper 		$pFilename
 	 * @throws	PHPExcel_Reader_Exception
 	 */
 	public function listWorksheetInfo($pFilename)
@@ -218,7 +218,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	/**
 	 * Loads PHPExcel from file
 	 *
-	 * @param 	string 		$pFilename
+	 * @param 	StringHelper 		$pFilename
 	 * @return PHPExcel
 	 * @throws PHPExcel_Reader_Exception
 	 */
@@ -234,7 +234,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	/**
 	 * Loads PHPExcel from file into PHPExcel instance
 	 *
-	 * @param 	string 		$pFilename
+	 * @param 	StringHelper 		$pFilename
 	 * @param	PHPExcel	$objPHPExcel
 	 * @return 	PHPExcel
 	 * @throws 	PHPExcel_Reader_Exception
@@ -308,7 +308,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	/**
 	 * Get delimiter
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getDelimiter() {
 		return $this->_delimiter;
@@ -328,7 +328,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	/**
 	 * Get enclosure
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getEnclosure() {
 		return $this->_enclosure;
@@ -351,7 +351,7 @@ class PHPExcel_Reader_CSV extends PHPExcel_Reader_Abstract implements PHPExcel_R
 	/**
 	 * Get line ending
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getLineEnding() {
 		return $this->_lineEnding;

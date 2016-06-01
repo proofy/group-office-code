@@ -95,6 +95,8 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 
 		//when duplicating in the calendar with right click
 		if(!empty($params['duplicate'])){
+			if (!empty($params['calendar_id']) && $params['calendar_id']>0)
+				$model->calendar_id = $params['calendar_id'];
 			$model = $model->duplicate(array('uuid'=>null));
 			$params['id']=$model->id;
 		}
@@ -265,6 +267,8 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 		if (!empty($newParticipantIds) && !empty($oldParticipantsIds))
 			$response['askForMeetingRequestForNewParticipants'] = true;
 		
+		$response['permission_level'] = $model->calendar->permissionLevel;
+		
 		return parent::afterSubmit($response, $model, $params, $modifiedAttributes);
 	}
 	
@@ -310,7 +314,6 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 					$resourceEvent->end_time = $model->end_time;
 					$resourceEvent->rrule = $model->rrule;
 					$resourceEvent->repeat_end_time = $model->repeat_end_time;
-					$resourceEvent->status = "NEEDS-ACTION";
 					$resourceEvent->user_id = $model->user_id;
 
 					$resourceEvent->busy = !$resourceEvent->calendar->group->show_not_as_busy;
@@ -355,6 +358,12 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 							'email'=> $p['email'],
 							'event_id'=>$event->id
 					));
+					
+					if($participant && !empty($p['contact_id']) && $p['contact_id'] != $participant->contact_id){
+						$participant->delete();
+						$participant = false;
+					}
+					
 					if (!$participant){
 						$participant = new \GO\Calendar\Model\Participant();
 						
@@ -558,6 +567,12 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 
 			$response['data'] = array_merge($response['data'], $createdRule);
 		}
+		
+//		$model->setAttribute('calendar_id', $params['calendar_id']);
+		
+		$response['data']['isResource'] = $model->isResource();
+		
+		
 
 		$response['data']['start_date'] = \GO\Base\Util\Date::get_timestamp($model->start_time, false);
 		$response['data']['end_date'] = \GO\Base\Util\Date::get_timestamp($model->end_time, false);
@@ -575,6 +590,20 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 			
 			$response['data'][$days[date('w', $model->start_time)]]=1;
 		}
+		
+		
+		if($model->isResource()) {
+			$response['data']['resourceGroupAdmin'] = false;
+			$adminUserIds=array();
+			$groupAdminsStmt= $model->calendar->group->admins;
+			while($adminUser = $groupAdminsStmt->fetch()){
+				$adminUserIds[] = $adminUser->id;
+			}
+			if (in_array(\GO::user()->id,$adminUserIds)) {
+					$response['data']['resourceGroupAdmin'] = true;
+			}
+		}
+		
 		
 		if(!$model->isResource() && $model->id>0)
 			$this->_loadResourceEvents($model, $response);
@@ -731,7 +760,7 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 		
 		// If you have clicked on the "print" button
 		if($print)
-			$this->_createPdf($response, true);
+			$this->_createPdf($response, $view);
 
 		return $response;
 	}
@@ -760,6 +789,9 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 		//dirty hack to save multiselect grid state
 		if(isset($_REQUEST['calendars']))
 			\GO::config()->save_setting('ms_calendars', implode(',', json_decode($_REQUEST['calendars'])), \GO::session()->values['user_id']);
+		if(isset($_REQUEST['categories'])) {
+			\GO::config()->save_setting('ms_categories', implode(',', json_decode($_REQUEST['categories'])), \GO::session()->values['user_id']);
+		}
 		
 		if(!empty($params['start_time']))
 			$startTime = $params['start_time'];
@@ -791,6 +823,11 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 			$calendars = json_decode($params['calendars']);
 		}
 		
+		$categories = array();
+		if(isset($params['categories'])) {
+			$categories = json_decode($params['categories']);
+		}
+		
 		
 		$colorIndex = 0;
 		
@@ -804,6 +841,9 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 		$bdaysAdded=false;
 		
 		$calendarModels=array();
+		
+		$this->_uuidEvents = array();
+		
 		foreach($calendars as $calendarId){
 			// Get the calendar model that $calendarIdis used for these events
 			try{
@@ -866,14 +906,26 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 					
 				if(\GO::modules()->tasks && empty($params['events_only'])){
 					$response = $this->_getTaskResponseForPeriod($response,$calendar,$startTime,$endTime);
-				}
-
-				$response = $this->_getEventResponseForPeriod($response,$calendar,$startTime,$endTime);
-			}	catch(\GO\Base\Exception\AccessDenied $e){
+				}				
+				
+				$response = $this->_getEventResponseForPeriod($response,$calendar,$startTime,$endTime, $categories);
+				
+			} catch(\GO\Base\Exception\AccessDenied $e){
 				//skip calendars without permission
+			} catch(\GO\Base\Exception\NotFound $e) {
+				\GO::debug('Calendar with ID: '. $calendarId . ' was not found');
+			}
+			
+		}
+
+		foreach($this->_uuidEvents as $uuidEvent) { // Add the event to the results array
+			$index = $this->_getIndex($response['results'],$uuidEvent->getAlternateStartTime(),$uuidEvent->getName());
+			$response['results'][$index]=$uuidEvent->getResponseData();
+			if ($uuidEvent->getEvent()->isResource()){
+				$response['results'][$index]['resourced_calendar_name'] = $uuidEvent->getEvent()->resourceGetEventCalendarName();
 			}
 		}
-		
+
 		// Get the best default calendar to add new events
 		$defaultWritableCalendar = $this->_getDefaultWritableCalendar($calendarModels);
 		if($defaultWritableCalendar){
@@ -917,7 +969,7 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 	/**
 	 * Get the best writable calendar for the current user/view
 	 * @param array $calendarModels
-	 * @return Go_Calendar_Model_Calendar
+	 * @return \GO\Calendar\Model\Calendar
 	 */
 	private function _getDefaultWritableCalendar(array $calendarModels){
 		
@@ -941,8 +993,8 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 	 * 
 	 * @param array $response
 	 * @param \GO\Calendar\Model\Calendar $calendar
-	 * @param string $startTime
-	 * @param string $endTime
+	 * @param StringHelper $startTime
+	 * @param StringHelper $endTime
 	 * @return array 
 	 */
 	private function _getTaskResponseForPeriod($response,$calendar,$startTime,$endTime){
@@ -957,10 +1009,23 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 		}
 		if(!empty($lists)){
 			
-		  
+			// If the calendar_tasklist_show is set to 1 task will display only on the start date in the calendar
+			switch(\GO::config()->calendar_tasklist_show) {
+				case 2:  //due date only
+					$dueQ = 'due_time';
+					$startQ = 'due_time';
+					break;
+				case 1: // start date only
+					$dueQ = 'start_time';
+					$startQ = 'start_time';
+					break;
+				default: // entirely
+					$dueQ = 'due_time';
+					$startQ = 'start_time';
+			}
 			$taskFindCriteria = \GO\Base\Db\FindCriteria::newInstance()
-							->addCondition('due_time', strtotime($startTime),'>=')
-							->addCondition('due_time', strtotime($endTime), '<=');
+							->addCondition($dueQ, strtotime($startTime),'>=')
+							->addCondition($startQ, strtotime($endTime), '<=');
 			
 			// Remove tasks that are completed
 			if(!$calendar->show_completed_tasks)
@@ -971,20 +1036,39 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 
 			$taskFindParams = \GO\Base\Db\FindParams::newInstance()
 							->criteria($taskFindCriteria);
-
+			
 			$tasks = \GO\Tasks\Model\Task::model()->find($taskFindParams);
 
 			while($task = $tasks->fetch()){
-
-				$startTime = date('Y-m-d',$task->due_time).' 00:00';
+				
+				$dayValue = $dayString[date('w', ($task->due_time))].' '.\GO\Base\Util\Date::get_timestamp($task->due_time,false);
+				$getIndexValue = $task->due_time;
+				
+				// If the start_time is empty, then get the due_time as start time.
+				// This displays the task only on the due_date
+				if(empty($task->start_time)){
+					$startTime = date('Y-m-d',$task->due_time).' 00:00';
+				} else {
+					$startTime = date('Y-m-d',$task->start_time).' 00:00';
+				}
+					
 				$endTime = date('Y-m-d',$task->due_time).' 23:59';
-
+				
+				
+				// Display the tasks in the calendar on due date or entirely [0=entirely, 1=start date, 2=due date] 
+				if(\GO::config()->calendar_tasklist_show==2) {
+					$startTime = $endTime;
+				} elseif(\GO::config()->calendar_tasklist_show==1) {
+					$endTime = $startTime;
+					$getIndexValue = $task->start_time;
+					$dayValue = $dayString[date('w', ($task->start_time))].' '.\GO\Base\Util\Date::get_timestamp($task->start_time,false);
+				}
+				
 				$resultCount++;
 
-				
 				$taskname = $task->name.' ('.$task->percentage_complete.'%)';
 
-				$response['results'][$this->_getIndex($response['results'], $task->due_time).'task'.$task->id] = array(
+				$response['results'][$this->_getIndex($response['results'], $getIndexValue).'task'.$task->id] = array(
 					'id'=>$response['count']++,
 					'link_count'=>$task->countLinks(),
 					'name'=>$taskname,
@@ -996,7 +1080,7 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 					'model_name'=>'GO\Tasks\Model\Task',
 					//'background'=>$calendar->displayColor,
 					'background'=>'EBF1E2',
-					'day'=>$dayString[date('w', ($task->due_time))].' '.\GO\Base\Util\Date::get_timestamp($task->due_time,false),
+					'day'=>$dayValue,
 					'read_only'=>true,
 					'task_id'=>$task->id
 				);
@@ -1021,8 +1105,8 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 	 * 
 	 * @param array $response
 	 * @param \GO\Calendar\Model\Calendar $calendar
-	 * @param string $startTime
-	 * @param string $endTime
+	 * @param StringHelper $startTime
+	 * @param StringHelper $endTime
 	 * @return array 
 	 */
 	private function _getHolidayResponseForPeriod($response,$calendar,$startTime,$endTime){
@@ -1059,8 +1143,8 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 	 * 
 	 * @param array $response
 	 * @param \GO\Calendar\Model\Calendar $calendar
-	 * @param string $startTime
-	 * @param string $endTime
+	 * @param StringHelper $startTime
+	 * @param StringHelper $endTime
 	 * @return array 
 	 */
 	private function _getLeavedaysResponseForPeriod($response,$calendar,$startTime,$endTime){
@@ -1098,8 +1182,8 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 	 * 
 	 * @param array $response
 	 * @param \GO\Calendar\Model\Calendar $calendar
-	 * @param string $startTime
-	 * @param string $endTime
+	 * @param StringHelper $startTime
+	 * @param StringHelper $endTime
 	 * @return array 
 	 */
 	private function _getBirthdayResponseForPeriod($response,$calendar,$startTime,$endTime){
@@ -1123,7 +1207,7 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 			if(!in_array($contact->id, $alreadyProcessed)){
 				$alreadyProcessed[] = $contact->id;
 
-				$name = \GO\Base\Util\String::format_name($contact->last_name, $contact->first_name, $contact->middle_name);
+				$name = \GO\Base\Util\StringHelper::format_name($contact->last_name, $contact->first_name, $contact->middle_name);
 				$start_arr = explode('-',$contact->upcoming);
 
 				$start_unixtime = mktime(0,0,0,$start_arr[1],$start_arr[2],$start_arr[0]);
@@ -1144,6 +1228,7 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 					'all_day_event'=>1,
 					'day'=>$dayString[date('w', $start_unixtime)].' '.\GO\Base\Util\Date::get_timestamp($start_unixtime,false),
 					'read_only'=>true,
+					'is_virtual'=>true,
 					'contact_id'=>$contact->id
 				);
 			}
@@ -1161,44 +1246,43 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 	 * 
 	 * @param array $response
 	 * @param \GO\Calendar\Model\Calendar $calendar
-	 * @param string $startTime
-	 * @param string $endTime
+	 * @param StringHelper $startTime
+	 * @param StringHelper $endTime
 	 * @return array 
 	 */
-	private function _getEventResponseForPeriod($response,$calendar,$startTime,$endTime){	
+	private function _getEventResponseForPeriod($response,$calendar,$startTime,$endTime, $categories){	
 		$resultCount = 0;
 	
 		// Get all the localEvent models between the given time period
-		$events = \GO\Calendar\Model\Event::model()->findCalculatedForPeriod(
-								\GO\Base\Db\FindParams::newInstance()->criteria(
-									\GO\Base\Db\FindCriteria::newInstance()->addCondition('calendar_id', $calendar->id)
-								)->select(),
-								strtotime($startTime), 
-								strtotime($endTime)
-							);
+		$events = $calendar->getEventsForPeriod(strtotime($startTime), strtotime($endTime),$categories);
 		
-		$this->_uuidEvents = array();
-
+//		$this->_uuidEvents = array();
+		
 		// Loop through each event and prepare the view for it.
 		foreach($events as $event){
 			
 			// Check for a double event, and merge them if they are double
 			$key = $event->getUuid().$event->getAlternateStartTime();
-		
+			
+			//$event->getEvent()->location = $key;
+			
 			if(isset($this->_uuidEvents[$key]))
 			{
-				if($event->getEvent()->calendar_id==$this->_uuidEvents[$key]->getEvent()->calendar_id){
+				if(!empty(\GO::config()->calendar_disable_merge) || $event->getEvent()->calendar_id==$this->_uuidEvents[$key]->getEvent()->calendar_id){
 					//this is an erroneous situation. events with the same start time and the same uuid may not appear in the same calendar.
 					//if we merge it then the user can't edit the events anymore.
-					$key+=$event->getEvent()->id;
+					$key .= $event->getEvent()->id;
 					$this->_uuidEvents[$key] = $event;
 				}else
-				{
+				{					
 					$this->_uuidEvents[$key]->mergeWithEvent($event);
 				}
-			}else{
+			}else{		
+				//echo $event->getEvent()->name.' '.$key.', ';
+				
 				$this->_uuidEvents[$key] = $event;
 			}
+		
 			
 //			$this->_uuidEvents[]=$event;
 			
@@ -1218,20 +1302,28 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 			$resultCount++; // Add one to the global result count;
 		}
 		
-		foreach($this->_uuidEvents as $uuidEvent) // Add the event to the results array
-			$response['results'][$this->_getIndex($response['results'],$uuidEvent->getAlternateStartTime(),$uuidEvent->getName())]=$uuidEvent->getResponseData();
-		
+//		foreach($this->_uuidEvents as $uuidEvent) { // Add the event to the results array
+//			$index = $this->_getIndex($response['results'],$uuidEvent->getAlternateStartTime(),$uuidEvent->getName());
+//			$response['results'][$index]=$uuidEvent->getResponseData();
+//			if ($uuidEvent->getEvent()->isResource())
+//				$response['results'][$index]['resourced_calendar_name'] = $uuidEvent->getEvent()->resourceGetEventCalendarName();
+//		}
+			
 		$response['count_events_only'] = $resultCount; // Set the count of the events
 
 		return $response;
 	}
 		
-	protected function actionIcs($params) {
-		$event = \GO\Calendar\Model\Event::model()->findByPk($params['id']);
-		header('Content-Type: text/plain');
-		//\GO\Base\Util\Http::outputDownloadHeaders(new \GO\Base\FS\File('calendar.ics'));
-		echo $event->toICS();
-	}
+//	protected function actionIcs($params) {
+//		$event = \GO\Calendar\Model\Event::model()->findByPk($params['id']);
+//		
+//		if($event->private && $event->calendar->user_id != \GO::user()->id) {
+//			throw new \GO\Base\Exception\AccessDenied();
+//		}
+//		header('Content-Type: text/plain');
+//		//\GO\Base\Util\Http::outputDownloadHeaders(new \GO\Base\FS\File('calendar.ics'));
+//		echo $event->toICS();
+//	}
 	
 	protected function actionDelete($params){
 		
@@ -1303,6 +1395,22 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 		return $response;
 	}
 	
+	private function findByStartTime($vevent, $calendar_id) {
+		$whereCriteria = \GO\Base\Db\FindCriteria::newInstance()							
+										->addCondition('uuid', (string)$vevent->uid)
+							->addCondition('calendar_id', $calendar_id)
+							->addCondition('start_time', $vevent->dtstart->getDateTime()->format('U'));
+
+			$findParams = \GO\Base\Db\FindParams::newInstance()->debugSql()	
+						->ignoreAcl()
+						->single()
+						->criteria($whereCriteria);
+		
+			return \GO\Calendar\Model\Event::model()->find($findParams);
+			
+		
+	}
+	
 	/**
 	 * Handle's a request from an organizer from another externals system
 	 * 
@@ -1314,6 +1422,10 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 	private function _handleIcalendarRequest(\Sabre\VObject\Component $vevent, $recurrenceDate, \GO\Email\Model\Account $account){
 		
 		$settings = \GO\Calendar\Model\Settings::model()->getDefault($account->user);
+		
+		if(!$settings->calendar) {
+			throw new \Exception(GO::t('noDefaultCalendar', 'calendar'));
+		}
 		
 		$masterEvent = \GO\Calendar\Model\Event::model()->findByUuid((string)$vevent->uid, 0, $settings->calendar_id);		
 
@@ -1330,13 +1442,17 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 			}
 		}  else if($masterEvent)
 		{
-			
 			$exceptionEvent = $masterEvent->findException($recurrenceDate);			
 				
 			if($exceptionEvent) {
 				if (!$masterEvent->calendar->checkPermissionLevel(\GO\Base\Model\Acl::DELETE_PERMISSION))
 					throw new \Exception(sprintf(\GO::t('cannotHandleInvitation2','calendar'),$masterEvent->calendar->name));
 				$exceptionEvent->delete();
+			}else {
+				$event = $this->findByStartTime($vevent, $settings->calendar_id);
+				if($event) {
+					$event->delete();
+				}
 			}
 			
 			$exception = $masterEvent->hasException($recurrenceDate);
@@ -1344,6 +1460,13 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 				if (!$masterEvent->calendar->checkPermissionLevel(\GO\Base\Model\Acl::DELETE_PERMISSION))
 					throw new \Exception(sprintf(\GO::t('cannotHandleInvitation2','calendar'),$masterEvent->calendar->name));
 				$exception->delete();
+			}
+		}else
+		{
+//			throw new \Exception("ja");
+			$event = $this->findByStartTime($vevent, $settings->calendar_id);
+			if($event) {
+				$event->delete();
 			}
 		}
 		
@@ -1513,6 +1636,14 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 		$participant->save();
 		
 		$event = $participant->getParticipantEvent();
+		
+		if(!$event && $participant->user_id) {			
+			
+			\GO::session()->runAs($participant->user_id);
+			//if the participant is a user and there's no event for him yet then create it.
+			$event = $participant->event->createCopyForParticipant($participant);
+		}
+		
 		if($event){
 			$event->replyToOrganizer();
 		}else {
@@ -1526,8 +1657,8 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 	 * Get the birthdays of the contacts in the given addressbooks between 
 	 * the given start and end time.
 	 * 
-	 * @param string $start_time
-	 * @param string $end_time
+	 * @param StringHelper $start_time
+	 * @param StringHelper $end_time
 	 * @param array $abooks
 	 * @return \GO\Base\Db\ActiveStatement 
 	 */
@@ -1636,4 +1767,42 @@ class EventController extends \GO\Base\Controller\AbstractModelController {
 		}
 		
 	}
+	
+	protected function actionExportEventAsIcs($event_id) {
+		
+		$eventModel = \GO\Calendar\Model\Event::model()->findByPk($event_id);
+		
+		if (!$eventModel)
+			throw new Exception('Could not find event with ID #'.$event_id.'.');
+			
+		if ($eventModel->exception_for_event_id>0)
+			$eventModel = \GO\Calendar\Model\Event::model()->findByPk($eventModel->exception_for_event_id);
+		
+		if (!$eventModel)
+			throw new Exception('Could not find main recurring event of event #'.$event_id.'.');
+		
+		
+		if($eventModel->private && $eventModel->calendar->user_id != \GO::user()->id) {
+			throw new \GO\Base\Exception\AccessDenied();
+		}
+		
+		\GO\Base\Util\Http::outputDownloadHeaders(new \GO\Base\FS\File($eventModel->calendar->name.' - '.\GO\Base\Util\Date::get_timestamp($eventModel->start_time).' '.$eventModel->name.'.ics'));
+		
+		echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Intermesh//NONSGML ".\GO::config()->product_name." ".\GO::config()->version."//EN\r\n";
+		
+		$t = new \GO\Base\VObject\VTimezone();
+		echo $t->serialize();
+		$v = $eventModel->toVObject();
+		echo $v->serialize();
+		
+		$exceptionsStmt = \GO\Calendar\Model\Event::model()->findByAttributes(array('calendar_id'=>$eventModel->calendar_id,'exception_for_event_id'=>$eventModel->id));
+		foreach ($exceptionsStmt as $exceptionEventModel) {
+			$vexc = $exceptionEventModel->toVObject();
+			echo $vexc->serialize();
+		}
+		
+		echo "END:VCALENDAR\r\n";
+		
+	}
+	
 }

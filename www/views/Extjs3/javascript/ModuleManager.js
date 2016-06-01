@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: ModuleManager.js 15285 2013-07-23 13:51:52Z mschering $
+ * @version $Id: ModuleManager.js 19025 2015-04-23 11:26:00Z wsmits $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -39,6 +39,8 @@ GO.ModuleManager = Ext.extend(function(){
 	settingsSortOrder : Array(),
 	
 	readyFunctions : {},
+	
+	subMenus : {},
 	
 	
 	addSettingsPanel : function(panelID, panelClass, panelConfig, sortPriority)
@@ -74,11 +76,20 @@ GO.ModuleManager = Ext.extend(function(){
 		return panels;
 	},
 	
-	addModule : function(moduleName, panelClass, panelConfig)
+	/**
+	 * 
+	 * @param {type} moduleName
+	 * @param {type} panelClass
+	 * @param {type} panelConfig
+	 * @param Object subMenuConfig {title:'title',iconCls:'classname'} // title is a required property
+	 * @returns {undefined}
+	 */
+	addModule : function(moduleName, panelClass, panelConfig, subMenuConfig)
 	{		
 		//this.modules[moduleName]=true;
 		if(panelClass)
 		{
+			panelConfig.inSubmenu = false;
 			panelConfig.moduleName = moduleName;
 			panelConfig.id='go-module-panel-'+panelConfig.moduleName;
 
@@ -86,8 +97,23 @@ GO.ModuleManager = Ext.extend(function(){
 				panelConfig.cls = 'go-module-panel';
 			
 			this.modulePanels[moduleName] = panelClass;
+			
+			// If this item needs to be inside a  submenu
+			if(subMenuConfig){
+				if(!this.subMenus[subMenuConfig.title]){
+					this.subMenus[subMenuConfig.title] = {
+						subMenuConfig:subMenuConfig,
+						items:[]
+					};
+				}
+
+				this.subMenus[subMenuConfig.title].items.push(panelConfig);
+				panelConfig.inSubmenu = true;
+			}
+			
 			this.panelConfigs[moduleName] = panelConfig;
 			this.sortOrder.push(moduleName);
+			
 		}
 		this.onAddModule(moduleName);
 		
@@ -156,8 +182,11 @@ GO.ModuleManager = Ext.extend(function(){
 	
 	userHasModule : function(module){
 		return module in this.modules;
-	}
-				
+	},
+	
+	getAllSubmenus : function(){
+		return this.subMenus;
+	}	
 });
 
 

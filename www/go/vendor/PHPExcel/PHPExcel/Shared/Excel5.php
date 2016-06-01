@@ -40,7 +40,7 @@ class PHPExcel_Shared_Excel5
 	 * This holds for Arial 10
 	 *
 	 * @param PHPExcel_Worksheet $sheet The sheet
-	 * @param string $col The column
+	 * @param StringHelper $col The column
 	 * @return integer The width in pixels
 	*/
 	public static function sizeCol($sheet, $col = 'A')
@@ -135,9 +135,9 @@ class PHPExcel_Shared_Excel5
 	 * The distanceX is found as sum of all the spanning columns widths minus correction for the two offsets
 	 *
 	 * @param PHPExcel_Worksheet $sheet
-	 * @param string $startColumn
+	 * @param StringHelper $startColumn
 	 * @param integer $startOffsetX Offset within start cell measured in 1/1024 of the cell width
-	 * @param string $endColumn
+	 * @param StringHelper $endColumn
 	 * @param integer $endOffsetX Offset within end cell measured in 1/1024 of the cell width
 	 * @return integer Horizontal measured in pixels
 	 */
@@ -235,7 +235,7 @@ class PHPExcel_Shared_Excel5
 	 *			   H is the height of the cell
 	 *
 	 * @param PHPExcel_Worksheet $sheet
-	 * @param string $coordinates E.g. 'A1'
+	 * @param StringHelper $coordinates E.g. 'A1'
 	 * @param integer $offsetX Horizontal offset in pixels
 	 * @param integer $offsetY Vertical offset in pixels
 	 * @param integer $width Width in pixels

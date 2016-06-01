@@ -55,8 +55,8 @@ class File extends \Sabre\DAV\FS\File {
 //		$file->saveVersion();
 //		$file->putContents($data);
 		
-		
-		$file = new \GO\Base\Fs\File($this->path);
+
+		$file = \GO\Files\Model\File::model()->findByPath($this->relpath);
 		$file->putContents($data);
 
 //		file_put_contents($this->path, $data);
@@ -68,7 +68,7 @@ class File extends \Sabre\DAV\FS\File {
 	/**
 	 * Renames the node
 	 *
-	 * @param string $name The new name
+	 * @param StringHelper $name The new name
 	 * @return void
 	 */
 	public function setName($name) {
@@ -93,7 +93,7 @@ class File extends \Sabre\DAV\FS\File {
 	/**
 	 * Movesthe node
 	 *
-	 * @param string $name The new name
+	 * @param StringHelper $name The new name
 	 * @return void
 	 */
 	public function move($newPath) {
@@ -116,10 +116,11 @@ class File extends \Sabre\DAV\FS\File {
 	/**
 	 * Returns the data
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function get() {
-
+		$file = \GO\Files\Model\File::model()->findByPath($this->relpath);
+		$file->open();
 		return fopen($this->path, 'r');
 	}
 

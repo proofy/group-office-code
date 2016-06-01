@@ -15,7 +15,7 @@ interface FieldInterface
      * Check if the respective value of a DateTime field satisfies a CRON exp
      *
      * @param DateTime $date DateTime object to check
-     * @param string $value CRON expression to test against
+     * @param StringHelper $value CRON expression to test against
      *
      * @return bool Returns TRUE if satisfied, FALSE otherwise
      */
@@ -35,7 +35,7 @@ interface FieldInterface
     /**
      * Validates a CRON expression for a given field
      *
-     * @param string $value CRON expression value to validate
+     * @param StringHelper $value CRON expression value to validate
      *
      * @return bool Returns TRUE if valid, FALSE otherwise
      */

@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: overrides.js 17275 2014-04-07 14:57:29Z mschering $
+ * @version $Id: overrides.js 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -272,7 +272,7 @@ Ext.override(Ext.Element, {
 		var c = document.getElementById('printcontainer');
 		var iFrame = document.getElementById('printframe');
         
-		var strTemplate = '<HTML><HEAD>{0}<TITLE>{1}</TITLE></HEAD><BODY onload="{2}" style="background-color:white;">{3}</BODY></HTML>';
+		var strTemplate = '<HTML><HEAD>{0}<TITLE>{1}</TITLE></HEAD><BODY onload="{2}" style="background-color:white;"><div style="position:fixed; top:0; left:0; right:0; bottom:0; z-index:99;"></div>{3}</BODY></HTML>';
 		var strAttr = '';
 		var strFormat;
 		var strHTML;
@@ -399,11 +399,11 @@ Ext.override(Ext.ToolTip,{
 
 Ext.apply(Ext.form.VTypes, {
     emailAddress:  function(v) {
-		var email = /^[_a-z0-9\-+\&]+(\.[_a-z0-9\-+\&]+)*@[a-z0-9\-]+(\.[a-z0-9\-]+)*(\.[a-z]{2,100})$/i;
+		var email = /^[_a-z0-9\-+\&\']+(\.[_a-z0-9\-+\&\']+)*@[a-z0-9\-]+(\.[a-z0-9\-]+)*(\.[a-z]{2,100})$/i;
         return email.test(v);
     },
     emailAddressText: Ext.form.VTypes.emailText,
-    emailAddressMask: /[a-z0-9_\.\-@\+\&]/i
+    emailAddressMask: /[a-z0-9_\.\-\'@\+\&]/i
 });
 
 
@@ -481,7 +481,7 @@ Ext.override(Ext.form.Checkbox, {
  * @param {HTMLElement} node The node to remove
  * @method
  */
- Ext.removeNode = Ext.isIE && !Ext.isIE8 && !Ext.isIE9 ? function() {
+ Ext.removeNode = Ext.isIE && !Ext.isIE8 && !Ext.isIE9 && !Ext.isIE10 ? function() {
 
 	var d;
 	return function(n) {
@@ -500,3 +500,67 @@ Ext.override(Ext.form.Checkbox, {
 		delete Ext.elCache[n.id];
 	}
 };
+
+
+Ext.override(Ext.layout.ToolbarLayout ,{
+		fitToSize : function(target) {
+        if (this.container.enableOverflow === false) {
+            return;
+        }
+
+        var width       = target.dom.clientWidth,
+            tableWidth  = target.dom.firstChild.offsetWidth,
+            clipWidth   = width - this.triggerWidth,
+            lastWidth   = this.lastWidth || 0,
+
+            hiddenItems = this.hiddenItems,
+            hasHiddens  = hiddenItems.length != 0,
+            isLarger    = width >= lastWidth;
+
+        this.lastWidth  = width;
+
+        if (tableWidth > width || (hasHiddens && isLarger)) {
+            var items     = this.container.items.items,
+                len       = items.length,
+                loopWidth = 0,
+                item;
+
+            for (var i = 0; i < len; i++) {
+                item = items[i];
+
+                if (!item.isFill) {
+                    loopWidth += this.getItemWidth(item);
+                    if (loopWidth > clipWidth) {
+                        if ((!item.hidden || !item.xtbHidden)) {
+                            this.hideItem(item);
+                        }
+                    } else if (item.xtbHidden) {
+                        this.unhideItem(item);
+                    }
+                }
+            }
+        }
+
+        
+        hasHiddens = hiddenItems.length != 0;
+
+        if (hasHiddens) {
+            this.initMore();
+
+            if (!this.lastOverflow) {
+                this.container.fireEvent('overflowchange', this.container, true);
+                this.lastOverflow = true;
+            }
+        } else if (this.more) {
+            this.clearMenu();
+            this.more.destroy();
+            delete this.more;
+
+            if (this.lastOverflow) {
+                this.container.fireEvent('overflowchange', this.container, false);
+                this.lastOverflow = false;
+            }
+        }
+    }
+	}
+);

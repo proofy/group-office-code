@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: CategoryDialog.js 15954 2013-10-17 12:04:36Z mschering $
+ * @version $Id: CategoryDialog.js 19024 2015-04-23 11:24:40Z wsmits $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -26,6 +26,16 @@ GO.bookmarks.CategoryDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 	},
 	buildForm : function () {
 
+		this.showInStartMenuCheck = new Ext.ux.form.XCheckbox({
+			hideLabel: true,
+			boxLabel: GO.bookmarks.lang.showCategoryInStartMenu,
+			name: 'show_in_startmenu'
+		});
+
+		this.emptyLine = new GO.form.PlainField({
+			value: '&nbsp;'
+		});
+		
 		this.propertiesPanel = new Ext.Panel({
 			border: false,
 			baseParams: {task: 'category'},			
@@ -39,7 +49,9 @@ GO.bookmarks.CategoryDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 				anchor: '100%',
 			  allowBlank:false,
 			  fieldLabel: GO.lang.strName
-			}
+			},
+			this.emptyLine,
+			this.showInStartMenuCheck
 //			,this.selectUser = new GO.form.SelectUser({
 //				fieldLabel: GO.lang['strUser'],
 //				disabled : !GO.settings.has_admin_permission,

@@ -45,13 +45,16 @@ class Odf {
 	/**
 	 * Class constructor
 	 *
-	 * @param string $filename the name of the odt file
+	 * @param StringHelper $filename the name of the odt file
 	 * @throws OdfException
 	 */
 	public function __construct($filename, $config = array()) {
 		if (!is_array($config)) {
 			throw new OdfException('Configuration data must be provided as array');
 		}
+		
+		$this->config['PATH_TO_TMP'] = GO::config()->tmpdir;
+		
 		foreach ($config as $configKey => $configValue) {
 			//if (array_key_exists($configKey, $this->config)) {
 				$this->config[$configKey] = $configValue;
@@ -92,8 +95,8 @@ class Odf {
 	/**
 	 * Assing a template variable
 	 *
-	 * @param string $key name of the variable within the template
-	 * @param string $value replacement value
+	 * @param StringHelper $key name of the variable within the template
+	 * @param StringHelper $value replacement value
 	 * @param bool $encode if true, special XML characters are encoded
 	 * @throws OdfException
 	 * @return odf
@@ -110,8 +113,8 @@ class Odf {
 	/**
 	 * Assign a template variable as a picture
 	 *
-	 * @param string $key name of the variable within the template
-	 * @param string $value path to the picture
+	 * @param StringHelper $key name of the variable within the template
+	 * @param StringHelper $value path to the picture
 	 * @throws OdfException
 	 * @return odf
 	 */
@@ -171,8 +174,8 @@ IMG;
 	 */
 	private function _parse() {
 		//  $this->contentXml = str_replace(array_keys($this->vars), array_values($this->vars), $this->contentXml);
-		$this->contentXml = preg_replace('/{([^}]*)}/Ue', "odf::replacetag('$1', \$this->vars)", $this->contentXml);
-		$this->stylesXml = preg_replace('/{([^}]*)}/Ue', "odf::replacetag('$1', \$this->vars)", $this->stylesXml);
+		$this->contentXml = preg_replace_callback('/{([^}]*)}/U', array($this, "replacetag"), $this->contentXml);
+		$this->stylesXml = preg_replace_callback('/{([^}]*)}/U', array($this, "replacetag"), $this->stylesXml);
 
 		//clean up unprocessed tags
 		$this->stylesXml=preg_replace('/{([^}]*)}/U',"",$this->stylesXml);
@@ -200,8 +203,9 @@ IMG;
 		return $tag . $garbage_tags;
 	}
 
-	public static function replacetag($tag, $record) {
-		$tag = stripslashes($tag);
+	public function replacetag($tag) {
+		
+		$tag = stripslashes($tag[1]);
 		$orig_tag = $tag;
 
 		//Sometimes people change styles within a {autodata} tag.
@@ -224,14 +228,14 @@ IMG;
 		}
 
 		if (!$math) {
-			if (!isset($record[$arr[0]])) {
+			if (!isset($this->vars[$arr[0]])) {
 				return '{' . $orig_tag . '}';
 			} else {
-				$v = $record[$arr[0]];
+				$v = $this->vars[$arr[0]];
 			}
 		} else {
 			$v = $arr[0];
-			foreach ($record as $key => $value) {
+			foreach ($this->vars as $key => $value) {
 				$v = str_replace($key, $value, $v);
 			}
 
@@ -280,7 +284,7 @@ IMG;
 	/**
 	 * Display all the current template variables
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function printVars() {
 		return print_r('<pre>' . print_r($this->vars, true) . '</pre>', true);
@@ -290,7 +294,7 @@ IMG;
 	 * Display the XML content of the file from odt document
 	 * as it is at the moment
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function __toString() {
 		return $this->contentXml;
@@ -299,7 +303,7 @@ IMG;
 	/**
 	 * Display loop segments declared with setSegment()
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function printDeclaredSegments() {
 		return '<pre>' . print_r(implode(' ', array_keys($this->segments)), true) . '</pre>';
@@ -308,7 +312,7 @@ IMG;
 	/**
 	 * Declare a segment in order to use it in a loop
 	 *
-	 * @param string $segment
+	 * @param StringHelper $segment
 	 * @throws OdfException
 	 * @return Segment
 	 */
@@ -328,7 +332,7 @@ IMG;
 	/**
 	 * Save the odt file on the disk
 	 *
-	 * @param string $file name of the desired file
+	 * @param StringHelper $file name of the desired file
 	 * @throws OdfException
 	 * @return void
 	 */
@@ -368,7 +372,7 @@ IMG;
 	/**
 	 * Export the file as attached file by HTTP
 	 *
-	 * @param string $name (optionnal)
+	 * @param StringHelper $name (optionnal)
 	 * @throws OdfException
 	 * @return void
 	 */
@@ -390,7 +394,7 @@ IMG;
 	/**
 	 * Returns a variable of configuration
 	 *
-	 * @return string The requested variable of configuration
+	 * @return StringHelper The requested variable of configuration
 	 */
 	public function getConfig($configKey) {
 		if (array_key_exists($configKey, $this->config)) {
@@ -402,7 +406,7 @@ IMG;
 	/**
 	 * Returns the temporary working file
 	 *
-	 * @return string le chemin vers le fichier temporaire de travail
+	 * @return StringHelper le chemin vers le fichier temporaire de travail
 	 */
 	public function gettmpfile() {
 		return $this->tmpfile;

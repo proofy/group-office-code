@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: EmailComposer.js 16967 2014-03-06 13:29:35Z mschering $
+ * @version $Id: EmailComposer.js 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -127,13 +127,13 @@ GO.email.EmailComposer = function(config) {
 		}),
 		this.ccFieldCheck = new Ext.menu.CheckItem({
 			text : GO.email.lang.ccField,
-			checked : true,
+			checked : GO.email.showCCfield,
 			checkHandler : this.onShowFieldCheck,
 			scope : this
 		}),
 		this.bccFieldCheck = new Ext.menu.CheckItem({
 			text : GO.email.lang.bccField,
-			checked : false,
+			checked : GO.email.showBCCfield,
 			checkHandler : this.onShowFieldCheck,
 			scope : this
 		})
@@ -146,6 +146,7 @@ GO.email.EmailComposer = function(config) {
 	var items = [
 	this.fromCombo = new Ext.form.ComboBox({
 		store : GO.email.aliasesStore,
+		editable:false,
 		fieldLabel : GO.email.lang.from,
 		name : 'alias_name',
 		anchor : '100%',
@@ -219,13 +220,17 @@ GO.email.EmailComposer = function(config) {
 	var anchor = -113;
 						
 	if(GO.settings.modules.savemailas && GO.settings.modules.savemailas.read_permission)
-	{
+	{		
 		if (!this.selectLinkField) {
 			this.selectLinkField = new GO.form.SelectLink({
 				anchor : '100%'
-			});					
+			});
 			anchor+=26;
 			items.push(this.selectLinkField);
+			
+			this.selectLinkField.on('change',function(){
+				this.replaceTemplateLinkTag();
+			},this);	
 		}
 	}
 
@@ -238,6 +243,10 @@ GO.email.EmailComposer = function(config) {
 				});
 				anchor+=26;
 				items.push(this.selectLinkField);
+				
+				this.selectLinkField.on('change',function(){
+					this.replaceTemplateLinkTag();
+				},this);
 			}
 		}
 	} catch(e) {}
@@ -524,6 +533,12 @@ Ext.extend(GO.email.EmailComposer, GO.Window, {
 	addSignature : function(accountRecord){
 		accountRecord = accountRecord || this.fromCombo.store.getById(this.fromCombo.getValue());
 			
+		if(!accountRecord) {
+			return false;
+		}
+		
+		var signature_below_reply = accountRecord.get("signature_below_reply");
+	
 		var sig = accountRecord.get(this.emailEditor.getContentType()+"_signature");
 		
 		if(!GO.util.empty(sig))
@@ -537,7 +552,11 @@ Ext.extend(GO.email.EmailComposer, GO.Window, {
 			}
 		}
 		
-		this.emailEditor.getActiveEditor().setValue(sig+this.emailEditor.getActiveEditor().getValue());
+		if(signature_below_reply){
+			this.emailEditor.getActiveEditor().setValue(this.emailEditor.getActiveEditor().getValue()+sig);
+		} else {
+			this.emailEditor.getActiveEditor().setValue(sig+this.emailEditor.getActiveEditor().getValue());
+		}
 	},
 
 	/*
@@ -587,11 +606,11 @@ Ext.extend(GO.email.EmailComposer, GO.Window, {
 		this.sendParams = {};
 		Ext.apply(this.sendParams, this.defaultSendParams);
 
-		GO.email.showCCfield = true;
-		GO.email.showBCCfield = false;
+//		GO.email.showCCfield = true;
+//		GO.email.showBCCfield = false;
 
-		this.showCC(GO.email.showCCfield);
-		this.showBCC(GO.email.showBCCfield);			
+		this.showCC(GO.email.showCCfield===1);
+		this.showBCC(GO.email.showBCCfield===1);			
 		this.ccFieldCheck.setChecked(GO.email.showCCfield);
 		this.bccFieldCheck.setChecked(GO.email.showBCCfield);
 
@@ -644,6 +663,8 @@ Ext.extend(GO.email.EmailComposer, GO.Window, {
 	},
 
 	initTemplateMenu :  function(config){
+		config = config||{};
+		
 //		if (typeof(config.template_id) == 'undefined' && this.templatesStore){
 //			var templateRecordIndex = this.templatesStore.findBy(function(record,id){
 //				return record.get('checked');
@@ -663,6 +684,14 @@ Ext.extend(GO.email.EmailComposer, GO.Window, {
 				item.setChecked(true);
 			}
 		}
+		if(GO.addressbook){
+			if(config.disableTemplates){
+				this.templatesBtn.setDisabled(config.disableTemplates);
+			} else {
+				this.templatesBtn.setDisabled(false);
+			}
+		}
+		
 	},
 					
 					
@@ -918,6 +947,19 @@ Ext.extend(GO.email.EmailComposer, GO.Window, {
 							this.selectLinkField.setValue(action.result.data.link_value);
 							this.selectLinkField.setRemoteText(action.result.data.link_text);
 						}
+						if(action.result.data.account_id) {
+							this.lastLoadParams.account_id = action.result.data.account_id
+//							this.fromCombo.setValue(this.lastLoadParams.account_id);
+						}
+						if(action.result.data.alias_id)
+							this.lastLoadParams.alias_id = action.result.data.alias_id
+						if(action.result.data.template_id) {
+							this.lastLoadParams.template_id = action.result.data.template_id
+							this.initTemplateMenu(); // set template menu 
+//							this.initTemplateMenu({template_id: this.lastLoadParams.template_id}); // set template menu 
+						}
+							
+//						action.result.data.account_id
 						
 						this.fireEvent('dialog_ready', this);
 					},
@@ -1015,8 +1057,8 @@ Ext.extend(GO.email.EmailComposer, GO.Window, {
 
 		this.startAutoSave();
 
-		this.ccFieldCheck.setChecked(GO.email.showCCfield);
-		this.bccFieldCheck.setChecked(this.bccCombo.getValue()!='');
+		this.ccFieldCheck.setChecked(GO.email.showCCfield || this.ccCombo.getValue()!=='');
+		this.bccFieldCheck.setChecked(GO.email.showBCCfield || this.bccCombo.getValue()!=='');
 	
 		if(config.afterLoad)
 		{
@@ -1036,6 +1078,10 @@ Ext.extend(GO.email.EmailComposer, GO.Window, {
 		}
 		
 		this.fireEvent('afterShowAndLoad',this);
+		
+		if(this.selectLinkField){
+			this.replaceTemplateLinkTag();
+		}
 	},
 	
 
@@ -1089,7 +1135,7 @@ Ext.extend(GO.email.EmailComposer, GO.Window, {
 			if(this.sendParams.save_to_path)
 				sendUrl = GO.url("email/message/saveToFile");
 			else if(draft || autoSave)
-				sendUrl = GO.url("email/message/save")
+				sendUrl = GO.url("email/message/save");
 
 			this.formPanel.form.submit({
 				url : sendUrl,
@@ -1179,6 +1225,33 @@ Ext.extend(GO.email.EmailComposer, GO.Window, {
 			case this.bccFieldCheck.id :
 				this.showBCC(checked);
 				break;
+		}
+	},
+	
+	replaceTemplateLinkTag: function() {
+
+		var editorValue = this.emailEditor.getActiveEditor().getValue();
+		var linkValue = '';
+
+		if (!GO.util.empty(this.selectLinkField.getValue())) {
+			var linkValue = this.selectLinkField.getRawValue();
+			var nValue = this.selectLinkField.getValue();
+			
+			GO.request({
+				url: 'core/createModelUrl',
+				params: {
+					modelTypeAndKey: nValue
+				},
+				success: function(response,options,result) {
+					var newValue = editorValue.replace(/<span class="go-composer-link">(.*?)<\/span>/g, function(match, contents, offset, s) {
+						// onclick="GO.linkHandlers[\''+nParts[0]+'\'].call(this, '+nParts[1]+');"
+						return '<span class="go-composer-link"><a href="' + result.url + '">' + linkValue + '</a></span>';
+					});
+
+					this.emailEditor.getActiveEditor().setValue(newValue);
+				},
+				scope: this
+			});
 		}
 	}
 });

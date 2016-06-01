@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: LinksDialog.js 17275 2014-04-07 14:57:29Z mschering $
+ * @version $Id: LinksDialog.js 19273 2015-07-28 08:30:25Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -21,6 +21,7 @@ GO.dialog.LinksDialog = function(config){
 	
 	this.grid = new GO.grid.SearchPanel({
 			filesupport: config.filesupport,
+			for_links: true,
 			noTitle:true,
 			noOpenLinks:true,
 			hideDescription:config.hideDescription,

@@ -691,7 +691,7 @@ class PHPExcel_Calculation_Engineering {
 	 * Parses a complex number into its real and imaginary parts, and an I or J suffix
 	 *
 	 * @param	string		$complexNumber	The complex number
-	 * @return	string[]	Indexed on "real", "imaginary" and "suffix"
+	 * @return	StringHelper[]	Indexed on "real", "imaginary" and "suffix"
 	 */
 	public static function _parseComplex($complexNumber) {
 		$workString = (string) $complexNumber;
@@ -1059,7 +1059,7 @@ class PHPExcel_Calculation_Engineering {
 	 *								Negative numbers are represented using two's-complement notation.
 	 *								If number is not a valid binary number, or if number contains more than
 	 *								10 characters (10 bits), BIN2DEC returns the #NUM! error value.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function BINTODEC($x) {
 		$x	= PHPExcel_Calculation_Functions::flattenSingleValue($x);
@@ -1111,7 +1111,7 @@ class PHPExcel_Calculation_Engineering {
 	 *								If places is not an integer, it is truncated.
 	 *								If places is nonnumeric, BIN2HEX returns the #VALUE! error value.
 	 *								If places is negative, BIN2HEX returns the #NUM! error value.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function BINTOHEX($x, $places=NULL) {
 		$x	= PHPExcel_Calculation_Functions::flattenSingleValue($x);
@@ -1165,7 +1165,7 @@ class PHPExcel_Calculation_Engineering {
 	 *								If places is not an integer, it is truncated.
 	 *								If places is nonnumeric, BIN2OCT returns the #VALUE! error value.
 	 *								If places is negative, BIN2OCT returns the #NUM! error value.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function BINTOOCT($x, $places=NULL) {
 		$x	= PHPExcel_Calculation_Functions::flattenSingleValue($x);
@@ -1223,7 +1223,7 @@ class PHPExcel_Calculation_Engineering {
 	 *								If places is not an integer, it is truncated.
 	 *								If places is nonnumeric, DEC2BIN returns the #VALUE! error value.
 	 *								If places is zero or negative, DEC2BIN returns the #NUM! error value.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function DECTOBIN($x, $places=NULL) {
 		$x	= PHPExcel_Calculation_Functions::flattenSingleValue($x);
@@ -1279,7 +1279,7 @@ class PHPExcel_Calculation_Engineering {
 	 *								If places is not an integer, it is truncated.
 	 *								If places is nonnumeric, DEC2HEX returns the #VALUE! error value.
 	 *								If places is zero or negative, DEC2HEX returns the #NUM! error value.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function DECTOHEX($x, $places=null) {
 		$x	= PHPExcel_Calculation_Functions::flattenSingleValue($x);
@@ -1333,7 +1333,7 @@ class PHPExcel_Calculation_Engineering {
 	 *								If places is not an integer, it is truncated.
 	 *								If places is nonnumeric, DEC2OCT returns the #VALUE! error value.
 	 *								If places is zero or negative, DEC2OCT returns the #NUM! error value.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function DECTOOCT($x, $places=null) {
 		$x	= PHPExcel_Calculation_Functions::flattenSingleValue($x);
@@ -1390,7 +1390,7 @@ class PHPExcel_Calculation_Engineering {
 	 *									If places is not an integer, it is truncated.
 	 *									If places is nonnumeric, HEX2BIN returns the #VALUE! error value.
 	 *									If places is negative, HEX2BIN returns the #NUM! error value.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function HEXTOBIN($x, $places=null) {
 		$x	= PHPExcel_Calculation_Functions::flattenSingleValue($x);
@@ -1426,7 +1426,7 @@ class PHPExcel_Calculation_Engineering {
 	 *								notation.
 	 *								If number is not a valid hexadecimal number, HEX2DEC returns the
 	 *								#NUM! error value.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function HEXTODEC($x) {
 		$x	= PHPExcel_Calculation_Functions::flattenSingleValue($x);
@@ -1472,7 +1472,7 @@ class PHPExcel_Calculation_Engineering {
 	 *									If places is nonnumeric, HEX2OCT returns the #VALUE! error
 	 *									value.
 	 *									If places is negative, HEX2OCT returns the #NUM! error value.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function HEXTOOCT($x, $places=null) {
 		$x	= PHPExcel_Calculation_Functions::flattenSingleValue($x);
@@ -1523,7 +1523,7 @@ class PHPExcel_Calculation_Engineering {
 	 *									error value.
 	 *									If places is negative, OCT2BIN returns the #NUM! error
 	 *									value.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function OCTTOBIN($x, $places=null) {
 		$x	= PHPExcel_Calculation_Functions::flattenSingleValue($x);
@@ -1559,7 +1559,7 @@ class PHPExcel_Calculation_Engineering {
 	 *								two's-complement notation.
 	 *								If number is not a valid octal number, OCT2DEC returns the
 	 *								#NUM! error value.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function OCTTODEC($x) {
 		$x	= PHPExcel_Calculation_Functions::flattenSingleValue($x);
@@ -1602,7 +1602,7 @@ class PHPExcel_Calculation_Engineering {
 	 *									If places is not an integer, it is truncated.
 	 *									If places is nonnumeric, OCT2HEX returns the #VALUE! error value.
 	 *									If places is negative, OCT2HEX returns the #NUM! error value.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function OCTTOHEX($x, $places=null) {
 		$x	= PHPExcel_Calculation_Functions::flattenSingleValue($x);
@@ -1635,7 +1635,7 @@ class PHPExcel_Calculation_Engineering {
 	 * @param	float		$imaginary		The imaginary coefficient of the complex number.
 	 * @param	string		$suffix			The suffix for the imaginary component of the complex number.
 	 *										If omitted, the suffix is assumed to be "i".
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function COMPLEX($realNumber=0.0, $imaginary=0.0, $suffix='i') {
 		$realNumber	= (is_null($realNumber))	? 0.0 :	PHPExcel_Calculation_Functions::flattenSingleValue($realNumber);
@@ -1779,7 +1779,7 @@ class PHPExcel_Calculation_Engineering {
 	 *		IMCONJUGATE(complexNumber)
 	 *
 	 * @param	string		$complexNumber	The complex number for which you want the conjugate.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function IMCONJUGATE($complexNumber) {
 		$complexNumber	= PHPExcel_Calculation_Functions::flattenSingleValue($complexNumber);
@@ -1807,7 +1807,7 @@ class PHPExcel_Calculation_Engineering {
 	 *		IMCOS(complexNumber)
 	 *
 	 * @param	string		$complexNumber	The complex number for which you want the cosine.
-	 * @return	string|float
+	 * @return	StringHelper|float
 	 */
 	public static function IMCOS($complexNumber) {
 		$complexNumber	= PHPExcel_Calculation_Functions::flattenSingleValue($complexNumber);
@@ -1831,7 +1831,7 @@ class PHPExcel_Calculation_Engineering {
 	 *		IMSIN(complexNumber)
 	 *
 	 * @param	string		$complexNumber	The complex number for which you want the sine.
-	 * @return	string|float
+	 * @return	StringHelper|float
 	 */
 	public static function IMSIN($complexNumber) {
 		$complexNumber	= PHPExcel_Calculation_Functions::flattenSingleValue($complexNumber);
@@ -1855,7 +1855,7 @@ class PHPExcel_Calculation_Engineering {
 	 *		IMSQRT(complexNumber)
 	 *
 	 * @param	string		$complexNumber	The complex number for which you want the square root.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function IMSQRT($complexNumber) {
 		$complexNumber	= PHPExcel_Calculation_Functions::flattenSingleValue($complexNumber);
@@ -1884,7 +1884,7 @@ class PHPExcel_Calculation_Engineering {
 	 *		IMLN(complexNumber)
 	 *
 	 * @param	string		$complexNumber	The complex number for which you want the natural logarithm.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function IMLN($complexNumber) {
 		$complexNumber	= PHPExcel_Calculation_Functions::flattenSingleValue($complexNumber);
@@ -1915,7 +1915,7 @@ class PHPExcel_Calculation_Engineering {
 	 *		IMLOG10(complexNumber)
 	 *
 	 * @param	string		$complexNumber	The complex number for which you want the common logarithm.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function IMLOG10($complexNumber) {
 		$complexNumber	= PHPExcel_Calculation_Functions::flattenSingleValue($complexNumber);
@@ -1941,7 +1941,7 @@ class PHPExcel_Calculation_Engineering {
 	 *		IMLOG2(complexNumber)
 	 *
 	 * @param	string		$complexNumber	The complex number for which you want the base-2 logarithm.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function IMLOG2($complexNumber) {
 		$complexNumber	= PHPExcel_Calculation_Functions::flattenSingleValue($complexNumber);
@@ -1967,7 +1967,7 @@ class PHPExcel_Calculation_Engineering {
 	 *		IMEXP(complexNumber)
 	 *
 	 * @param	string		$complexNumber	The complex number for which you want the exponential.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function IMEXP($complexNumber) {
 		$complexNumber	= PHPExcel_Calculation_Functions::flattenSingleValue($complexNumber);
@@ -2000,7 +2000,7 @@ class PHPExcel_Calculation_Engineering {
 	 *
 	 * @param	string		$complexNumber	The complex number you want to raise to a power.
 	 * @param	float		$realNumber		The power to which you want to raise the complex number.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function IMPOWER($complexNumber,$realNumber) {
 		$complexNumber	= PHPExcel_Calculation_Functions::flattenSingleValue($complexNumber);
@@ -2035,7 +2035,7 @@ class PHPExcel_Calculation_Engineering {
 	 *
 	 * @param	string		$complexDividend	The complex numerator or dividend.
 	 * @param	string		$complexDivisor		The complex denominator or divisor.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function IMDIV($complexDividend,$complexDivisor) {
 		$complexDividend	= PHPExcel_Calculation_Functions::flattenSingleValue($complexDividend);
@@ -2079,7 +2079,7 @@ class PHPExcel_Calculation_Engineering {
 	 *
 	 * @param	string		$complexNumber1		The complex number from which to subtract complexNumber2.
 	 * @param	string		$complexNumber2		The complex number to subtract from complexNumber1.
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function IMSUB($complexNumber1,$complexNumber2) {
 		$complexNumber1	= PHPExcel_Calculation_Functions::flattenSingleValue($complexNumber1);
@@ -2111,7 +2111,7 @@ class PHPExcel_Calculation_Engineering {
 	 *		IMSUM(complexNumber[,complexNumber[,...]])
 	 *
 	 * @param	string		$complexNumber,...	Series of complex numbers to add
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function IMSUM() {
 		// Return value
@@ -2147,7 +2147,7 @@ class PHPExcel_Calculation_Engineering {
 	 *		IMPRODUCT(complexNumber[,complexNumber[,...]])
 	 *
 	 * @param	string		$complexNumber,...	Series of complex numbers to multiply
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function IMPRODUCT() {
 		// Return value

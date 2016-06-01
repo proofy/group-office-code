@@ -102,7 +102,7 @@ class TCPDF2DBarcode {
 	 * @param $w (int) Width of a single rectangle element in user units.
 	 * @param $h (int) Height of a single rectangle element in user units.
 	 * @param $color (string) Foreground color (in SVG format) for bar elements (background is transparent).
- 	 * @return string SVG code.
+ 	 * @return StringHelper SVG code.
  	 * @public
 	 */
 	public function getBarcodeSVGcode($w=3, $h=3, $color='black') {
@@ -138,7 +138,7 @@ class TCPDF2DBarcode {
 	 * @param $w (int) Width of a single rectangle element in pixels.
 	 * @param $h (int) Height of a single rectangle element in pixels.
 	 * @param $color (string) Foreground color for bar elements (background is transparent).
- 	 * @return string HTML code.
+ 	 * @return StringHelper HTML code.
  	 * @public
 	 */
 	public function getBarcodeHTML($w=10, $h=10, $color='black') {

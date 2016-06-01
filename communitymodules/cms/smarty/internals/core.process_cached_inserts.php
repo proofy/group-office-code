@@ -8,8 +8,8 @@
 /**
  * Replace cached inserts with the actual results
  *
- * @param string $results
- * @return string
+ * @param StringHelper $results
+ * @return StringHelper
  */
 function smarty_core_process_cached_inserts($params, &$smarty)
 {

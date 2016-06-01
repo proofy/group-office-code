@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: FilePropertiesDialog.js 16919 2014-02-26 14:12:07Z mschering $
+ * @version $Id: FilePropertiesDialog.js 19028 2015-04-24 07:11:45Z wsmits $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -50,6 +50,20 @@ GO.files.FilePropertiesDialog = function(config){
 			xtype: 'plainfield',
 			fieldLabel: GO.lang.strMtime,
 			name: 'mtime'
+		},
+		{
+			xtype: 'plainfield',
+			fieldLabel: GO.lang.strUser,
+			name: 'username'
+		},
+		{
+			xtype: 'plainfield',
+			fieldLabel: GO.lang.mUser,
+			name: 'musername'
+		},{
+			xtype: 'plainfield',
+			fieldLabel: GO.files.lang.lockedBy,
+			name: 'locked_user_name'
 		},
 		new GO.form.HtmlComponent({
 			html:'<hr />'

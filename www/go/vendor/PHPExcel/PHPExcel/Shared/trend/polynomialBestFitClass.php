@@ -43,7 +43,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 	 * Algorithm type to use for best-fit
 	 * (Name of this trend class)
 	 *
-	 * @var	string
+	 * @var	StringHelper
 	 **/
 	protected $_bestFitType		= 'polynomial';
 
@@ -99,7 +99,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 	 * Return the Equation of the best-fit line
 	 *
 	 * @param	 int		$dp		Number of places of decimal precision to display
-	 * @return	 string
+	 * @return	 StringHelper
 	 **/
 	public function getEquation($dp=0) {
 		$slope = $this->getSlope($dp);
@@ -122,7 +122,7 @@ class PHPExcel_Polynomial_Best_Fit extends PHPExcel_Best_Fit
 	 * Return the Slope of the line
 	 *
 	 * @param	 int		$dp		Number of places of decimal precision to display
-	 * @return	 string
+	 * @return	 StringHelper
 	 **/
 	public function getSlope($dp=0) {
 		if ($dp != 0) {

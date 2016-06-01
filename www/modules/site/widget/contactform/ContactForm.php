@@ -5,23 +5,30 @@ namespace GO\Site\Widget\Contactform;
 
 
 class ContactForm extends \GO\Base\Model {
+	
+	
+	/**
+	 * @var string URL anti spam trap for bots filling in all the fields. It must always be empty.
+	 */
+	public $url;
+	
 	/**
 	 * @var string email from input
 	 */
 	public $email;
 	
 	/**
-	 * @var string name input 
+	 * @var StringHelper name input 
 	 */
 	public $name;
 	
 	/**
-	 * @var string message input
+	 * @var StringHelper message input
 	 */
 	public $message;
 	
 	/**
-	 * @var string email to input
+	 * @var StringHelper email to input
 	 */
 	public $receipt;
 	
@@ -30,7 +37,7 @@ class ContactForm extends \GO\Base\Model {
 	 * @return array validation rules
 	 */
 	public function validate()
-	{
+	{		
 		if(empty($this->name))
 			$this->setValidationError('name', sprintf(\GO::t('attributeRequired'),'name'));
 		if(empty($this->email))
@@ -51,11 +58,17 @@ class ContactForm extends \GO\Base\Model {
 		
 		if(!$this->validate())
 			return false;
-		$message = \GO\Base\Mail\Message::newInstance();
-		$message->setSubject("Groupoffice contact form");
-		$message->setBody($this->message);
-		$message->addFrom($this->email, $this->name);
-		$message->addTo($this->receipt);
-		return \GO\Base\Mail\Mailer::newGoInstance()->send($message);
+		
+		if(empty($this->url)) {
+			$message = \GO\Base\Mail\Message::newInstance();
+			$message->setSubject("Groupoffice contact form");
+			$message->setBody($this->message);
+			$message->addFrom($this->email, $this->name);
+			$message->addTo($this->receipt);
+			return \GO\Base\Mail\Mailer::newGoInstance()->send($message);
+		}else
+		{
+			return false;
+		}
 	}
 }

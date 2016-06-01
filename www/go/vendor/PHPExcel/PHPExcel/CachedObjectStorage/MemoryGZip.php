@@ -77,7 +77,7 @@ class PHPExcel_CachedObjectStorage_MemoryGZip extends PHPExcel_CachedObjectStora
     /**
      * Get cell at a specific coordinate
      *
-     * @param 	string 			$pCoord		Coordinate of the cell
+     * @param 	StringHelper 			$pCoord		Coordinate of the cell
      * @throws 	PHPExcel_Exception
      * @return 	PHPExcel_Cell 	Cell that was found, or null if not found
      */

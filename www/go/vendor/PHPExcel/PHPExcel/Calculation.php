@@ -180,7 +180,7 @@ class PHPExcel_Calculation {
 	 * Error message for any error that was raised/thrown by the calculation engine
 	 *
 	 * @access	public
-	 * @var string
+	 * @var StringHelper
 	 *
 	 */
 	public $formulaError = NULL;
@@ -226,7 +226,7 @@ class PHPExcel_Calculation {
 	/**
 	 * The current locale setting
 	 *
-	 * @var string
+	 * @var StringHelper
 	 *
 	 */
 	private static $_localeLanguage = 'en_us';					//	US English	(default locale)
@@ -235,7 +235,7 @@ class PHPExcel_Calculation {
 	 * List of available locale settings
 	 * Note that this is read for the locale subdirectory only when requested
 	 *
-	 * @var string[]
+	 * @var StringHelper[]
 	 *
 	 */
 	private static $_validLocaleLanguages = array(	'en'		//	English		(default language)
@@ -243,7 +243,7 @@ class PHPExcel_Calculation {
 	/**
 	 * Locale-specific argument separator for function arguments
 	 *
-	 * @var string
+	 * @var StringHelper
 	 *
 	 */
 	private static $_localeArgumentSeparator = ',';
@@ -252,7 +252,7 @@ class PHPExcel_Calculation {
 	/**
 	 * Locale-specific translations for Excel constants (True, False and Null)
 	 *
-	 * @var string[]
+	 * @var StringHelper[]
 	 *
 	 */
 	public static $_localeBoolean = array(	'TRUE'	=> 'TRUE',
@@ -265,7 +265,7 @@ class PHPExcel_Calculation {
 	 * Excel constant string translations to their PHP equivalents
 	 * Constant conversion from text name/value to actual (datatyped) value
 	 *
-	 * @var string[]
+	 * @var StringHelper[]
 	 *
 	 */
 	private static $_ExcelConstants = array('TRUE'	=> TRUE,
@@ -1918,7 +1918,7 @@ class PHPExcel_Calculation {
 	/**
 	 * Clear calculation cache for a specified worksheet
 	 *
-	 * @param string $worksheetName
+	 * @param StringHelper $worksheetName
 	 */
 	public function clearCalculationCacheForWorksheet($worksheetName) {
 		if (isset($this->_calculationCache[$worksheetName])) {
@@ -1929,8 +1929,8 @@ class PHPExcel_Calculation {
 	/**
 	 * Rename calculation cache for a specified worksheet
 	 *
-	 * @param string $fromWorksheetName
-	 * @param string $toWorksheetName
+	 * @param StringHelper $fromWorksheetName
+	 * @param StringHelper $toWorksheetName
 	 */
 	public function renameCalculationCacheForWorksheet($fromWorksheetName, $toWorksheetName) {
 		if (isset($this->_calculationCache[$fromWorksheetName])) {
@@ -1943,7 +1943,7 @@ class PHPExcel_Calculation {
 	/**
 	 * Get the currently defined locale code
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getLocale() {
 		return self::$_localeLanguage;
@@ -1953,7 +1953,7 @@ class PHPExcel_Calculation {
 	/**
 	 * Set the locale code
 	 *
-	 * @param string $locale  The locale to use for formula translation
+	 * @param StringHelper $locale  The locale to use for formula translation
 	 * @return boolean
 	 */
 	public function setLocale($locale = 'en_us') {

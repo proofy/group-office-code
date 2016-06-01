@@ -3,7 +3,7 @@
 namespace GO\Customfields\Customfieldtype;
 
 
-abstract class AbstractCustomfieldtype{
+abstract class AbstractCustomfieldtype extends \GO\Base\Observable{
 	
 	/**
 	 * The field model that this datatype will be used for.
@@ -58,7 +58,7 @@ abstract class AbstractCustomfieldtype{
 	/**
 	 * This function is used when $model->customFieldRecord->att is accessed
 	 * 
-	 * @param string $key Database column 'col_x'
+	 * @param StringHelper $key Database column 'col_x'
 	 * @param array $attributes Customfield model attributes
 	 * @return Mixed 
 	 */
@@ -70,7 +70,7 @@ abstract class AbstractCustomfieldtype{
 	 * This function is used to format the database value for the interface edit
 	 * form.
 	 * 
-	 * @param string $key Database column 'col_x'
+	 * @param StringHelper $key Database column 'col_x'
 	 * @param array $attributes Customfield model attributes
 	 * @return Mixed 
 	 */
@@ -82,7 +82,7 @@ abstract class AbstractCustomfieldtype{
 	 * This function is used to format the value that comes from the interface for
 	 * the database.
 	 * 
-	 * @param string $key Database column 'col_x'
+	 * @param StringHelper $key Database column 'col_x'
 	 * @param array $attributes Customfield model attributes
 	 * @return Mixed 
 	 */
@@ -105,12 +105,12 @@ abstract class AbstractCustomfieldtype{
 	 * This function is used to format the database value for the interface display
 	 * panel (HTML).
 	 * 
-	 * @param string $key Database column 'col_x'
+	 * @param StringHelper $key Database column 'col_x'
 	 * @param array $attributes Customfield model attributes
 	 * @return Mixed 
 	 */
 	public function formatDisplay($key, &$attributes, \GO\Customfields\Model\AbstractCustomFieldsRecord $model){
-		return \GO\Base\Util\String::text_to_html($attributes[$key]);
+		return \GO\Base\Util\StringHelper::text_to_html($attributes[$key]);
 	}
 	
 	/**
@@ -134,7 +134,7 @@ abstract class AbstractCustomfieldtype{
 	/**
 	 * Get the validation error message
 	 * 
-	 * @return string The errormessage for this validator 
+	 * @return StringHelper The errormessage for this validator 
 	 */
 	public function getValidationError(){
 		return \GO::t('defaultValidationError','customfields');
@@ -176,5 +176,11 @@ abstract class AbstractCustomfieldtype{
 		return array();
 	}
 	
-	
+	/**
+	 * 
+	 * @return \GO\Customfields\Model\Field
+	 */
+	public function getField(){
+		return $this->field;
+	}
 }

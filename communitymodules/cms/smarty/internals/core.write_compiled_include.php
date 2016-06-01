@@ -8,8 +8,8 @@
 /**
  * Extract non-cacheable parts out of compiled template and write it
  *
- * @param string $compile_path
- * @param string $template_compiled
+ * @param StringHelper $compile_path
+ * @param StringHelper $template_compiled
  * @return boolean
  */
 

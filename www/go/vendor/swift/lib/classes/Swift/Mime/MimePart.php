@@ -36,7 +36,7 @@ class Swift_Mime_MimePart extends Swift_Mime_SimpleMimeEntity
      * @param Swift_Mime_ContentEncoder $encoder
      * @param Swift_KeyCache            $cache
      * @param Swift_Mime_Grammar        $grammar
-     * @param string                    $charset
+     * @param StringHelper                    $charset
      */
     public function __construct(Swift_Mime_HeaderSet $headers, Swift_Mime_ContentEncoder $encoder, Swift_KeyCache $cache, Swift_Mime_Grammar $grammar, $charset = null)
     {
@@ -52,8 +52,8 @@ class Swift_Mime_MimePart extends Swift_Mime_SimpleMimeEntity
      * {@link Swift_OutputByteStream}.
      *
      * @param mixed  $body
-     * @param string $contentType optional
-     * @param string $charset     optional
+     * @param StringHelper $contentType optional
+     * @param StringHelper $charset     optional
      *
      * @return Swift_Mime_MimePart
      */
@@ -72,7 +72,7 @@ class Swift_Mime_MimePart extends Swift_Mime_SimpleMimeEntity
     /**
      * Get the character set of this entity.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getCharset()
     {
@@ -82,7 +82,7 @@ class Swift_Mime_MimePart extends Swift_Mime_SimpleMimeEntity
     /**
      * Set the character set of this entity.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      *
      * @return Swift_Mime_MimePart
      */
@@ -101,7 +101,7 @@ class Swift_Mime_MimePart extends Swift_Mime_SimpleMimeEntity
     /**
      * Get the format of this entity (i.e. flowed or fixed).
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFormat()
     {
@@ -111,7 +111,7 @@ class Swift_Mime_MimePart extends Swift_Mime_SimpleMimeEntity
     /**
      * Set the format of this entity (flowed or fixed).
      *
-     * @param string $format
+     * @param StringHelper $format
      *
      * @return Swift_Mime_MimePart
      */
@@ -166,7 +166,7 @@ class Swift_Mime_MimePart extends Swift_Mime_SimpleMimeEntity
      * Receive notification that the charset has changed on this document, or a
      * parent document.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      */
     public function charsetChanged($charset)
     {

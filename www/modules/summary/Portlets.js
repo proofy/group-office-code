@@ -6,14 +6,14 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: Portlets.js 14816 2013-05-21 08:31:20Z mschering $
+ * @version $Id: Portlets.js 17672 2014-06-11 12:19:34Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
 GO.summary.portlets=[];
 
 GO.mainLayout.onReady(function(){
-	var rssTabPanel = new Ext.TabPanel({});
+	var rssTabPanel = new Ext.TabPanel({doLayoutOnTabChange:true});
 	
 	GO.summary.portlets['portlet-rss-reader']=new GO.summary.Portlet({
 		id: 'portlet-rss-reader',

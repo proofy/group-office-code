@@ -70,7 +70,7 @@ class PHPExcel_Cell_DefaultValueBinder implements PHPExcel_Cell_IValueBinder
      * DataType for value
      *
      * @param   mixed  $pValue
-     * @return  string
+     * @return  StringHelper
      */
     public static function dataTypeForValue($pValue = null) {
         // Match the value against a few data types

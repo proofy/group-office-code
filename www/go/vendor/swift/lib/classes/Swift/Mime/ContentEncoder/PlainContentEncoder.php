@@ -20,7 +20,7 @@ class Swift_Mime_ContentEncoder_PlainContentEncoder implements Swift_Mime_Conten
     /**
      * The name of this encoding scheme (probably 7bit or 8bit).
      *
-     * @var string
+     * @var StringHelper
      */
     private $_name;
 
@@ -34,7 +34,7 @@ class Swift_Mime_ContentEncoder_PlainContentEncoder implements Swift_Mime_Conten
     /**
      * Creates a new PlainContentEncoder with $name (probably 7bit or 8bit).
      *
-     * @param string  $name
+     * @param StringHelper  $name
      * @param boolean $canonical If canonicalization transformation should be done.
      */
     public function __construct($name, $canonical = false)
@@ -46,11 +46,11 @@ class Swift_Mime_ContentEncoder_PlainContentEncoder implements Swift_Mime_Conten
     /**
      * Encode a given string to produce an encoded string.
      *
-     * @param string  $string
+     * @param StringHelper  $string
      * @param integer $firstLineOffset ignored
      * @param integer $maxLineLength   - 0 means no wrapping will occur
      *
-     * @return string
+     * @return StringHelper
      */
     public function encodeString($string, $firstLineOffset = 0, $maxLineLength = 0)
     {
@@ -92,7 +92,7 @@ class Swift_Mime_ContentEncoder_PlainContentEncoder implements Swift_Mime_Conten
     /**
      * Get the name of this encoding scheme.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getName()
     {
@@ -111,11 +111,11 @@ class Swift_Mime_ContentEncoder_PlainContentEncoder implements Swift_Mime_Conten
     /**
      * A safer (but weaker) wordwrap for unicode.
      *
-     * @param string  $string
+     * @param StringHelper  $string
      * @param integer $length
-     * @param string  $le
+     * @param StringHelper  $le
      *
-     * @return string
+     * @return StringHelper
      */
     private function _safeWordwrap($string, $length = 75, $le = "\r\n")
     {
@@ -152,9 +152,9 @@ class Swift_Mime_ContentEncoder_PlainContentEncoder implements Swift_Mime_Conten
     /**
      * Canonicalize string input (fix CRLF).
      *
-     * @param string $string
+     * @param StringHelper $string
      *
-     * @return string
+     * @return StringHelper
      */
     private function _canonicalize($string)
     {

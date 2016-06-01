@@ -25,7 +25,7 @@ class SQL {
 	/**
 	 * Get's all queries from an SQL dump file in an array
 	 *
-	 * @param	string $file The absolute path to the SQL file
+	 * @param	StringHelper $file The absolute path to the SQL file
 	 * @access public
 	 * @return array An array of SQL strings
 	 */

@@ -200,7 +200,7 @@ $l['iCalendar_update_old']='Diese Nachricht enthält einen Termin, der bereits v
 $l['iCalendar_event_cancelled']='Diese Nachricht enthält die Absage eines Termins.';
 $l['iCalendar_event_invitation_declined']='Diese Nachricht enthält einen Termin den sie abgelehnt haben.';
 $l["addUnknownSenders"]='Unbekannte Absender hinzufügen';
-$l["addUnknownSendersText"]='Sie fügen die ausgewählten Absenderadressen einer Adressliste hinzu. Zuvor müssen die gewählten Absender einem Group-Office-Adressbuch hinzugefügt werden. Klicken Sie auf einen Namen, wenn Sie die Person hinzufügen möchten oder schließen Sie dieses Fenster.';
+$l["addUnknownSendersText"]='Sie fügen die ausgewählten Absenderadressen einer Adressliste hinzu. Zuvor müssen die gewählten Absender einem RuhrMAIL-Adressbuch hinzugefügt werden. Klicken Sie auf einen Namen, wenn Sie die Person hinzufügen möchten oder schließen Sie dieses Fenster.';
 $l["emailFiles"]='Dateien versenden';
 $l["moveOldMails"]= 'Alte E-Mails verschieben';
 $l["moveOldMailsInstructions"]= 'Wählen Sie ein Datum. Wenn Sie anschließend OK klicken, werden alle E-Mails im gewählten Ordner vor diesem Datum in den gewählten Zielordner verschoben.';
@@ -211,7 +211,7 @@ $l["deletingEmails"]= 'Lösche E-Mails...';
 $l["everythingBefore"]= 'Alle E-Mails vor';
 $l["alsoChildren"]= 'Wende dies auch auf die E-Mails in den Unterordnern an.';
 $l['autolinked']='Diese Nachricht wurde automatisch nach %s verlinkt';
-$l['defaultProgramInstructions']='<p>Um {product_name} als Ihr Standard E-Mail-Programm zu wählen, lesen Sie bitte <a class="normal-link" href="http://www.{product_name}.com/wiki/E-mail#Set_{product_name}_as_your_default_e-mail_client" target="_blank">diese Anleitung</a>.</p><p>Wenn Sie Windows verwenden, müssen Sie dann noch <a class="normal-link" href="{url}">diese Regdatei</a> herunterladen und ausführen/importieren.</p>';
+$l['defaultProgramInstructions']='<p>Um {product_name} als Ihr Standard E-Mail-Programm zu wählen, lesen Sie bitte <a class="normal-link" href="https://gw.ruhrmail.de/default_e-mail_client.html" target="_blank">diese Anleitung</a>.</p><p>Wenn Sie Windows verwenden, müssen Sie dann noch <a class="normal-link" href="{url}">diese Regdatei</a> herunterladen und ausführen/importieren.</p>';
 $l['xssDetected']="Diese Nachricht könnte bösartigen Inhalt enthalten. Klicken Sie hier, um dennoch die gefilterte Nachricht anzusehen.";
 $l['xssMessageHidden']='Aus Sicherheitsgründen wurde die Nachricht verborgen';
 $l['failedRecipients']='Fehler beim Senden an';
@@ -226,7 +226,7 @@ $l['checkUnseen']='Diesen Ordner automatisch auf neue Nachrichten prüfen';
 $l["deleteSendersFrom"]='Entferne Absender von ...';
 $l['useAccount']='Verwende Account';
 $l['storePassword']='Passwort dauerhaft speichern';
-$l['sieveNote']='Nicht alle Feature werden unterstützt. Prüfen Sie die Anleitung.';
+$l['sieveNote']='Nicht alle Feature werden unterstützt. Sieve nicht in Gebrauch. Prüfen Sie die Anleitung.';
 $l['winmailNoFiles']="Dieser winmail Anhang enthält keine Dateien.";
 $l['mailbox']='Postfach';
 $l["markFolderReadConfirm"]='Möchten Sie alle Nachrichten im Ordner \'{name}\' als gelesen markieren?';
@@ -263,3 +263,31 @@ $l['linkMustHavePermissionToWrite'] = 'Sie haben nicht die benötigten Schreibbe
 $l['sortAddressesByMailTime'] = 'Adressen der Empfänger nach der Zeit der letzten gesendeten E-Mail sortieren (benötigt das Adressbuch-Modul)';
 
 $l['permissionDelegated']= 'Stellvertreter';
+
+$l['showCcByDefault']='CC-Feld standardmäßig anzeigen';
+$l['showBccByDefault']='BCC-Feld standardmäßig anzeigen';
+$l['saveToItem']= 'Zu Element anhängen';
+$l['saveAttachmentTo']= 'Anhang zu diesen Elementen anhängen';
+
+$l['untilDateError']='Habe versucht, das folgende Enddatum einzutragen, aber der Prozess stoppte mit einem Fehler';
+
+$l['label']= 'Schlagwort';
+$l['labels']= 'Schlagwörter';
+$l['labelsLimit']= 'Es können maximal %d Schlagwörter angelegt werden';
+$l['saveToPersonal']= 'Im persönlichen Order speichern';
+$l['thisIsSpam1']= 'Diese Nachricht wurde als Spam identifiziert. Klicken Sie';
+$l['thisIsSpam2']= 'hier';
+$l['thisIsSpam3']= 'wenn Sie glauben, dass es sich bei dieser Nachricht NICHT um Spam handelt.';
+$l['thisIsNotSpam1']= 'Klicken Sie';
+$l['thisIsNotSpam2']= 'hier';
+$l['thisIsNotSpam3']= 'wenn Sie glauben, dass es sich bei dieser Nachricht um Spam handelt.';
+$l['moveToSpamTitle']= 'In den Spam-Ordner verschieben?';
+$l['moveToSpamMsg']= 'Sind Sie sicher, dass Sie diese Nachricht als Spam markieren möchten?';
+$l['moveToInboxTitle']= 'Aus dem Spam-Order verschieben?';
+$l['moveToInboxMsg']= 'Sind Sie sicher, dass Sie die Spam-Markierung entfernen und diese Nachricht in den Posteingang verschieben wollen?';
+
+$l['fts']= 'Ganze Nachricht';
+
+$l['icalendarOpenEvent']='Ereignis öffnen';
+$l['placeSignatureBelowReply']= 'Bei antworten/weiterleiten: Signatur immer am Ende der Nachricht platzieren.';
+$l['linkeditems']= 'Diese Nachricht ist mit %s Einträgen verknüpft: %s';

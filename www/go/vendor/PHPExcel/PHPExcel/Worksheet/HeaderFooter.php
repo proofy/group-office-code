@@ -106,42 +106,42 @@ class PHPExcel_Worksheet_HeaderFooter
 	/**
 	 * OddHeader
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_oddHeader			= '';
 
 	/**
 	 * OddFooter
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_oddFooter			= '';
 
 	/**
 	 * EvenHeader
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_evenHeader		= '';
 
 	/**
 	 * EvenFooter
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_evenFooter		= '';
 
 	/**
 	 * FirstHeader
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_firstHeader		= '';
 
 	/**
 	 * FirstFooter
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_firstFooter		= '';
 
@@ -190,7 +190,7 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Get OddHeader
      *
-     * @return string
+     * @return StringHelper
      */
     public function getOddHeader() {
     	return $this->_oddHeader;
@@ -199,7 +199,7 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Set OddHeader
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Worksheet_HeaderFooter
      */
     public function setOddHeader($pValue) {
@@ -210,7 +210,7 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Get OddFooter
      *
-     * @return string
+     * @return StringHelper
      */
     public function getOddFooter() {
     	return $this->_oddFooter;
@@ -219,7 +219,7 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Set OddFooter
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Worksheet_HeaderFooter
      */
     public function setOddFooter($pValue) {
@@ -230,7 +230,7 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Get EvenHeader
      *
-     * @return string
+     * @return StringHelper
      */
     public function getEvenHeader() {
     	return $this->_evenHeader;
@@ -239,7 +239,7 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Set EvenHeader
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Worksheet_HeaderFooter
      */
     public function setEvenHeader($pValue) {
@@ -250,7 +250,7 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Get EvenFooter
      *
-     * @return string
+     * @return StringHelper
      */
     public function getEvenFooter() {
     	return $this->_evenFooter;
@@ -259,7 +259,7 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Set EvenFooter
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Worksheet_HeaderFooter
      */
     public function setEvenFooter($pValue) {
@@ -270,7 +270,7 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Get FirstHeader
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFirstHeader() {
     	return $this->_firstHeader;
@@ -279,7 +279,7 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Set FirstHeader
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Worksheet_HeaderFooter
      */
     public function setFirstHeader($pValue) {
@@ -290,7 +290,7 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Get FirstFooter
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFirstFooter() {
     	return $this->_firstFooter;
@@ -299,7 +299,7 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Set FirstFooter
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Worksheet_HeaderFooter
      */
     public function setFirstFooter($pValue) {
@@ -391,7 +391,7 @@ class PHPExcel_Worksheet_HeaderFooter
      * Add header/footer image
      *
      * @param PHPExcel_Worksheet_HeaderFooterDrawing $image
-     * @param string $location
+     * @param StringHelper $location
      * @throws PHPExcel_Exception
      * @return PHPExcel_Worksheet_HeaderFooter
      */
@@ -403,7 +403,7 @@ class PHPExcel_Worksheet_HeaderFooter
     /**
      * Remove header/footer image
      *
-     * @param string $location
+     * @param StringHelper $location
      * @throws PHPExcel_Exception
      * @return PHPExcel_Worksheet_HeaderFooter
      */

@@ -39,7 +39,7 @@ class PHPExcel_Writer_Excel2007_Comments extends PHPExcel_Writer_Excel2007_Write
 	 * Write comments to XML format
 	 *
 	 * @param 	PHPExcel_Worksheet				$pWorksheet
-	 * @return 	string 								XML Output
+	 * @return 	StringHelper 								XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	public function writeComments(PHPExcel_Worksheet $pWorksheet = null)
@@ -119,7 +119,7 @@ class PHPExcel_Writer_Excel2007_Comments extends PHPExcel_Writer_Excel2007_Write
 	 * Write VML comments to XML format
 	 *
 	 * @param 	PHPExcel_Worksheet				$pWorksheet
-	 * @return 	string 								XML Output
+	 * @return 	StringHelper 								XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	public function writeVMLComments(PHPExcel_Worksheet $pWorksheet = null)

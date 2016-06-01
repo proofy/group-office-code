@@ -22,14 +22,14 @@ class Swift_Mime_Headers_IdentificationHeader extends Swift_Mime_Headers_Abstrac
      *
      * This may hold multiple IDs or just a single ID.
      *
-     * @var string[]
+     * @var StringHelper[]
      */
     private $_ids = array();
 
     /**
      * Creates a new IdentificationHeader with the given $name and $id.
      *
-     * @param string             $name
+     * @param StringHelper             $name
      * @param Swift_Mime_Grammar $grammar
      */
     public function __construct($name, Swift_Mime_Grammar $grammar)
@@ -80,7 +80,7 @@ class Swift_Mime_Headers_IdentificationHeader extends Swift_Mime_Headers_Abstrac
     /**
      * Set the ID used in the value of this header.
      *
-     * @param string|array $id
+     * @param StringHelper|array $id
      *
      * @throws Swift_RfcComplianceException
      */
@@ -94,7 +94,7 @@ class Swift_Mime_Headers_IdentificationHeader extends Swift_Mime_Headers_Abstrac
      *
      * If multiple IDs are set only the first is returned.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getId()
     {
@@ -106,7 +106,7 @@ class Swift_Mime_Headers_IdentificationHeader extends Swift_Mime_Headers_Abstrac
     /**
      * Set a collection of IDs to use in the value of this Header.
      *
-     * @param string[] $ids
+     * @param StringHelper[] $ids
      *
      * @throws Swift_RfcComplianceException
      */
@@ -126,7 +126,7 @@ class Swift_Mime_Headers_IdentificationHeader extends Swift_Mime_Headers_Abstrac
     /**
      * Get the list of IDs used in this Header.
      *
-     * @return string[]
+     * @return StringHelper[]
      */
     public function getIds()
     {
@@ -141,7 +141,7 @@ class Swift_Mime_Headers_IdentificationHeader extends Swift_Mime_Headers_Abstrac
      *
      * @see toString()
      *
-     * @return string
+     * @return StringHelper
      *
      * @throws Swift_RfcComplianceException
      */
@@ -163,7 +163,7 @@ class Swift_Mime_Headers_IdentificationHeader extends Swift_Mime_Headers_Abstrac
     /**
      * Throws an Exception if the id passed does not comply with RFC 2822.
      *
-     * @param string $id
+     * @param StringHelper $id
      *
      * @throws Swift_RfcComplianceException
      */

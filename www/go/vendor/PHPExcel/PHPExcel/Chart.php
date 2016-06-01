@@ -38,7 +38,7 @@ class PHPExcel_Chart
 	/**
 	 * Chart Name
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_name = '';
 
@@ -94,7 +94,7 @@ class PHPExcel_Chart
 	/**
 	 * Display Blanks as
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_displayBlanksAs = '0';
 
@@ -102,7 +102,7 @@ class PHPExcel_Chart
 	/**
 	 * Top-Left Cell Position
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_topLeftCellRef = 'A1';
 
@@ -126,7 +126,7 @@ class PHPExcel_Chart
 	/**
 	 * Bottom-Right Cell Position
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_bottomRightCellRef = 'A1';
 
@@ -165,7 +165,7 @@ class PHPExcel_Chart
 	/**
 	 * Get Name
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getName() {
 		return $this->_name;
@@ -310,7 +310,7 @@ class PHPExcel_Chart
 	/**
 	 * Get Display Blanks as
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getDisplayBlanksAs() {
 		return $this->_displayBlanksAs;
@@ -319,7 +319,7 @@ class PHPExcel_Chart
 	/**
 	 * Set Display Blanks as
 	 *
-	 * @param string $displayBlanksAs
+	 * @param StringHelper $displayBlanksAs
 	 * @return PHPExcel_Chart
 	 */
 	public function setDisplayBlanksAs($displayBlanksAs = '0') {
@@ -360,7 +360,7 @@ class PHPExcel_Chart
 	/**
 	 * Get the cell address where the top left of the chart is fixed
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getTopLeftCell() {
 		return $this->_topLeftCellRef;
@@ -464,7 +464,7 @@ class PHPExcel_Chart
 	/**
 	 * Get the cell address where the bottom right of the chart is fixed
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getBottomRightCell() {
 		return $this->_bottomRightCellRef;

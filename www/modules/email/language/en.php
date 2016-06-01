@@ -44,6 +44,8 @@ $l["draftsFolder"]='Drafts folder';
 $l["sender"]='From field';
 $l["toField"]='To field';
 $l["ccField"]='CC field';
+$l['showCcByDefault']='Show CC field by default';
+$l['showBccByDefault']='Show BCC field by default';
 $l["bccField"]='BCC field';
 $l["keyword"]='Keyword';
 $l["notification"]='Request read notification';
@@ -134,6 +136,7 @@ $l["skipUnknownRecipientsAction"]='Don\'t show this window next time';
 $l["skipUnknownRecipients"]='Don\'t show unknown recipients dialog';
 $l["alwaysRequestNotification"]='Always request a read notification';
 $l["icalendarUpdateEvent"]='Update Event';
+$l["icalendarOpenEvent"]='Open Event';
 $l["icalendarDeleteEvent"]='Delete Event';
 $l["icalendarAcceptInvitation"]='Accept';
 $l["icalendarDeclineInvitation"]='Decline';
@@ -166,7 +169,7 @@ $l["alsoChildren"]= 'Also apply this to the emails in the subfolders.';
 
 $l['name'] = 'Email';
 $l['description'] = 'Full featured e-mail client. Every user will be able to send and receive emails';
-$l['feedbackNoReciepent'] = 'You didn\'t enter a reciepent';
+$l['feedbackNoReciepent'] = 'You didn\'t enter a recipient';
 $l['feedbackSMTPProblem'] = 'There was a problem communicating with SMTP: ';
 $l['feedbackUnexpectedError'] = 'There was an unexpected problem building the email: ';
 $l['feedbackCreateFolderFailed'] = 'Failed to create folder';
@@ -197,7 +200,7 @@ $l['quotaError']="Your mailbox is full. Empty your trash folder first. If it is 
 $l['draftsDisabled']="Message could not be saved because the 'Drafts' folder is disabled.<br /><br />Go to E-mail -> Administration -> Accounts -> Double click account -> Folders to configure it.";
 $l['noSaveWithPop3']='Message could not be saved because a POP3 account does not support this.';
 $l['goAlreadyStarted']='{product_name} has already been started. The e-mail composer is now loaded in {product_name}. Close this window and compose your message in {product_name}.';
-$l['replyHeader']='At %s, %s on %s %s wrote:';
+$l['replyHeader']='On %s, %s at %s %s wrote:';
 $l['alias']='Alias';
 $l['aliases']='Aliases';
 $l['noUidNext']='Your mail server does not support UIDNEXT. The \'Drafts\' folder is disabled automatically for this account now.';
@@ -260,7 +263,7 @@ $l["showAll"]='Show all';
 
 $l['noname'] = 'no name';
 $l['searchIn'] = 'Search in';
-$l['searchRecursive'] = 'Search recursive';
+$l['searchRecursive'] = 'Include subfolders';
 $l['currentFolder'] = 'Current folder';
 $l['allFolders'] = 'All folders';
 
@@ -277,3 +280,23 @@ $l['labelsLimit'] = 'Label\'s limit reached. The maximum number of labels is %d'
 
 $l['saveToItem'] = 'Save to item';
 $l['saveAttachmentTo'] = 'Save the attachment to these items';
+$l['saveToPersonal'] = 'Save to personal folder';
+
+$l['thisIsSpam1'] = 'This message has been identified as spam. Click';
+$l['thisIsSpam2'] = 'here';
+$l['thisIsSpam3'] = 'if you think this message is NOT spam.';
+
+$l['thisIsNotSpam1'] = 'Click';
+$l['thisIsNotSpam2'] = 'here';
+$l['thisIsNotSpam3'] = 'if you think this message is spam.';
+
+$l['moveToSpamTitle'] = 'Move to Spam folder?';
+$l['moveToSpamMsg'] = 'Are you sure you want to classify this message as spam?';
+$l['moveToInboxTitle'] = 'Move out of Spam folder?';
+$l['moveToInboxMsg'] = 'Are you sure you want to remove the spam mark and move this message into your inbox?';
+
+$l['fts'] = 'Full message';
+
+$l['placeSignatureBelowReply'] = 'On reply/forward: Place signature always at the end of the mail.';
+
+$l['linkeditems'] = 'This mail is linked to %s item(s): %s';

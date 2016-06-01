@@ -70,21 +70,21 @@ class Smarty
     /**
      * The name of the directory where templates are located.
      *
-     * @var string
+     * @var StringHelper
      */
     var $template_dir    =  'templates';
 
     /**
      * The directory where compiled templates are located.
      *
-     * @var string
+     * @var StringHelper
      */
     var $compile_dir     =  'templates_c';
 
     /**
      * The directory where config files are located.
      *
-     * @var string
+     * @var StringHelper
      */
     var $config_dir      =  'configs';
 
@@ -115,7 +115,7 @@ class Smarty
      * This is the path to the debug console template. If not set,
      * the default one will be used.
      *
-     * @var string
+     * @var StringHelper
      */
     var $debug_tpl       =  '';
 
@@ -126,7 +126,7 @@ class Smarty
      *  <li>URL => enable debugging when SMARTY_DEBUG is found in the URL.</li>
      * </ul>
      * @link http://www.foo.dom/index.php?SMARTY_DEBUG
-     * @var string
+     * @var StringHelper
      */
     var $debugging_ctrl  =  'NONE';
 
@@ -162,7 +162,7 @@ class Smarty
     /**
      * The name of the directory for cache files.
      *
-     * @var string
+     * @var StringHelper
      */
     var $cache_dir       =  'cache';
 
@@ -250,14 +250,14 @@ class Smarty
     /**
      * The left delimiter used for the template tags.
      *
-     * @var string
+     * @var StringHelper
      */
     var $left_delimiter  =  '{';
 
     /**
      * The right delimiter used for the template tags.
      *
-     * @var string
+     * @var StringHelper
      */
     var $right_delimiter =  '}';
 
@@ -266,7 +266,7 @@ class Smarty
      * variables_order in php.ini E = Environment, G = GET, P = POST,
      * C = Cookies, S = Server
      *
-     * @var string
+     * @var StringHelper
      */
     var $request_vars_order    = 'EGPCS';
 
@@ -286,7 +286,7 @@ class Smarty
      * Instead of creating separate sets of templates per language, you
      * set different compile_ids like 'en' and 'de'.
      *
-     * @var string
+     * @var StringHelper
      */
     var $compile_id            = null;
 
@@ -326,7 +326,7 @@ class Smarty
     /**
      * The function used for cache file handling. If not set, built-in caching is used.
      *
-     * @var null|string function name
+     * @var null|StringHelper function name
      */
     var $cache_handler_func   = null;
 
@@ -372,7 +372,7 @@ class Smarty
      * If a template cannot be found, this PHP function will be executed.
      * Useful for creating templates on-the-fly or other special action.
      *
-     * @var string function name
+     * @var StringHelper function name
      */
     var $default_template_handler_func = '';
 
@@ -380,21 +380,21 @@ class Smarty
      * The file that contains the compiler class. This can a full
      * pathname, or relative to the php_include path.
      *
-     * @var string
+     * @var StringHelper
      */
     var $compiler_file        =    'Smarty_Compiler.class.php';
 
     /**
      * The class used for compiling templates.
      *
-     * @var string
+     * @var StringHelper
      */
     var $compiler_class        =   'Smarty_Compiler';
 
     /**
      * The class used to load config vars.
      *
-     * @var string
+     * @var StringHelper
      */
     var $config_class          =   'Config_File';
 
@@ -455,14 +455,14 @@ class Smarty
     /**
      * md5 checksum of the string 'Smarty'
      *
-     * @var string
+     * @var StringHelper
      */
     var $_smarty_md5           = 'f8d698aea36fcbead2b9d5359ffca76f';
 
     /**
      * Smarty version number
      *
-     * @var string
+     * @var StringHelper
      */
     var $_version              = '2.6.19';
 
@@ -476,14 +476,14 @@ class Smarty
     /**
      * for different compiled templates
      *
-     * @var string
+     * @var StringHelper
      */
     var $_compile_id           = null;
 
     /**
      * text in URL to enable debug mode
      *
-     * @var string
+     * @var StringHelper
      */
     var $_smarty_debug_id      = 'SMARTY_DEBUG';
 
@@ -549,7 +549,7 @@ class Smarty
     /**
      * name of optional cache include file
      *
-     * @var string
+     * @var StringHelper
      */
     var $_cache_include = null;
 
@@ -557,7 +557,7 @@ class Smarty
      * indicate if the current code is used in a compiled
      * include
      *
-     * @var string
+     * @var StringHelper
      */
     var $_cache_including = false;
 
@@ -574,7 +574,7 @@ class Smarty
     /**
      * assigns values to template variables
      *
-     * @param array|string $tpl_var the template variable name(s)
+     * @param array|StringHelper $tpl_var the template variable name(s)
      * @param mixed $value the value to assign
      */
     function assign($tpl_var, $value = null)
@@ -594,7 +594,7 @@ class Smarty
     /**
      * assigns values to template variables by reference
      *
-     * @param string $tpl_var the template variable name
+     * @param StringHelper $tpl_var the template variable name
      * @param mixed $value the referenced value to assign
      */
     function assign_by_ref($tpl_var, &$value)
@@ -606,7 +606,7 @@ class Smarty
     /**
      * appends values to template variables
      *
-     * @param array|string $tpl_var the template variable name(s)
+     * @param array|StringHelper $tpl_var the template variable name(s)
      * @param mixed $value the value to append
      */
     function append($tpl_var, $value=null, $merge=false)
@@ -646,7 +646,7 @@ class Smarty
     /**
      * appends values to template variables by reference
      *
-     * @param string $tpl_var the template variable name
+     * @param StringHelper $tpl_var the template variable name
      * @param mixed $value the referenced value to append
      */
     function append_by_ref($tpl_var, &$value, $merge=false)
@@ -669,7 +669,7 @@ class Smarty
     /**
      * clear the given assigned template variable.
      *
-     * @param string $tpl_var the template variable to clear
+     * @param StringHelper $tpl_var the template variable to clear
      */
     function clear_assign($tpl_var)
     {
@@ -684,8 +684,8 @@ class Smarty
     /**
      * Registers custom function to be used in templates
      *
-     * @param string $function the name of the template function
-     * @param string $function_impl the name of the PHP function to register
+     * @param StringHelper $function the name of the template function
+     * @param StringHelper $function_impl the name of the PHP function to register
      */
     function register_function($function, $function_impl, $cacheable=true, $cache_attrs=null)
     {
@@ -697,7 +697,7 @@ class Smarty
     /**
      * Unregisters custom function
      *
-     * @param string $function name of template function
+     * @param StringHelper $function name of template function
      */
     function unregister_function($function)
     {
@@ -707,7 +707,7 @@ class Smarty
     /**
      * Registers object to be used in templates
      *
-     * @param string $object name of template object
+     * @param StringHelper $object name of template object
      * @param object &$object_impl the referenced PHP object to register
      * @param null|array $allowed list of allowed methods (empty = all)
      * @param boolean $smarty_args smarty argument format, else traditional
@@ -724,7 +724,7 @@ class Smarty
     /**
      * Unregisters object
      *
-     * @param string $object name of template object
+     * @param StringHelper $object name of template object
      */
     function unregister_object($object)
     {
@@ -735,8 +735,8 @@ class Smarty
     /**
      * Registers block function to be used in templates
      *
-     * @param string $block name of template block
-     * @param string $block_impl PHP function to register
+     * @param StringHelper $block name of template block
+     * @param StringHelper $block_impl PHP function to register
      */
     function register_block($block, $block_impl, $cacheable=true, $cache_attrs=null)
     {
@@ -747,7 +747,7 @@ class Smarty
     /**
      * Unregisters block function
      *
-     * @param string $block name of template function
+     * @param StringHelper $block name of template function
      */
     function unregister_block($block)
     {
@@ -757,8 +757,8 @@ class Smarty
     /**
      * Registers compiler function
      *
-     * @param string $function name of template function
-     * @param string $function_impl name of PHP function to register
+     * @param StringHelper $function name of template function
+     * @param StringHelper $function_impl name of PHP function to register
      */
     function register_compiler_function($function, $function_impl, $cacheable=true)
     {
@@ -769,7 +769,7 @@ class Smarty
     /**
      * Unregisters compiler function
      *
-     * @param string $function name of template function
+     * @param StringHelper $function name of template function
      */
     function unregister_compiler_function($function)
     {
@@ -779,8 +779,8 @@ class Smarty
     /**
      * Registers modifier to be used in templates
      *
-     * @param string $modifier name of template modifier
-     * @param string $modifier_impl name of PHP function to register
+     * @param StringHelper $modifier name of template modifier
+     * @param StringHelper $modifier_impl name of PHP function to register
      */
     function register_modifier($modifier, $modifier_impl)
     {
@@ -791,7 +791,7 @@ class Smarty
     /**
      * Unregisters modifier
      *
-     * @param string $modifier name of template modifier
+     * @param StringHelper $modifier name of template modifier
      */
     function unregister_modifier($modifier)
     {
@@ -801,7 +801,7 @@ class Smarty
     /**
      * Registers a resource to fetch a template
      *
-     * @param string $type name of resource
+     * @param StringHelper $type name of resource
      * @param array $functions array of functions to handle resource
      */
     function register_resource($type, $functions)
@@ -827,7 +827,7 @@ class Smarty
     /**
      * Unregisters a resource
      *
-     * @param string $type name of resource
+     * @param StringHelper $type name of resource
      */
     function unregister_resource($type)
     {
@@ -903,8 +903,8 @@ class Smarty
     /**
      * load a filter of specified type and name
      *
-     * @param string $type filter type
-     * @param string $name filter name
+     * @param StringHelper $type filter type
+     * @param StringHelper $name filter name
      */
     function load_filter($type, $name)
     {
@@ -926,10 +926,10 @@ class Smarty
     /**
      * clear cached content for the given template and cache id
      *
-     * @param string $tpl_file name of template file
-     * @param string $cache_id name of cache_id
-     * @param string $compile_id name of compile_id
-     * @param string $exp_time expiration time
+     * @param StringHelper $tpl_file name of template file
+     * @param StringHelper $cache_id name of cache_id
+     * @param StringHelper $compile_id name of compile_id
+     * @param StringHelper $exp_time expiration time
      * @return boolean
      */
     function clear_cache($tpl_file = null, $cache_id = null, $compile_id = null, $exp_time = null)
@@ -961,7 +961,7 @@ class Smarty
     /**
      * clear the entire contents of cache (all templates)
      *
-     * @param string $exp_time expire time
+     * @param StringHelper $exp_time expire time
      * @return boolean results of {@link smarty_core_rm_auto()}
      */
     function clear_all_cache($exp_time = null)
@@ -973,10 +973,10 @@ class Smarty
     /**
      * test to see if valid cache exists for this template
      *
-     * @param string $tpl_file name of template file
-     * @param string $cache_id
-     * @param string $compile_id
-     * @return string|false results of {@link _read_cache_file()}
+     * @param StringHelper $tpl_file name of template file
+     * @param StringHelper $cache_id
+     * @param StringHelper $compile_id
+     * @return StringHelper|false results of {@link _read_cache_file()}
      */
     function is_cached($tpl_file, $cache_id = null, $compile_id = null)
     {
@@ -1010,9 +1010,9 @@ class Smarty
      * or all compiled template files if one is not specified.
      * This function is for advanced use only, not normally needed.
      *
-     * @param string $tpl_file
-     * @param string $compile_id
-     * @param string $exp_time
+     * @param StringHelper $tpl_file
+     * @param StringHelper $compile_id
+     * @param StringHelper $exp_time
      * @return boolean results of {@link smarty_core_rm_auto()}
      */
     function clear_compiled_tpl($tpl_file = null, $compile_id = null, $exp_time = null)
@@ -1032,7 +1032,7 @@ class Smarty
     /**
      * Checks whether requested template exists.
      *
-     * @param string $tpl_file
+     * @param StringHelper $tpl_file
      * @return boolean
      */
     function template_exists($tpl_file)
@@ -1044,8 +1044,8 @@ class Smarty
     /**
      * Returns an array containing template variables
      *
-     * @param string $name
-     * @param string $type
+     * @param StringHelper $name
+     * @param StringHelper $type
      * @return array
      */
     function &get_template_vars($name=null)
@@ -1064,8 +1064,8 @@ class Smarty
     /**
      * Returns an array containing config variables
      *
-     * @param string $name
-     * @param string $type
+     * @param StringHelper $name
+     * @param StringHelper $type
      * @return array
      */
     function &get_config_vars($name=null)
@@ -1084,7 +1084,7 @@ class Smarty
     /**
      * trigger Smarty error
      *
-     * @param string $error_msg
+     * @param StringHelper $error_msg
      * @param integer $error_type
      */
     function trigger_error($error_msg, $error_type = E_USER_WARNING)
@@ -1096,9 +1096,9 @@ class Smarty
     /**
      * executes & displays the template results
      *
-     * @param string $resource_name
-     * @param string $cache_id
-     * @param string $compile_id
+     * @param StringHelper $resource_name
+     * @param StringHelper $cache_id
+     * @param StringHelper $compile_id
      */
     function display($resource_name, $cache_id = null, $compile_id = null)
     {
@@ -1108,9 +1108,9 @@ class Smarty
     /**
      * executes & returns or displays the template results
      *
-     * @param string $resource_name
-     * @param string $cache_id
-     * @param string $compile_id
+     * @param StringHelper $resource_name
+     * @param StringHelper $cache_id
+     * @param StringHelper $compile_id
      * @param boolean $display
      */
     function fetch($resource_name, $cache_id = null, $compile_id = null, $display = false)
@@ -1311,9 +1311,9 @@ class Smarty
     /**
      * load configuration values
      *
-     * @param string $file
-     * @param string $section
-     * @param string $scope
+     * @param StringHelper $file
+     * @param StringHelper $section
+     * @param StringHelper $scope
      */
     function config_load($file, $section = null, $scope = 'global')
     {
@@ -1324,7 +1324,7 @@ class Smarty
     /**
      * return a reference to a registered object
      *
-     * @param string $name
+     * @param StringHelper $name
      * @return object
      */
     function &get_registered_object($name) {
@@ -1340,7 +1340,7 @@ class Smarty
     /**
      * clear configuration values
      *
-     * @param string $var
+     * @param StringHelper $var
      */
     function clear_config($var = null)
     {
@@ -1356,9 +1356,9 @@ class Smarty
     /**
      * get filepath of requested plugin
      *
-     * @param string $type
-     * @param string $name
-     * @return string|false
+     * @param StringHelper $type
+     * @param StringHelper $name
+     * @return StringHelper|false
      */
     function _get_plugin_filepath($type, $name)
     {
@@ -1370,8 +1370,8 @@ class Smarty
    /**
      * test if resource needs compiling
      *
-     * @param string $resource_name
-     * @param string $compile_path
+     * @param StringHelper $resource_name
+     * @param StringHelper $compile_path
      * @return boolean
      */
     function _is_compiled($resource_name, $compile_path)
@@ -1403,8 +1403,8 @@ class Smarty
    /**
      * compile the template
      *
-     * @param string $resource_name
-     * @param string $compile_path
+     * @param StringHelper $resource_name
+     * @param StringHelper $compile_path
      * @return boolean
      */
     function _compile_resource($resource_name, $compile_path)
@@ -1439,9 +1439,9 @@ class Smarty
    /**
      * compile the given source
      *
-     * @param string $resource_name
-     * @param string $source_content
-     * @param string $compiled_content
+     * @param StringHelper $resource_name
+     * @param StringHelper $source_content
+     * @param StringHelper $compiled_content
      * @return boolean
      */
     function _compile_source($resource_name, &$source_content, &$compiled_content, $cache_include_path=null)
@@ -1504,8 +1504,8 @@ class Smarty
     /**
      * Get the compile path for this resource
      *
-     * @param string $resource_name
-     * @return string results of {@link _get_auto_filename()}
+     * @param StringHelper $resource_name
+     * @return StringHelper results of {@link _get_auto_filename()}
      */
     function _get_compile_path($resource_name)
     {
@@ -1519,8 +1519,8 @@ class Smarty
      *
      * sets $source_content to the source of the template, and
      * $resource_timestamp to its time stamp
-     * @param string $resource_name
-     * @param string $source_content
+     * @param StringHelper $resource_name
+     * @param StringHelper $source_content
      * @param integer $resource_timestamp
      * @param boolean $get_source
      * @param boolean $quiet
@@ -1604,10 +1604,10 @@ class Smarty
     /**
      * parse out the type and name from the resource
      *
-     * @param string $resource_base_path
-     * @param string $resource_name
-     * @param string $resource_type
-     * @param string $resource_name
+     * @param StringHelper $resource_base_path
+     * @param StringHelper $resource_name
+     * @param StringHelper $resource_type
+     * @param StringHelper $resource_name
      * @return boolean
      */
 
@@ -1668,9 +1668,9 @@ class Smarty
     /**
      * Handle modifiers
      *
-     * @param string|null $modifier_name
+     * @param StringHelper|null $modifier_name
      * @param array|null $map_array
-     * @return string result of modifiers
+     * @return StringHelper result of modifiers
      */
     function _run_mod_handler()
     {
@@ -1690,8 +1690,8 @@ class Smarty
     /**
      * Remove starting and ending quotes from the string
      *
-     * @param string $string
-     * @return string
+     * @param StringHelper $string
+     * @return StringHelper
      */
     function _dequote($string)
     {
@@ -1706,8 +1706,8 @@ class Smarty
     /**
      * read in a file
      *
-     * @param string $filename
-     * @return string
+     * @param StringHelper $filename
+     * @return StringHelper
      */
     function _read_file($filename)
     {
@@ -1726,10 +1726,10 @@ class Smarty
     /**
      * get a concrete filename for automagically created content
      *
-     * @param string $auto_base
-     * @param string $auto_source
-     * @param string $auto_id
-     * @return string
+     * @param StringHelper $auto_base
+     * @param StringHelper $auto_source
+     * @param StringHelper $auto_id
+     * @return StringHelper
      * @staticvar string|null
      * @staticvar string|null
      */
@@ -1762,7 +1762,7 @@ class Smarty
     /**
      * unlink a file, possibly using expiration time
      *
-     * @param string $resource
+     * @param StringHelper $resource
      * @param integer $exp_time
      */
     function _unlink($resource, $exp_time = null)
@@ -1779,9 +1779,9 @@ class Smarty
     /**
      * returns an auto_id for auto-file-functions
      *
-     * @param string $cache_id
-     * @param string $compile_id
-     * @return string|null
+     * @param StringHelper $cache_id
+     * @param StringHelper $compile_id
+     * @return StringHelper|null
      */
     function _get_auto_id($cache_id=null, $compile_id=null) {
     if (isset($cache_id))
@@ -1795,10 +1795,10 @@ class Smarty
     /**
      * trigger Smarty plugin error
      *
-     * @param string $error_msg
-     * @param string $tpl_file
+     * @param StringHelper $error_msg
+     * @param StringHelper $tpl_file
      * @param integer $tpl_line
-     * @param string $file
+     * @param StringHelper $file
      * @param integer $line
      * @param integer $error_type
      */
@@ -1820,7 +1820,7 @@ class Smarty
 
     /**
      * callback function for preg_replace, to call a non-cacheable block
-     * @return string
+     * @return StringHelper
      */
     function _process_compiled_include_callback($match) {
         $_func = '_smarty_tplfunc_'.$match[2].'_'.$match[3];
@@ -1937,7 +1937,7 @@ class Smarty
      * Extracts the filter name from the given callback
      * 
      * @param callback $function
-     * @return string
+     * @return StringHelper
      */
 	function _get_filter_name($function)
 	{

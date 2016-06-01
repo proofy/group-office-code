@@ -51,18 +51,50 @@ class GO{
 
 
 	private static $_view;
+	
+	/**
+	 * Check if a class can be used.
+	 * This function checks if the class exists and if the module for the class is installed (So the tables are available, when it's an active record)
+	 * 
+	 * @param StringHelper $className
+	 * @return boolean
+	 */
+	public static function classExists($className){
+		
+		$parts = explode('\\', $className);
+		$module = strtolower($parts[1]);
+		
+			
+		if (($module != 'base' && (!GO::modules()->isInstalled($module) || !GO::modules()->isAvailable($module))) || !class_exists($className)){
+			return false;
+		}else
+		{
+			return true;
+		}
+//			
+//		if(class_exists($className)){
+//			
+//			$clsParts = explode('\\',$className);
+//			
+//			if($clsParts[1] == 'Base' || GO::modules()->isInstalled(strtolower($clsParts[1])))
+//				return true;
+//		}
+//	
+//		return false;
+	}
+	
 	/**
 	 * If you set this to true then all acl's will allow all actions. Useful
 	 * for maintenance scripts.
 	 *
 	 * It returns the old value.
 	 *
-	 * @param string $ignore
+	 * @param StringHelper $ignore
 	 * @return boolean Old value
 	 */
 	public static function setIgnoreAclPermissions($ignore=true){
 		
-		\GO::debug("setIgnoreAclPermissions");
+		\GO::debug("setIgnoreAclPermissions(".var_export($ignore, true).')');
 		
 		$oldValue = \GO::$ignoreAclPermissions;
 		\GO::$ignoreAclPermissions=$ignore;
@@ -143,7 +175,7 @@ class GO{
 		'GO\Base\Cache\Disk' => 'go/base/cache/Disk.php',
 		'GO\Base\Cache\Apc' => 'go/base/cache/Apc.php',
 		'GO\Base\Db\ActiveStatement' => 'go/base/db/ActiveStatement.php',
-		'GO\Base\Util\String' => 'go/base/util/String.php',
+		'GO\Base\Util\StringHelper' => 'go/base/util/StringHelper.php',
 		'GO\Base\Model\ModelCache' => 'go/base/model/ModelCache.php',
 		'GO\Base\Router' => 'go/base/Router.php',
 		'GO\Base\Controller\AbstractController' => 'go/base/controller/AbstractController.php',
@@ -155,7 +187,7 @@ class GO{
 		'GO\Base\Data\Store' => 'go/base/data/Store.php',
 		'GO\Base\Data\ColumnModel' => 'go/base/data/ColumnModel.php',
 		'GO\Base\Module' => 'go/base/Module.php',
-		'GO\Base\Model_AbstractUserDefaultModel' => 'go/base/model/AbstractUserDefaultModel.php',
+		'GO\Base\Model\AbstractUserDefaultModel' => 'go/base/model/AbstractUserDefaultModel.php',
 		'GO\Base\Db\FindParams' => 'go/base/db/FindParams.php',
 		'GO\Base\Db\FindCriteria' => 'go/base/db/FindCriteria.php',
 		'GO\Base\Util\Date' => 'go/base/util/Date.php',
@@ -382,13 +414,6 @@ class GO{
 	 * 
 	 * @return \GO\Base\Cache\CacheInterface
 	 */
-	/**
-	 * Returns cache driver. Cached items will persist between connections and are
-	 * available to all users. When debug is enabled a dummy cache driver is used
-	 * that caches nothing.
-	 * 
-	 * @return GO_Base_Cache_Interface
-	 */
 	public static function cache(){
 
         if (!isset(self::$_cache)) {
@@ -446,12 +471,16 @@ class GO{
 	/**
 	 * The automatic class loader for Group-Office.
 	 *
-	 * @param string $className
+	 * @param StringHelper $className
 	 */
 	public static function autoload($className) {
 		
 		//for namespaces
 //		$className = str_replace('\\', '_', $className);
+		
+		//Sometimes there's a leading \ in the $className and sometimes not.
+		//Might not be true for all php versions.		
+		$className = ltrim($className, '\\');
 			
 		if(isset(self::$_classes[$className])){
 			//don't use \GO::config()->root_path here because it might not be autoloaded yet causing an infite loop.
@@ -513,11 +542,26 @@ class GO{
 					
 					$filePath = self::config()->root_path.$file;
 					
-				}elseif(strpos($className,'Sabre\VObject')===0) {
-					$filePath = self::config()->root_path . 'go/vendor/VObject/lib/'.str_replace('\\','/',$className).'.php';
-				}elseif(strpos($className,'Sabre')===0) {				
-					$filePath = self::config()->root_path . 'go/vendor/SabreDAV/lib/'.str_replace('\\','/',$className). '.php';
-				}else	if (0 === strpos($className, 'Swift'))
+				}elseif(strpos($className,'Sabre')===0) {
+					$split = explode('\\', $className);
+					$lib = 'dav';
+					if(strpos(strtolower($split[1]), 'dav')===false){
+						$lib = strtolower($split[1]);
+						unset($split[1]);
+					} else if(strpos(strtolower($split[1]), 'http')===false) {
+						require_once(self::config()->root_path . 'go/vendor/sabre/uri/lib/functions.php'); 
+						require_once(self::config()->root_path . 'go/vendor/sabre/http/lib/functions.php'); 
+					}
+					
+					if($lib == 'xml') {
+						require_once(self::config()->root_path . 'go/vendor/sabre/xml/lib/Serializer/functions.php'); 
+						require_once(self::config()->root_path . 'go/vendor/sabre/xml/lib/Deserializer/functions.php'); 
+					}
+					unset($split[0]);
+					$path = implode('/',$split);
+					$filePath = self::config()->root_path . 'go/vendor/sabre/'.$lib.'/lib/'.$path. '.php';
+//					echo $filePath.'<br>';
+				}else if (0 === strpos($className, 'Swift'))
 				{
 					require_once self::config()->root_path.'go/vendor/swift/lib/classes/Swift.php';
 					//Load the init script to set up dependency injection
@@ -561,17 +605,29 @@ class GO{
 		}
 		self::$initialized=true;
 		
-	
-		
 		//register our custom error handler here
-		error_reporting(E_ALL | E_STRICT);
 		set_error_handler(array('GO','errorHandler'));
 		register_shutdown_function(array('GO','shutdown'));
 
    	spl_autoload_register(array('GO', 'autoload'));	
-
+		
 		//Start session here. Important that it's called before \GO::config().
 		\GO::session();
+		
+		if (!empty(\GO::config()->debug_usernames)) {
+			$usernames = explode(',',\GO::config()->debug_usernames);
+			$currentUserModel = \GO::user();
+			if (!empty($currentUserModel) && in_array($currentUserModel->username,$usernames))
+				\GO::config()->debug=true;
+		}
+		
+		if(\GO::config()->debug){
+			error_reporting(E_ALL | E_STRICT);
+		}
+		
+		if(!self::isInstalled()){
+			return;
+		}
 		
 		if(\GO::config()->debug){
 			self::$_scriptStartTime = \GO\Base\Util\Date::getmicrotime();			
@@ -582,6 +638,7 @@ class GO{
 		//set local to utf-8 so functions will behave consistently
 		if ( !empty(\GO::config()->locale_all) ){
 			setlocale(LC_CTYPE, \GO::config()->locale_all);
+			putenv('LC_ALL='.\GO::config()->locale_all);
 		}else{
 			//for escape shell arg
 			if(!isset(\GO::session()->values['locale_all'])){
@@ -606,7 +663,7 @@ class GO{
 			}
 //			exit(\GO::session()->values['locale_all']);
 			setlocale(LC_CTYPE, \GO::session()->values['locale_all']);
-
+			putenv('LC_ALL='.\GO::session()->values['locale_all']);
 		}
 		
 		
@@ -648,6 +705,9 @@ class GO{
 			self::config()->tmpdir = self::config()->getTempFolder()->path().'/';
 		}
 		
+		if(isset(GO::config()->init_script)) {
+			require(GO::config()->init_script);
+		}		
 	}
 	
 	/**
@@ -701,7 +761,7 @@ class GO{
 	 * Register a callback function when an error occurs. It will be called with
 	 * the error message as string
 	 * 
-	 * @param string|array $func
+	 * @param StringHelper|array $func
 	 */
 	public static function registerErrorLogCallback($func){
 		self::$_errorLogCallbacks[]=$func;
@@ -711,8 +771,8 @@ class GO{
 	 * Custom error handler that logs to our own error log
 	 * 
 	 * @param int $errno
-	 * @param string $errstr
-	 * @param string $errfile
+	 * @param StringHelper $errstr
+	 * @param StringHelper $errfile
 	 * @param int $errline
 	 * @return boolean
 	 */
@@ -799,7 +859,7 @@ class GO{
 	/**
 	 * Writes a string to the Group-Office error log
 	 * 
-	 * @param string $errorMsg
+	 * @param StringHelper $errorMsg
 	 */
 	public static function logError($errorMsg){		
 		$logDir = \GO::config()->file_storage_path . 'log';
@@ -817,7 +877,7 @@ class GO{
 	 * Add a log entry to syslog if enabled in config.php
 	 *
 	 * @param	int $level The log level. See sys_log() of the PHP docs
-	 * @param	string $message The log message
+	 * @param	StringHelper $message The log message
 	 * @access public
 	 * @return void
 	 */
@@ -855,7 +915,7 @@ class GO{
 	/**
 	 * Check if require exists
 	 *
-	 * @param string $fileName
+	 * @param StringHelper $fileName
 	 *
 	 * @return boolean
 	 */
@@ -877,7 +937,7 @@ class GO{
 	/**
 	 * Write's to a debug log.
 	 *
-	 * @param string $text log entry
+	 * @param StringHelper $text log entry
 	 */
 	public static function debug($text, $config=false) {
 
@@ -1018,10 +1078,10 @@ class GO{
 	 * 
 	 * Controller external/index will be execured.
 	 *
-	 * @param string $module
+	 * @param StringHelper $module
 	 * @param function $function
 	 * @param array $params
-	 * @return string
+	 * @return StringHelper
 	 */
 	public static function createExternalUrl($module, $function, $params,$toLoginDialog=false)
 	{
@@ -1048,7 +1108,7 @@ class GO{
 	 *
 	 * This is handled by the main index.php
 	 *
-	 * @param string $url
+	 * @param StringHelper $url
 	 */
 	public static function setAfterLoginUrl($url){
 		\GO::session()->values['after_login_url']=$url;
@@ -1057,10 +1117,12 @@ class GO{
 	/**
 	 * Generate a controller URL.
 	 *
-	 * @param string $path To controller. eg. addressbook/contact/submit
+	 * @param StringHelper $path To controller. eg. addressbook/contact/submit
 	 * @param array $params eg. array('id'=>1,'someVar'=>'someValue')
 	 * @param boolean $relative Defaults to true. Set to false to return an absolute URL.
 	 * @param boolean $htmlspecialchars Set to true to escape special html characters. eg. & becomes &amp.
+	 * @return StringHelper
+	 * @param boolean $appendSecurityToken add a SecurityToken to the url.
 	 * @return string
 	 */
 	public static function url($path='', $params=array(), $relative=true, $htmlspecialchars=false, $appendSecurityToken=true){
@@ -1103,7 +1165,7 @@ class GO{
 	/**
 	 * Find classes in a folder
 	 *
-	 * @param string $path Relative from go/base
+	 * @param StringHelper $path Relative from go/base
 	 * @return \ReflectionClass[]
 	 */
 	public static function findClasses($subfolder){
@@ -1129,7 +1191,7 @@ class GO{
 	/**
 	 * Find classes in a folder
 	 *
-	 * @param string $path Relative from $config['file_storage_path'].'php/'
+	 * @param StringHelper $path Relative from $config['file_storage_path'].'php/'
 	 * @return \ReflectionClass[]
 	 */
 	public static function findFsClasses($subfolder, $subClassOf=null){
@@ -1142,12 +1204,12 @@ class GO{
 
 			foreach($items as $item){
 				if($item instanceof \GO\Base\Fs\File){
-					$className = 'GOFS_';
+					$className = 'GOFS\\';
 					
 					$subFolders = explode('/', $subfolder);
 					
 					foreach($subFolders as $sf){
-						$className .= ucfirst($sf).'_';
+						$className .= ucfirst($sf).'\\';
 					}
 					
 					$className .= $item->nameWithoutExtension();
@@ -1195,22 +1257,52 @@ class GO{
 	 * Check if a file is encoded and if so check if it can be decrypted with
 	 * Ioncube.
 	 * 
-	 * @param string $path
+	 * @param StringHelper $path
 	 * @return boolean
 	 */
-	public static function scriptCanBeDecoded($path=null){
+	public static function scriptCanBeDecoded($packagename="Professional"){
 		
-		if(!empty(self::$ioncubeWorks)){
-			return true;
+//		if(!empty(self::$ioncubeWorks)){
+//			return true;
+//		}
+
+		$majorVersion = GO::config()->getMajorVersion();
+	
+		switch($packagename){
+			case 'Billing':
+				$className = 'LicenseBilling';
+				$licenseFile = 'billing-'.$majorVersion.'-license.txt';
+				break;
+
+			case 'Documents':
+				$className = 'LicenseDocuments';
+				$licenseFile = 'documents-'.$majorVersion.'-license.txt';
+				break;
+
+			default:
+
+				$className = 'License';
+				$licenseFile = 'groupoffice-pro-'.$majorVersion.'-license.txt';
+				
+				
+			break;
+		
+//			default:
+//				throw new Exception("Unkonwn package ".$packagename);
 		}
 
-		if(!isset($path)){
-			$path = GO::config()->root_path.'modules/professional/License.php';
+		$path = GO::config()->root_path.'modules/professional/'.$className.'.php';
+		
+		
+		if(!file_exists($path)){
+			return false;
 		}
+		
+		//echo $path;
 
 		//check data for presence of ionCube in code.
 		$data=  file_get_contents($path, false, null, -1, 100);		
-		if(strpos($data, 'ionCube')===false){				
+		if(strpos($data, 'ionCube')===false){							
 			return true;
 		}
 
@@ -1219,29 +1311,36 @@ class GO{
 		}
 
 
-		$lf = self::getLicenseFile();
+//		$lf = self::getLicenseFile();
+		
+		$file = new \GO\Base\Fs\File(GO::config()->root_path.$licenseFile);
 		
 		//Empty license file is provided in download so we must check the size.
-		if(!$lf->exists() || $lf->size()===0){
+		if(!$file->exists()){
 			return false;
 		}
-
-		self::$ioncubeWorks = \GO\Professional\License::check();
 		
-		return self::$ioncubeWorks;
+		$fullClassName = "\\GO\\Professional\\".$className;
+
+		$check =  $fullClassName::check();
+		
+//		var_dump($check);
+		
+		return $check;
+		
+//		self::$ioncubeWorks = true;
+		
+//		return self::$ioncubeWorks;
 		
 	}
-	
 	
 	/**
 	 * Get the license file object
 	 * 
 	 * @return \GO\Base\Fs\File
 	 */
-	public static function getLicenseFile(){
-		return new \GO\Base\Fs\File(GO::config()->root_path.'groupoffice-license.txt');
-	}
-	
+//	pnew \GO\Base\Fs\File(GO::config()->root_path.'groupoffice-license.txt');
+
 	/**
 	 * Checks if the main cron job is running for the task scheduler
 	 * 
@@ -1249,5 +1348,13 @@ class GO{
 	 */
 	public static function cronIsRunning(){
 		return \GO::config()->get_setting('cron_last_run') > time()-300;
+	}
+	
+	public static function p($name){
+		return self::request()->post($name);
+	}
+	
+	public static function g($name){
+		return self::request()->get($name);
 	}
 }

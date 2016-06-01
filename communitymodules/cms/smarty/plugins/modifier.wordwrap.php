@@ -15,11 +15,11 @@
  * @link http://smarty.php.net/manual/en/language.modifier.wordwrap.php
  *          wordwrap (Smarty online manual)
  * @author   Monte Ohrt <monte at ohrt dot com>
- * @param string
+ * @param StringHelper
  * @param integer
- * @param string
+ * @param StringHelper
  * @param boolean
- * @return string
+ * @return StringHelper
  */
 function smarty_modifier_wordwrap($string,$length=80,$break="\n",$cut=false)
 {

@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: CommentsGrid.js 16251 2013-11-15 08:39:41Z mschering $
+ * @version $Id: CommentsGrid.js 18977 2015-04-02 08:47:13Z michaelhart86 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -17,6 +17,7 @@ GO.comments.CommentsGrid = function(config){
 	}
 	config.layout='fit';
 	config.autoScroll=true;
+	config.stateI='comments-Grid';
 	config.split=true;
 	config.border=false;
 	config.store = new GO.data.JsonStore({
@@ -24,7 +25,7 @@ GO.comments.CommentsGrid = function(config){
 	    baseParams: {
 	    	task: 'comments'
 	    	},
-	    fields: ['id','model_id','model_name','user_name','ctime','mtime','comments'],
+	    fields: ['id','model_id','category_id','category_name','model_name','user_name','ctime','mtime','comments'],
 	    remoteSort: true
 	});
 	
@@ -48,9 +49,13 @@ GO.comments.CommentsGrid = function(config){
 		  	return '<i>'+v+'</i>';
 		  }
 		},{
+			header: GO.comments.lang['category'], 
+			dataIndex: 'category_name',
+			width:50
+		 },{
 			header: GO.lang.strCtime, 
 			dataIndex: 'ctime',
-			width:110,
+			width:50,
 			align:'right',
 		  renderer: function(v){
 		  	return '<b>'+v+'</b>';
@@ -118,7 +123,9 @@ Ext.extend(GO.comments.CommentsGrid, GO.grid.GridPanel,{
 		
 		GO.comments.commentDialogListeners={
 			save:function(){
-				this.store.reload();
+				if(this.store.baseParams.model_id && this.store.baseParams.model_name){
+					this.store.reload();
+				}
 			},
 			scope:this
 		};

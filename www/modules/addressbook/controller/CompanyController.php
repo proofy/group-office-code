@@ -247,7 +247,7 @@ class CompanyController extends \GO\Base\Controller\AbstractModelController {
 
 		$criteria = \GO\Base\Db\FindCriteria::newInstance()
 						->addModel(\GO\Addressbook\Model\Company::model(), 't');
-
+					
 		// Filter by clicked letter
 		if (!empty($params['clicked_letter'])) {
 			if ($params['clicked_letter'] == '[0-9]') {
@@ -310,7 +310,7 @@ class CompanyController extends \GO\Base\Controller\AbstractModelController {
 	protected function actionMoveEmployees($params) {
 		$to_company = \GO\Addressbook\Model\Company::model()->findByPk($params['to_company_id']);
 
-		$contacts = \GO\Addressbook\Model\Contacts::model()->find(
+		$contacts = \GO\Addressbook\Model\Contact::model()->find(
 						\GO\Base\Db\FindCriteria::newInstance()
 										->addCondition('company_id', $params['from_company_id'])
 		);
@@ -393,7 +393,7 @@ class CompanyController extends \GO\Base\Controller\AbstractModelController {
 	 * Remove the invalid emails from records to be imported
 	 */
 	protected function beforeImport($params, &$model, &$attributes, $record) {	
-	  if(isset($attributes['email']) && !\GO\Base\Util\String::validate_email($attributes['email']))
+	  if(isset($attributes['email']) && !\GO\Base\Util\StringHelper::validate_email($attributes['email']))
           unset($attributes['email']);
         
 	  return parent::beforeImport($params, $model, $attributes, $record);
@@ -402,8 +402,9 @@ class CompanyController extends \GO\Base\Controller\AbstractModelController {
 	protected function actionSelectCompany($params){
 		
 				$response = array('total'=>0, 'results'=>array());
-			
-		$query = '%'.preg_replace ('/[\s*]+/','%', $params['query']).'%'; 
+			$query = !empty($params['query']) ? $params['query'] : '';
+				
+		$query = '%'.preg_replace ('/[\s*]+/','%', $query).'%'; 
 				
 		
 		$findParams = \GO\Base\Db\FindParams::newInstance()
@@ -422,7 +423,7 @@ class CompanyController extends \GO\Base\Controller\AbstractModelController {
 				'type'=>'INNER' //defaults to INNER,
 
 			))			
-			->limit(10);
+			->limit(10)->order('t.name');
 
 //		}
 
@@ -472,6 +473,46 @@ class CompanyController extends \GO\Base\Controller\AbstractModelController {
 		
 		
 		return $response;
+		
+	}
+	
+	protected function afterAttributes(&$attributes, &$response, &$params, GO\Base\Db\ActiveRecord $model) {
+		/**
+		 * add the writebel addresslists to te maping store
+		 */
+		$findParams = new \GO\Base\Db\FindParams();
+		$findParams->permissionLevel(\GO\Base\Model\Acl::WRITE_PERMISSION);
+		
+		$addresslists = \GO\Addressbook\Model\Addresslist::model()->find($findParams);
+		foreach ($addresslists as $rec) {
+			
+			$attributes['addresslist_'. $rec->id] = array('name'=>'addresslist.addresslist_' . $rec->id, 'label'=>'' .GO::t('addresslists', 'addressbook'). ': ' .$rec->name, 'gotype'=>'boolean');
+			
+		}
+		
+	}
+	
+	protected function afterImport(&$model, &$attributes, $record) {
+		
+		
+		foreach ($attributes as $key => $value) {
+			
+			/**
+			 * pares the mapping loking for 'addresslist_'
+			 */
+			
+			if(stripos($key, 'addresslist_') !== FALSE) {
+				$data = explode('_', $key);
+				$id = $data[1];
+				
+				if($value == 1) {
+					
+					$addresslistModel = \GO\Addressbook\Model\Addresslist::model()->findByPk($id);
+					$addresslistModel->addManyMany ('companies', $model->id);
+				}
+			}
+			
+		}
 		
 	}
 	

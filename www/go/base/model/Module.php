@@ -21,7 +21,7 @@ use GO;
  * @author Merijn Schering <mschering@intermesh.nl>
  * @package GO.base.model 
  * 
- * @property string $id The id of the module which is identical to the folder name inside the "modules" folder.
+ * @property StringHelper $id The id of the module which is identical to the folder name inside the "modules" folder.
  * @property String $path The absolute filesystem path to module.
  * @property \GO\Base\Module $moduleManager The module class to install, initialize etc the module.
  * @property int $acl_id
@@ -49,7 +49,7 @@ class Module extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Install's a module with all it's dependencies
 	 * 
-	 * @param string $moduleId
+	 * @param StringHelper $moduleId
 	 * @return \GO\Base\Model\Module
 	 * @throws \GO\Base\Exception\Save
 	 */
@@ -228,7 +228,7 @@ class Module extends \GO\Base\Db\ActiveRecord {
 		$ucfirst = ucfirst($this->id);
 		$moduleClassPath = $this->path.'/'.$ucfirst.'Module.php';
 		
-		if(!file_exists($moduleClassPath) || !\GO::scriptCanBeDecoded($moduleClassPath)){
+		if(!file_exists($moduleClassPath)){
 			return false;
 		}
 

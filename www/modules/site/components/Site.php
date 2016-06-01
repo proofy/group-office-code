@@ -153,8 +153,8 @@ class Site {
 			self::$_site=\GO\Site\Model\Site::model()->findByPk($site_id,false,true); // Find the website model from its id
 		}else{
 		
-			if(isset($_GET['site_id']))
-				GO::session()->values['site_id'] = $_GET['site_id'];
+		if(isset($_GET['site_id']))
+			GO::session()->values['site_id'] = $_GET['site_id'];
 
 			if(isset(GO::session()->values['site_id']))
 				self::$_site=\GO\Site\Model\Site::model()->findByPk(GO::session()->values['site_id'],false,true); // Find the website model from its id
@@ -234,8 +234,8 @@ class Site {
 	/**
 	 * Get URL to a public template file that is accessible with the browser.
 	 * 
-	 * @param string $relativePath
-	 * @return string
+	 * @param StringHelper $relativePath
+	 * @return StringHelper
 	 */
 	public static function file($relativePath, $template=true){
 
@@ -243,9 +243,9 @@ class Site {
 			$folder = new \GO\Base\Fs\Folder(\Site::model()->getPublicPath());
 			
 			$relativePath=str_replace($folder->stripFileStoragePath().'/files/', '', $relativePath);
-			return \Site::model()->getPublicUrl().'files/'.\GO\Base\Util\String::rawurlencodeWithourSlash($relativePath);	
+			return \Site::model()->getPublicUrl().'files/'.\GO\Base\Util\StringHelper::rawurlencodeWithourSlash($relativePath);	
 		}else{
-			return self::template()->getUrl().\GO\Base\Util\String::rawurlencodeWithourSlash($relativePath);
+			return self::template()->getUrl().\GO\Base\Util\StringHelper::rawurlencodeWithourSlash($relativePath);
 		}
 	}
 	
@@ -255,8 +255,8 @@ class Site {
 	/**
 	 * Check if a template or asset exists
 	 * 
-	 * @param string $relativePath
-	 * @return string
+	 * @param StringHelper $relativePath
+	 * @return StringHelper
 	 */
 	public static function fileExists($relativePath, $template=true){
 		return file_exists(self::filePath($relativePath, $template));
@@ -266,8 +266,8 @@ class Site {
 	/**
 	 * Get Path to a public template file that is accessible with the browser.
 	 * 
-	 * @param string $relativePath
-	 * @return string
+	 * @param StringHelper $relativePath
+	 * @return StringHelper
 	 */
 	public static function filePath($relativePath, $template=true){
 		if(!$template){
@@ -283,9 +283,9 @@ class Site {
 	 * Get a thumbnail URL for user uploaded files. This does not work for template
 	 * images.
 	 * 
-	 * @param string $relativePath
+	 * @param StringHelper $relativePath
 	 * @param array $thumbParams
-	 * @return string URL to thumbnail
+	 * @return StringHelper URL to thumbnail
 	 */
 	public static function thumb($relativePath, $thumbParams=array("lw"=>100, "ph"=>100, "zc"=>1)) {
 		

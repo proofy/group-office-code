@@ -506,6 +506,9 @@ Ext.ux.form.SuperBoxSelect = Ext.extend(Ext.ux.form.SuperBoxSelect,Ext.form.Comb
 
 		Ext.ux.form.SuperBoxSelect.superclass.onBlur.call(this);
 	},
+	assertValue : function() {
+		//override this function because it's called by Ext.Editor and fails.
+	},
 
 	onCollapse: function() {
 		this.view.clearSelections();

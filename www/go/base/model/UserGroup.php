@@ -46,10 +46,38 @@ class UserGroup extends \GO\Base\Db\ActiveRecord {
   
 	public function relations() {
 		return array(
-				'group' => array('type' => self::BELONGS_TO, 'model' => 'GO\Base\Model\Group', 'field' => 'group_id'),
+			'user' => array('type' => self::BELONGS_TO, 'model' => 'GO\Base\Model\User', 'field' => 'user_id'),
+			'group' => array('type' => self::BELONGS_TO, 'model' => 'GO\Base\Model\Group', 'field' => 'group_id'),
 		);
 	}
   public function primaryKey() {
     return array('user_id','group_id');
   }
+	
+	private function updateAclMtime(){
+		$sql = "UPDATE go_acl_items SET mtime=unix_timestamp() WHERE id IN (SELECT acl_id FROM go_acl WHERE group_id=".$this->group_id.")";		
+		\GO::getDbConnection()->query($sql);
+	}
+	
+	protected function afterSave($wasNew) {
+		
+		$this->updateAclMtime();
+		
+		return parent::afterSave($wasNew);
+	}
+	
+	protected function beforeDelete() {
+		
+		if($this->group_id == \GO::config()->group_root && $this->user_id == 1) {
+			throw new \Exception("You can't remove the administrator from the administrators group.");
+		}
+		
+		parent::beforeDelete();
+	}
+	
+	protected function afterDelete() {
+		$this->updateAclMtime();
+		
+		return parent::afterDelete();
+	}
 }

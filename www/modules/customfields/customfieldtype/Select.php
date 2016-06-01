@@ -22,7 +22,7 @@ class Select extends AbstractCustomfieldtype{
 	 * This function is used to format the database value for the interface edit
 	 * form.
 	 * 
-	 * @param string $key Database column 'col_x'
+	 * @param StringHelper $key Database column 'col_x'
 	 * @param array $attributes Customfield model attributes
 	 * @return Mixed 
 	 */

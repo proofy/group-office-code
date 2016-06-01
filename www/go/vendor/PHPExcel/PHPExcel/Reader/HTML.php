@@ -47,7 +47,7 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 	/**
 	 * Input encoding
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_inputEncoding	= 'ANSI';
 
@@ -128,7 +128,7 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 	/**
 	 * Loads PHPExcel from file
 	 *
-	 * @param 	string 		$pFilename
+	 * @param 	StringHelper 		$pFilename
 	 * @return 	PHPExcel
 	 * @throws 	PHPExcel_Reader_Exception
 	 */
@@ -144,7 +144,7 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 	/**
 	 * Set input encoding
 	 *
-	 * @param string $pValue Input encoding
+	 * @param StringHelper $pValue Input encoding
 	 */
 	public function setInputEncoding($pValue = 'ANSI')
 	{
@@ -155,7 +155,7 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 	/**
 	 * Get input encoding
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getInputEncoding()
 	{
@@ -399,7 +399,7 @@ class PHPExcel_Reader_HTML extends PHPExcel_Reader_Abstract implements PHPExcel_
 	/**
 	 * Loads PHPExcel from file into PHPExcel instance
 	 *
-	 * @param 	string 		$pFilename
+	 * @param 	StringHelper 		$pFilename
 	 * @param	PHPExcel	$objPHPExcel
 	 * @return 	PHPExcel
 	 * @throws 	PHPExcel_Reader_Exception

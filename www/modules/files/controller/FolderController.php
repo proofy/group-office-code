@@ -51,7 +51,7 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 			$folders = array($params['path']);
 		}else
 		{
-			$folders = array('users','projects','addressbook','notes','tickets');
+			$folders = array('users','projects2','addressbook','notes','tickets');
 
 
 			$billingFolder = new \GO\Base\Fs\Folder(\GO::config()->file_storage_path.'billing');
@@ -204,11 +204,11 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 				\GO\Files\Model\SharedRootFolder::model()->rebuildCache(\GO::user()->id, true);
 			}else
 			{
-				
-			
-				$syncFolder = \GO\Files\Model\Folder::model()->findByPk($params['sync_folder_id']);
-				if($syncFolder)
-					$syncFolder->syncFilesystem();
+				if(empty(GO::config()->files_disable_filesystem_sync)){
+					$syncFolder = \GO\Files\Model\Folder::model()->findByPk($params['sync_folder_id']);
+					if($syncFolder)
+						$syncFolder->syncFilesystem();
+				}
 			}
 		}
 
@@ -259,7 +259,7 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 					
 					$response[] = $node;
 
-					if (\GO::modules()->addressbook) {
+					if (GO::config()->files_show_addressbooks && GO::modules()->addressbook) {
 						$contactsFolder = \GO\Files\Model\Folder::model()->findByPath('addressbook');
 
 						if ($contactsFolder) {
@@ -269,8 +269,9 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 						}
 					}
 
-					if (\GO::modules()->projects) {
-						$projectsFolder = \GO\Files\Model\Folder::model()->findByPath('projects');
+
+					if (GO::config()->files_show_projects && GO::modules()->projects) {
+						$projectsFolder =  \GO\Files\Model\Folder::model()->findByPath('projects');
 
 						if ($projectsFolder) {
 							$node = $this->_folderToNode($projectsFolder, $expandFolderIds, false, $showFiles);
@@ -279,7 +280,8 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 						}
 					}
 					
-					if (\GO::modules()->projects2) {
+
+					if (GO::config()->files_show_projects && GO::modules()->projects2) {
 						$projectsFolder = \GO\Files\Model\Folder::model()->findByPath('projects2');
 
 						if ($projectsFolder) {
@@ -412,7 +414,7 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 		}
 
 		if(!empty($params['name']) && \GO::config()->convert_utf8_filenames_to_ascii)
-			$params['name']=\GO\Base\Util\String::utf8ToASCII ($params['name']);
+			$params['name']=\GO\Base\Util\StringHelper::utf8ToASCII ($params['name']);
 
 		return parent::beforeSubmit($response, $model, $params);
 	}
@@ -662,12 +664,12 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 			$folder = \GO\Files\Model\Folder::model()->findHomeFolder (GO::user());
 		if(!$folder)
 			throw new Exception('No Folder found with id '.$params['folder_id']);
-
+		$user = $folder->quotaUser;
 		$this->_listFolderPermissionLevel=$folder->permissionLevel;
 
 		$response['permission_level']=$folder->permissionLevel;//$folder->readonly ? \GO\Base\Model\Acl::READ_PERMISSION : $folder->permissionLevel;
 
-		if(empty($params['skip_fs_sync']))
+		if(empty($params['skip_fs_sync']) && empty(GO::config()->files_disable_filesystem_sync))
 			$folder->checkFsSync();
 
 		//useful information for the view.
@@ -681,8 +683,6 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 			$response['thumbs']=0;
 
 		$response['parent_id'] = $folder->parent_id;
-		$response['disk_usage']=round(\GO::user()->disk_usage/1024/1024,2);
-		$response['disk_quota']=\GO::user()->disk_quota;
 
 		//locked state
 		$response['lock_state']=!empty($folder->apply_state);
@@ -761,6 +761,7 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 
 			$store->resetResults();
 
+			$store->getColumnModel()->formatColumn('size', '"-"',array(),'size');
 			$store->getColumnModel()->formatColumn('type', '',array(),'extension');
 			$store->getColumnModel()->formatColumn('locked', '$model->isLocked()');
 			$store->getColumnModel()->formatColumn('locked_user_id', '$model->locked_user_id');
@@ -787,6 +788,13 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 			$record = $folder->files(\GO\Base\Db\FindParams::newInstance()->single()->select('count(*) as total'));
 			$response['total']+=$record->total;
 		}
+		if(empty($user)) {
+			$user = \GO::user();
+		}
+		
+		$response['owner_id'] = $user->id;
+		$response['disk_usage']=round($user->disk_usage/1024/1024,2);
+		$response['disk_quota']=$user->disk_quota;
 
 		return $response;
 	}
@@ -906,7 +914,7 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 
 
 		$currentPath = $folder->path;
-		$newPath = $model->buildFilesPath();
+		$newPath = rtrim($model->buildFilesPath(),'.');
 		
 
 		if(!$newPath)
@@ -1013,11 +1021,11 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 	private function _createNewModelFolder(\GO\Base\Db\ActiveRecord $model) {
 
 		GO::debug("Create new model folder ".$model->className()."(ID:".$model->id.")");
-		
-		$folder = \GO\Files\Model\Folder::model()->findByPath($model->buildFilesPath(),true, array('acl_id'=>$model->findAclId(),'readonly'=>1));
+		$filesPath = rtrim($model->buildFilesPath(),'.');
+		$folder = \GO\Files\Model\Folder::model()->findByPath($filesPath,true, array('acl_id'=>$model->findAclId(),'readonly'=>1));
 		
 		if(!$folder){
-			throw new \Exception("Failed to create folder ".$model->buildFilesPath());
+			throw new \Exception("Failed to create folder ".$filesPath);
 		}
 //      if (!empty($model->acl_id))
 //          $folder->acl_id = $model->acl_id;
@@ -1047,7 +1055,7 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 
 	public function checkModelFolder(\GO\Base\Db\ActiveRecord $model, $saveModel=false, $mustExist=false) {
 		$oldAllowDeletes = \GO\Base\Fs\File::setAllowDeletes(false);
-
+	
 		$folder = false;
 		if ($model->files_folder_id > 0){
 			
@@ -1067,7 +1075,7 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 
 			if ($saveModel && $model->isModified())
 				$model->save(true);
-		}elseif (isset($model->acl_id) || $mustExist) {
+		}elseif ((isset($model->acl_id) && !$model->aclOverwrite()) || $mustExist) {
 			
 			GO::debug('Folder does not exist in database. Will create it.');
 		
@@ -1158,6 +1166,8 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 
 	protected function actionCompress($params) {
 
+		ini_set('max_execution_time', 600);
+		ini_set('memory_limit', '512M');
 		$sources = json_decode($params['compress_sources'], true);
 
 
@@ -1183,6 +1193,77 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 
 		return $response;
 	}
+	
+	/**
+	 * Compress the selected files and return as download
+	 * 
+	 * @param array $params
+	 * @return boolean
+	 * @throws \Exception
+	 */
+	protected function actionCompressAndDownload($params) {
+
+		if(!isset($params['archive_name']))
+			Throw new \Exception('No name for the archive given');
+		
+		ini_set('max_execution_time', 600);
+		ini_set('memory_limit', '512M');
+		
+		$sources = json_decode($params['sources'], true);
+		
+		$workingFolder = false;
+		
+		// Read the sources and create objects from them
+		$sourceObjects = array();
+		
+		// The total filesize in bytes
+		$totalFileSize = 0;
+		
+		// The maximum filesize that is allowed to zip (Default is 256MB)
+		$maxFilesize = GO::config()->zip_max_file_size;
+		
+		for($i=0;$i<count($sources);$i++){
+			$path = \GO::config()->file_storage_path.$sources[$i];
+			
+			$sourceFile = \GO\Base\Fs\Base::createFromPath($path);
+			
+			// Increase the total filesize
+			$totalFileSize += $sourceFile->size();
+			
+			if($totalFileSize >= $maxFilesize){
+				throw new \Exception(sprintf(
+					\GO::t('zipFilesizeTooBig','base'), 
+					\GO\Base\Util\Number::formatSize($maxFilesize,2)
+				));
+			}
+			
+			// Set the workingFolder
+			if(!$workingFolder){
+				$workingFolder = $sourceFile->parent();
+			}
+			
+			$sourceObjects[]= $sourceFile;
+		}
+		
+		// Create the zipped temp file object
+		$archiveFile = \GO\Base\Fs\File::tempFile($params['archive_name'],'zip');
+		if($archiveFile->exists())
+			throw new \Exception(sprintf(\GO::t('filenameExists','files'), $archiveFile->stripFileStoragePath()));
+		
+		// Create the zipfile
+		if(\GO\Base\Fs\Zip::create($archiveFile, $workingFolder, $sourceObjects)){
+			
+			// Output download headers
+//			\GO\Base\Util\Http::outputDownloadHeaders($archiveFile,false,true);
+//			$archiveFile->output();
+			$response['archive'] = $archiveFile->stripTempPath();
+			$response['success'] = true;
+		} else {
+			throw new \Exception("ZIP creation failed");
+		}
+		
+		return $response;
+	}
 
 
 	protected function actionDecompress($params){
@@ -1205,8 +1286,8 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 					
 					$folder = \GO\Base\Fs\Folder::tempFolder(uniqid());
 					
-					if(class_exists("ZipArchive")){
-						$zip = new ZipArchive;
+					if(class_exists("\ZipArchive")){
+						$zip = new \ZipArchive;
 						$zip->open($file->path());
 						$zip->extractTo($folder->path());									
 						$this->_convertZipEncoding($folder);
@@ -1265,8 +1346,8 @@ class FolderController extends \GO\Base\Controller\AbstractModelController {
 		
 		foreach($items as $item){
 			
-			if(!\GO\Base\Util\String::isUtf8($item->name()))
-				$item->rename(\GO\Base\Util\String::clean_utf8($item->name(), $charset));
+			if(!\GO\Base\Util\StringHelper::isUtf8($item->name()))
+				$item->rename(\GO\Base\Util\StringHelper::clean_utf8($item->name(), $charset));
 
 			if($item->isFolder()){
 				$this->_convertZipEncoding($item, $charset);

@@ -194,7 +194,7 @@ class PHPExcel_Worksheet_PageSetup
 	/**
 	 * Orientation
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_orientation	= PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT;
 
@@ -263,7 +263,7 @@ class PHPExcel_Worksheet_PageSetup
 	/**
 	 * Print area
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_printArea = NULL;
 
@@ -304,7 +304,7 @@ class PHPExcel_Worksheet_PageSetup
     /**
      * Get Orientation
      *
-     * @return string
+     * @return StringHelper
      */
     public function getOrientation() {
     	return $this->_orientation;
@@ -313,7 +313,7 @@ class PHPExcel_Worksheet_PageSetup
     /**
      * Set Orientation
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Worksheet_PageSetup
      */
     public function setOrientation($pValue = PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT) {
@@ -463,8 +463,8 @@ class PHPExcel_Worksheet_PageSetup
 	/**
 	 * Set Columns to repeat at left by start and end
 	 *
-	 * @param string $pStart
-	 * @param string $pEnd
+	 * @param StringHelper $pStart
+	 * @param StringHelper $pEnd
 	 * @return PHPExcel_Worksheet_PageSetup
 	 */
 	public function setColumnsToRepeatAtLeftByStartAndEnd($pStart = 'A', $pEnd = 'A') {
@@ -569,7 +569,7 @@ class PHPExcel_Worksheet_PageSetup
 	 *							Otherwise, the specific range identified by the value of $index will be returned
 	 *							Print areas are numbered from 1
 	 * @throws	PHPExcel_Exception
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public function getPrintArea($index = 0) {
 		if ($index == 0) {

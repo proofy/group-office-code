@@ -21,7 +21,7 @@ class SettingsModule extends \GO\Base\Module{
 			$login_screen_text = \GO::config()->get_setting('login_screen_text');
 			$login_screen_text_title = \GO::config()->get_setting('login_screen_text_title');
 			
-			echo 'GO.mainLayout.on("login", function(mainLayout){mainLayout.msg("'.\GO\Base\Util\String::escape_javascript ($login_screen_text_title).'", "'.\GO\Base\Util\String::escape_javascript ($login_screen_text).'", 3600, 400);});';
+			echo 'GO.mainLayout.on("login", function(mainLayout){mainLayout.msg("'.\GO\Base\Util\StringHelper::escape_javascript ($login_screen_text_title).'", "'.\GO\Base\Util\StringHelper::escape_javascript ($login_screen_text).'", 3600, 400);});';
 					
 		}
 

@@ -27,7 +27,7 @@ class Twitter extends \GO\Site\Components\Widget {
 	 * dev.twitter.com -> create an app -> request oauth token. Then look at the 
 	 * oAuth tab.
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	public $consumerKey='';
 	
@@ -36,7 +36,7 @@ class Twitter extends \GO\Site\Components\Widget {
 	 * dev.twitter.com -> create an app -> request oauth token. Then look at the 
 	 * oAuth tab.
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	public $consumerSecret='';
 	
@@ -45,7 +45,7 @@ class Twitter extends \GO\Site\Components\Widget {
 	 * dev.twitter.com -> create an app -> request oauth token. Then look at the 
 	 * oAuth tab.
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	public $accessToken='';
 	
@@ -54,7 +54,7 @@ class Twitter extends \GO\Site\Components\Widget {
 	 * dev.twitter.com -> create an app -> request oauth token. Then look at the 
 	 * oAuth tab.
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	public $accessTokenSecret='';
 	
@@ -62,7 +62,7 @@ class Twitter extends \GO\Site\Components\Widget {
 	/**
 	 * Twitter username (ex. GroupOffice)
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	public $screenName="";
 	
@@ -316,7 +316,7 @@ http://t.co/zy3JDoVTEC"
 					if(!is_object($value)){
 						
 						if($key=='text')
-							$value = \GO\Base\Util\String::text_to_html($value);
+							$value = \GO\Base\Util\StringHelper::text_to_html($value);
 						
 						if($key=='created_at'){
 							$value = strtotime($value);

@@ -20,3 +20,8 @@ $l['name']='Lesezeichen';
 $l['description']='Ein Modul um Lesezeichen zu erstellen.';
 $l['general']='Allgemein';
 $l['googleDescription']="Durchsuche das Internet";
+
+$l['behaveAsModule']='Verhalten wie ein Modul (Browser neu laden)';
+$l['confirmDelete']='Sind Sie sicher, dass Sie dieses Lesezeichen löschen wollen?';
+$l['toggle']='Ansicht umschalten';
+$l['showCategoryInStartMenu']='Lesezeichen gruppieren (Browser Reload nötig)';

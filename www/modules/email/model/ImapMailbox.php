@@ -29,14 +29,14 @@ class ImapMailbox extends \GO\Base\Model {
 
 	/**
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_attributes;
 
 	public function __construct(Account $account, $attributes) {
 		$this->_account = $account;
 
-		\GO::debug("GO\Email\Model\ImapMailbox:".$attributes['name']);
+		\GO::debug("GO\Email\Model\ImapMailbox:".var_export($attributes,true));
 
 		$this->_attributes = $attributes;
 
@@ -224,20 +224,38 @@ class ImapMailbox extends \GO\Base\Model {
 	  if($this->getAccount()->getPermissionLevel() <= \GO\Base\Model\Acl::READ_PERMISSION)
 		  throw new \GO\Base\Exception\AccessDenied();
 
+		$name = trim($name);
 		$this->_validateName($name);
 
 		$parentName = $this->getParentName();
 		$newMailbox = empty($parentName) ? $name : $parentName.$this->delimiter.$name;
 
 //		throw new \Exception($this->name." -> ".$newMailbox);
-
-		return $this->getAccount()->openImapConnection()->rename_folder($this->name, $newMailbox);
+		
+		if($this->getAccount()->openImapConnection()->rename_folder($this->name, $newMailbox)) {
+			$this->_attributes['name'] = $newMailbox;
+			
+			return true;
+		}
+		return false;
 	}
 
 	public function delete(){
 	  if($this->getAccount()->getPermissionLevel() <= \GO\Base\Model\Acl::READ_PERMISSION)
 		 throw new \GO\Base\Exception\AccessDenied();
-
+		
+		if($this->getHasChildren()) {
+			
+			foreach ($this->getChildren() as $mailBox) {
+				
+				
+				if(!$mailBox->delete()) {
+					return false;
+				}
+			}
+			
+		}
+		
 	  return $this->getAccount()->openImapConnection()->delete_folder($this->name);
 	}
 
@@ -267,6 +285,7 @@ class ImapMailbox extends \GO\Base\Model {
 	public function createChild($name, $subscribe=true){
 	  if($this->getAccount()->getPermissionLevel() <= \GO\Base\Model\Acl::READ_PERMISSION)
 		  throw new \GO\Base\Exception\AccessDenied();
+		$name = trim($name);
 		$newMailbox = empty($this->name) ? $name : $this->name.$this->delimiter.$name;
 
 		$this->_validateName($name);

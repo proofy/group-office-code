@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: LinksPanel.js 17206 2014-03-26 12:43:55Z mschering $
+ * @version $Id: LinksPanel.js 19273 2015-07-28 08:30:25Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -210,6 +210,7 @@ GO.grid.LinksPanel = function(config){
 	});
 
 	this.linkTypeFilter = new GO.LinkTypeFilterPanel({
+		for_links: true,
 		region:'south',
 		height:300
 	//		region:'west',

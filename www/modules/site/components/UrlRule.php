@@ -7,7 +7,7 @@ class UrlRule
 {
 
 	/**
-	 * @var string the URL suffix used for this rule.
+	 * @var StringHelper the URL suffix used for this rule.
 	 * For example, ".html" can be used so that the URL looks like pointing to a static HTML page.
 	 * Defaults to null, meaning using the value of {@link CUrlManager::urlSuffix}.
 	 */
@@ -38,7 +38,7 @@ class UrlRule
 	public $matchValue;
 
 	/**
-	 * @var string the HTTP verb (e.g. GET, POST, DELETE) that this rule should match.
+	 * @var StringHelper the HTTP verb (e.g. GET, POST, DELETE) that this rule should match.
 	 * If this rule can match multiple verbs, please separate them with commas.
 	 * If this property is not set, the rule can match any verb.
 	 * Note that this property is only used when parsing a request. It is ignored for URL creation.
@@ -54,7 +54,7 @@ class UrlRule
 	public $parsingOnly = false;
 
 	/**
-	 * @var string the controller/action pair
+	 * @var StringHelper the controller/action pair
 	 */
 	public $route;
 
@@ -64,17 +64,17 @@ class UrlRule
 	public $references = array();
 
 	/**
-	 * @var string the pattern used to match route
+	 * @var StringHelper the pattern used to match route
 	 */
 	public $routePattern;
 
 	/**
-	 * @var string regular expression used to parse a URL
+	 * @var StringHelper regular expression used to parse a URL
 	 */
 	public $pattern;
 
 	/**
-	 * @var string template used to construct a URL
+	 * @var StringHelper template used to construct a URL
 	 */
 	public $template;
 
@@ -95,8 +95,8 @@ class UrlRule
 
 	/**
 	 * Constructor.
-	 * @param string $route the route of the URL (controller/action)
-	 * @param string $pattern the pattern for matching the URL
+	 * @param StringHelper $route the route of the URL (controller/action)
+	 * @param StringHelper $pattern the pattern for matching the URL
 	 */
 	public function __construct($route, $pattern)
 	{
@@ -146,9 +146,9 @@ class UrlRule
 	/**
 	 * Creates a URL based on this rule.
 	 * @param CUrlManager $manager the manager
-	 * @param string $route the route
+	 * @param StringHelper $route the route
 	 * @param array $params list of parameters
-	 * @param string $ampersand the token separating name-value pairs in the URL.
+	 * @param StringHelper $ampersand the token separating name-value pairs in the URL.
 	 * @return mixed the constructed URL or false on error
 	 */
 	public function createUrl($manager, $route, $params, $ampersand)
@@ -233,8 +233,8 @@ class UrlRule
 	 * Parses a URL based on this rule.
 	 * @param UrlManager $manager the URL manager
 	 * @param HttpRequest $request the request object
-	 * @param string $pathInfo path info part of the URL
-	 * @param string $rawPathInfo path info that contains the potential URL suffix
+	 * @param StringHelper $pathInfo path info part of the URL
+	 * @param StringHelper $rawPathInfo path info that contains the potential URL suffix
 	 * @return mixed the route that consists of the controller ID and action ID or false on error
 	 */
 	public function parseUrl($manager, $request, $pathInfo, $rawPathInfo)

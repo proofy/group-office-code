@@ -66,7 +66,8 @@ CREATE TABLE IF NOT EXISTS `fs_folders` (
   `thumbs` BOOLEAN NOT NULL DEFAULT '1',
   `ctime` int(11) NOT NULL,
   `mtime` int(11) NOT NULL,
-	`muser_id` int(11) NOT NULL DEFAULT '0',
+  `muser_id` int(11) NOT NULL DEFAULT '0',
+  `quota_user_id` INT NOT NULL DEFAULT '0',
   `readonly` BOOLEAN NOT NULL DEFAULT '0',
   `cm_state` text,
   `apply_state` tinyint(1) NOT NULL DEFAULT '0',
@@ -218,6 +219,7 @@ CREATE TABLE IF NOT EXISTS `fs_versions` (
   `user_id` int(11) NOT NULL,
   `path` varchar(255) NOT NULL,
   `version` int(11) NOT NULL DEFAULT '1',
+  `size_bytes` BIGINT NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `file_id` (`file_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;

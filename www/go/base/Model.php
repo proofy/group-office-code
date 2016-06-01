@@ -39,6 +39,10 @@ abstract class Model extends Object{
 	
 	private static $_models=array();			// class name => model
 	
+	public function __construct() {
+		//just to prevent "model" to be called as constructor by PHP.
+	}
+	
 	/**
 	 * Returns the static model of the specified AR class.
 	 * Every child of this class must override it.
@@ -63,10 +67,10 @@ abstract class Model extends Object{
 	 * 
 	 * returns 'base' if it belongs to the core library of Group-Office.
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
-	public function getModule(){
-		$arr = explode('\\', $this->className());
+	public static function getModule(){
+		$arr = explode('\\', static::className());
 		
 		return strtolower($arr[1]);
 	}
@@ -88,8 +92,8 @@ abstract class Model extends Object{
 	
 	/**
 	 * Returns the text label for the specified attribute.
-	 * @param string $attribute the attribute name
-	 * @return string the attribute label
+	 * @param StringHelper $attribute the attribute name
+	 * @return StringHelper the attribute label
 	 * @see attributeLabels
 	 */
 	public function getAttributeLabel($attribute)
@@ -108,7 +112,7 @@ abstract class Model extends Object{
 	/**
 	 * Get the name of the model in short
 	 * eg. Model_User will return 'User'
-	 * @return string Model name
+	 * @return StringHelper Model name
 	 */
 	public function getModelName()
 	{
@@ -140,7 +144,7 @@ abstract class Model extends Object{
 	 * Get the validationError for the given attribute
 	 * If the attribute has no error then fals will be returned
 	 * 
-	 * @param string $key
+	 * @param StringHelper $key
 	 * @return mixed 
 	 */
 
@@ -158,16 +162,17 @@ abstract class Model extends Object{
 	 * an error on the associated form field.
 	 * The key for an error must be unique.
 	 * 
-	 * @param string $key 
-	 * @param string $message 
+	 * @param StringHelper $key 
+	 * @param StringHelper $message 
 	 */
 	protected function setValidationError($key, $message) {
+		\GO::debug('Validation error in '.$this->className().' for attribute:'.$key.'. Message is: '.$message);
 		$this->_validationErrors[$key] = $message;
 	}
 	
 	/**
 		* Returns a value indicating whether there is any validation error.
-		* @param string $key attribute name. Use null to check all attributes.
+		* @param StringHelper $key attribute name. Use null to check all attributes.
 		* @return boolean whether there is any error.
 		*/
 	public function hasValidationErrors($key=null)

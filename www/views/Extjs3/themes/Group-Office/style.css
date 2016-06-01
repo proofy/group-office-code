@@ -5,6 +5,12 @@
 * modules/<modulename>/themes/Default/style.css instead.
 */
 
+
+.btn-windows {
+	background-image:url('images/16x16/gnome-windows.png') !important;
+}
+
+
 .editorgrid-editablecell {
 	background:url('images/16x16/celledit.png') no-repeat top right !important;
 }
@@ -63,12 +69,16 @@
 	width:10px;
 }
 
-.go-html-formatted, .go-html-formatted p, .go-html-formatted li, .go-html-formatted td, .go-html-formatted div, .go-html-formatted span{
+.go-html-formatted{
 	font: 12px Arial, Helvetica Sans-serif;
 }
 
+.go-html-formatted div, .go-html-formatted dl, .go-html-formatted dt, .go-html-formatted dd, .go-html-formatted ul, .go-html-formatted ol, .go-html-formatted li, .go-html-formatted h1, .go-html-formatted h2, .go-html-formatted h3, .go-html-formatted h4, .go-html-formatted h5, .go-html-formatted h6, .go-html-formatted pre, .go-html-formatted form, .go-html-formatted fieldset, .go-html-formatted input, .go-html-formatted p, .go-html-formatted blockquote, .go-html-formatted th, .go-html-formatted td, .go-html-formatted span {
+    font: inherit;
+}
+
 .go-html-formatted  blockquote {  
-	display: block;  
+  display: block;  
   margin: 1em 40px;  
   padding:0px 10px;
 }
@@ -499,6 +509,10 @@ a.normal-link:hover{
 
 .btn-print{
 	background-image:url('images/16x16/print.png') !important;
+}
+
+.btn-read{
+	background-image:url('images/16x16/read.png') !important;
 }
 
 .btn-link {
@@ -2360,4 +2374,14 @@ body.ext-ie6 .x-superboxselect-item {margin: 2px 1px 2px 1px; line-height: 1.2em
 
 .go-row-body{
 	font-size:11px;
+}
+
+.startmenu-submenu .x-menu-item-icon{
+	display:block !important;
+	cursor: pointer;
+}
+
+.startmenu-submenu .x-menu-item span{
+	padding-left:20px;
+	cursor: pointer;
 }

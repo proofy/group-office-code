@@ -7,7 +7,7 @@
  * If you have questions write an e-mail to info@intermesh.nl
  * 
  * @copyright Copyright Intermesh
- * @version $Id: ManageDialog.js 15954 2013-10-17 12:04:36Z mschering $
+ * @version $Id: ManageDialog.js 18536 2014-12-01 10:29:30Z mschering $
  * @author Merijn Schering <mschering@intermesh.nl>
  */
 
@@ -50,6 +50,7 @@ GO.addressbook.ManageDialog = function(config)
 		xtype: 'tabpanel',
 		activeTab: 0,
 		border: true,
+		deferredRender: false,
 		items: items
 	}];
 	config.buttons=[{ 

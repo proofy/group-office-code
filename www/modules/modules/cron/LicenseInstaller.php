@@ -51,9 +51,8 @@ class LicenseInstaller extends AbstractCron {
 	 * $user parameter is null and the run function will be called only once.
 	 * 
 	 * @param CronJob $cronJob
-	 * @param User $user [OPTIONAL]
 	 */
-	public function run(CronJob $cronJob,User $user = null){
+	public function run(CronJob $cronJob){
 		
 		GO::session()->runAsRoot();
 		

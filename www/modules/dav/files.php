@@ -25,18 +25,23 @@ require('../../GO.php');
 // Authentication backend
 $authBackend = new \GO\Dav\Auth\Backend();
 
-if(!\GO::modules()->isInstalled("dav"))
-	trigger_error('DAV module not installed. Install it at Start menu -> Modules', E_USER_ERROR);
-
+if (!\GO::modules()->isInstalled('dav')){
+	$msg = 'DAV module not installed. Install it at Start menu -> Apps.';
+	
+	trigger_error($msg, E_USER_WARNING);
+	
+	exit($msg);
+}
 
 $root = new \GO\Dav\Fs\RootDirectory();
 
-$tree = new \GO\Dav\ObjectTree($root);
+//$tree = new \GO\Dav\ObjectTree($root);
 
 // The rootnode needs in turn to be passed to the server class
-$server = new Sabre\DAV\Server($tree);
+$server = new Sabre\DAV\Server($root);
 $server->debugExceptions=\GO::config()->debug;
-$server->subscribeEvent('exception', function($e){
+
+$server->on('exception', function($e){
 	\GO::debug((string) $e);
 });
 
@@ -53,7 +58,9 @@ $locksDir = $tmpDir->createChild('locksdb', false);
 $locksDir->create();
 
 // Support for LOCK and UNLOCK
-$lockBackend = new Sabre\DAV\Locks\Backend\FS($locksDir->path());
+//$lockBackend = new Sabre\DAV\Locks\Backend\FS($locksDir->path());
+$lockBackend = new Sabre\DAV\Locks\Backend\PDO(\GO::getDbConnection());
+$lockBackend->tableName = 'dav_locks';
 $lockPlugin = new Sabre\DAV\Locks\Plugin($lockBackend);
 $server->addPlugin($lockPlugin);
 

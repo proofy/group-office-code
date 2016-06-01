@@ -45,6 +45,7 @@ $l['printAllDaySingle']='Hele dag';
 $l['printAllDayMultiple']='Hele dag van %s tot %s';
 $l['open_resource']='Reservering openen';
 $l['resource_mail_subject']='Hulpmiddel \'%s\' gereserveerd voor \'%s\' op \'%s\'';//%s is resource name, %s is event name, %s is start date;
+$l['resource_confirmed_mail_body']='%s heeft hulpmiddel \'%s\' gereserveerd en de boeking geaccordeerd. U beheert dit hulpmiddel. Gebruik de onderstaande link als u deze boeking wilt weigeren.';
 $l['resource_mail_body']='%s heeft hulpmiddel \'%s\' gereserveerd. U beheert dit hulpmiddel. Open de reservering om deze te accepteren of weigeren.';
 $l['resource_modified_mail_subject']='Hulpmiddel \'%s\' reservering voor \'%s\' op \'%s\' gewijzigd';//%s is resource name, %s is event name, %s is start date;
 $l['resource_modified_mail_body']='%s heeft de reservering voor hulpmiddel \'%s\' gewijzigd. U beheert dit hulpmiddel. Open de reservering om deze te accepteren of weigeren.';
@@ -258,3 +259,7 @@ $l['cannotHandleInvitation2']='Kon de afspraak niet aanpassen, omdat u te weinig
 $l['tooltip'] = 'Tooltip tekst';
 
 $l['moveEventResourceError'] = 'Kan afspraak niet verzetten omdat de volgende hulpmiddelen dan niet beschikbaar zijn:';
+
+$l['resourceUsedIn'] = 'Hulpmiddel gebruikt in';
+
+$l['exportAsIcs'] = 'Exporteren als ICS';

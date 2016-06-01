@@ -28,7 +28,7 @@ class Utils{
 				elseif (strtoupper($encoding) == 'Q') {
 					$fld = quoted_printable_decode($fld);
 				}
-				$fld = \GO\Base\Util\String::clean_utf8($fld, $charset);
+				$fld = \GO\Base\Util\StringHelper::clean_utf8($fld, $charset);
 
 				$string = str_replace($v, $fld, $string);
 			}
@@ -39,12 +39,12 @@ class Utils{
 //			throw new \Exception($charset.' : '.substr($string, $pos+2));
 			$string = rawurldecode(substr($string, $pos+2));
 
-			$string=\GO\Base\Util\String::clean_utf8($string, $charset);
+			$string=\GO\Base\Util\StringHelper::clean_utf8($string, $charset);
 		}else
 		{			
-			$string=\GO\Base\Util\String::clean_utf8($string, $defaultCharset);
+			$string=\GO\Base\Util\StringHelper::clean_utf8($string, $defaultCharset);
 		}
-//		$string=\GO\Base\Util\String::clean_utf8($string);
+//		$string=\GO\Base\Util\StringHelper::clean_utf8($string);
 		
 		//\GO::debug($string);
 		return str_replace(array('\\\\', '\\(', '\\)'), array('\\','(', ')'), $string);

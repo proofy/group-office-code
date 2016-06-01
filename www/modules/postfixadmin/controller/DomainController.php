@@ -94,5 +94,50 @@ class DomainController extends \GO\Base\Controller\AbstractModelController {
 		return $response;		
 	}
 	
+	
+	protected function allowGuests() {
+		return array(
+				'export',
+				'import'
+		);
+	}
+	
+	
+	protected function actionExport($domain_name) {
+		$this->requireCli();
+		
+		
+		\GO::session()->runAsRoot();
+
+		
+		$domain = \GO\Postfixadmin\Model\Domain::model()->findSingleByAttribute('domain', $domain_name);
+		$data = $domain->export();
+		
+		echo json_encode($data, JSON_PRETTY_PRINT);
+	}
+	
+	
+	protected function actionImport($file) {
+		
+		$this->requireCli();
+		
+		
+		\GO::session()->runAsRoot();
+		
+		$data = file_get_contents($file);
+
+		$data = json_decode($data, true);
+		
+
+		
+		$domain = new \GO\Postfixadmin\Model\Domain();
+		
+		if($domain->import($data)) {
+			echo "Success!";
+		}
+		
+		
+	}
 }
+
 

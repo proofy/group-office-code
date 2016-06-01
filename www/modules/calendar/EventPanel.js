@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: EventPanel.js 17206 2014-03-26 12:43:55Z mschering $
+ * @version $Id: EventPanel.js 19228 2015-06-24 12:36:41Z wsmits $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -56,6 +56,10 @@ GO.calendar.EventPanel = Ext.extend(GO.DisplayPanel,{
 		if(GO.tasks)
 			this.template +=GO.tasks.TaskTemplate;
 
+		if(GO.workflow){
+			this.template +=GO.workflow.WorkflowTemplate;
+		}
+		
 		if(GO.calendar)
 			this.template += GO.calendar.EventTemplate;
 

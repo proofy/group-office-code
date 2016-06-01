@@ -45,9 +45,8 @@ class CalculateDiskUsage extends AbstractCron {
 	 * $user parameter is null and the run function will be called only once.
 	 * 
 	 * @param CronJob $cronJob
-	 * @param \GO\Base\Model\User $user [OPTIONAL]
 	 */
-	public function run(CronJob $cronJob,\GO\Base\Model\User $user = null){
+	public function run(CronJob $cronJob){
 		$stmt =\GO::getDbConnection()->query("SHOW TABLE STATUS FROM `".\GO::config()->db_name."`;");
 
 		$database_usage=0;

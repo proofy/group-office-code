@@ -25,7 +25,7 @@ class Notifier
 {
 	/**
 	 * checks if there is a notification message with the given value
-	 * @param string $key name of the note
+	 * @param StringHelper $key name of the note
 	 * @return boolean if the note excists
 	 */
 	public function hasMessage($key)
@@ -35,7 +35,7 @@ class Notifier
 	
 	/**
 	 * Get the notification message and delete it afterwards
-	 * @param string $key the key of the notification
+	 * @param StringHelper $key the key of the notification
 	 * @param boolean $remove should the note be remove from session after getting it
 	 * @return null 
 	 */
@@ -55,8 +55,8 @@ class Notifier
 	
 	/**
 	 * add a new note to the session
-	 * @param string $key the key of the message
-	 * @param string $value the message
+	 * @param StringHelper $key the key of the message
+	 * @param StringHelper $value the message
 	 */
 	public function setMessage($key,$value)
 	{

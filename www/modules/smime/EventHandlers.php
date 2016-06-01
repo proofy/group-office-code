@@ -3,6 +3,8 @@
 
 namespace GO\Smime;
 
+use GO;
+
 
 class EventHandlers {
 
@@ -24,20 +26,20 @@ class EventHandlers {
 
 		if (isset($_FILES['cert']['tmp_name'][0]) && is_uploaded_file($_FILES['cert']['tmp_name'][0])) {
 			//check Group-Office password
-			if (!\GO::user()->checkPassword($params['smime_password']))
-				throw new \Exception(\GO::t('badGoLogin', 'smime'));
+			if (!GO::user()->checkPassword($params['smime_password']))
+				throw new \Exception(GO::t('badGoLogin', 'smime'));
 
 			$certData = file_get_contents($_FILES['cert']['tmp_name'][0]);
 
 			//smime password may not match the Group-Office password
 			openssl_pkcs12_read($certData, $certs, $params['smime_password']);
 			if (!empty($certs))
-				throw new \Exception(\GO::t('smime_pass_matches_go', 'smime'));
+				throw new \Exception(GO::t('smime_pass_matches_go', 'smime'));
 
 			//password may not be empty.
 			openssl_pkcs12_read($certData, $certs, "");
 			if (!empty($certs))
-				throw new \Exception(\GO::t('smime_pass_empty', 'smime'));
+				throw new \Exception(GO::t('smime_pass_empty', 'smime'));
 		}
 
 		$cert = Model\Certificate::model()->findByPk($account->id);
@@ -61,16 +63,18 @@ class EventHandlers {
 	public static function aliasesStore(\GO\Email\Controller\AliasController $controller, &$response, \GO\Base\Data\Store $store, $params) {
 
 		foreach ($response['results'] as &$alias) {
+
+			$accountModel = \GO\Email\Model\Account::model()->findByPk($alias['account_id']);
 			$cert = Model\Certificate::model()->findByPk($alias['account_id']);
 
-			if ($cert) {
+			if ($cert && !empty($accountModel) && GO::user()->id===$accountModel->user_id) {
 				$alias['has_smime_cert'] = true;
 				$alias['always_sign'] = $cert->always_sign;
 			}
 		}
 	}
 
-	public static function viewMessage(\GO\Email\Controller\MessageController $controller, array &$response, \GO\Email\Model\ImapMessage $imapMessage, \GO\Email\Model\Account $account, $params) {
+	public static function toOutputArray(array &$response, \GO\Email\Model\ImapMessage $imapMessage) {
 		
 		if($imapMessage->content_type == 'application/x-pkcs7-mime')
 			$imapMessage->content_type = 'application/pkcs7-mime';
@@ -90,7 +94,7 @@ class EventHandlers {
 			//PHP can't output the verified data without the signature without 
 			//suppling the extracerts option. We generated a dummy certificate for 
 			//this.
-			openssl_pkcs7_verify($outfile->path(), null, "/dev/null", array(), \GO::config()->root_path."modules/smime/dummycert.pem", $verifyOutfile->path());
+			openssl_pkcs7_verify($outfile->path(), null, "/dev/null", array(), GO::config()->root_path."modules/smime/dummycert.pem", $verifyOutfile->path());
 			
 			$message = \GO\Email\Model\SavedMessage::model()->createFromMimeData(
 							$verifyOutfile->getContents());
@@ -100,6 +104,10 @@ class EventHandlers {
 			$verifyOutfile->delete();
 
 			$newResponse = $message->toOutputArray(true);
+			
+			unset($newResponse['to']);					
+			unset($newResponse['cc']);
+					
 			foreach ($newResponse as $key => $value) {
 				if (!empty($value) || $key == 'attachments')
 					$response[$key] = $value;
@@ -113,22 +121,22 @@ class EventHandlers {
 			$encrypted = !isset($imapMessage->content_type_attributes['smime-type']) || ($imapMessage->content_type_attributes['smime-type'] != 'signed-data');
 			if ($encrypted) {
 
-				\GO::debug("Message is encrypted");
+				GO::debug("Message is encrypted");
 
-				$cert = Model\Certificate::model()->findByPk($account->id);
+				$cert = Model\Certificate::model()->findByPk($imapMessage->account->id);
 
 				if (!$cert || empty($cert->cert)) {					
-					\GO::debug('SMIME: No private key at all found for this account');
-					$response['htmlbody'] =\GO::t('noPrivateKeyForDecrypt','smime');
+					GO::debug('SMIME: No private key at all found for this account');
+					$response['htmlbody'] =GO::t('noPrivateKeyForDecrypt','smime');
 					return false;
 				}
 
-				if (isset($params['password']))
-					\GO::session()->values['smime']['passwords'][$account->id] = $params['password'];
+				if (isset($_REQUEST['password']))
+					GO::session()->values['smime']['passwords'][$imapMessage->account->id] = $_REQUEST['password'];
 
-				if (!isset(\GO::session()->values['smime']['passwords'][$account->id])) {
+				if (!isset(GO::session()->values['smime']['passwords'][$imapMessage->account->id])) {
 					$response['askPassword'] = true;
-					\GO::debug("Need to ask for password");
+					GO::debug("Need to ask for password");
 					return false;
 				}
 			}
@@ -164,7 +172,7 @@ class EventHandlers {
 			//$outfilerel = $reldir . 'unencrypted.txt';
 
 			if ($encrypted) {
-				\GO::debug('Message is encrypted');
+				GO::debug('Message is encrypted');
 
 				
 //				$imapMessage->getImapConnection()->save_to_file($imapMessage->uid, $infile->path(), 'TEXT', 'base64');
@@ -173,13 +181,13 @@ class EventHandlers {
 				if(!$imapMessage->saveToFile($infile->path()))
 					throw new \Exception("Could not save IMAP message to file for decryption");
 				
-				$password = \GO::session()->values['smime']['passwords'][$account->id];
+				$password = GO::session()->values['smime']['passwords'][$imapMessage->account->id];
 				openssl_pkcs12_read($cert->cert, $certs, $password);
 
 				if (empty($certs)) {
 					//password invalid
 					$response['askPassword'] = true;
-					\GO::debug("Invalid password");
+					GO::debug("Invalid password");
 					return false;
 				}
 
@@ -188,28 +196,42 @@ class EventHandlers {
 				$infile->delete();
 
 				if (!$return || !$outfile->exists() || !$outfile->size()) {					
-					$response['htmlbody'] = \GO::t('decryptionFailed','smime') . '<br />';
+					$response['htmlbody'] = GO::t('decryptionFailed','smime') . '<br />';
 					while ($str = openssl_error_string()) {
 						$response['htmlbody'].='<br />' . $str;
 					}
-					\GO::debug("Decryption failed");
+					GO::debug("Decryption failed");
 					return false;
 				}else
 				{
+					
+					//check if also signed
+					$data = $outfile->getContents();
+					if(strpos($data, 'signed-data')){
+						$verifyOutfile = \GO\Base\Fs\File::tempFile();					
+						openssl_pkcs7_verify($outfile->path(), null, "/dev/null", array(), GO::config()->root_path."modules/smime/dummycert.pem", $verifyOutfile->path());
+						
+						$outfile = $verifyOutfile;
+					}					
+					
 					$message = \GO\Email\Model\SavedMessage::model()->createFromMimeData($outfile->getContents());
 					$newResponse = $message->toOutputArray(true);
+					unset($newResponse['to']);					
+					unset($newResponse['to_string']);
+					unset($newResponse['cc']);
+					
 					foreach($newResponse as $key=>$value){
 						if(!empty($value) || $key=='attachments')
 							$response[$key]=$value;
 					}
 					$response['smime_encrypted']=true;
-//					$response['path']=$outfile->stripTempPath();
-					
+					//$response['path']=$outfile->stripTempPath();
+
 					$outfile->delete();
 				}
 			}else
 			{
-				\GO::debug('Message is NOT encrypted');
+				GO::debug('Message is NOT encrypted');
 			}
 		}
 	}
@@ -218,7 +240,7 @@ class EventHandlers {
 		if (!empty($params['sign_smime'])) {
 
 			//$password = trim(file_get_contents("/home/mschering/password.txt"));
-			$password = \GO::session()->values['smime']['passwords'][$account->id];
+			$password = GO::session()->values['smime']['passwords'][$account->id];
 
 			$cert = Model\Certificate::model()->findByPk($account->id);
 			$message->setSignParams($cert->cert, $password);
@@ -229,7 +251,7 @@ class EventHandlers {
 			if (!isset($cert))
 				$cert = Model\Certificate::model()->findByPk($account->id);
 
-			$password = \GO::session()->values['smime']['passwords'][$account->id];
+			$password = GO::session()->values['smime']['passwords'][$account->id];
 			openssl_pkcs12_read($cert->cert, $certs, $password);
 
 			if (!isset($certs['cert']))
@@ -252,7 +274,7 @@ class EventHandlers {
 			$failed = array();
 			$publicCerts = array($certs['cert']);
 			foreach ($to as $email => $name) {
-				$pubCert = Model\PublicCertificate::model()->findSingleByAttributes(array('user_id' => \GO::user()->id, 'email' => $email));
+				$pubCert = Model\PublicCertificate::model()->findSingleByAttributes(array('user_id' => GO::user()->id, 'email' => $email));
 				if (!$pubCert) {
 					$failed[] = $email;
 				}else
@@ -262,7 +284,7 @@ class EventHandlers {
 			}
 
 			if (count($failed))
-				throw new \Exception(sprintf(\GO::t('noPublicCertForEncrypt', 'smime'), implode(', ', $failed)));
+				throw new \Exception(sprintf(GO::t('noPublicCertForEncrypt', 'smime'), implode(', ', $failed)));
 
 			$message->setEncryptParams($publicCerts);
 		}

@@ -57,10 +57,12 @@
  * @property int $disk_usage The diskspace used in Bytes (cache column with sum fs_files.size owned by this user)
  * @property int $mail_reminders
  * @property int $popup_reminders
+ * @property int $popup_emails
  * @property int $contact_id
  * @property String $holidayset
+ * @property boolean $no_reminders
  * 
- * @property $completeDateFormat
+ * @property string $completeDateFormat
  * @property string $date_separator
  * @property string $date_format
  * @property string $email
@@ -81,6 +83,36 @@ use GO\Base\Mail\Mailer;
 
 
 class User extends \GO\Base\Db\ActiveRecord {
+	
+	
+	/**
+	 * Run code as administrator
+	 * 
+	 * Can be useful when you need to do stuff that the current user isn't 
+	 * allowed to. For example when you create a contact you don't have the 
+	 * permissions to do that while adding it.
+	 * 
+	 * @param callable $callback Code in this function will run as administrator
+	 */
+	public static function sudo($callback) {
+		
+//		$usr = \GO::user();
+//		$currentUserId = !empty($usr) ? $usr->id : false; // when not logged in
+	
+		$oldIgnore = GO::setIgnoreAclPermissions();
+		
+		try {
+			$ret = call_user_func($callback);
+			
+			GO::setIgnoreAclPermissions($oldIgnore);
+			
+			return $ret;
+		} catch (\Exception $ex) {			
+			GO::setIgnoreAclPermissions($oldIgnore);
+			throw $ex;
+		}
+	}
+	
   
 	public $generatedRandomPassword = false;
 	public $passwordConfirm;
@@ -91,7 +123,7 @@ class User extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * This variable will be set when the password is modified.
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	private $_unencryptedPassword;
 	/**
@@ -207,7 +239,7 @@ class User extends \GO\Base\Db\ActiveRecord {
 	}
 
 	public function init() {
-		$this->columns['email']['regex'] = \GO\Base\Util\String::get_email_validation_regex();
+		$this->columns['email']['regex'] = \GO\Base\Util\StringHelper::get_email_validation_regex();
 		$this->columns['email']['required'] = true;
 
 		$this->columns['password']['required'] = true;
@@ -252,11 +284,32 @@ class User extends \GO\Base\Db\ActiveRecord {
 	public function calculatedDiskUsage($bytes = false) {
 		if (GO::modules()->isInstalled('files')) {
 			if (!$bytes) { //recalculated
-				$fp = \GO\Base\Db\FindParams::newInstance()->criteria(\GO\Base\Db\FindCriteria::newInstance()->addCondition('user_id', $this->id));
-				$sumFilesize = Grouped::model()->load('GO\Files\Model\File', 'user_id', 'SUM(size) as total_size', $fp)->fetch();
+				$fp = \GO\Base\Db\FindParams::newInstance()->select('SUM(size) as total_size')
+					->joinModel(array(
+						'model'=>'GO\Files\Model\Folder',  
+						'localTableAlias'=>'t', 
+						'localField'=>'folder_id',
+						'tableAlias'=>'d'
+					))
+					->criteria(\GO\Base\Db\FindCriteria::newInstance()->addCondition('quota_user_id', $this->id, '=', 'd'));
+				$sumFilesize = \GO\Files\Model\File::model()->findSingle($fp);
+				$fpVer = \GO\Base\Db\FindParams::newInstance()->select('SUM(size_bytes) as total_size')
+					->joinModel(array(
+						'model'=>'GO\Files\Model\File',  
+						'localTableAlias'=>'t', 
+						'localField'=>'file_id',
+						'tableAlias'=>'f'
+					))->joinModel(array(
+						'model'=>'GO\Files\Model\Folder',  
+						'localTableAlias'=>'f', 
+						'localField'=>'folder_id',
+						'tableAlias'=>'d'
+					))
+					->criteria(\GO\Base\Db\FindCriteria::newInstance()->addCondition('quota_user_id', $this->id, '=', 'd'));
+				$sumVersionsize = \GO\Files\Model\Version::model()->findSingle($fpVer);
 				//GO::debug($sumFilesize->total_size);
 				if ($sumFilesize)
-					$this->disk_usage = $sumFilesize->total_size;
+					$this->disk_usage = ($sumFilesize->total_size + $sumVersionsize->total_size);
 			} else {
 				$this->disk_usage+=$bytes;
 			}
@@ -282,7 +335,7 @@ class User extends \GO\Base\Db\ActiveRecord {
 			$this->setValidationError('passwordConfirm', GO::t('passwordMatchError'));
 		}
 		
-		if($this->isModified('disk_quota') && GO::user()->getModulePermissionLevel('users') < Acl::MANAGE_PERMISSION)
+		if($this->isModified('disk_quota') && !GO::$ignoreAclPermissions && GO::user()->getModulePermissionLevel('users') < Acl::MANAGE_PERMISSION)
 			$this->setValidationError('disk_quota', 'Only managers of the "users"  module may modify disk quota');
 		
 		if(GO::config()->password_validate && $this->isModified('password')){
@@ -305,7 +358,7 @@ class User extends \GO\Base\Db\ActiveRecord {
 			$this->setValidationError('username', GO::t('error_username_exists', 'users'));
 
 		if (empty($this->password) && $this->isNew) {
-			$this->password = \GO\Base\Util\String::randomPassword();
+			$this->password = \GO\Base\Util\StringHelper::randomPassword();
 			$this->generatedRandomPassword = true;
 		}
 
@@ -334,7 +387,9 @@ class User extends \GO\Base\Db\ActiveRecord {
 				
 		if($this->isModified('password') && !empty($this->password)){
 			$this->_unencryptedPassword=$this->password;
-			$this->password=crypt($this->password);
+			
+				
+			$this->password=$this->_encryptPassword($this->password);
 			$this->password_type='crypt';
 			
 			$this->digest = md5($this->username.":".GO::config()->product_name.":".$this->_unencryptedPassword);
@@ -342,12 +397,31 @@ class User extends \GO\Base\Db\ActiveRecord {
 		
 		return parent::beforeSave();
 	}	
+	
+	
+	private function _encryptPassword($password) {
+		if(function_exists('password_hash')) {
+			return password_hash($password,PASSWORD_DEFAULT);
+		}else
+		{
+			$salt = uniqid();
+			if(function_exists("mcrypt_create_iv")) {
+				$salt = base64_encode(mcrypt_create_iv(24, MCRYPT_DEV_URANDOM));
+			}
+			
+			if (CRYPT_SHA256 == 1) {
+					$salt = '$5$'.$salt;
+			}
+			
+			return crypt($password, $salt);
+		}
+	}
 		
 	/**
 	 * When the password was just modified. You can call this function to get the
 	 * plain text password.
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function getUnencryptedPassword(){
 		return isset($this->_unencryptedPassword) ? $this->_unencryptedPassword : false;
@@ -366,7 +440,9 @@ class User extends \GO\Base\Db\ActiveRecord {
 			if(!empty(GO::config()->register_user_groups)){
 				$groups = explode(',',GO::config()->register_user_groups);
 				foreach($groups as $groupName){
-					$group = Group::model()->findSingleByAttribute('name', trim($groupName));
+
+					$group = Group::model()->findByName($groupName);
+
 					if($group)
 						$group->addUser($this->id);
 				}
@@ -385,7 +461,9 @@ class User extends \GO\Base\Db\ActiveRecord {
 		if(!empty(GO::config()->register_visible_user_groups)){
 			$groups = explode(',',GO::config()->register_visible_user_groups);
 			foreach($groups as $groupName){
-				$group = Group::model()->findSingleByAttribute('name', trim($groupName));
+
+				$group = Group::model()->findByName(trim($groupName));
+				
 				if($group)
 					$this->acl->addGroup($group->id, Acl::MANAGE_PERMISSION);
 			}
@@ -454,7 +532,7 @@ class User extends \GO\Base\Db\ActiveRecord {
 			}
 		}
 		
-		return \GO\Base\Util\String::format_name($this->last_name, $this->first_name, $this->middle_name,$sort);
+		return \GO\Base\Util\StringHelper::format_name($this->last_name, $this->first_name, $this->middle_name,$sort);
 	}
 	
 	/**
@@ -465,10 +543,10 @@ class User extends \GO\Base\Db\ActiveRecord {
 	public function getShortName() {
 		
 		if(!empty($this->first_name))
-			$short = substr($this->first_name,0,1);  
+			$short = \GO\Base\Util\StringHelper::substr($this->first_name,0,1);  
 		
 		if(!empty($this->last_name))
-			$short .= substr($this->last_name,0,1);  
+			$short .= \GO\Base\Util\StringHelper::substr($this->last_name,0,1);  
 		
 		return strtoupper($short);
 	}
@@ -523,7 +601,7 @@ class User extends \GO\Base\Db\ActiveRecord {
 		if(!empty(GO::config()->register_user_groups)){
 			$groups = explode(',',GO::config()->register_user_groups);
 			foreach($groups as $groupName){
-				$group = GO\Base\Model\Group::model()->findSingleByAttribute('name', trim($groupName));
+				$group = GO\Base\Model\Group::model()->findByName(trim($groupName));
 				$groupIds[]=$group->id;
 			}
 		}
@@ -547,8 +625,10 @@ class User extends \GO\Base\Db\ActiveRecord {
 		if(!empty(GO::config()->register_visible_user_groups)){
 			$groups = explode(',',GO::config()->register_visible_user_groups);
 			foreach($groups as $groupName){
-				$group = GO\Base\Model\Group::model()->findSingleByAttribute('name', trim($groupName));
-				$groupIds[]=$group->id;
+				$group = GO\Base\Model\Group::model()->findByName(trim($groupName));
+				if($group){
+					$groupIds[]=$group->id;
+				}
 			}
 		}
 		
@@ -571,7 +651,7 @@ class User extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Get the user's permission level for a given module.
 	 * 
-	 * @param string $moduleId
+	 * @param StringHelper $moduleId
 	 * @return int 
 	 */
 	public function getModulePermissionLevel($moduleId) {
@@ -593,25 +673,20 @@ class User extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Check if the password is correct for this user.
 	 * 
-	 * @param string $password
+	 * @param StringHelper $password
 	 * @return boolean 
 	 */
 	public function checkPassword($password){
-
-		if ($this->password_type == 'crypt') {
-			if (crypt($password, $this->password) != $this->password) {
-				return false;
-			}
-		} else {
-			//pwhash is not set yet. We're going to use the old md5 hashed password
-			if (md5($password) != $this->password) {
-				return false;
-			} else {				
-				$this->password=$password;
-				$oldIgnore=GO::setIgnoreAclPermissions(true);
-				$this->save();				
-				GO::setIgnoreAclPermissions($oldIgnore);
-			}
+		
+//		throw new \Exception($password);
+		
+		if(!\GO\Base\Util\Crypt::checkPassword($password, $this->password, $this->password_type)){
+			return false;
+		} elseif($this->password_type != 'crypt' && md5($password) == $this->password) {
+			$this->password=$password;
+			$oldIgnore=GO::setIgnoreAclPermissions(true);
+			$this->save();				
+			GO::setIgnoreAclPermissions($oldIgnore);
 		}
 		
 		$digest = md5($this->username.":".GO::config()->product_name.":".$password);
@@ -705,12 +780,12 @@ class User extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Add the user to user groups.
 	 * 
-	 * @param string[] $groupNames
+	 * @param StringHelper[] $groupNames
 	 * @param boolean $autoCreate 
 	 */
 	public function addToGroups(array $groupNames, $autoCreate=false){		
 		foreach($groupNames as $groupName){
-			$group = Group::model()->findSingleByAttribute('name', $groupName);
+			$group = Group::model()->findByName($groupName);
 			
 			if(!$group && $autoCreate){
 				$group = new Group();
@@ -762,9 +837,9 @@ class User extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Send an email to the newly registrated user when he just created an account.
 	 * The mail should contain a welcome message and a username and password
-	 * @param string $view path to a template for the email. If the view is not set or
+	 * @param StringHelper $view path to a template for the email. If the view is not set or
 	 * not found the default email body will be loaded from groupoffice
-	 * @param string $title title of email
+	 * @param StringHelper $title title of email
 	 * @param array $_data this array will be explode to the view. if the view template
 	 * is not found it will be ignored
 	 * @return boolean true when email was send
@@ -815,7 +890,7 @@ class User extends \GO\Base\Db\ActiveRecord {
 	 * reset password function. The token will change when the user's password or
 	 * email address changes and when the user logs in.
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function getSecurityToken(){
 		return md5($this->password.$this->email.$this->ctime.$this->lastlogin);

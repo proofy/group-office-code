@@ -49,7 +49,7 @@ class PHPExcel_Shared_XMLWriter extends XMLWriter {
 	/**
 	 * Temporary filename
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_tempFileName = '';
 
@@ -109,8 +109,8 @@ class PHPExcel_Shared_XMLWriter extends XMLWriter {
 	/**
 	 * Fallback method for writeRaw, introduced in PHP 5.2
 	 *
-	 * @param string $text
-	 * @return string
+	 * @param StringHelper $text
+	 * @return StringHelper
 	 */
 	public function writeRawData($text)
 	{

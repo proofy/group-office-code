@@ -40,7 +40,7 @@ class PHPExcel_Writer_Excel2007_ContentTypes extends PHPExcel_Writer_Excel2007_W
 	 *
 	 * @param 	PHPExcel	$pPHPExcel
 	 * @param	boolean		$includeCharts	Flag indicating if we should include drawing details for charts
-	 * @return 	string 						XML Output
+	 * @return 	StringHelper 						XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	public function writeContentTypes(PHPExcel $pPHPExcel = null, $includeCharts = FALSE)
@@ -221,8 +221,8 @@ class PHPExcel_Writer_Excel2007_ContentTypes extends PHPExcel_Writer_Excel2007_W
 	 * Write Default content type
 	 *
 	 * @param 	PHPExcel_Shared_XMLWriter 	$objWriter 		XML Writer
-	 * @param 	string 						$pPartname 		Part name
-	 * @param 	string 						$pContentType 	Content type
+	 * @param 	StringHelper 						$pPartname 		Part name
+	 * @param 	StringHelper 						$pContentType 	Content type
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	private function _writeDefaultContentType(PHPExcel_Shared_XMLWriter $objWriter = null, $pPartname = '', $pContentType = '')
@@ -242,8 +242,8 @@ class PHPExcel_Writer_Excel2007_ContentTypes extends PHPExcel_Writer_Excel2007_W
 	 * Write Override content type
 	 *
 	 * @param 	PHPExcel_Shared_XMLWriter 	$objWriter 		XML Writer
-	 * @param 	string 						$pPartname 		Part name
-	 * @param 	string 						$pContentType 	Content type
+	 * @param 	StringHelper 						$pPartname 		Part name
+	 * @param 	StringHelper 						$pContentType 	Content type
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	private function _writeOverrideContentType(PHPExcel_Shared_XMLWriter $objWriter = null, $pPartname = '', $pContentType = '')

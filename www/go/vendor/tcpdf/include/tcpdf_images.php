@@ -64,7 +64,7 @@ class TCPDF_IMAGES {
 	 * Return the image type given the file name or array returned by getimagesize() function.
 	 * @param $imgfile (string) image file name
 	 * @param $iminfo (array) array of image information returned by getimagesize() function.
-	 * @return string image type
+	 * @return StringHelper image type
 	 * @since 4.8.017 (2009-11-27)
 	 * @public static
 	 */

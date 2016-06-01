@@ -44,7 +44,7 @@ class UrlManager
 	public $useStrictParsing = false;
 	
 	/**
-	 * @var string the GET variable name for route. Defaults to 'r'.
+	 * @var StringHelper the GET variable name for route. Defaults to 'r'.
 	 */
 	public $routeVar = 'r';
 	
@@ -58,7 +58,7 @@ class UrlManager
 	public $caseSensitive = false;
 	
 	/**
-	 * @var string the URL suffix used when in 'path' format.
+	 * @var StringHelper the URL suffix used when in 'path' format.
 	 * For example, ".html" can be used so that the URL looks like pointing to a static HTML page. Defaults to empty.
 	 */
 	public $urlSuffix = '';
@@ -120,12 +120,12 @@ class UrlManager
 
 	/**
 	 * Constructs a URL.
-	 * @param string $route the controller and the action (e.g. article/read)
+	 * @param StringHelper $route the controller and the action (e.g. article/read)
 	 * @param array $params list of GET parameters (name=>value). Both the name and value will be URL-encoded.
 	 * If the name is '#', the corresponding value will be treated as an anchor
 	 * and will be appended at the end of the URL.
-	 * @param string $ampersand the token separating name-value pairs in the URL. Defaults to '&'.
-	 * @return string the constructed URL
+	 * @param StringHelper $ampersand the token separating name-value pairs in the URL. Defaults to '&'.
+	 * @return StringHelper the constructed URL
 	 */
 	public function createUrl($route, $params = array(), $ampersand = '&')
 	{
@@ -159,10 +159,10 @@ class UrlManager
 
 	/**
 	 * Creates a URL based on default settings.
-	 * @param string $route the controller and the action (e.g. article/read)
+	 * @param StringHelper $route the controller and the action (e.g. article/read)
 	 * @param array $params list of GET parameters
-	 * @param string $ampersand the token separating name-value pairs in the URL.
-	 * @return string the constructed URL
+	 * @param StringHelper $ampersand the token separating name-value pairs in the URL.
+	 * @return StringHelper the constructed URL
 	 */
 	protected function createUrlDefault($route, $params, $ampersand)
 	{		
@@ -201,7 +201,7 @@ class UrlManager
 
 	/**
 	 * Returns the base URL of the application.
-	 * @return string the base URL of the application (the part after host name and before query string).
+	 * @return StringHelper the base URL of the application (the part after host name and before query string).
 	 * If {@link showScriptName} is true, it will include the script name part.
 	 * Otherwise, it will not, and the ending slashes are stripped off.
 	 */
@@ -225,6 +225,10 @@ class UrlManager
 		
 		$domain = \Site::model()->domain == '*' ? $_SERVER['SERVER_NAME'] : \Site::model()->domain;
 		
+		if(\Site::model()->ssl && $_SERVER['SERVER_PORT'] !== 443 || !\Site::model()->ssl && $_SERVER['SERVER_PORT'] !== 80) {
+			$domain = rtrim($domain, '/') . ':' . $_SERVER['SERVER_PORT'] . '/';
+		}
+
 		$url .= $domain.rtrim($this->getBaseUrl(),'/');
 		return $url;
 	}
@@ -232,7 +236,7 @@ class UrlManager
 	/**
 	 * Parses the user request.
 	 * @param Request $request the request component
-	 * @return string the route (controllerID/actionID) and perhaps GET parameters in path format.
+	 * @return StringHelper the route (controllerID/actionID) and perhaps GET parameters in path format.
 	 */
 	public function parseUrl($request)
 	{
@@ -258,9 +262,9 @@ class UrlManager
 
 	/**
 	 * Removes the URL suffix from path info.
-	 * @param string $pathInfo path info part in the URL
-	 * @param string $urlSuffix the URL suffix to be removed
-	 * @return string path info with URL suffix removed.
+	 * @param StringHelper $pathInfo path info part in the URL
+	 * @param StringHelper $urlSuffix the URL suffix to be removed
+	 * @return StringHelper path info with URL suffix removed.
 	 */
 	public function removeUrlSuffix($pathInfo, $urlSuffix)
 	{
@@ -273,10 +277,10 @@ class UrlManager
 	/**
 	 * Creates a path info based on the given parameters.
 	 * @param array $params list of GET parameters
-	 * @param string $equal the separator between name and value
-	 * @param string $ampersand the separator between name-value pairs
-	 * @param string $key this is used internally.
-	 * @return string the created path info
+	 * @param StringHelper $equal the separator between name and value
+	 * @param StringHelper $ampersand the separator between name-value pairs
+	 * @param StringHelper $key this is used internally.
+	 * @return StringHelper the created path info
 	 */
 	public function createPathInfo($params, $equal, $ampersand, $key = null)
 	{
@@ -353,8 +357,8 @@ class UrlManager
 	 * Checks if the url includes the http/https/ftp :// tag
 	 * If it doesn't include that then it adds http:// to the url
 	 * 
-	 * @param string $url
-	 * @return string
+	 * @param StringHelper $url
+	 * @return StringHelper
 	 */
 	public function addHttp($url) {
 		if (!preg_match("~^(?:f|ht)tps?://~i", $url)) {

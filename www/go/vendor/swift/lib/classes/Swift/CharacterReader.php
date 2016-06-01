@@ -25,7 +25,7 @@ interface Swift_CharacterReader
     /**
      * Returns the complete character map
      *
-     * @param string  $string
+     * @param StringHelper  $string
      * @param integer $startOffset
      * @param array   $currentMap
      * @param mixed   $ignoredChars

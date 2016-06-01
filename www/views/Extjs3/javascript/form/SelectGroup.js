@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: SelectGroup.js 16917 2014-02-26 13:07:38Z mschering $
+ * @version $Id: SelectGroup.js 19426 2015-09-21 12:03:28Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -23,6 +23,11 @@
  */
 
  GO.form.SelectGroup = function(config){
+	 
+	if(!config.valueField) {
+		config.valueField = 'id';
+	}
+	
 	Ext.apply(this, config);
 
 	this.store = new GO.data.JsonStore({
@@ -30,7 +35,7 @@
 		root: 'results',
 		totalProperty: 'total',
 		id: 'id',
-		fields:['id','name','email','groupname'],
+		fields:['id','name','email','groupname','cf'],
 		remoteSort: true
 	});
 	this.store.setDefaultSort('name', 'asc');
@@ -41,10 +46,10 @@
 	if(!this.hiddenName)
 		this.hiddenName = 'group_id';
 
+	
 
 	GO.form.SelectGroup.superclass.constructor.call(this,{
-		displayField: 'name',				
-		valueField: 'id',
+		displayField: 'name',		
 		triggerAction: 'all',
 		selectOnFocus:true,
 		forceSelection: true,

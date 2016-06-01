@@ -20,7 +20,7 @@ class Swift_Transport_Esmtp_Auth_CramMd5Authenticator implements Swift_Transport
     /**
      * Get the name of the AUTH mechanism this Authenticator handles.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getAuthKeyword()
     {
@@ -31,8 +31,8 @@ class Swift_Transport_Esmtp_Auth_CramMd5Authenticator implements Swift_Transport
      * Try to authenticate the user with $username and $password.
      *
      * @param Swift_Transport_SmtpAgent $agent
-     * @param string                    $username
-     * @param string                    $password
+     * @param StringHelper                    $username
+     * @param StringHelper                    $password
      *
      * @return boolean
      */
@@ -57,10 +57,10 @@ class Swift_Transport_Esmtp_Auth_CramMd5Authenticator implements Swift_Transport
     /**
      * Generate a CRAM-MD5 response from a server challenge.
      *
-     * @param string $secret
-     * @param string $challenge
+     * @param StringHelper $secret
+     * @param StringHelper $challenge
      *
-     * @return string
+     * @return StringHelper
      */
     private function _getResponse($secret, $challenge)
     {

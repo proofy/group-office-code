@@ -130,14 +130,14 @@ class PHPExcel_Shared_Font
 	/**
 	 * AutoSize method
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private static $autoSizeMethod = self::AUTOSIZE_METHOD_APPROX;
 
 	/**
 	 * Path to folder containing TrueType font .ttf files
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private static $trueTypeFontPath = null;
 
@@ -191,7 +191,7 @@ class PHPExcel_Shared_Font
 	/**
 	 * Set autoSize method
 	 *
-	 * @param string $pValue
+	 * @param StringHelper $pValue
 	 * @return	 boolean					Success or failure
 	 */
 	public static function setAutoSizeMethod($pValue = self::AUTOSIZE_METHOD_APPROX)
@@ -208,7 +208,7 @@ class PHPExcel_Shared_Font
 	/**
 	 * Get autoSize method
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public static function getAutoSizeMethod()
 	{
@@ -224,7 +224,7 @@ class PHPExcel_Shared_Font
 	 *		<li>~/.fonts/</li>
 	 *	</ul>
 	 *
-	 * @param string $pValue
+	 * @param StringHelper $pValue
 	 */
 	public static function setTrueTypeFontPath($pValue = '')
 	{
@@ -234,7 +234,7 @@ class PHPExcel_Shared_Font
 	/**
 	 * Get the path to the folder containing .ttf files.
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public static function getTrueTypeFontPath()
 	{
@@ -298,7 +298,7 @@ class PHPExcel_Shared_Font
 	/**
 	 * Get GD text width in pixels for a string of text in a certain font at a certain rotation angle
 	 *
-	 * @param string $text
+	 * @param StringHelper $text
 	 * @param PHPExcel_Style_Font
 	 * @param int $rotation
 	 * @return int
@@ -333,7 +333,7 @@ class PHPExcel_Shared_Font
 	/**
 	 * Get approximate width in pixels for a string of text in a certain font at a certain rotation angle
 	 *
-	 * @param string $columnText
+	 * @param StringHelper $columnText
 	 * @param PHPExcel_Style_Font $font
 	 * @param int $rotation
 	 * @return int Text width in pixels (no padding added)
@@ -421,7 +421,7 @@ class PHPExcel_Shared_Font
 	 * Returns the font path given the font
 	 *
 	 * @param PHPExcel_Style_Font
-	 * @return string Path to TrueType font file
+	 * @return StringHelper Path to TrueType font file
 	 */
 	public static function getTrueTypeFontFileFromFont($font) {
 		if (!file_exists(self::$trueTypeFontPath) || !is_dir(self::$trueTypeFontPath)) {
@@ -547,7 +547,7 @@ class PHPExcel_Shared_Font
 	/**
 	 * Returns the associated charset for the font name.
 	 *
-	 * @param string $name Font name
+	 * @param StringHelper $name Font name
 	 * @return int Character set code
 	 */
 	public static function getCharsetFromFontName($name)

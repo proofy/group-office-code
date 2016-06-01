@@ -12,8 +12,8 @@ class PEAR5
     * You MUST use a reference, or they will not persist!
     *
     * @access public
-    * @param  string $class  The calling classname, to prevent clashes
-    * @param  string $var    The variable to retrieve.
+    * @param  StringHelper $class  The calling classname, to prevent clashes
+    * @param  StringHelper $var    The variable to retrieve.
     * @return mixed   A reference to the variable. If not set it will be
     *                 auto initialised to NULL.
     */

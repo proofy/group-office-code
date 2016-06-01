@@ -114,7 +114,7 @@ class PHPExcel_Shared_Date
 	 *	@param		long		$dateValue			Excel date/time value
 	 *	@param		boolean		$adjustToTimezone	Flag indicating whether $dateValue should be treated as
 	 *													a UST timestamp, or adjusted to UST
-	 *	@param		string	 	$timezone			The timezone for finding the adjustment from UST
+	 *	@param		StringHelper	 	$timezone			The timezone for finding the adjustment from UST
 	 *	@return		long		PHP serialized date/time
 	 */
 	public static function ExcelToPHP($dateValue = 0, $adjustToTimezone = FALSE, $timezone = NULL) {
@@ -178,7 +178,7 @@ class PHPExcel_Shared_Date
 	 *	@param	mixed		$dateValue			PHP serialized date/time or date object
 	 *	@param	boolean		$adjustToTimezone	Flag indicating whether $dateValue should be treated as
 	 *													a UST timestamp, or adjusted to UST
-	 *	@param	string	 	$timezone			The timezone for finding the adjustment from UST
+	 *	@param	StringHelper	 	$timezone			The timezone for finding the adjustment from UST
 	 *	@return	mixed		Excel date/time value
 	 *							or boolean FALSE on failure
 	 */

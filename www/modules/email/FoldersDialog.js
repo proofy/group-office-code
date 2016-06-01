@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: FoldersDialog.js 14816 2013-05-21 08:31:20Z mschering $
+ * @version $Id: FoldersDialog.js 19949 2016-04-07 13:50:22Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -37,6 +37,12 @@ GO.email.FoldersDialog = function(config) {
 			}
 		})
 	});
+	
+	this.foldersTree.on('load', function(node) {
+		if(node.attributes.mailbox == "INBOX") {
+			node.disable();
+		}
+	});
 
 	// set the root node
 	this.rootNode = new Ext.tree.AsyncTreeNode({
@@ -54,14 +60,17 @@ GO.email.FoldersDialog = function(config) {
 
 	this.foldersTree.on('checkchange', function(node, checked) {
 		
+		
 		var route = checked ? 'email/folder/subscribe' : 'email/folder/unsubscribe';
-
+		var mailboxs = [];
+		mailboxs.push(node.attributes.mailbox);
+		
 		GO.request({
 			maskEl:this.body,
 			url : route,
 			params : {
 				account_id : this.account_id,
-				mailbox : node.attributes.mailbox
+				mailboxs : Ext.util.JSON.encode(mailboxs) 
 			},
 			fail:function(){
 				this.foldersTree.getRootNode().reload();
@@ -85,11 +94,14 @@ GO.email.FoldersDialog = function(config) {
 
 	treeEdit.on('beforecomplete', function(editor, text, value) {
 		
+		var mailboxs = [];
+		mailboxs.push(editor.editNode.attributes.mailbox);
+		
 		GO.request({
 			url : 'email/folder/rename',
 			params : {
 				account_id: editor.editNode.attributes.account_id,
-				mailbox: editor.editNode.attributes.mailbox,
+				mailboxs: Ext.util.JSON.encode(mailboxs),
 				name: text
 			},
 			fail : function() {
@@ -202,6 +214,69 @@ GO.email.FoldersDialog = function(config) {
 				this.rootNode.reload();
 			},
 			scope : this
+		},
+		'->' 
+		,{
+			iconCls : 'btn-add',
+			text : GO.lang.selectAll,
+			cls : 'x-btn-text-icon',
+			handler : function() {
+
+				var list = this.treeToMailboxList(this.rootNode);
+
+
+				GO.request({
+					maskEl:this.body,
+					url : 'email/folder/subscribe',
+					params : {
+						account_id : this.account_id,
+						mailboxs : Ext.util.JSON.encode(list)
+					},
+					success:function(){
+						this.foldersTree.getRootNode().reload();
+					},
+					fail:function(){
+						this.foldersTree.getRootNode().reload();
+					},
+					scope : this
+				});
+
+
+
+				this.rootNode.reload();
+				
+			},
+			scope : this
+		},{
+			iconCls : 'btn-add',
+			text : GO.lang.deselectAll,
+			cls : 'x-btn-text-icon',
+			handler : function() {
+				
+				var list = this.treeToMailboxList(this.rootNode);
+
+
+				GO.request({
+					maskEl:this.body,
+					url : 'email/folder/unsubscribe',
+					params : {
+						account_id : this.account_id,
+						mailboxs : Ext.util.JSON.encode(list)
+					},
+					success:function(){
+						this.foldersTree.getRootNode().reload();
+					},
+					fail:function(){
+						this.foldersTree.getRootNode().reload();
+					},
+					scope : this
+				});
+
+
+
+				this.rootNode.reload();
+			},
+			scope : this
 		}
 
 		],
@@ -244,5 +319,19 @@ Ext.extend(GO.email.FoldersDialog, Ext.Window, {
 			};
 		}
 		return data;
+	},
+	
+	treeToMailboxList: function(node, list) {
+		if(!list){
+			list = [];
+		}
+		node.eachChild(function(subNode) {
+			
+			list.push(subNode.attributes.mailbox)
+			this.treeToMailboxList(subNode, list);
+		}, this)
+		return list;
+		
 	}
+	
 });

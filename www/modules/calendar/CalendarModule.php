@@ -42,9 +42,14 @@ class CalendarModule extends \GO\Base\Module{
 	} 
 	
 	public static function initListeners() {		
+		\GO\Base\Model\User::model()->addListener('delete', "GO\Calendar\CalendarModule", "deleteUser");
 		\GO\Base\Model\Reminder::model()->addListener('dismiss', "GO\Calendar\Model\Event", "reminderDismissed");
 	}
 	
+	public static function deleteUser($user){
+		Model\Calendar::model()->deleteByAttribute('user_id', $user->id);
+		Model\View::model()->deleteByAttribute('user_id', $user->id);		
+	}
 	
 	public static function submitSettings(&$settingsController, &$params, &$response, $user) {
 		

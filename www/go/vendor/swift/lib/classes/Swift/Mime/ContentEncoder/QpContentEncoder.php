@@ -116,7 +116,7 @@ class Swift_Mime_ContentEncoder_QpContentEncoder extends Swift_Encoder_QpEncoder
      * Get the name of this encoding scheme.
      * Returns the string 'quoted-printable'.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getName()
     {

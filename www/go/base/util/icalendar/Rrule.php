@@ -68,7 +68,7 @@ class Rrule extends \GO\Base\Util\Date\RecurrencePattern
 		$parameters['freq'] = strtoupper($json['freq']);
 		if($parameters['freq']=='MONTHLY_DATE')
 			$parameters['freq']='MONTHLY';
-		$parameters['eventstarttime'] = isset($json['eventstarttime'])?strtotime($json['eventstarttime']):strtotime($json['start_time']);
+		$parameters['eventstarttime'] = isset($json['eventstarttime'])?\GO\Base\Util\Date::to_unixtime($json['eventstarttime']):\GO\Base\Util\Date::to_unixtime($json['start_time']);
 		$parameters['until'] = empty($json['repeat_forever']) && isset($json['until']) ? \GO\Base\Util\Date::to_unixtime($json['until'].' 23:59') : 0; //date('G', $parameters['eventstarttime']).':'.date('i', $parameters['eventstarttime'])) : 0;
 		$parameters['bymonth'] = isset($json['bymonth'])?$json['bymonth']:'';
 		$parameters['bymonthday'] = isset($json['bymonthday'])?$json['bymonthday']:'';
@@ -132,10 +132,17 @@ class Rrule extends \GO\Base\Util\Date\RecurrencePattern
 					$rrule .= ';BYMONTHDAY='.date('j', $this->_eventstarttime);
 				}elseif (!empty($this->_byday))
 				{
-					if(!empty($this->_bysetpos))
-						$rrule .= ";BYSETPOS=".$this->_bysetpos;
+					if(!empty($this->_bysetpos)){
 						
-					$rrule .= ';BYDAY='.implode(',', $this->_byday);
+						$self = $this;
+						$byday = array_map(function($day) use($self) {
+							return $self->_bysetpos . $day;
+						}, $this->_byday);
+					} else {
+						$byday = $this->_byday;
+					}
+					
+					$rrule .= ';BYDAY='.implode(',', $byday);
 				}
 			break;
 		}
@@ -344,8 +351,17 @@ class Rrule extends \GO\Base\Util\Date\RecurrencePattern
 		$this->_interval = !empty($rrule_arr['INTERVAL']) ? intval($rrule_arr['INTERVAL']) : 1;
 		$this->_bysetpos = !empty($rrule_arr['BYSETPOS']) ? intval($rrule_arr['BYSETPOS']) : 0;
 		
-		if($this->_bysetpos<0)
-			throw new Exception("'Last X of month' recurrence pattern currently not supported by Group-Office.");
+		
+		//fix for thundebird sending: RRULE:FREQ=DAILY;UNTIL=20150326T080000Z;BYDAY=MO,TU,WE,TH,FR
+		//it should work as RRULE:FREQ=WEEKLY;UNTIL=20150326T080000Z;BYDAY=MO,TU,WE,TH,FR
+		
+		if(!empty($this->_byday) && $this->_freq == 'DAILY'){
+			$this->_freq = 'WEEKLY';
+		}
+		
+		if($this->_bysetpos<0) {
+			throw new \Exception("'Last X of month' recurrence pattern currently not supported by Group-Office.");
+		}
 		
 		
 		$this->_splitDaysAndSetPos();
@@ -353,7 +369,12 @@ class Rrule extends \GO\Base\Util\Date\RecurrencePattern
 		//if rrule is passed like this: RRULE:INTERVAL=1;FREQ=WEEKLY;BYDAY=
 		//then assume days should be the event start time day.
 		if(isset($rrule_arr['BYDAY']) && empty($this->_byday))
-			$this->_byday=array($this->_days[date('w', $this->_eventstarttime)]);
+			$this->_byday=array($this->_days[gmdate('w', $this->_eventstarttime)]);
+		
+		
+//		if($this->_freq == 'YEARLY' && (!empty($this->_bymonth) || !empty($this->_bymonth))) {
+//			throw new \Exception("Sorry, this recurrence pattern is not supported by Group-Office");
+//		}
 		
 		
 		

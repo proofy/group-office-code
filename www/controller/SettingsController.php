@@ -3,18 +3,28 @@
 
 namespace GO\Core\Controller;
 
+use GO;
+
 
 class SettingsController extends \GO\Base\Controller\AbstractController {
 	
-	protected function actionSubmit($params){
+	protected function actionSubmit($params){		
+		
+		$this->fireEvent('beforesavesettings', array($this, $params));
 			
+		// Fix for branding of Group-Office (Group-Office is replaced with branding name and then the theme is also renamed.)
+		if(isset(\GO::config()->product_name) && !empty($params['theme']) && \GO::config()->product_name == $params['theme']){
+			 $params['theme'] = 'Group-Office';
+		}
+		
 		if(!empty($params["dateformat"])){
 			$dateparts = explode(':',$params["dateformat"]);
 			$params['date_separator'] = $dateparts[0];
 			$params['date_format'] = $dateparts[1];
 		}
 		
-		$user = \GO\Base\Model\User::model()->findByPk($params['id']);
+//		$user = \GO\Base\Model\User::model()->findByPk($params['id']);
+		$user = GO::user();
 		
 					
 		if (!empty($params["password"]) || !empty($params["passwordConfirm"])) {
@@ -37,19 +47,26 @@ class SettingsController extends \GO\Base\Controller\AbstractController {
 		\GO::$ignoreAclPermissions = true;
 		$contact = $user->createContact();
 		unset($params['id']);
-		$contact->setAttributes($params);
-		$contact->save();
+		if($contact !== false) {
+			$contact->setAttributes($params);
+			$contact->save(true);
+		}
 		\GO::$ignoreAclPermissions = false;
 		
-		$response['success']=$user->save();
+		$response['success']=$user->save(true);
 		
 		if(!$response['success']){
-			$response['feedback']=nl2br(implode("<br />", $user->getValidationErrors())."\n");			
+			
+			//No HTML can be used because iframe file upload is used!
+			$response['feedback']=implode("\n", $user->getValidationErrors())."\n";			
 			
 			$response['validationErrors']=$user->getValidationErrors();
+		}else
+		{
+			\GO::modules()->callModuleMethod('submitSettings', array(&$this, &$params, &$response, $user), false);
 		}
+				
 		
-		\GO::modules()->callModuleMethod('submitSettings', array(&$this, &$params, &$response, $user), false);
 		
 
 //		\GO\Base\Session::setCompatibilitySessionVars();

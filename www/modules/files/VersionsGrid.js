@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: VersionsGrid.js 14816 2013-05-21 08:31:20Z mschering $
+ * @version $Id: VersionsGrid.js 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -23,7 +23,7 @@ GO.files.VersionsGrid = function(config) {
 	config.split = true;
 	config.store = new GO.data.JsonStore({
 		url : GO.url("files/version/store"),
-		fields : ['id', 'mtime','user_name','version'],
+		fields : ['id', 'mtime','user_name','version','size_bytes'],
 		remoteSort : true,
 		id:'id'
 	});
@@ -44,6 +44,11 @@ GO.files.VersionsGrid = function(config) {
 			dataIndex : 'user_name',
 			sortable : false,
 			id:'name'
+		},{
+			header : GO.lang['strSize'],
+			dataIndex : 'size_bytes',
+			sortable : true,
+			renderer: GO.util.format.fileSize
 		}, {
 			header : GO.lang.strMtime,
 			dataIndex : 'mtime',

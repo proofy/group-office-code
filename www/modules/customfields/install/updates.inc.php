@@ -156,10 +156,20 @@ $updates['201402110930'][]="ALTER TABLE `cf_fields` ADD `addressbook_ids` VARCHA
 $updates['201402111315'][]="ALTER TABLE `cf_fields` CHANGE `addressbook_ids` `addressbook_ids` VARCHAR(255) NOT NULL DEFAULT '';";
 
 $updates['201403251524'][]="ALTER TABLE `cf_fields` ADD COLUMN `extra_options` VARCHAR(255) NOT NULL DEFAULT '';";
+$updates['201405131536'][]="ALTER TABLE `cf_fields` CHANGE COLUMN `extra_options` `extra_options` TEXT;";
 
 				
-$updates['201403251524'][]="update `cf_categories` set `extends_model` = replace(`extends_model`,'_','\\\\');";
-$updates['201403251524'][]="update `cf_fields` set `datatype` = replace(`datatype`,'_','\\\\');";
+$updates['201405131536'][]="update `cf_categories` set `extends_model` = replace(`extends_model`,'_','\\\\');";
+$updates['201405131536'][]="update `cf_fields` set `datatype` = replace(`datatype`,'_','\\\\');";
 
-$updates['201403251524'][]="ALTER TABLE `cf_fields` ADD COLUMN `extra_options` VARCHAR(255) NOT NULL DEFAULT '';";
 
+$updates['201409161000'][]="ALTER TABLE `cf_fields` ADD `prefix` VARCHAR( 32 ) NOT NULL DEFAULT '',
+ADD `suffix` VARCHAR( 32 ) NOT NULL DEFAULT '';";
+
+$updates['201503311128'][]="ALTER TABLE `cf_fields` CHANGE `category_id` `category_id` INT(11) NOT NULL DEFAULT '0';";
+
+$updates['201506241200'][]="update `cf_enabled_blocks` set `model_type_name` = replace(`model_type_name`,'_','\\\\');";
+$updates['201506271325'][]="update `cf_enabled_categories` set `model_name` = replace(`model_name`,'_','\\\\');";
+$updates['201506291410'][]="update `cf_disable_categories` set `model_name` = replace(`model_name`,'_','\\\\');";
+
+$updates['201508311114'][]="UPDATE `cf_fields` SET datatype='GO\\\\Phpcustomfield\\\\Customfieldtype\\\\Php' WHERE datatype='GO\\\\Customfields\\\\Customfieldtype\\\\Php';";

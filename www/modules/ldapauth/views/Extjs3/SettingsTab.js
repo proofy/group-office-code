@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: SettingsTab.js 17032 2014-03-12 09:41:25Z mschering $
+ * @version $Id: SettingsTab.js 18768 2015-02-19 10:10:21Z mschering $
  * @copyright Copyright Intermesh
  * @author Michael de Hart <mdhart@intermesh.nl>
  */
@@ -18,7 +18,8 @@ GO.ldapauth.SettingsTab = Ext.extend(Ext.Panel, {
 
 		this.formPanel = new Ext.Panel({
 			layout : 'form',
-			labelWidth: 140
+			labelWidth: 140,
+			forceLayout: true
 		});
 		Ext.apply(this, {
 			autoScroll : true,
@@ -33,10 +34,14 @@ GO.ldapauth.SettingsTab = Ext.extend(Ext.Panel, {
 		//when settings are loaded
 		if(!action.result.data.ldap_fields || action.result.data.ldap_fields.length===0 ){
 			this.setDisabled(true);
+			
+			this.ownerCt.hideTabStripItem(this);
 		}
 		else if(action.result.data.ldap_fields) {
 			this.setDisabled(false);
 			var fields = action.result.data.ldap_fields;
+			
+			var checkFnFields = [];
 			//clear panel and add new services with there respective values
 			
 			var currentPanel = this.formPanel;
@@ -56,8 +61,9 @@ GO.ldapauth.SettingsTab = Ext.extend(Ext.Panel, {
 						this.setTitle(name);
 					} else {
 						if(!this.extraPanels[name]) {
-							this.extraPanels[name] = currentPanel = this.formPanel=new Ext.Panel({
+							this.extraPanels[name] = currentPanel = new Ext.Panel({
 								id: name,
+								forceLayout: true,
 								title: name,
 								autoScroll : true,
 								layout : 'form',
@@ -68,7 +74,7 @@ GO.ldapauth.SettingsTab = Ext.extend(Ext.Panel, {
 							currentPanel = this.extraPanels[name];
 						
 						GO.mainLayout.personalSettingsDialog._tabPanel.add(currentPanel);
-						GO.mainLayout.personalSettingsDialog._tabPanel.doLayout();
+						
 						//GO.moduleManager.addSettingsPanel(field.name, this.formPanel);
 					}
 					currentPanel.removeAll();
@@ -106,6 +112,27 @@ GO.ldapauth.SettingsTab = Ext.extend(Ext.Panel, {
 						field.boxLabel = fields[i]['label'] || '';
 						field.submitOnValue=fields[i]['onValue'];
 						field.submitOffValue=fields[i]['offValue'];
+						
+						if(fields[i].itemId){
+							field.itemId = fields[i].itemId;
+						}else
+						{
+							field.itemId = Ext.id();
+						}
+						
+						if(fields[i].checkFn){
+								field.checkFn = fields[i].checkFn;
+								field.listeners = {
+										check: function(cmp, newVal) {
+												eval(cmp.checkFn);
+										},
+										scope: currentPanel
+								};
+								
+								
+								checkFnFields.push([currentPanel, field.itemId, field.listeners.check]);
+						}
+
 
 						
 						if(!GO.util.empty(field.submitOnValue)){
@@ -135,10 +162,23 @@ GO.ldapauth.SettingsTab = Ext.extend(Ext.Panel, {
 				//field.text = fields[i]['text'] || '';
 				
 				//console.log(field);
-				currentPanel.add(field);
+				currentPanel.add(field);				
 				currentPanel.doLayout();
-			}
+				
+				
+			}			
 			//this.serviceFieldset.items = this.serviceFields;
+			
+			
+			GO.mainLayout.personalSettingsDialog._tabPanel.doLayout();
+			
+			
+			for(var i=0,l = checkFnFields.length;i<l;i++){
+				var cmp = checkFnFields[i][0].items.get(checkFnFields[i][1]);
+				checkFnFields[i][2].call(checkFnFields[i][0], cmp, cmp.checked);
+			}
+			checkFnFields = [];
+			
 			
 		}
 		

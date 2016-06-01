@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: CalendarDialog.js 16919 2014-02-26 14:12:07Z mschering $
+ * @version $Id: CalendarDialog.js 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -129,9 +129,11 @@ GO.calendar.CalendarDialog = function(config)
 			xtype:'xcheckbox',
 			hideLabel:true,
 			boxLabel:GO.calendar.lang.publishICS,
+			hidden: GO.calendar.disablePublishing,
 			name:'public'
 		},{
 			xtype:'plainfield',
+			hidden: GO.calendar.disablePublishing,
 			fieldLabel:'iCalendar URL',
 			name:'ics_url',
 			anchor:'100%'
@@ -228,8 +230,13 @@ GO.calendar.CalendarDialog = function(config)
 					{
 						uploadFile.clearQueue();
 
-
-						GO.errorDialog.show("<pre>"+action.result.feedback+"</pre>", GO.lang.strSuccess);
+						Ext.Msg.show({
+							title: GO.lang.strSuccess,
+							width : 600,
+							height : 220,
+							icon: Ext.MessageBox.INFO,
+							msg: "<pre>"+action.result.feedback+"</pre>"
+						});
 						this.fireEvent('calendarimport', this);
 						
 					},
@@ -340,6 +347,11 @@ Ext.extend(GO.calendar.CalendarDialog, GO.Window, {
 		if(!this.rendered)
 			this.render(Ext.getBody());
 			
+		if(GO.tasks)
+		{
+			this.tasklistsTab.setModelId(calendar_id);
+		}
+			
 		this.propertiesTab.show();       
 
 		if(resource && !this.selectGroup.store.loaded)
@@ -421,7 +433,7 @@ Ext.extend(GO.calendar.CalendarDialog, GO.Window, {
 				this.exportButton.setDisabled(false);
 				this.importTab.setDisabled(false);
 
-				if(action.result.remoteComboTexts.tasklist_id)
+				if(GO.tasks && action.result.remoteComboTexts.tasklist_id)
 					this.selectTasklist.setRemoteText(action.result.remoteComboTexts.tasklist_id);
 
 				this.showGroups(action.result.data.group_id > 1);
@@ -464,6 +476,7 @@ Ext.extend(GO.calendar.CalendarDialog, GO.Window, {
 
 					if(GO.tasks)
 					{
+						this.tasklistsTab.setModelId(action.result.id);
 						this.tasklistsTab.store.commitChanges();
 					}
 

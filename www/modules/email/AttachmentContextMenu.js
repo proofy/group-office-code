@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: AttachmentContextMenu.js 17275 2014-04-07 14:57:29Z mschering $
+ * @version $Id: AttachmentContextMenu.js 17572 2014-05-28 13:32:01Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -36,7 +36,7 @@ GO.email.AttachmentContextMenu = function(config)
 	{
 		this.saveButton = new Ext.menu.Item({
 					iconCls: 'btn-save',
-					text: GO.lang.cmdSave,
+					text: GO.email.lang.saveToPersonal,
 					cls: 'x-btn-text-icon',
 					handler: function(){
 						GO.email.saveAttachment(this.attachment,this.messagePanel);

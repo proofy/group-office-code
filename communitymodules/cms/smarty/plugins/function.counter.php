@@ -17,7 +17,7 @@
  *       (Smarty online manual)
  * @param array parameters
  * @param Smarty
- * @return string|null
+ * @return StringHelper|null
  */
 function smarty_function_counter($params, &$smarty)
 {

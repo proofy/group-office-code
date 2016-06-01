@@ -46,7 +46,7 @@ class Swift_Mailer
      *
      * For example 'mimepart' would create a 'message.mimepart' instance
      *
-     * @param string $service
+     * @param StringHelper $service
      *
      * @return object
      */

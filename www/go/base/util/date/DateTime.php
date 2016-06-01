@@ -26,7 +26,7 @@ class DateTime extends \DateTime {
 
   /**
    * Overwrite constructor to used groupoffice default timezone and not systems default timezone
-   * @param string $time
+   * @param StringHelper $time
    * @param DateTimeZone $timezone
    */
   public function __construct($time="now", $timezone=null) {
@@ -63,8 +63,8 @@ class DateTime extends \DateTime {
 	 * Format the datetime to the format given
 	 * If there is no format specified the default user specified format will be used
 	 * @todo fix timezone issue
-	 * @param string $format the format the date should be returned
-	 * @return string formatted date
+	 * @param StringHelper $format the format the date should be returned
+	 * @return StringHelper formatted date
 	 */
 	public function format($format=null)
 	{
@@ -78,7 +78,7 @@ class DateTime extends \DateTime {
 	/**
 	 * Format the DateTime object in a \GO::user respected time format
 	 * @param DateTimeZone $timezone
-	 * @return string The formatted time
+	 * @return StringHelper The formatted time
 	 */
 	public function formatTime() {
 	  $timeFormat = \GO::user() ? \GO::user()->time_format : \GO::config()->default_time_format;
@@ -88,7 +88,7 @@ class DateTime extends \DateTime {
 	/**
 	 * Format the DateTime object in a \GO::user respected date format
 	 * @param DateTimeZone $timezone
-	 * @return string The formatted time
+	 * @return StringHelper The formatted time
 	 */
 	public function formatDate() {
 	  $dateFormat = \GO::user() ? \GO::user()->completeDateFormat : \GO::config()->getCompleteDateFormat();
@@ -243,7 +243,7 @@ class DateTime extends \DateTime {
 	 * Convert a diff array to a readable string
 	 * 
 	 * @param array $diff
-	 * @return string
+	 * @return StringHelper
 	 */
 	public static function diffToString($diff) {
 		$string = '';

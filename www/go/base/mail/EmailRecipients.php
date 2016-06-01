@@ -9,7 +9,7 @@ class EmailRecipients{
 	 * 
 	 * "Merijn Schering" <mschering@intermesh.nl>,someone@somedomain.com,Pete <pete@pete.com
 	 * 
-	 * @param string $emailRecipientList 
+	 * @param StringHelper $emailRecipientList 
 	 */
 	public function __construct($emailRecipientList='', $strict=false){
 		$this->strict=$strict;
@@ -29,39 +29,39 @@ class EmailRecipients{
 	 * 
 	 * (string) EmailRecipients::createSingle("john@example.com", "John Smith");
 	 * 
-	 * @param string $email
-	 * @param string $personal
+	 * @param StringHelper $email
+	 * @param StringHelper $personal
 	 * @return EmailRecipients 
 	 */
 	public static function createSingle($email, $personal){
 		$l = new EmailRecipients();
-		$l->addRecipient($email, $personal);
+		$l->addRecipient(strtolower($email), $personal);
 		return $l;
 	}
 	
 	/**
 	 * Add a recipient to the list.
 	 * 
-	 * @param string $email
-	 * @param string $personal 
+	 * @param StringHelper $email
+	 * @param StringHelper $personal 
 	 */
 	public function addRecipient($email, $personal=null){
 		//echo $email.' '.$personal.'<br />';
 		if(empty($email))
 			return false;
 
-		$this->_addresses[trim($email)]=!empty($personal) ? trim($personal) : null;
+		$this->_addresses[trim(strtolower($email))]=!empty($personal) ? trim($personal) : null;
 	}
 	
 	/**
 	 * Check if an e-mail address is in this list
 	 * 
-	 * @param string $email
+	 * @param StringHelper $email
 	 * @return boolean 
 	 */
 	public function hasRecipient($email){
 //		return isset($this->_addresses[$email]);
-		return array_key_exists($email, $this->_addresses);
+		return array_key_exists(strtolower($email), $this->_addresses);
 	}
 
 	
@@ -77,10 +77,10 @@ class EmailRecipients{
 	/**
 	 * Remove a recipient from the list.
 	 * 
-	 * @param string $email 
+	 * @param StringHelper $email 
 	 */
 	public function removeRecipient($email){
-		unset($this->_addresses[trim($email)]);
+		unset($this->_addresses[trim(strtolower($email))]);
 	}
 	/**
 	 * Get the addresses in an array('email@address.com'=>'Personal name'))
@@ -154,7 +154,7 @@ class EmailRecipients{
 	/**
 	* Temporary storage of personal info of an e-mail address
 	*
-	* @var     string
+	* @var     StringHelper
 	* @access  private
 	*/
 	private $_personal = false;
@@ -162,7 +162,7 @@ class EmailRecipients{
 	/**
 	* Temporary storage
 	*
-	* @var     string
+	* @var     StringHelper
 	* @access  private
 	*/
 	private $_buffer = '';
@@ -190,7 +190,7 @@ class EmailRecipients{
 	 * 
 	 * "Merijn Schering" <mschering@intermesh.nl>,someone@somedomain.com,Pete <pete@pete.com
 	 * 
-	 * @param string $emailRecipientList 
+	 * @param StringHelper $emailRecipientList 
 	 */
 	public function addString($recipientListString)
 	{
@@ -227,7 +227,7 @@ class EmailRecipients{
 				
 				case ',':
 				case ';':
-					if($this->_quote || (!$this->strict && !$this->_emailFound && !\GO\Base\Util\String::validate_email(trim($this->_buffer))))
+					if($this->_quote || (!$this->strict && !$this->_emailFound && !\GO\Base\Util\StringHelper::validate_email(trim($this->_buffer))))
 					{
 						$this->_buffer .= $char;				
 					}else
@@ -263,7 +263,7 @@ class EmailRecipients{
 		
 		if(!empty($this->_buffer))
 		{
-			if($this->strict && !\GO\Base\Util\String::validate_email($this->_buffer)){
+			if($this->strict && !\GO\Base\Util\StringHelper::validate_email($this->_buffer)){
 				throw new \Exception("Address ".$this->_buffer." is not valid");
 			}else
 			{

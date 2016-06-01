@@ -12,7 +12,7 @@
 /**
  * The JsonResonse object can be used as any normal array but will output json when echoed
  * 
- * @version $Id: JsonResponse.php 16981 2014-03-07 14:04:21Z mschering $
+ * @version $Id: JsonResponse.php 19117 2015-05-21 07:18:29Z mschering $
  * @copyright Copyright Intermesh BV.
  * @author Michael de Hart <mdhart@intermesh.nl>
  * @package GO.base.data
@@ -44,6 +44,10 @@ class JsonResponse implements \ArrayAccess {
 //		});
 		
 		$string = json_encode($this->data);
+		
+		if($string === false) {
+			throw new \Exception("JSON encoding error");
+		}
 
 		if(strpos($string,'startjs:')!==false){
 			preg_match_all('/"startjs:(.*?):endjs"/usi', $string, $matches, PREG_SET_ORDER);

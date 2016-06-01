@@ -67,7 +67,7 @@ abstract class AbstractUserDefaultModel extends \GO\Base\Db\ActiveRecord {
 	 * Return a model to store the default in. Eg. The default tasklist created by
 	 * getDefault should be stored in \GO\Tasks\Model\Settings->default_taskkist_id
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function settingsModelName() {
 		return false;
@@ -77,7 +77,7 @@ abstract class AbstractUserDefaultModel extends \GO\Base\Db\ActiveRecord {
 	 * Return a settings attribute name. Eg. The default tasklist created by
 	 * getDefault should be stored in \GO\Tasks\Model\Settings->default_taskkist_id
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function settingsPkAttribute() {
 		return false;
@@ -158,7 +158,7 @@ abstract class AbstractUserDefaultModel extends \GO\Base\Db\ActiveRecord {
 	/**
 	 *
 	 * @param \GO\Base\Db\User $user User model, defaults to false.
-	 * @param string &$feedback Feedback string for calling scope, contains
+	 * @param StringHelper &$feedback Feedback string for calling scope, contains
 	 * success / failure reports on every default model.
 	 */
 	public function setDefaultAttributes($user=false,&$feedback=''){

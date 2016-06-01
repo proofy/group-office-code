@@ -9,14 +9,14 @@ class PortletController extends \GO\Base\Controller\AbstractModelController {
 	/**
 	 * The full name of the used model in this controller
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	protected $model = 'GO\email\Model\PortletFolder';
 	
 	/**
 	 * The state of the portlet folders tree (This is the same state as the tree in the email tab)
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	private $_treeState;
 	
@@ -198,7 +198,7 @@ class PortletController extends \GO\Base\Controller\AbstractModelController {
 	 * Get the tree result from the given mailboxes
 	 * 
 	 * @param array $mailboxes
-	 * @return string
+	 * @return StringHelper
 	 */
 	private function _getMailboxTreeNodes($mailboxes) {
 		$nodes = array();
@@ -290,7 +290,7 @@ class PortletController extends \GO\Base\Controller\AbstractModelController {
 	/**
 	 * Check if the mailbox is enabled to show in the email portlet
 	 * 
-	 * @param string $mailboxName
+	 * @param StringHelper $mailboxName
 	 * @return boolean
 	 */
 	private function _showInPortlet($accountId,$mailboxName){

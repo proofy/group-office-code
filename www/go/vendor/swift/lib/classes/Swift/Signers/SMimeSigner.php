@@ -42,9 +42,9 @@ class Swift_Signers_SMimeSigner implements Swift_Signers_BodySigner
     /**
      * Constructor.
      *
-     * @param string $certificate
-     * @param string $privateKey
-     * @param string $encryptCertificate
+     * @param StringHelper $certificate
+     * @param StringHelper $privateKey
+     * @param StringHelper $encryptCertificate
      */
     public function __construct($signCertificate = null, $signPrivateKey = null, $encryptCertificate = null)
     {
@@ -72,8 +72,8 @@ class Swift_Signers_SMimeSigner implements Swift_Signers_BodySigner
     /**
      * Returns an new Swift_Signers_SMimeSigner instance.
      *
-     * @param string $certificate
-     * @param string $privateKey
+     * @param StringHelper $certificate
+     * @param StringHelper $privateKey
      *
      * @return Swift_Signers_SMimeSigner
      */
@@ -87,8 +87,8 @@ class Swift_Signers_SMimeSigner implements Swift_Signers_BodySigner
      *
      * @link http://www.php.net/manual/en/openssl.pkcs7.flags.php
      *
-     * @param string       $certificate
-     * @param string|array $privateKey  If the key needs an passphrase use array('file-location', 'passphrase') instead
+     * @param StringHelper       $certificate
+     * @param StringHelper|array $privateKey  If the key needs an passphrase use array('file-location', 'passphrase') instead
      * @param integer      $signOptions Bitwise operator options for openssl_pkcs7_sign()
      *
      * @return Swift_Signers_SMimeSigner
@@ -117,7 +117,7 @@ class Swift_Signers_SMimeSigner implements Swift_Signers_BodySigner
      * @link http://www.php.net/manual/en/openssl.pkcs7.flags.php
      * @link http://nl3.php.net/manual/en/openssl.ciphers.php
      *
-     * @param string|array $recipientCerts Either an single X.509 certificate, or an assoc array of X.509 certificates.
+     * @param StringHelper|array $recipientCerts Either an single X.509 certificate, or an assoc array of X.509 certificates.
      * @param integer      $cipher
      *
      * @return Swift_Signers_SMimeSigner
@@ -142,7 +142,7 @@ class Swift_Signers_SMimeSigner implements Swift_Signers_BodySigner
     }
 
     /**
-     * @return string
+     * @return StringHelper
      */
     public function getSignCertificate()
     {
@@ -150,7 +150,7 @@ class Swift_Signers_SMimeSigner implements Swift_Signers_BodySigner
     }
 
     /**
-     * @return string
+     * @return StringHelper
      */
     public function getSignPrivateKey()
     {
@@ -164,7 +164,7 @@ class Swift_Signers_SMimeSigner implements Swift_Signers_BodySigner
      * But some older mail clients, namely Microsoft Outlook 2000 will work when the message first encrypted.
      * As this goes against the official specs, its recommended to only use 'encryption -> signing' when specifically targeting these 'broken' clients.
      *
-     * @param string $signThenEncrypt
+     * @param StringHelper $signThenEncrypt
      *
      * @return Swift_Signers_SMimeSigner
      */

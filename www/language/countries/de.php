@@ -157,6 +157,7 @@ $l['PA']='Panama';
 $l['PE']='Peru';
 $l['PG']='Papua-Neuguinea';
 $l['PH']='Philippinen';
+$l['PK'] = 'Pakistan';
 $l['PL']='Polen';
 $l['PT']='Portugal';
 $l['PW']='Palau';

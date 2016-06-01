@@ -51,12 +51,14 @@ class Mailbox extends \GO\Base\Db\ActiveRecord {
 	public function getLogMessage($action) {		
 		return $this->username;
 	}
+	
+	public $skipPasswordEncryption = false;
 
 	protected function beforeSave() {
 
-		if ($this->isModified("password"))
-			$this->password = '{CRYPT}' . crypt($this->password);
-		
+		if (!$this->skipPasswordEncryption && $this->isModified("password")) {
+			$this->password = '{CRYPT}' . @\crypt($this->password); //disabled depricated error for unsalted crypt
+		}
 		$parts = explode('@', $this->username);
 
 		$this->maildir = $this->domain->domain . '/' . $parts[0] . '/';

@@ -39,7 +39,7 @@ class PHPExcel_Chart_Title
 	/**
 	 * Title Caption
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_caption = null;
 
@@ -62,7 +62,7 @@ class PHPExcel_Chart_Title
 	/**
 	 * Get caption
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getCaption() {
 		return $this->_caption;
@@ -71,7 +71,7 @@ class PHPExcel_Chart_Title
 	/**
 	 * Set caption
 	 *
-	 * @param string $caption
+	 * @param StringHelper $caption
 	 */
 	public function setCaption($caption = null) {
 		$this->_caption = $caption;

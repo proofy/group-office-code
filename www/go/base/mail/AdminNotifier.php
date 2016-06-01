@@ -8,8 +8,8 @@ class AdminNotifier {
 	/**
 	 * Can be used to notify the administrator by email
 	 * 
-	 * @param string $subject
-	 * @param string $message 
+	 * @param StringHelper $subject
+	 * @param StringHelper $message 
 	 */
 	public static function sendMail($subject, $body){
 

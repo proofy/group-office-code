@@ -44,7 +44,7 @@ class PHPExcel_Shared_ZipStreamWrapper {
     /**
      * Filename in ZipAcrhive
      *
-     * @var string
+     * @var StringHelper
      */
     private $_fileNameInArchive = '';
 
@@ -76,7 +76,7 @@ class PHPExcel_Shared_ZipStreamWrapper {
 	 * @param	string	$path			resource name including scheme, e.g.
 	 * @param	string	$mode			only "r" is supported
 	 * @param	int		$options		mask of STREAM_REPORT_ERRORS and STREAM_USE_PATH
-	 * @param	string  &$openedPath	absolute path of the opened stream (out parameter)
+	 * @param	StringHelper  &$openedPath	absolute path of the opened stream (out parameter)
 	 * @return	bool    true on success
      */
     public function stream_open($path, $mode, $options, &$opened_path) {
@@ -131,7 +131,7 @@ class PHPExcel_Shared_ZipStreamWrapper {
 	 * Implements support for fread(), fgets() etc.
 	 *
 	 * @param   int		$count	maximum number of bytes to read
-	 * @return  string
+	 * @return  StringHelper
      */
     function stream_read($count) {
         $ret = substr($this->_data, $this->_position, $count);

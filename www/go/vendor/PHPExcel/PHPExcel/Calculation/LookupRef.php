@@ -65,7 +65,7 @@ class PHPExcel_Calculation_LookupRef {
 	 *								TRUE or omitted		CELL_ADDRESS returns an A1-style reference
 	 *								FALSE				CELL_ADDRESS returns an R1C1-style reference
 	 * @param	sheetText		Optional Name of worksheet to use
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function CELL_ADDRESS($row, $column, $relativity=1, $referenceStyle=True, $sheetText='') {
 		$row		= PHPExcel_Calculation_Functions::flattenSingleValue($row);

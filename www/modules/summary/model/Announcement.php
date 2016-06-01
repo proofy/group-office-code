@@ -20,6 +20,8 @@
 
 namespace GO\Summary\Model;
 
+use GO;
+
 
 class Announcement extends \GO\Base\Db\ActiveRecord {
 	
@@ -29,7 +31,7 @@ class Announcement extends \GO\Base\Db\ActiveRecord {
 	}
 	
 	public function getLocalizedName(){
-		return \GO::t('announcement','summary');
+		return GO::t('announcement','summary');
 	}
 	
 	public function tableName(){
@@ -44,6 +46,14 @@ class Announcement extends \GO\Base\Db\ActiveRecord {
 		$this->columns['content']['gotype']='html';
 		$this->columns['due_time']['gotype']='unixdate';
 		return parent::init();
+	}
+	
+	protected function afterSave($wasNew) {
+		// Only do this when it's a new model
+		if($wasNew){
+			$this->acl->addGroup(GO::config()->group_everyone);
+		}
+		return parent::afterSave($wasNew);
 	}
 	
 }

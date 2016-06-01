@@ -22,10 +22,10 @@ class Swift_Message extends Swift_Mime_SimpleMessage
      *
      * Details may be optionally passed into the constructor.
      *
-     * @param string $subject
-     * @param string $body
-     * @param string $contentType
-     * @param string $charset
+     * @param StringHelper $subject
+     * @param StringHelper $body
+     * @param StringHelper $contentType
+     * @param StringHelper $charset
      */
     public function __construct($subject = null, $body = null, $contentType = null, $charset = null)
     {
@@ -50,10 +50,10 @@ class Swift_Message extends Swift_Mime_SimpleMessage
     /**
      * Create a new Message.
      *
-     * @param string $subject
-     * @param string $body
-     * @param string $contentType
-     * @param string $charset
+     * @param StringHelper $subject
+     * @param StringHelper $body
+     * @param StringHelper $contentType
+     * @param StringHelper $charset
      *
      * @return Swift_Message
      */
@@ -65,9 +65,9 @@ class Swift_Message extends Swift_Mime_SimpleMessage
     /**
      * Add a MimePart to this Message.
      *
-     * @param string|Swift_OutputByteStream $body
-     * @param string                        $contentType
-     * @param string                        $charset
+     * @param StringHelper|Swift_OutputByteStream $body
+     * @param StringHelper                        $contentType
+     * @param StringHelper                        $charset
      *
      * @return Swift_Mime_SimpleMessage
      */

@@ -33,7 +33,7 @@ class Swift_Plugins_Loggers_EchoLogger implements Swift_Plugins_Logger
     /**
      * Add a log entry.
      *
-     * @param string $entry
+     * @param StringHelper $entry
      */
     public function add($entry)
     {

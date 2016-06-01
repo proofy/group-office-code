@@ -48,10 +48,10 @@ class Crypt {
 	/** Encryption Procedure
 	 *
 	 * 	@param   mixed    msg      message/data
-	 * 	@param   string   k        encryption key
+	 * 	@param   StringHelper   k        encryption key
 	 * 	@param   boolean  base64   base64 encode result
 	 *
-	 * 	@return  string   iv+ciphertext+mac or
+	 * 	@return  StringHelper   iv+ciphertext+mac or
 	 *           boolean  false on error
 	 */
 	public static function encrypt($msg, $k='', $base64 = true, $prefix='{GOCRYPT}') {
@@ -96,11 +96,11 @@ class Crypt {
 
 	/** Decryption Procedure
 	 *
-	 * 	@param   string   msg      output from encrypt()
-	 * 	@param   string   k        encryption key
+	 * 	@param   StringHelper   msg      output from encrypt()
+	 * 	@param   StringHelper   k        encryption key
 	 * 	@param   boolean  base64   base64 decode msg
 	 *
-	 * 	@return  string   original message/data or
+	 * 	@return  StringHelper   original message/data or
 	 *           boolean  false on error
 	 */
 	public static function decrypt($msg, $k='', $base64 = true) {
@@ -150,13 +150,13 @@ class Crypt {
 
 	/** PBKDF2 Implementation (as described in RFC 2898);
 	 *
-	 * 	@param   string  p   password
-	 * 	@param   string  s   salt
+	 * 	@param   StringHelper  p   password
+	 * 	@param   StringHelper  s   salt
 	 * 	@param   int     c   iteration count (use 1000 or higher)
 	 * 	@param   int     kl  derived key length
-	 * 	@param   string  a   hash algorithm
+	 * 	@param   StringHelper  a   hash algorithm
 	 *
-	 * 	@return  string  derived key
+	 * 	@return  StringHelper  derived key
 	 */
 	private static function pbkdf2($p, $s, $c, $kl, $a = 'sha256') {
 
@@ -190,7 +190,7 @@ class Crypt {
 			$key = file_get_contents($key_file);
 		} else {
 
-			$key = String::randomPassword(20);
+			$key = StringHelper::randomPassword(20);
 			if (file_put_contents($key_file, $key)) {
 				chmod($key_file, 0400);
 			} else {
@@ -198,6 +198,55 @@ class Crypt {
 			}
 		}
 		return $key;
+	}
+	
+	/**
+	 * Util functio for encrypting passwords
+	 * @param string $password password to be encrypted
+	 * @return string the encrypted password
+	 */
+	public static function encryptPassword($password) {
+		if(function_exists('password_hash')) {
+			return password_hash($password,PASSWORD_DEFAULT);
+		}else
+		{
+			$salt = uniqid();
+			if(function_exists("mcrypt_create_iv")) {
+				$salt = base64_encode(mcrypt_create_iv(24, MCRYPT_DEV_URANDOM));
+			}
+			
+			if (CRYPT_SHA256 == 1) {
+					$salt = '$5$'.$salt;
+			}
+			
+			return crypt($password, $salt);
+		}
+	}
+	
+	/**
+	 * Check an encrypted password for validity
+	 * @param string $password the password to check
+	 * @param string $encrypted_password the hash that was saved
+	 * @param string $type type of encryption (can be crypt or anything else)
+	 * @return boolean true if the password is valid
+	 */
+	public static function checkPassword($password, $encrypted_password, $type='crypt'){
+		
+		if ($type == 'crypt') {
+			
+			if(function_exists('password_verify')) {
+				if(!password_verify($password, $encrypted_password)){
+					return false;
+				}
+			} else if (crypt($password, $encrypted_password) != $encrypted_password) {
+				return false;
+			}
+			
+		} else if (md5($password) != $encrypted_password) {
+			return false;
+		}
+		
+		return true;
 	}
 
 }

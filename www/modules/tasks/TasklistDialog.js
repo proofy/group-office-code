@@ -33,8 +33,7 @@ GO.tasks.TasklistDialog = function(config)
 				text:GO.lang.cmdExport,
 				disabled:true,
 				handler:function(){
-					// TODO: Fix this export so it works with the new MVC structure
-					document.location=GO.settings.modules.tasks.url+'export.php?tasklist_id='+this.tasklist_id;
+					document.location=GO.url('tasks/task/exportIcs', {"tasklist_id":this.tasklist_id});
 				},
 				scope:this
 			}),

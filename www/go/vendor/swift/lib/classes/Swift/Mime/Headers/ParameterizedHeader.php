@@ -34,14 +34,14 @@ class Swift_Mime_Headers_ParameterizedHeader extends Swift_Mime_Headers_Unstruct
     /**
      * The parameters as an associative array.
      *
-     * @var string[]
+     * @var StringHelper[]
      */
     private $_params = array();
 
     /**
      * Creates a new ParameterizedHeader with $name.
      *
-     * @param string                   $name
+     * @param StringHelper                   $name
      * @param Swift_Mime_HeaderEncoder $encoder
      * @param Swift_Encoder            $paramEncoder, optional
      * @param Swift_Mime_Grammar       $grammar
@@ -68,7 +68,7 @@ class Swift_Mime_Headers_ParameterizedHeader extends Swift_Mime_Headers_Unstruct
     /**
      * Set the character set used in this Header.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      */
     public function setCharset($charset)
     {
@@ -81,8 +81,8 @@ class Swift_Mime_Headers_ParameterizedHeader extends Swift_Mime_Headers_Unstruct
     /**
      * Set the value of $parameter.
      *
-     * @param string $parameter
-     * @param string $value
+     * @param StringHelper $parameter
+     * @param StringHelper $value
      */
     public function setParameter($parameter, $value)
     {
@@ -92,9 +92,9 @@ class Swift_Mime_Headers_ParameterizedHeader extends Swift_Mime_Headers_Unstruct
     /**
      * Get the value of $parameter.
      *
-     * @param string $parameter
+     * @param StringHelper $parameter
      *
-     * @return string
+     * @return StringHelper
      */
     public function getParameter($parameter)
     {
@@ -108,7 +108,7 @@ class Swift_Mime_Headers_ParameterizedHeader extends Swift_Mime_Headers_Unstruct
     /**
      * Set an associative array of parameter names mapped to values.
      *
-     * @param string[] $parameters
+     * @param StringHelper[] $parameters
      */
     public function setParameters(array $parameters)
     {
@@ -119,7 +119,7 @@ class Swift_Mime_Headers_ParameterizedHeader extends Swift_Mime_Headers_Unstruct
     /**
      * Returns an associative array of parameter names mapped to values.
      *
-     * @return string[]
+     * @return StringHelper[]
      */
     public function getParameters()
     {
@@ -129,7 +129,7 @@ class Swift_Mime_Headers_ParameterizedHeader extends Swift_Mime_Headers_Unstruct
     /**
      * Get the value of this header prepared for rendering.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFieldBody() //TODO: Check caching here
     {
@@ -152,7 +152,7 @@ class Swift_Mime_Headers_ParameterizedHeader extends Swift_Mime_Headers_Unstruct
      * This doesn't need to be overridden in theory, but it is for implementation
      * reasons to prevent potential breakage of attributes.
      *
-     * @param string $string The string to tokenize
+     * @param StringHelper $string The string to tokenize
      *
      * @return array An array of tokens as strings
      */
@@ -179,10 +179,10 @@ class Swift_Mime_Headers_ParameterizedHeader extends Swift_Mime_Headers_Unstruct
     /**
      * Render a RFC 2047 compliant header parameter from the $name and $value.
      *
-     * @param string $name
-     * @param string $value
+     * @param StringHelper $name
+     * @param StringHelper $value
      *
-     * @return string
+     * @return StringHelper
      */
     private function _createParameter($name, $value)
     {
@@ -240,11 +240,11 @@ class Swift_Mime_Headers_ParameterizedHeader extends Swift_Mime_Headers_Unstruct
     /**
      * Returns the parameter value from the "=" and beyond.
      *
-     * @param string  $value     to append
+     * @param StringHelper  $value     to append
      * @param boolean $encoded
      * @param boolean $firstLine
      *
-     * @return string
+     * @return StringHelper
      */
     private function _getEndOfParameterValue($value, $encoded = false, $firstLine = false)
     {

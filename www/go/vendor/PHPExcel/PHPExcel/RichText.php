@@ -83,7 +83,7 @@ class PHPExcel_RichText implements PHPExcel_IComparable
     /**
      * Create text
      *
-     * @param string $pText Text
+     * @param StringHelper $pText Text
      * @return PHPExcel_RichText_TextElement
      * @throws PHPExcel_Exception
      */
@@ -97,7 +97,7 @@ class PHPExcel_RichText implements PHPExcel_IComparable
     /**
      * Create text run
      *
-     * @param string $pText Text
+     * @param StringHelper $pText Text
      * @return PHPExcel_RichText_Run
      * @throws PHPExcel_Exception
      */
@@ -111,7 +111,7 @@ class PHPExcel_RichText implements PHPExcel_IComparable
     /**
      * Get plain text
      *
-     * @return string
+     * @return StringHelper
      */
     public function getPlainText()
     {
@@ -130,7 +130,7 @@ class PHPExcel_RichText implements PHPExcel_IComparable
     /**
      * Convert to string
      *
-     * @return string
+     * @return StringHelper
      */
     public function __toString()
     {
@@ -167,7 +167,7 @@ class PHPExcel_RichText implements PHPExcel_IComparable
     /**
      * Get hash code
      *
-     * @return string    Hash code
+     * @return StringHelper    Hash code
      */
     public function getHashCode()
     {

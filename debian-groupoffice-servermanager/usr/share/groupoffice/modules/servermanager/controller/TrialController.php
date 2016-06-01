@@ -3,6 +3,8 @@
 
 namespace GO\Servermanager\Controller;
 
+use Exception;
+
 
 class TrialController extends \GO\Site\Components\Controller {
 
@@ -113,7 +115,7 @@ class TrialController extends \GO\Site\Components\Controller {
 			$config['db_name']=$model->dbName;
 			$config['db_user']=$model->dbUser;
 			$config['db_host']=\GO::config()->db_host;
-			$config['db_pass']= \GO\Base\Util\String::randomPassword(8,'a-z,A-Z,1-9');
+			$config['db_pass']= \GO\Base\Util\StringHelper::randomPassword(8,'a-z,A-Z,1-9');
 			$config['host']='/';
 			$config['root_path']=$model->installPath.'groupoffice/';
 			$config['tmpdir']='/tmp/'.$model->name.'/';
@@ -135,12 +137,13 @@ class TrialController extends \GO\Site\Components\Controller {
 		$config['default_thousands_separator'] = $params['default_thousands_separator'];
 		$config['default_decimal_separator'] = $params['default_decimal_separator'];
 		$config['first_weekday'] = $params['first_weekday'];
+		$config['disable_mail'] = true;
 		
 
 		if (intval($config['max_users']) < 1)
 			throw new Exception('You must set a maximum number of users');
 
-		if (!\GO\Base\Util\String::validate_email($config['webmaster_email']))
+		if (!\GO\Base\Util\StringHelper::validate_email($config['webmaster_email']))
 			throw new Exception(\GO::t('invalidEmail','servermanager'));
 		
 		$tmpFile = \GO\Base\Fs\File::tempFile('', 'php');

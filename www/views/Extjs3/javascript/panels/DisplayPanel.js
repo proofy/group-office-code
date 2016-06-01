@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: DisplayPanel.js 16947 2014-02-28 14:04:55Z mschering $
+ * @version $Id: DisplayPanel.js 19345 2015-08-25 10:11:22Z wsmits $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -19,7 +19,7 @@ GO.DisplayPanel=function(config){
 
 	GO.DisplayPanel.superclass.constructor.call(this, config);
 
-	this.addEvents({bodyclick:true,afterbodyclick:true,afterload:true});
+	this.addEvents({bodyclick:true,afterbodyclick:true,afterload:true, 'reset':true});
 }
 
 Ext.extend(GO.DisplayPanel, Ext.Panel,{
@@ -257,6 +257,8 @@ Ext.extend(GO.DisplayPanel, Ext.Panel,{
 		var tbar = this.getTopToolbar();
 		if(tbar)
 			tbar.setDisabled(true);
+		
+		this.fireEvent('reset', this);
 	},
 
 	getState : function(){
@@ -429,7 +431,11 @@ Ext.extend(GO.DisplayPanel, Ext.Panel,{
 						GO.linkBrowser.show({model_id: link.parent_model_id,model_name: link.parent_model_name,folder_id: link.id});
 					}else
 					{
-						GO.linkHandlers[link.model_name].call(this, link.model_id, {data: link});
+						if(!GO.linkHandlers[link.model_name]){
+							GO.errorDialog.show(GO.lang.handlerNotInstalled,GO.lang.moduleNotInstalled);
+						} else {
+							GO.linkHandlers[link.model_name].call(this, link.model_id, {data: link});
+						}
 					}
 					e.preventDefault();
 					return;
@@ -588,6 +594,7 @@ Ext.extend(GO.DisplayPanel, Ext.Panel,{
 			
 			GO.request({
 				maskEl:this.body,
+				method:'GET',
 				url: this.loadUrl,
 				params:this.loadParams,
 				success: function(options, response, result)

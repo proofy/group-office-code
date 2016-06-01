@@ -24,7 +24,7 @@ class Swift_Validate
     /**
      * Checks if an e-mail address matches the current grammars.
      *
-     * @param string $email
+     * @param StringHelper $email
      *
      * @return boolean
      */

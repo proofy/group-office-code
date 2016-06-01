@@ -5,7 +5,7 @@
  * Group-Office license along with Group-Office. See the file /LICENSE.TXT
  *
  * If you have questions write an e-mail to info@intermesh.nl
- * @version $Id: MessagePanel.js 17032 2014-03-12 09:41:25Z mschering $
+ * @version $Id: MessagePanel.js 19192 2015-06-10 09:28:38Z michaelhart86 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  * @since Group-Office 1.0
@@ -121,9 +121,6 @@ GO.email.MessagePanel = Ext.extend(Ext.Panel, {
 
 		if(GO.calendar){
 
-
-
-
 			templateStr += '<tpl if="!GO.util.empty(values.iCalendar)">'+
 				'<tpl if="iCalendar.feedback">'+
 				'<div class="message-icalendar">'+
@@ -132,8 +129,8 @@ GO.email.MessagePanel = Ext.extend(Ext.Panel, {
 
 				'<tpl if="iCalendar.invitation">'+
 
-				'<tpl if="!GO.util.empty(iCalendar.invitation.is_processed)">'+
-					'<a id="em-icalendar-open-'+this.bodyId+'" class="go-model-icon-GO_Calendar_Model_Event normal-link" style="padding-left:20px;background-repeat:no-repeat;" href="#" class="go-model-icon-GO\\Calendar\\Model\\Event message-icalendar-icon">'+GO.email.lang.appointementAlreadyProcessed+'</a>'+
+					'<tpl if="!GO.util.empty(iCalendar.invitation.is_processed)">'+
+						'<a id="em-icalendar-open-'+this.bodyId+'" class="go-model-icon-GO_Calendar_Model_Event normal-link" style="padding-left:20px;background-repeat:no-repeat;" href="#" class="go-model-icon-GO\\Calendar\\Model\\Event message-icalendar-icon">'+GO.email.lang.appointementAlreadyProcessed+'</a>'+
 					'</tpl>'+
 					'<tpl if="iCalendar.invitation.is_invitation">'+
 
@@ -153,6 +150,7 @@ GO.email.MessagePanel = Ext.extend(Ext.Panel, {
 						'<div class="go-model-icon-GO_Calendar_Model_Event message-icalendar-icon ">'+
 						'{[values.iCalendar.feedback]}</div>'+
 						'<div class="message-icalendar-actions">'+
+						'<a id="em-icalendar-open-'+this.bodyId+'" class="normal-link" style="padding-right:20px;" href="#">'+GO.email.lang.icalendarOpenEvent+'</a>'+
 							'<a class="normal-link" id="em-icalendar-update-event-'+this.bodyId+'" href="#">'+GO.email.lang.icalendarUpdateEvent+'</a>'+
 							'</div>'+
 					'</tpl>'+
@@ -163,6 +161,17 @@ GO.email.MessagePanel = Ext.extend(Ext.Panel, {
 				'</tpl>'+
 				'</tpl>';
 		}
+
+		templateStr += '<tpl if="values.isInSpamFolder==\'1\';">'+
+				'<div class="message-move">'+
+					GO.email.lang['thisIsSpam1']+' <a id="em-move-mail-link-'+this.bodyId+'" class="go-model-icon-GO\\Email\\Model\\Message normal-link" style="background-repeat:no-repeat;" href="javascript:GO.email.moveToInbox(\'{values.uid}\',\'{values.account_id}\');" >'+GO.email.lang['thisIsSpam2']+'</a> '+GO.email.lang['thisIsSpam3']+
+				'</div>'+
+			'</tpl>'+
+			'<tpl if="values.isInSpamFolder==\'0\';">'+
+				'<div class="message-move">'+
+					GO.email.lang['thisIsNotSpam1']+' <a id="em-move-mail-link-'+this.bodyId+'" class="go-model-icon-GO\\Email\\Model\\Message normal-link" style="background-repeat:no-repeat;" href="javascript:GO.email.moveToSpam(\'{values.uid}\',\'{values.mailbox}\',\'{values.account_id}\');" >'+GO.email.lang['thisIsNotSpam2']+'</a> '+GO.email.lang['thisIsNotSpam3']+
+				'</div>'+
+			'</tpl>';
 
 		templateStr += '<div id="'+this.bodyId+'" class="message-body go-html-formatted">{htmlbody}'+
 			'<tpl if="body_truncated">'+
@@ -496,7 +505,14 @@ GO.email.MessagePanel = Ext.extend(Ext.Panel, {
 									uid:this.uid,
 									contact_id:this.data.sender_contact_id
 								},
-								maskEl:Ext.getBody()
+								maskEl:Ext.getBody(),
+								success: function(options, response, result) {
+									if (result.success) {
+										this.data.contact_linked_message_id = result.linked_email_id;
+									}
+									this.getEl().unmask();
+								},
+								scope:this
 							});
 						}else{
 							GO.request({
@@ -507,7 +523,14 @@ GO.email.MessagePanel = Ext.extend(Ext.Panel, {
 									model_name2:'GO\\Savemailas\\Model\\LinkedEmail',
 									id2:this.data.contact_linked_message_id
 								},
-								maskEl:Ext.getBody()
+								maskEl:Ext.getBody(),
+								success: function(options, response, result) {
+									if (result.success) {
+										this.data.company_linked_message_id = result.linked_email_id;
+									}
+									this.getEl().unmask();
+								},
+								scope:this
 							});
 						}
 					}
@@ -695,7 +718,7 @@ GO.email.readVCard = function(url) {
 			callback: function(options, success, response)
 			{
 				var responseData = Ext.decode(response.responseText);
-				if(!success)
+				if(!success || !responseData.success)
 				{
 					Ext.MessageBox.alert(GO.lang['strError'], responseData['feedback']);
 				} else {

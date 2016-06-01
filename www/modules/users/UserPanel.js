@@ -168,12 +168,6 @@ GO.users.UserPanel = Ext.extend(GO.DisplayPanel,{
 				this.newOODoc.setDisabled(GO.documenttemplates.ooTemplatesStore.getCount() == 0);
 			}, this);
 		}
-
-		if(GO.tasks)
-		{
-			this.scheduleCallItem = new GO.tasks.ScheduleCallMenuItem();
-			this.newMenuButton.menu.add(this.scheduleCallItem);
-		}
 	},
 	getLinkName : function(){
 		return this.data.full_name;
@@ -184,31 +178,5 @@ GO.users.UserPanel = Ext.extend(GO.DisplayPanel,{
 
 		if(GO.documenttemplates && !GO.documenttemplates.ooTemplatesStore.loaded)
 			GO.documenttemplates.ooTemplatesStore.load();
-
-		if(data.write_permission)
-		{
-			if(this.scheduleCallItem)
-			{
-				var name = this.data.full_name;
-
-				if(this.data.work_phone!='')
-				{
-					name += ' ('+this.data.work_phone+')';
-				}else if(this.data.cellular!='')
-				{
-					name += ' ('+this.data.cellular+')';
-				}else if(this.data.home_phone!='')
-				{
-					name += ' ('+this.data.home_phone+')';
-				}
-
-				this.scheduleCallItem.setLinkConfig({
-					name: name,
-					links:[{link_id: this.data.id, link_type:2}],
-					callback:this.reload,
-					scope: this
-				});
-			}
-		}
 	}
 });

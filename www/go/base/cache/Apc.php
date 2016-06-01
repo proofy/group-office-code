@@ -32,7 +32,7 @@ class Apc implements CacheInterface{
 
 	/**
 	 * Store any value in the cache
-	 * @param string $key
+	 * @param StringHelper $key
 	 * @param mixed $value Will be serialized
 	 * @param int $ttl Seconds to live
 	 */
@@ -43,7 +43,7 @@ class Apc implements CacheInterface{
 	/**
 	 * Get a value from the cache
 	 * 
-	 * @param string $key
+	 * @param StringHelper $key
 	 * @return boolean 
 	 */
 	public function get($key){
@@ -54,7 +54,7 @@ class Apc implements CacheInterface{
 	/**
 	 * Delete a value from the cache
 	 * 
-	 * @param string $key 
+	 * @param StringHelper $key 
 	 */
 	public function delete($key){
 		apc_delete($this->_prefix.$key);

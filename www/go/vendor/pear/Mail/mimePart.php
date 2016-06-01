@@ -78,7 +78,7 @@ class Mail_mimePart
     /**
     * The encoding type of this part
     *
-    * @var string
+    * @var StringHelper
     * @access private
     */
     var $_encoding;
@@ -94,7 +94,7 @@ class Mail_mimePart
     /**
     * The output of this part after being built
     *
-    * @var string
+    * @var StringHelper
     * @access private
     */
     var $_encoded;
@@ -110,7 +110,7 @@ class Mail_mimePart
     /**
     * The body of this part (not encoded)
     *
-    * @var string
+    * @var StringHelper
     * @access private
     */
     var $_body;
@@ -118,7 +118,7 @@ class Mail_mimePart
     /**
     * The location of file with body of this part (not encoded)
     *
-    * @var string
+    * @var StringHelper
     * @access private
     */
     var $_body_file;
@@ -126,7 +126,7 @@ class Mail_mimePart
     /**
     * The end-of-line sequence
     *
-    * @var string
+    * @var StringHelper
     * @access private
     */
     var $_eol = "\r\n";
@@ -136,7 +136,7 @@ class Mail_mimePart
     *
     * Sets up the object.
     *
-    * @param string $body   The body of the mime part if any.
+    * @param StringHelper $body   The body of the mime part if any.
     * @param array  $params An associative array of optional parameters:
     *     content_type      - The content type for this part eg multipart/mixed
     *     encoding          - The encoding to use, 7bit, 8bit,
@@ -282,7 +282,7 @@ class Mail_mimePart
      * Encodes and returns the email. Also stores
      * it in the encoded member variable
      *
-     * @param string $boundary Pre-defined boundary string
+     * @param StringHelper $boundary Pre-defined boundary string
      *
      * @return An associative array containing two elements,
      *         body and headers. The headers element is itself
@@ -345,8 +345,8 @@ class Mail_mimePart
      * Encodes and saves the email into file. File must exist.
      * Data will be appended to the file.
      *
-     * @param string  $filename  Output file location
-     * @param string  $boundary  Pre-defined boundary string
+     * @param StringHelper  $filename  Output file location
+     * @param StringHelper  $boundary  Pre-defined boundary string
      * @param boolean $skip_head True if you don't want to save headers
      *
      * @return array An associative array containing message headers
@@ -385,8 +385,8 @@ class Mail_mimePart
     /**
      * Encodes given email part into file
      *
-     * @param string  $fh        Output file handle
-     * @param string  $boundary  Pre-defined boundary string
+     * @param StringHelper  $fh        Output file handle
+     * @param StringHelper  $boundary  Pre-defined boundary string
      * @param boolean $skip_head True if you don't want to save headers
      *
      * @return array True on sucess or PEAR error object
@@ -441,7 +441,7 @@ class Mail_mimePart
      * Adds a subpart to current mime part and returns
      * a reference to it
      *
-     * @param string $body   The body of the subpart, if any.
+     * @param StringHelper $body   The body of the subpart, if any.
      * @param array  $params The parameters for the subpart, same
      *                       as the $params argument for constructor.
      *
@@ -460,11 +460,11 @@ class Mail_mimePart
     /**
      * Returns encoded data based upon encoding passed to it
      *
-     * @param string $data     The data to encode.
-     * @param string $encoding The encoding type to use, 7bit, base64,
+     * @param StringHelper $data     The data to encode.
+     * @param StringHelper $encoding The encoding type to use, 7bit, base64,
      *                         or quoted-printable.
      *
-     * @return string
+     * @return StringHelper
      * @access private
      */
     function _getEncodedData($data, $encoding)
@@ -488,13 +488,13 @@ class Mail_mimePart
     /**
      * Returns encoded data based upon encoding passed to it
      *
-     * @param string   $filename Data file location
-     * @param string   $encoding The encoding type to use, 7bit, base64,
+     * @param StringHelper   $filename Data file location
+     * @param StringHelper   $encoding The encoding type to use, 7bit, base64,
      *                           or quoted-printable.
      * @param resource $fh       Output file handle. If set, data will be
      *                           stored into it instead of returning it
      *
-     * @return string Encoded data or PEAR error object
+     * @return StringHelper Encoded data or PEAR error object
      * @access private
      */
     function _getEncodedDataFromFile($filename, $encoding, $fh=null)
@@ -566,11 +566,11 @@ class Mail_mimePart
     /**
      * Encodes data to quoted-printable standard.
      *
-     * @param string $input    The data to encode
+     * @param StringHelper $input    The data to encode
      * @param int    $line_max Optional max line length. Should
      *                         not be more than 76 chars
      *
-     * @return string Encoded data
+     * @return StringHelper Encoded data
      *
      * @access private
      */
@@ -639,15 +639,15 @@ class Mail_mimePart
     /**
      * Encodes the paramater of a header.
      *
-     * @param string $name      The name of the header-parameter
-     * @param string $value     The value of the paramter
-     * @param string $charset   The characterset of $value
-     * @param string $language  The language used in $value
-     * @param string $encoding  Parameter encoding. If not set, parameter value
+     * @param StringHelper $name      The name of the header-parameter
+     * @param StringHelper $value     The value of the paramter
+     * @param StringHelper $charset   The characterset of $value
+     * @param StringHelper $language  The language used in $value
+     * @param StringHelper $encoding  Parameter encoding. If not set, parameter value
      *                          is encoded according to RFC2231
      * @param int    $maxLength The maximum length of a line. Defauls to 75
      *
-     * @return string
+     * @return StringHelper
      *
      * @access private
      */
@@ -716,13 +716,13 @@ class Mail_mimePart
     /**
      * Encodes header parameter as per RFC2047 if needed
      *
-     * @param string $name      The parameter name
-     * @param string $value     The parameter value
-     * @param string $charset   The parameter charset
-     * @param string $encoding  Encoding type (quoted-printable or base64)
+     * @param StringHelper $name      The parameter name
+     * @param StringHelper $value     The parameter value
+     * @param StringHelper $charset   The parameter charset
+     * @param StringHelper $encoding  Encoding type (quoted-printable or base64)
      * @param int    $maxLength Encoded parameter max length. Default: 76
      *
-     * @return string Parameter line
+     * @return StringHelper Parameter line
      * @access private
      */
     function _buildRFC2047Param($name, $value, $charset,
@@ -786,13 +786,13 @@ class Mail_mimePart
     /**
      * Encodes a header as per RFC2047
      *
-     * @param string $name     The header name
-     * @param string $value    The header data to encode
-     * @param string $charset  Character set name
-     * @param string $encoding Encoding name (base64 or quoted-printable)
-     * @param string $eol      End-of-line sequence. Default: "\r\n"
+     * @param StringHelper $name     The header name
+     * @param StringHelper $value    The header data to encode
+     * @param StringHelper $charset  Character set name
+     * @param StringHelper $encoding Encoding name (base64 or quoted-printable)
+     * @param StringHelper $eol      End-of-line sequence. Default: "\r\n"
      *
-     * @return string          Encoded header data (without a name)
+     * @return StringHelper          Encoded header data (without a name)
      * @access public
      * @since 1.6.1
      */
@@ -925,8 +925,8 @@ class Mail_mimePart
     /**
      * Explode quoted string
      *
-     * @param string $delimiter Delimiter expression string for preg_match()
-     * @param string $string    Input string
+     * @param StringHelper $delimiter Delimiter expression string for preg_match()
+     * @param StringHelper $string    Input string
      *
      * @return array            String tokens array
      * @access private
@@ -954,13 +954,13 @@ class Mail_mimePart
     /**
      * Encodes a header value as per RFC2047
      *
-     * @param string $value      The header data to encode
-     * @param string $charset    Character set name
-     * @param string $encoding   Encoding name (base64 or quoted-printable)
+     * @param StringHelper $value      The header data to encode
+     * @param StringHelper $charset    Character set name
+     * @param StringHelper $encoding   Encoding name (base64 or quoted-printable)
      * @param int    $prefix_len Prefix length. Default: 0
-     * @param string $eol        End-of-line sequence. Default: "\r\n"
+     * @param StringHelper $eol        End-of-line sequence. Default: "\r\n"
      *
-     * @return string            Encoded header data
+     * @return StringHelper            Encoded header data
      * @access public
      * @since 1.6.1
      */
@@ -1058,9 +1058,9 @@ class Mail_mimePart
     /**
      * Encodes the given string using quoted-printable
      *
-     * @param string $str String to encode
+     * @param StringHelper $str String to encode
      *
-     * @return string     Encoded string
+     * @return StringHelper     Encoded string
      * @access public
      * @since 1.6.0
      */
@@ -1084,13 +1084,13 @@ class Mail_mimePart
      * This method makes sure that encoded-word represents an integral
      * number of characters as per RFC2047.
      *
-     * @param string $str        String to encode
-     * @param string $charset    Character set name
-     * @param string $encoding   Encoding name (base64 or quoted-printable)
+     * @param StringHelper $str        String to encode
+     * @param StringHelper $charset    Character set name
+     * @param StringHelper $encoding   Encoding name (base64 or quoted-printable)
      * @param int    $prefix_len Prefix length. Default: 0
-     * @param string $eol        End-of-line sequence. Default: "\r\n"
+     * @param StringHelper $eol        End-of-line sequence. Default: "\r\n"
      *
-     * @return string     Encoded string
+     * @return StringHelper     Encoded string
      * @access public
      * @since 1.8.0
      */
@@ -1189,7 +1189,7 @@ class Mail_mimePart
      *
      * @param array $matches Preg_replace's matches array
      *
-     * @return string        Encoded character string
+     * @return StringHelper        Encoded character string
      * @access private
      */
     function _qpReplaceCallback($matches)
@@ -1203,7 +1203,7 @@ class Mail_mimePart
      *
      * @param array $matches Preg_replace's matches array
      *
-     * @return string        Encoded character string
+     * @return StringHelper        Encoded character string
      * @access private
      */
     function _encodeReplaceCallback($matches)

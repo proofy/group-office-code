@@ -39,7 +39,7 @@ abstract class Swift
     /**
      * Internal autoloader for spl_autoload_register().
      *
-     * @param string $class
+     * @param StringHelper $class
      */
     public static function autoload($class)
     {

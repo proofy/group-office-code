@@ -18,7 +18,7 @@
  * @credits Monte Ohrt <monte AT ohrt DOT com>
  * @param array
  * @param Smarty
- * @return string
+ * @return StringHelper
  * @uses smarty_make_timestamp()
  */
 function smarty_function_html_select_time($params, &$smarty)

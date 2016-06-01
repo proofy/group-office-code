@@ -14,7 +14,7 @@
  * preferences into account.
  *
  * @copyright Copyright Intermesh
- * @version $Id: Date.php 17256 2014-04-04 08:33:24Z mschering $
+ * @version $Id: Date.php 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @package GO.base.util
  * @since Group-Office 3.0
  */
@@ -143,10 +143,10 @@ class Date {
 	 * Reformat a date string formatted by Group-Office user preference to a string
 	 * that can be read by strtotime related PHP functions
 	 *
-	 * @param string $date_string
-	 * @param string $date_separator
-	 * @param string $date_format
-	 * @return string
+	 * @param StringHelper $date_string
+	 * @param StringHelper $date_separator
+	 * @param StringHelper $date_format
+	 * @return StringHelper
 	 */
 	public static function to_input_format($date_string, $date_separator=null, $date_format=null)
 	{
@@ -175,7 +175,7 @@ class Date {
 	 * Takes a date string formatted by Group-Office user preference and turns it
 	 * into a unix timestamp.
 	 *
-	 * @param String $date_string
+	 * @param StringHelper $date_string
 	 * @return int Unix timestamp
 	 */
 	public static function to_unixtime($date_string) {
@@ -200,7 +200,7 @@ class Date {
 	 *
 	 * A Group-Office date is formated by user preference.
 	 *
-	 * @param	string $date_string The Group-Office date string
+	 * @param	StringHelper $date_string The Group-Office date string
 	 * @param	bool $with_time The output sting should contain time too
 	 * @access public
 	 * @return int unix timestamp
@@ -272,8 +272,8 @@ class Date {
 	/**
 	 * Takes two Group-Office settings like Ymd and - and converts this into Y-m-d
 	 *
-	 * @param	string $format Any format accepted by php's date function
-	 * @param	string $separator A separate like - / or .
+	 * @param	StringHelper $format Any format accepted by php's date function
+	 * @param	StringHelper $separator A separate like - / or .
 	 * @access public
 	 * @return int unix timestamp
 	 */
@@ -304,7 +304,9 @@ class Date {
 	public static function get_timestamp($utime, $with_time=true)
 	{
 		$utime = intval($utime);
-		if($utime<1)
+		
+		//this is a hack because we have a lot of timestamps defaulting to '0'. The better fix would be to set all db values to default null.
+		if($utime === 0)
 			return '';
 
 		return Date::format('@'.$utime, $with_time);
@@ -370,7 +372,7 @@ class Date {
 	/**
 	 * Convert a date formatted according to icalendar 2.0 specs to a unix timestamp.
 	 *
-	 * @param String $date
+	 * @param StringHelper $date
 	 * @param Icalendar\Timezone $icalendarTimezone
 	 * @return int Unix timestamp
 	 */
@@ -416,4 +418,26 @@ class Date {
 		
 		return date('W',$timeStamp)%2===0;
 	}
+	
+	/**
+	 * Get the timestamp of the beginning of the week.
+	 * 
+	 * @return int Timestamp of the beginning of this week. (Sunday of Monday based on the GO::config()->default_first_weekday)
+	 */
+	public static function getWeekStart(){
+				
+		// If the first day of the week is set to monday
+		if(\GO::config()->default_first_weekday == 1){
+			$currentDay = date('N') - \GO::config()->default_first_weekday;
+		} else {
+			$currentDay = date('w');
+		}
+		
+		// Get the amount of seconds in a day
+		$day = 24*60*60;
+		
+		$weekStart = mktime(0,0,0) - ($currentDay * $day);
+		
+		return $weekStart;
+	}	
 }

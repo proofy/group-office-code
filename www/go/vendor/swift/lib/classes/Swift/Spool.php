@@ -46,7 +46,7 @@ interface Swift_Spool
      * Sends messages using the given transport instance.
      *
      * @param Swift_Transport $transport        A transport instance
-     * @param string[]        $failedRecipients An array of failures by-reference
+     * @param StringHelper[]        $failedRecipients An array of failures by-reference
      *
      * @return integer The number of sent emails
      */

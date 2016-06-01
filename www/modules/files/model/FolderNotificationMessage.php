@@ -54,7 +54,7 @@ class FolderNotificationMessage extends \GO\Base\Db\ActiveRecord {
 
     /**
      *
-     * @return string 
+     * @return StringHelper 
      */
     public function tableName() {
             return 'fs_notification_messages';

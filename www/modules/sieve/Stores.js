@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: Stores.js 15346 2013-07-30 09:36:26Z mschering $
+ * @version $Id: Stores.js 19372 2015-09-07 08:23:51Z wsmits $
  * @copyright Copyright Intermesh
  * @author Wesley Smits <wsmits@intermesh.nl>
  */
@@ -19,8 +19,9 @@ GO.sieve.cmbFieldStore = new Ext.data.ArrayStore({
 	[GO.sieve.lang.from, 'From'],
 	[GO.sieve.lang.to, 'To'],
 	[GO.sieve.lang.size, 'size'],
-//	[GO.sieve.lang.body, 'body'],
+	[GO.sieve.lang.body, 'body'],
 	[GO.sieve.lang.spamflag, 'X-Spam-Flag'],
+	[GO.sieve.lang.currentdate, 'currentdate'],
 	[GO.sieve.lang.custom, 'custom']
 	]
 });
@@ -38,6 +39,15 @@ GO.sieve.cmbOperatorStore = new Ext.data.ArrayStore({
 	]
 });
 
+GO.sieve.cmbBodyOperatorStore = new Ext.data.ArrayStore({
+	idIndex: 1,
+	fields: ['field', 'value'],
+	data:[
+	[GO.sieve.lang.contains, 'contains'],
+	[GO.sieve.lang.notcontains, 'notcontains']
+	]
+});
+
 GO.sieve.cmbActionStore = new Ext.data.ArrayStore({
 	idIndex: 1,
 	fields: ['field', 'value'],
@@ -51,6 +61,16 @@ GO.sieve.cmbActionStore = new Ext.data.ArrayStore({
 	[GO.sieve.lang.reject, 'reject'],
 	[GO.sieve.lang.discard, 'discard'],
 	[GO.sieve.lang.stop, 'stop']
+	]
+});
+
+GO.sieve.cmbDateOperatorStore = new Ext.data.ArrayStore({
+	idIndex: 1,
+	fields: ['field', 'value'],
+	data:[
+	[GO.sieve.lang.before, 'value-le'], // before
+  [GO.sieve.lang.is, 'is'],					// is
+  [GO.sieve.lang.after, 'value-ge']		// after
 	]
 });
 

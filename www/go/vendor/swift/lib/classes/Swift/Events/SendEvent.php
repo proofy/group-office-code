@@ -39,7 +39,7 @@ class Swift_Events_SendEvent extends Swift_Events_EventObject
     /**
      * Any recipients which failed after sending.
      *
-     * @var string[]
+     * @var StringHelper[]
      */
     private $_failedRecipients = array();
 
@@ -96,7 +96,7 @@ class Swift_Events_SendEvent extends Swift_Events_EventObject
     /**
      * Get an recipient addresses which were not accepted for delivery.
      *
-     * @return string[]
+     * @return StringHelper[]
      */
     public function getFailedRecipients()
     {

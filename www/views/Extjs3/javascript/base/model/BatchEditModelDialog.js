@@ -1,6 +1,7 @@
 GO.base.model.BatchEditModelDialog = Ext.extend(GO.dialog.TabbedFormDialog, {
 	grid: false,
 	editors : [],
+	width: 800,
 	
 	initComponent : function(){
 		
@@ -13,13 +14,17 @@ GO.base.model.BatchEditModelDialog = Ext.extend(GO.dialog.TabbedFormDialog, {
 		GO.base.model.BatchEditModelDialog.superclass.initComponent.call(this);	
 	},
 
-	setModels : function(model_name, keys, grid, editors,exclude){
+	setModels : function(model_name, keys, primaryKey, editors,exclude){
+		
+		this.store.baseParams.primaryKey=primaryKey;
+		this.store.baseParams.keys = Ext.encode(keys);
+		
 		this.formPanel.baseParams.model_name=model_name;
 		this.store.baseParams.model_name=model_name;
 		//this.formPanel.baseParams.exclude=exclude;
 		this.store.baseParams.exclude=exclude;
 		this.formPanel.baseParams.keys=Ext.encode(keys);
-		this.grid = grid;
+		this.formPanel.baseParams.primaryKey=primaryKey;
 		this.editors = editors;
 	},
 	
@@ -35,17 +40,43 @@ GO.base.model.BatchEditModelDialog = Ext.extend(GO.dialog.TabbedFormDialog, {
 			config = {regex: new RegExp(record.get('regex'),record.get('regex_flags'))};
 		
 		var colName = record.get('name');
-		if(this.editors[colName])
+		if (this.editors[colName]) {
 			var editor = new this.editors[colName](config);
-		else 
-			var editor = GO.base.form.getFormFieldByType(record.get('gotype'), record.get('name'), config);
+			col.setEditor(editor);
+		}else {
+			var field = GO.base.form.getFormFieldByType(record.get('gotype'), record.get('name'), config);
+			
+//			console.log(editor);
+//			if (field.xtype == 'superboxselect') {
+//				
+//				var ed = new Ext.grid.GridEditor(
+//								{
+//									field: field,
+//									autoSize: true,
+//									completeOnEnter: false // <- enter will stop editing if not set
+//									, grid: this.editGrid
+//									, listeners: {
+//										beforeshow: function (editor) {
+////											var rowHeight = Ext.fly(editor.grid.getView().getRow(editor.row)).getHeight();
+////											if (rowHeight < 100) {
+////												rowHeight = 100;
+////											}
+//											editor.field.setHeight(100);
+//										}
+//									}
+//								}
+//				);
+//				col.setEditor(ed);
+//			}else
+//			{
+				col.setEditor(field);
+//			}
+		}		
 		
-		col.setEditor(editor);
 	},
 	
 	afterSubmit : function(){
-		if(this.grid)
-			this.grid.store.reload();
+		
 	},
 	
 	getSubmitParams : function(){
@@ -55,33 +86,65 @@ GO.base.model.BatchEditModelDialog = Ext.extend(GO.dialog.TabbedFormDialog, {
 	buildForm : function(){
 		
 		var checkColumn = new GO.grid.CheckColumn({
-			header: '&nbsp;',
-			id:'edit',
-			dataIndex: 'edit',
-			width: 20,
+			header:GO.lang['replace'],
+			id:'replace',
+			dataIndex: 'replace',
+			width: 80,
 			sortable:false,
-			hideable:false
+			hideable:false,
+			disabled_field: 'mergeable',
+			isDisabled: function(record) {
+				return !record.get(this.disabled_field);
+			}
 		});
+		
 	
 		var fields ={
-			fields:['name','label','edit','value','gotype','regex','regex_flags'],
+			fields:['name','label','replace','value','gotype','regex','regex_flags', 'replace', 'mergeable', 'has_data', 'multiselect', 'customfieldtype'],
 			columns:[
-			checkColumn,{
-				header:GO.lang['label'],
-				dataIndex: 'label',
-				sortable:false,
-				hideable:false,
-				editable:false,
-				id:'label'
-			},{
-				header:GO.lang['value'],
-				dataIndex: 'value',
-				sortable:false,
-				hideable:false,
-				editable:true,
-				editor: new Ext.form.TextField({}),
-				id:'value'
-			}		
+				checkColumn,
+				{
+					header:GO.lang['label'],
+					dataIndex: 'label',
+					sortable:false,
+					hideable:false,
+					editable:false,
+					id:'label',
+					width: 200
+				},{
+					header:GO.lang['value'],
+					dataIndex: 'value',
+					sortable:false,
+					hideable:false,
+					editable:true,
+					width: 300,
+					editor: new Ext.form.TextField({}),
+					renderer: {
+						fn: function(value, metaData, record, rowIndex, colIndex, store) {
+
+							//get Column
+							var col = this.editGrid.getColumnModel().getColumnAt(colIndex);
+
+							var editor =col.getEditor();
+//							if(editor.field) {
+//								editor = editor.field;
+//							}
+							// check of column is set and has an editor with a displayField
+							if(editor.queryValuesDelimiter) {
+								//superbox select
+								value = value.replace(col.getEditor().queryValuesDelimiter, ', ');
+							}else	if(!GO.util.empty(col) && !GO.util.empty(editor.displayField) && !GO.util.empty(value)) {
+								var editorRec = editor.getStore().query(editor.valueField,value);
+								value = editorRec.items[0].get(editor.displayField);
+							} else if(record.get('has_data') && value == ""){
+								value = '<span class="x-item-disabled" >'+ GO.lang['hasData'] +'<span>';
+							}
+							return value;
+						},
+						scope: this
+					},
+					id:'value'
+				}
 			]
 		};
 		
@@ -94,6 +157,10 @@ GO.base.model.BatchEditModelDialog = Ext.extend(GO.dialog.TabbedFormDialog, {
 			//fields: ['name','label','edit','value','gotype'],
 			remoteSort: true
 		});
+	
+		this.store.on('load', function() {
+			
+		}, this)
 	
 		
 		var columnModel =  new Ext.grid.ColumnModel({
@@ -120,10 +187,10 @@ GO.base.model.BatchEditModelDialog = Ext.extend(GO.dialog.TabbedFormDialog, {
 					this.setEditor(e.record);
 					return true;
 				},scope:this,
-				afteredit:function(e){
+				afteredit:function(e) {
 					var t = e.record.get('gotype');
 
-					e.record.set('edit',true);
+					e.record.set('replace',true);
 					
 					if(t=='date' || t=='unixtimestamp' || t=='unixdate')
 						e.record.set(e.field,e.value.format(GO.settings.date_format));
@@ -135,7 +202,7 @@ GO.base.model.BatchEditModelDialog = Ext.extend(GO.dialog.TabbedFormDialog, {
 	}
 });
 
-GO.base.model.showBatchEditModelDialog=function(model_name, keys, grid, editors,exclude,title){
+GO.base.model.showBatchEditModelDialog=function(model_name, keys, primaryKey, editors,exclude,title){
 	
 	if (keys.length<=0) {
 			Ext.Msg.alert(GO.lang.batchSelectionError, GO.lang.batchSelectOne);
@@ -150,6 +217,7 @@ GO.base.model.showBatchEditModelDialog=function(model_name, keys, grid, editors,
 		GO.base.model.batchEditModelDialog.setTitle(title);
 	}
 	
-	GO.base.model.batchEditModelDialog.setModels(model_name, keys, grid, editors,exclude);
+	GO.base.model.batchEditModelDialog.setModels(model_name, keys, primaryKey, editors,exclude);
 	GO.base.model.batchEditModelDialog.show();
+	return GO.base.model.batchEditModelDialog;
 }

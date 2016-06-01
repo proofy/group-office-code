@@ -14,8 +14,8 @@
  * Purpose:  Check if string contains target string
  * 
  * @author   Wilmar van Beusekom <wilmar@intermesh.nl>
- * @param string
- * @param string
+ * @param StringHelper
+ * @param StringHelper
  * @return boolean
  */
 

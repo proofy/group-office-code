@@ -163,28 +163,28 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Summary Information stream data.
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_summaryInformation;
 
 	/**
 	 * Extended Summary Information stream data.
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_documentSummaryInformation;
 
 	/**
 	 * User-Defined Properties stream data.
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_userDefinedProperties;
 
 	/**
 	 * Workbook stream data. (Includes workbook globals substream as well as sheet substreams)
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_data;
 
@@ -227,7 +227,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * Codepage set in the Excel file being read. Only important for BIFF5 (Excel 5.0 - Excel 95)
 	 * For BIFF8 (Excel 97 - Excel 2003) this will always have the value 'UTF-16LE'
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_codepage;
 
@@ -332,14 +332,14 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * The combined MSODRAWINGGROUP data
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_drawingGroupData;
 
 	/**
 	 * The combined MSODRAWING data (per sheet)
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_drawingData;
 
@@ -391,7 +391,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Can the current PHPExcel_Reader_IReader read the file?
 	 *
-	 * @param 	string 		$pFilename
+	 * @param 	StringHelper 		$pFilename
 	 * @return 	boolean
 	 * @throws PHPExcel_Reader_Exception
 	 */
@@ -418,7 +418,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Reads names of the worksheets from a file, without parsing the whole file to a PHPExcel object
 	 *
-	 * @param 	string 		$pFilename
+	 * @param 	StringHelper 		$pFilename
 	 * @throws 	PHPExcel_Reader_Exception
 	 */
 	public function listWorksheetNames($pFilename)
@@ -467,7 +467,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Return worksheet info (Name, Last Column Letter, Last Column Index, Total Rows, Total Columns)
 	 *
-	 * @param   string     $pFilename
+	 * @param   StringHelper     $pFilename
 	 * @throws   PHPExcel_Reader_Exception
 	 */
 	public function listWorksheetInfo($pFilename)
@@ -561,7 +561,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Loads PHPExcel from file
 	 *
-	 * @param 	string 		$pFilename
+	 * @param 	StringHelper 		$pFilename
 	 * @return 	PHPExcel
 	 * @throws 	PHPExcel_Reader_Exception
 	 */
@@ -1056,7 +1056,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Use OLE reader to extract the relevant data streams from the OLE file
 	 *
-	 * @param string $pFilename
+	 * @param StringHelper $pFilename
 	 */
 	private function _loadOLE($pFilename)
 	{
@@ -3720,7 +3720,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * This record is used for storing result from FORMULA record when it is a string, and
 	 * it occurs directly after the FORMULA record
 	 *
-	 * @return string The string contents as UTF-8
+	 * @return StringHelper The string contents as UTF-8
 	 */
 	private function _readString()
 	{
@@ -4966,9 +4966,9 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Convert formula structure into human readable Excel formula like 'A3+A5*5'
 	 *
-	 * @param string $formulaStructure The complete binary data for the formula
-	 * @param string $baseCell Base cell, only needed when formula contains tRefN tokens, e.g. with shared formulas
-	 * @return string Human readable formula
+	 * @param StringHelper $formulaStructure The complete binary data for the formula
+	 * @param StringHelper $baseCell Base cell, only needed when formula contains tRefN tokens, e.g. with shared formulas
+	 * @return StringHelper Human readable formula
 	 */
 	private function _getFormulaFromStructure($formulaStructure, $baseCell = 'A1')
 	{
@@ -5005,10 +5005,10 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Take formula data and additional data for formula and return human readable formula
 	 *
-	 * @param string $formulaData The binary data for the formula itself
-	 * @param string $additionalData Additional binary data going with the formula
-	 * @param string $baseCell Base cell, only needed when formula contains tRefN tokens, e.g. with shared formulas
-	 * @return string Human readable formula
+	 * @param StringHelper $formulaData The binary data for the formula itself
+	 * @param StringHelper $additionalData Additional binary data going with the formula
+	 * @param StringHelper $baseCell Base cell, only needed when formula contains tRefN tokens, e.g. with shared formulas
+	 * @return StringHelper Human readable formula
 	 */
 	private function _getFormulaFromData($formulaData,  $additionalData = '', $baseCell = 'A1')
 	{
@@ -5034,8 +5034,8 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 *
 	 * @param array $tokens
 	 * @param array $additionalData Additional binary data going with the formula
-	 * @param string $baseCell Base cell, only needed when formula contains tRefN tokens, e.g. with shared formulas
-	 * @return string Human readable formula
+	 * @param StringHelper $baseCell Base cell, only needed when formula contains tRefN tokens, e.g. with shared formulas
+	 * @return StringHelper Human readable formula
 	 */
 	private function _createFormulaFromTokens($tokens, $additionalData)
 	{
@@ -5196,8 +5196,8 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Fetch next token from binary formula data
 	 *
-	 * @param string Formula data
-	 * @param string $baseCell Base cell, only needed when formula contains tRefN tokens, e.g. with shared formulas
+	 * @param StringHelper Formula data
+	 * @param StringHelper $baseCell Base cell, only needed when formula contains tRefN tokens, e.g. with shared formulas
 	 * @return array
 	 * @throws PHPExcel_Reader_Exception
 	 */
@@ -5763,8 +5763,8 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * Reads a cell address in BIFF8 e.g. 'A2' or '$A$2'
 	 * section 3.3.4
 	 *
-	 * @param string $cellAddressStructure
-	 * @return string
+	 * @param StringHelper $cellAddressStructure
+	 * @return StringHelper
 	 */
 	private function _readBIFF8CellAddress($cellAddressStructure)
 	{
@@ -5794,9 +5794,9 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * to indicate offsets from a base cell
 	 * section 3.3.4
 	 *
-	 * @param string $cellAddressStructure
-	 * @param string $baseCell Base cell, only needed when formula contains tRefN tokens, e.g. with shared formulas
-	 * @return string
+	 * @param StringHelper $cellAddressStructure
+	 * @param StringHelper $baseCell Base cell, only needed when formula contains tRefN tokens, e.g. with shared formulas
+	 * @return StringHelper
 	 */
 	private function _readBIFF8CellAddressB($cellAddressStructure, $baseCell = 'A1')
 	{
@@ -5838,8 +5838,8 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * always fixed range
 	 * section 2.5.14
 	 *
-	 * @param string $subData
-	 * @return string
+	 * @param StringHelper $subData
+	 * @return StringHelper
 	 * @throws PHPExcel_Reader_Exception
 	 */
 	private function _readBIFF5CellRangeAddressFixed($subData)
@@ -5877,8 +5877,8 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * always fixed range
 	 * section 2.5.14
 	 *
-	 * @param string $subData
-	 * @return string
+	 * @param StringHelper $subData
+	 * @return StringHelper
 	 * @throws PHPExcel_Reader_Exception
 	 */
 	private function _readBIFF8CellRangeAddressFixed($subData)
@@ -5916,8 +5916,8 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * there are flags indicating whether column/row index is relative
 	 * section 3.3.4
 	 *
-	 * @param string $subData
-	 * @return string
+	 * @param StringHelper $subData
+	 * @return StringHelper
 	 */
 	private function _readBIFF8CellRangeAddress($subData)
 	{
@@ -5969,9 +5969,9 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * to indicate offsets from a base cell
 	 * section 3.3.4
 	 *
-	 * @param string $subData
-	 * @param string $baseCell Base cell
-	 * @return string Cell range address
+	 * @param StringHelper $subData
+	 * @param StringHelper $baseCell Base cell
+	 * @return StringHelper Cell range address
 	 */
 	private function _readBIFF8CellRangeAddressB($subData, $baseCell = 'A1')
 	{
@@ -6051,7 +6051,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * Read BIFF8 cell range address list
 	 * section 2.5.15
 	 *
-	 * @param string $subData
+	 * @param StringHelper $subData
 	 * @return array
 	 */
 	private function _readBIFF8CellRangeAddressList($subData)
@@ -6079,7 +6079,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * Read BIFF5 cell range address list
 	 * section 2.5.15
 	 *
-	 * @param string $subData
+	 * @param StringHelper $subData
 	 * @return array
 	 */
 	private function _readBIFF5CellRangeAddressList($subData)
@@ -6110,7 +6110,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * in which case an PHPExcel_Reader_Exception is thrown
 	 *
 	 * @param int $index
-	 * @return string|false
+	 * @return StringHelper|false
 	 * @throws PHPExcel_Reader_Exception
 	 */
 	private function _readSheetRangeByRefIndex($index)
@@ -6166,7 +6166,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * returns e.g. array('value' => '{1,2;3,4}', 'size' => 40}
 	 * section 2.5.8
 	 *
-	 * @param string $arrayData
+	 * @param StringHelper $arrayData
 	 * @return array
 	 */
 	private static function _readBIFF8ConstantArray($arrayData)
@@ -6205,7 +6205,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * section 2.5.7
 	 * returns e.g. array('value' => '5', 'size' => 9)
 	 *
-	 * @param string $valueData
+	 * @param StringHelper $valueData
 	 * @return array
 	 */
 	private static function _readBIFF8Constant($valueData)
@@ -6255,7 +6255,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * Extract RGB color
 	 * OpenOffice.org's Documentation of the Microsoft Excel File Format, section 2.5.4
 	 *
-	 * @param string $rgb Encoded RGB value (4 bytes)
+	 * @param StringHelper $rgb Encoded RGB value (4 bytes)
 	 * @return array
 	 */
 	private static function _readRGB($rgb)
@@ -6280,7 +6280,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * Read byte string (8-bit string length)
 	 * OpenOffice documentation: 2.5.2
 	 *
-	 * @param string $subData
+	 * @param StringHelper $subData
 	 * @return array
 	 */
 	private function _readByteStringShort($subData)
@@ -6302,7 +6302,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * Read byte string (16-bit string length)
 	 * OpenOffice documentation: 2.5.2
 	 *
-	 * @param string $subData
+	 * @param StringHelper $subData
 	 * @return array
 	 */
 	private function _readByteStringLong($subData)
@@ -6326,7 +6326,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * OpenOffice documentation: 2.5.3
 	 * function will automatically find out where the Unicode string ends.
 	 *
-	 * @param string $subData
+	 * @param StringHelper $subData
 	 * @return array
 	 */
 	private static function _readUnicodeStringShort($subData)
@@ -6350,7 +6350,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * OpenOffice documentation: 2.5.3
 	 * this function is under construction, needs to support rich text, and Asian phonetic settings
 	 *
-	 * @param string $subData
+	 * @param StringHelper $subData
 	 * @return array
 	 */
 	private static function _readUnicodeStringLong($subData)
@@ -6374,7 +6374,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * this function is under construction, needs to support rich text, and Asian phonetic settings
 	 * OpenOffice.org's Documentation of the Microsoft Excel File Format, section 2.5.3
 	 *
-	 * @param string $subData
+	 * @param StringHelper $subData
 	 * @param int $characterCount
 	 * @return array
 	 */
@@ -6409,8 +6409,8 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * Convert UTF-8 string to string surounded by double quotes. Used for explicit string tokens in formulas.
 	 * Example:  hello"world  -->  "hello""world"
 	 *
-	 * @param string $value UTF-8 encoded string
-	 * @return string
+	 * @param StringHelper $value UTF-8 encoded string
+	 * @return StringHelper
 	 */
 	private static function _UTF8toExcelDoubleQuoted($value)
 	{
@@ -6421,7 +6421,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Reads first 8 bytes of a string and return IEEE 754 float
 	 *
-	 * @param string $data Binary string that is at least 8 bytes long
+	 * @param StringHelper $data Binary string that is at least 8 bytes long
 	 * @return float
 	 */
 	private static function _extractNumber($data)
@@ -6477,9 +6477,9 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Get UTF-8 string from (compressed or uncompressed) UTF-16 string
 	 *
-	 * @param string $string
+	 * @param StringHelper $string
 	 * @param bool $compressed
-	 * @return string
+	 * @return StringHelper
 	 */
 	private static function _encodeUTF16($string, $compressed = '')
 	{
@@ -6494,8 +6494,8 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Convert UTF-16 string in compressed notation to uncompressed form. Only used for BIFF8.
 	 *
-	 * @param string $string
-	 * @return string
+	 * @param StringHelper $string
+	 * @return StringHelper
 	 */
 	private static function _uncompressByteString($string)
 	{
@@ -6512,8 +6512,8 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Convert string to UTF-8. Only used for BIFF5.
 	 *
-	 * @param string $string
-	 * @return string
+	 * @param StringHelper $string
+	 * @return StringHelper
 	 */
 	private function _decodeCodepage($string)
 	{
@@ -6524,7 +6524,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Read 16-bit unsigned integer
 	 *
-	 * @param string $data
+	 * @param StringHelper $data
 	 * @param int $pos
 	 * @return int
 	 */
@@ -6537,7 +6537,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	/**
 	 * Read 32-bit signed integer
 	 *
-	 * @param string $data
+	 * @param StringHelper $data
 	 * @param int $pos
 	 * @return int
 	 */
@@ -6591,7 +6591,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * OpenOffice documentation: 2.5.11
 	 *
 	 * @param int $index
-	 * @return string
+	 * @return StringHelper
 	 */
 	private static function _mapBorderStyle($index)
 	{
@@ -6620,7 +6620,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * OpenOffice documentation: 2.5.12
 	 *
 	 * @param int $index
-	 * @return string
+	 * @return StringHelper
 	 */
 	private static function _mapFillPattern($index)
 	{
@@ -6653,7 +6653,7 @@ class PHPExcel_Reader_Excel5 extends PHPExcel_Reader_Abstract implements PHPExce
 	 * Map error code, e.g. '#N/A'
 	 *
 	 * @param int $subData
-	 * @return string
+	 * @return StringHelper
 	 */
 	private static function _mapErrorCode($subData)
 	{

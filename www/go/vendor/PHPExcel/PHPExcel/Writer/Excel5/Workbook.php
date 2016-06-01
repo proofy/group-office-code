@@ -321,7 +321,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
 	/**
 	 * Alter color palette adding a custom color
 	 *
-	 * @param string $rgb E.g. 'FF00AA'
+	 * @param StringHelper $rgb E.g. 'FF00AA'
 	 * @return int Color index
 	 */
 	private function _addColor($rgb) {
@@ -836,8 +836,8 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
 	/**
 	 * Write a short NAME record
 	 *
-	 * @param	string		 $name
-	 * @param	string		 $sheetIndex		1-based sheet index the defined name applies to. 0 = global
+	 * @param	StringHelper		 $name
+	 * @param	StringHelper		 $sheetIndex		1-based sheet index the defined name applies to. 0 = global
 	 * @param	integer[][]  $rangeBounds    range boundaries
 	 * @param	boolean      $isHidden
 	 * @return	string	Complete binary record data
@@ -1001,7 +1001,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
 	/**
 	 * Writes Excel FORMAT record for non "built-in" numerical formats.
 	 *
-	 * @param string  $format Custom format string
+	 * @param StringHelper  $format Custom format string
 	 * @param integer $ifmt   Format index code
 	 */
 	private function _writeNumFormat($format, $ifmt)
@@ -1062,7 +1062,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
 	 *
 	 * A similar method is used in Worksheet.php for a slightly different purpose.
 	 *
-	 * @param string $sheetname Worksheet name
+	 * @param StringHelper $sheetname Worksheet name
 	 */
 	private function _writeExternsheet($sheetname)
 	{
@@ -1225,7 +1225,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
 	/**
 	 * Stores the COUNTRY record for localization
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	private function _writeCountry()
 	{
@@ -1242,7 +1242,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
 	/**
 	 * Write the RECALCID record
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	private function _writeRecalcId()
 	{
@@ -1292,7 +1292,7 @@ class PHPExcel_Writer_Excel5_Workbook extends PHPExcel_Writer_Excel5_BIFFwriter
 	 * access to SST. However, despite the documentation it doesn't seem to be
 	 * required so we will ignore it.
 	 *
-	 * @return string Binary data
+	 * @return StringHelper Binary data
 	 */
 	private function _writeSharedStringsTable()
 	{

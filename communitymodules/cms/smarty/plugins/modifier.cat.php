@@ -19,9 +19,9 @@
  *          (Smarty online manual)
  * @author   Monte Ohrt <monte at ohrt dot com>
  * @version 1.0
- * @param string
- * @param string
- * @return string
+ * @param StringHelper
+ * @param StringHelper
+ * @return StringHelper
  */
 function smarty_modifier_cat($string, $cat)
 {

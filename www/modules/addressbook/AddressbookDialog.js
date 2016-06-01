@@ -172,6 +172,7 @@ GO.addressbook.AddressbookDialog = Ext.extend(GO.dialog.TabbedFormDialog, {
 					valueField:'value',
 					displayField:'label',
 					mode:'local',
+					editable:false,
 					allowBlank: false,
 					triggerAction: 'all',
 					value: 'CSV'
@@ -190,6 +191,7 @@ GO.addressbook.AddressbookDialog = Ext.extend(GO.dialog.TabbedFormDialog, {
 					valueField:'value',
 					displayField:'label',
 					mode:'local',
+					editable:false,
 					allowBlank: false,
 					triggerAction: 'all',
 					value: 'GO\\Addressbook\\Controller\\Company'
@@ -213,7 +215,8 @@ GO.addressbook.AddressbookDialog = Ext.extend(GO.dialog.TabbedFormDialog, {
 												fileType: fileType,
 												excludedAttributes : ['ctime','mtime','user_id', 'contact_name','link_id','files_folder_id',
 													'user_id','email_allowed','go_user_id'],
-												modelContainerIdName : 'addressbook_id'
+												modelContainerIdName : 'addressbook_id',
+												possibleUpdateFindAttributes : ['email']
 											});
 										}
 									this.importDialogs[fileType][controllerName].show(this.remoteModelId);

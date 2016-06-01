@@ -48,6 +48,7 @@
  * 
  * @property String $photo Full path to photo
  * @property String $photoURL URL to photo
+ * @property string $color
  */
 
 
@@ -103,18 +104,23 @@ class Company extends \GO\Base\Db\ActiveRecord {
 	}
 	
 	public function defaultAttributes() {
+		$ab = \GO::user() ? Addressbook::model()->getDefault(\GO::user()) : false;
 		return array(
+				'addressbook_id' => $ab ? $ab->id : null,
 				'country'=>\GO::config()->default_country,
 				'post_country'=>\GO::config()->default_country
 		);
 	}
 	
 	public function attributeLabels() {
-		$attr = parent::attributeLabels();
+		$labels = parent::attributeLabels();
 		
-		$attr['postAddressIsEqual']="Post address is equal to visit address";
+		$labels['postAddressIsEqual']="Post address is equal to visit address";
+		$labels['link_id'] = \GO::t('cmdLink');
+		$labels['invoice_email'] = \GO::t('email');
+		$labels['photo'] = \GO::t('photo','addressbook');
 		
-		return $attr;
+		return $labels;
 	}
 	
 	public function validate() {
@@ -132,8 +138,8 @@ class Company extends \GO\Base\Db\ActiveRecord {
 	
 	protected function init() {
 		$this->columns['addressbook_id']['required']=true;
-		$this->columns['email']['regex']=\GO\Base\Util\String::get_email_validation_regex();
-		$this->columns['invoice_email']['regex']=\GO\Base\Util\String::get_email_validation_regex();
+		$this->columns['email']['regex']=\GO\Base\Util\StringHelper::get_email_validation_regex();
+		$this->columns['invoice_email']['regex']=\GO\Base\Util\StringHelper::get_email_validation_regex();
 		
 //		
 //		$this->columns['phone']['gotype']='phone';
@@ -153,7 +159,7 @@ class Company extends \GO\Base\Db\ActiveRecord {
 
 	protected function getCacheAttributes() {
 		
-		$name =$this->name;
+		$name = !empty($this->name2) ? $this->name.' '.$this->name2 : $this->name;
 		
 		if($this->addressbook)
 			$name .= ' ('.$this->addressbook->name.')';
@@ -179,12 +185,13 @@ class Company extends \GO\Base\Db\ActiveRecord {
 	
 	protected function afterSave($wasNew) {
 		
-		if(!$wasNew && $this->isModified('addressbook_id')){
+		if(!$wasNew){
 			
+			//also update time stamp of contact for carddav
 			//make sure contacts and companies are in the same addressbook.
 			$whereCriteria = \GO\Base\Db\FindCriteria::newInstance()
-							->addCondition('company_id', $this->id)
-							->addCondition('addressbook_id', $this->addressbook_id,'!=');
+							->addCondition('company_id', $this->id);
+							
 			
 			$findParams = \GO\Base\Db\FindParams::newInstance()
 							->ignoreAcl()
@@ -193,6 +200,7 @@ class Company extends \GO\Base\Db\ActiveRecord {
 			$stmt = Contact::model()->find($findParams);			
 			while($contact = $stmt->fetch()){
 				$contact->addressbook_id=$this->addressbook_id;
+				$contact->mtime = time();
 				$contact->save();
 			}
 		}		
@@ -217,6 +225,9 @@ class Company extends \GO\Base\Db\ActiveRecord {
 	protected function beforeSave() {
 		if(!empty($this->homepage))
 			$this->homepage = \GO\Base\Util\Http::checkUrlForHttp($this->homepage);
+		
+		if (empty($this->color))
+			$this->color = "000000";
 		
 		return parent::beforeSave();
 	}
@@ -254,7 +265,7 @@ class Company extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Get the full address formatted according to the country standards.
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getFormattedAddress()
 	{
@@ -271,7 +282,7 @@ class Company extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Get the full post address formatted according to the country standards.
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getFormattedPostAddress()
 	{
@@ -343,14 +354,22 @@ class Company extends \GO\Base\Db\ActiveRecord {
 		
 		
 //		if(strtolower($file->extension())!='jpg'){
-		$filename = $photoPath->path().'/'.$this->id.'.jpg';
+		$filename = $photoPath->path().'/com_'.$this->id.'.jpg';
 		$img = new \GO\Base\Util\Image();
 		if(!$img->load($file->path())){
 			throw new \Exception(\GO::t('imageNotSupported','addressbook'));
 		}
 		
+		$aspectRatio = $img->getHeight() > $img->getWidth()
+				? $img->getHeight() / $img->getWidth()
+				: $img->getWidth() / $img->getHeight();
+		
 		//resize it to small image so we don't get in trouble with sync clients
-		$img->fitBox(240,320);
+		if ($img->getHeight() > $img->getWidth()) {
+			$img->fitBox(320/$aspectRatio,320);
+		} else {
+			$img->fitBox(320,320/$aspectRatio);
+		}
 		
 		if(!$img->save($filename, IMAGETYPE_JPEG)){
 			throw new \Exception("Could not save photo!");
@@ -385,7 +404,7 @@ class Company extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Get the URL to the original photo.
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getPhotoURL(){
 		return $this->photoFile->exists() 
@@ -393,7 +412,7 @@ class Company extends \GO\Base\Db\ActiveRecord {
 						: \GO::config()->host.'modules/addressbook/themes/Default/images/unknown-person.png';
 	}
 	
-	public function getPhotoThumbURL($urlParams=array("w"=>90, "h"=>120, "zc"=>1)) {
+	public function getPhotoThumbURL($urlParams=array("lw"=>120,"pw"=>120,"zc"=>0)) {
 		
 		if($this->getPhotoFile()->exists()){
 			$urlParams['filemtime']=$this->getPhotoFile()->mtime();

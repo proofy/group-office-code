@@ -103,14 +103,16 @@ class MailboxController extends \GO\Base\Controller\AbstractModelController {
 			$params['username'] .= '@'.$domainModel->domain;
 		
 		if ($model->isNew) {
-//			$aliasModel = \GO\Postfixadmin\Model\Alias::model()->findSingleByAttribute('address', $params['username']);
-//			if (empty($aliasModel)) {
-//				$aliasModel = new \GO\Postfixadmin\Model\Alias();
-//			}
-//			$aliasModel->domain_id = $params['domain_id'];
-//			$aliasModel->address = $params['username'];
-//			$aliasModel->goto = $params['username'];
-//			$aliasModel->save();
+			
+			//Create alias for each username so it's possible to add a catch all alias because aliases have priority over usernames.
+			$aliasModel = \GO\Postfixadmin\Model\Alias::model()->findSingleByAttribute('address', $params['username']);
+			if (empty($aliasModel)) {
+				$aliasModel = new \GO\Postfixadmin\Model\Alias();
+			}
+			$aliasModel->domain_id = $params['domain_id'];
+			$aliasModel->address = $params['username'];
+			$aliasModel->goto = $params['username'];
+			$aliasModel->save();
 			
 			
 			if(!empty($params['alias']) && $params['alias']!=$params['username']){

@@ -180,7 +180,7 @@ class Xmac {
 
 	public static function toUtf8($string, $charset) {
 
-		if(!\GO\Base\Util\String::is8bit($string,$charset))
+		if(!\GO\Base\Util\StringHelper::is8bit($string,$charset))
 			return $string;
 		
 //		$searches = array();

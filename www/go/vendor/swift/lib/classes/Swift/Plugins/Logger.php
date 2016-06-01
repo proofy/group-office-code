@@ -20,7 +20,7 @@ interface Swift_Plugins_Logger
     /**
      * Add a log entry.
      *
-     * @param string $entry
+     * @param StringHelper $entry
      */
     public function add($entry);
 
@@ -32,7 +32,7 @@ interface Swift_Plugins_Logger
     /**
      * Get this log as a string.
      *
-     * @return string
+     * @return StringHelper
      */
     public function dump();
 }

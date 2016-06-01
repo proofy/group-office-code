@@ -110,7 +110,8 @@ class SieveController extends \GO\Base\Controller\AbstractModelController{
 			$index=0;
 			foreach($this->_sieve->script->content as $item)
 			{
-				//if ($item['name']!='Autoreply')
+				// Hide the "Out of office" script because it need to be loaded in a separate dialog
+				if (isset($item['name']) && $item['name']!='Out of office')
 				{
 					$i['name']=$item['name'];
 					$i['index']=$index;
@@ -142,7 +143,7 @@ class SieveController extends \GO\Base\Controller\AbstractModelController{
 			$rule['name'] = $params['rule_name'];
 			$rule['tests'] = json_decode($params['criteria'], true);
 			$rule['actions'] = json_decode($params['actions'], true);
-			
+						
 			for($i=0,$c=count($rule['tests']);$i<$c;$i++)
 			{
 				//\GO::debug("TEST: ".$rule['tests'][$i]['arg1']);
@@ -180,7 +181,7 @@ class SieveController extends \GO\Base\Controller\AbstractModelController{
 					Throw new \GO\Base\Exception\Save(\GO::t('stopEndError','sieve'));
 				}
 			}
-
+			
 			if($params['join'] == 'allof') {
 				$rule['join'] = 1;
 			}
@@ -219,7 +220,13 @@ class SieveController extends \GO\Base\Controller\AbstractModelController{
 			if($params['script_index']>-1 && isset($this->_sieve->script->content[$params['script_index']]))
 				$this->_sieve->script->update_rule($params['script_index'],$rule);
 			else {
-				$this->_sieve->script->add_rule($rule);
+				
+				// If the rule is a spam rule then it needs to be placed at the top.
+				if($this->_checkIsSpam($rule)){
+					$this->_sieve->script->add_rule($rule,0);
+				} else {
+					$this->_sieve->script->add_rule($rule);
+				}
 			}
 			
 			// Het script opslaan
@@ -234,6 +241,35 @@ class SieveController extends \GO\Base\Controller\AbstractModelController{
 			$response['feedback'] = nl2br($e->getMessage()); //.'<br>'.$e->getTraceAsString();
 		}
 		return $response;
+	}
+	
+	/**
+	 * Check if the tests in the given rule are spam message tests
+	 * 
+	 * @param array $rule
+	 * @return boolean
+	 * @throws \Exception
+	 */
+	private function _checkIsSpam($rule){
+		
+		if(!is_array($rule) || !is_array($rule['tests'])){
+			Throw new \Exception('Rule is not an array');
+		}
+		
+		$isSpam = false;
+
+		foreach($rule['tests'] as $test){
+			if($test['test'] == 'header' && $test['type'] == 'contains' && $test['arg1'] == 'X-Spam-Flag'){
+				$isSpam = true;
+			}
+			
+			if($test['test'] == 'header' && $test['type'] == 'contains' && $test['arg1'] == 'Subject' && $test['arg2'] == 'spam'){
+				$isSpam = true;
+			}
+		}
+		
+		return $isSpam;
+
 	}
 	
 	protected function actionAccountAliases($params) {
@@ -284,11 +320,16 @@ class SieveController extends \GO\Base\Controller\AbstractModelController{
 		{
 				switch($action['type'])
 				{
+					case 'addflag':
+						if($action['target'] == '\\Seen'){
+							$action['text'] = \GO::t('setRead','sieve');
+						}
+						break;
 					case 'set_read':
-						$action['text'] = \GO::t('setRead','sieve');
+							$action['text'] = \GO::t('setRead','sieve');
 						break;
 					case 'fileinto':
-						if(!$action['copy']){
+						if(empty($action['copy'])){
 							$action['text'] = \GO::t('fileinto','sieve').' "'.$action['target'].'"';
 						}else{
 							$action['text']=\GO::t('copyto','sieve').' "'.$action['target'].'"';
@@ -379,30 +420,4 @@ class SieveController extends \GO\Base\Controller\AbstractModelController{
 		$response['success'] = true;
 		return $response;
 	}
-	
-//	protected function actionLoadOutOfOffice($params) {
-//		$response['data'] = array(
-//				'message' => '',
-//				'days' => '',
-//				'start_date' => '',
-//				'end_date' => '',
-//				'email' => ''
-//			);
-//		
-//		$this->_sieveConnect($params['account_id']);
-//		$this->_sieve->load($this->_sieve->get_active());
-//		
-//		foreach($this->_sieve->script->content as $k => $item) {
-//			if ($item['name']=='Autoreply') {
-//				$response['data'] = $item;
-//				$response['data']['script_index'] = $k;
-//				break;
-//			}
-//		}
-//		
-//		$response['success'] = true;
-//		return $response;
-//	}
-	
 }
-?>

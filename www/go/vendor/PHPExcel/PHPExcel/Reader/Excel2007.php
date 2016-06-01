@@ -71,7 +71,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 	/**
 	 * Can the current PHPExcel_Reader_IReader read the file?
 	 *
-	 * @param 	string 		$pFilename
+	 * @param 	StringHelper 		$pFilename
 	 * @return 	boolean
 	 * @throws PHPExcel_Reader_Exception
 	 */
@@ -115,7 +115,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 	/**
 	 * Reads names of the worksheets from a file, without parsing the whole file to a PHPExcel object
 	 *
-	 * @param 	string 		$pFilename
+	 * @param 	StringHelper 		$pFilename
 	 * @throws 	PHPExcel_Reader_Exception
 	 */
 	public function listWorksheetNames($pFilename)
@@ -159,7 +159,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 	/**
 	 * Return worksheet info (Name, Last Column Letter, Last Column Index, Total Rows, Total Columns)
 	 *
-	 * @param   string     $pFilename
+	 * @param   StringHelper     $pFilename
 	 * @throws   PHPExcel_Reader_Exception
 	 */
 	public function listWorksheetInfo($pFilename)
@@ -333,7 +333,7 @@ class PHPExcel_Reader_Excel2007 extends PHPExcel_Reader_Abstract implements PHPE
 	/**
 	 * Loads PHPExcel from file
 	 *
-	 * @param 	string 		$pFilename
+	 * @param StringHelperg 		$pFilename
 	 * @throws 	PHPExcel_Reader_Exception
 	 */
 	public function load($pFilename)

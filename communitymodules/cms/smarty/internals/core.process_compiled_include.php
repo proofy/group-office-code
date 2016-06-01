@@ -9,9 +9,9 @@
  * Replace nocache-tags by results of the corresponding non-cacheable
  * functions and return it
  *
- * @param string $compiled_tpl
- * @param string $cached_source
- * @return string
+ * @param StringHelper $compiled_tpl
+ * @param StringHelper $cached_source
+ * @return StringHelper
  */
 
 function smarty_core_process_compiled_include($params, &$smarty)

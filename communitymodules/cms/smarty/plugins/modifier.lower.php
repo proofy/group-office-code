@@ -15,8 +15,8 @@
  * @link http://smarty.php.net/manual/en/language.modifier.lower.php
  *          lower (Smarty online manual)
  * @author   Monte Ohrt <monte at ohrt dot com>
- * @param string
- * @return string
+ * @param StringHelper
+ * @return StringHelper
  */
 function smarty_modifier_lower($string)
 {

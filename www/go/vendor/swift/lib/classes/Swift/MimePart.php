@@ -22,9 +22,9 @@ class Swift_MimePart extends Swift_Mime_MimePart
      *
      * Details may be optionally passed into the constructor.
      *
-     * @param string $body
-     * @param string $contentType
-     * @param string $charset
+     * @param StringHelper $body
+     * @param StringHelper $contentType
+     * @param StringHelper $charset
      */
     public function __construct($body = null, $contentType = null, $charset = null)
     {
@@ -48,9 +48,9 @@ class Swift_MimePart extends Swift_Mime_MimePart
     /**
      * Create a new MimePart.
      *
-     * @param string $body
-     * @param string $contentType
-     * @param string $charset
+     * @param StringHelper $body
+     * @param StringHelper $contentType
+     * @param StringHelper $charset
      *
      * @return Swift_Mime_MimePart
      */

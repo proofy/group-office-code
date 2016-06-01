@@ -558,7 +558,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 
 	/**
 	 * Build the OLE Part for DocumentSummary Information
-	 * @return string
+	 * @return StringHelper
 	 */
 	private function _writeDocumentSummaryInformation(){
 
@@ -759,7 +759,7 @@ class PHPExcel_Writer_Excel5 extends PHPExcel_Writer_Abstract implements PHPExce
 
 	/**
 	 * Build the OLE Part for Summary Information
-	 * @return string
+	 * @return StringHelper
 	 */
 	private function _writeSummaryInformation(){
 		// offset: 0; size: 2; must be 0xFE 0xFF (UTF-16 LE byte order mark)

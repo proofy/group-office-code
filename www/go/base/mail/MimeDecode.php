@@ -97,7 +97,7 @@ class MimeDecode
     /**
      * The raw email to decode
      *
-     * @var    string
+     * @var    StringHelper
      * @access private
      */
     var $_input;
@@ -105,7 +105,7 @@ class MimeDecode
     /**
      * The header part of the input
      *
-     * @var    string
+     * @var    StringHelper
      * @access private
      */
     var $_header;
@@ -113,7 +113,7 @@ class MimeDecode
     /**
      * The body part of the input
      *
-     * @var    string
+     * @var    StringHelper
      * @access private
      */
     var $_body;
@@ -121,7 +121,7 @@ class MimeDecode
     /**
      * If an error occurs, this is used to store the message
      *
-     * @var    string
+     * @var    StringHelper
      * @access private
      */
     var $_error;
@@ -166,7 +166,7 @@ class MimeDecode
      * Sets up the object, initialise the variables, and splits and
      * stores the header and body of the input.
      *
-     * @param string The input to decode
+     * @param StringHelper The input to decode
      * @access public
      */
     function __construct($input)
@@ -224,8 +224,8 @@ class MimeDecode
      * If it finds certain content-types it will call itself in a
      * recursive fashion
      *
-     * @param string Header section
-     * @param string Body section
+     * @param StringHelper Header section
+     * @param StringHelper Body section
      * @return object Results of decoding process
      * @access private
      */
@@ -358,7 +358,7 @@ class MimeDecode
      * array of references to the parts, indexed by mime number.
      *
      * @param  object $structure   The structure to go through
-     * @param  string $mime_number Internal use only.
+     * @param  StringHelper $mime_number Internal use only.
      * @return array               Mime numbers
      */
     function &getMimeNumbers(&$structure, $no_refs = false, $mime_number = '', $prepend = '')
@@ -400,7 +400,7 @@ class MimeDecode
      * section, this function will split them (at the first
      * blank line) and return them.
      *
-     * @param string Input to split apart
+     * @param StringHelper Input to split apart
      * @return array Contains header and body section
      * @access private
      */
@@ -422,7 +422,7 @@ class MimeDecode
      * Parse headers given in $input and return
      * as assoc array.
      *
-     * @param string Headers to parse
+     * @param StringHelper Headers to parse
      * @return array Contains parsed headers
      * @access private
      */
@@ -435,7 +435,7 @@ class MimeDecode
             //#7065 - wrapping.. with encoded stuff.. - probably not needed,
             // wrapping space should only get removed if the trailing item on previous line is a 
             // encoded character
-            $input   = preg_replace("/=\r\n(\t| )+/", '=', $input);
+            //$input   = preg_replace("/=\r\n(\t| )+/", '=', $input);
             $input   = preg_replace("/\r\n(\t| )+/", ' ', $input);
             
             $headers = explode("\r\n", trim($input));
@@ -465,7 +465,7 @@ class MimeDecode
      * robust as it could be. Eg. header comments
      * in the wrong place will probably break it.
      *
-     * @param string Header value to parse
+     * @param StringHelper Header value to parse
      * @return array Contains parsed result
      * @access private
      */
@@ -634,7 +634,7 @@ class MimeDecode
      * This function splits the input based
      * on the given boundary
      *
-     * @param string Input to parse
+     * @param StringHelper Input to parse
      * @return array Contains array of resulting mime parts
      * @access private
      */
@@ -670,8 +670,8 @@ class MimeDecode
      * conformant, but it does pass all the given
      * examples (in RFC2047).
      *
-     * @param string Input header value to decode
-     * @return string Decoded header value
+     * @param StringHelper Input header value to decode
+     * @return StringHelper Decoded header value
      * @access private
      */
     function _decodeHeader($input)
@@ -713,9 +713,9 @@ class MimeDecode
      * Given a body string and an encoding type,
      * this function will decode and return it.
      *
-     * @param  string Input body to decode
-     * @param  string Encoding type to use.
-     * @return string Decoded body
+     * @param  StringHelper Input body to decode
+     * @param  StringHelper Encoding type to use.
+     * @return StringHelper Decoded body
      * @access private
      */
     function _decodeBody($input, $encoding = '7bit')
@@ -742,8 +742,8 @@ class MimeDecode
      * Given a quoted-printable string, this
      * function will decode and return it.
      *
-     * @param  string Input body to decode
-     * @return string Decoded body
+     * @param  StringHelper Input body to decode
+     * @return StringHelper Decoded body
      * @access private
      */
     function _quotedPrintableDecode($input) {
@@ -770,7 +770,7 @@ class MimeDecode
      * however and won't just blindly decode whatever you
      * pass it.
      *
-     * @param  string Input body to look for attahcments in
+     * @param  StringHelper Input body to look for attahcments in
      * @return array  Decoded bodies, filenames and permissions
      * @access public
      * @author Unknown
@@ -895,7 +895,7 @@ class MimeDecode
      *
      * @param  object Input to convert to xml. This should be the
      *                output of the MimeDecode::decode function
-     * @return string XML version of input
+     * @return StringHelper XML version of input
      * @access public
      */
     function getXML($input)
@@ -917,7 +917,7 @@ class MimeDecode
      * @param  object  Input to convert to xml. This is a mimepart object.
      *                 It may or may not contain subparts.
      * @param  integer Number of tabs to indent
-     * @return string  XML version of input
+     * @return StringHelper  XML version of input
      * @access private
      */
     function _getXML($input, $indent = 1)
@@ -958,10 +958,10 @@ class MimeDecode
     /**
      * Helper function to _getXML(). Returns xml of a header.
      *
-     * @param  string  Name of header
-     * @param  string  Value of header
+     * @param  StringHelper  Name of header
+     * @param  StringHelper  Value of header
      * @param  integer Number of tabs to indent
-     * @return string  XML version of input
+     * @return StringHelper  XML version of input
      * @access private
      */
     function _getXML_helper($hdr_name, $hdr_value, $indent)

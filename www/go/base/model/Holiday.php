@@ -21,6 +21,7 @@
  * @property String $date 
  * @property String $name
  * @property String $region
+ * @property boolean $free_day
  */
 
 namespace GO\Base\Model;
@@ -70,9 +71,9 @@ class Holiday extends \GO\Base\Db\ActiveRecord {
 	 * If $force is set to true then the current holidays in the given period and 
 	 * locale will be deleted and recreated from the holidays file.
 	 * 
-	 * @param string $startDate
-	 * @param string $endDate
-	 * @param string $locale
+	 * @param StringHelper $startDate
+	 * @param StringHelper $endDate
+	 * @param StringHelper $locale
 	 * @param boolean $check
 	 * @param boolean $force
 	 * @return \GO\Base\Db\ActiveStatement 
@@ -111,8 +112,8 @@ class Holiday extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Check if the requested holidays are available in the database.
 	 * 
-	 * @param string $year
-	 * @param string $locale
+	 * @param StringHelper $year
+	 * @param StringHelper $locale
 	 * @return int
 	 * @throws Exception 
 	 */
@@ -141,8 +142,8 @@ class Holiday extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Delete all the holidays of the given year and locale
 	 * 
-	 * @param string $year
-	 * @param string $locale
+	 * @param StringHelper $year
+	 * @param StringHelper $locale
 	 * @throws Exception 
 	 */
 	public function deleteHolidays($year,$locale='en'){
@@ -190,8 +191,8 @@ class Holiday extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Generate the holidays from the holidays file for the given year and locale.
 	 * 
-	 * @param string $year
-	 * @param string $locale
+	 * @param StringHelper $year
+	 * @param StringHelper $locale
 	 * @throws Exception 
 	 */
 	public function generateHolidays($year,$locale='en'){
@@ -215,15 +216,27 @@ class Holiday extends \GO\Base\Db\ActiveRecord {
 		
 		// Set the fixed holidays from the holidays file
 		if(isset($holidays['fix'])) {
-			foreach($holidays['fix'] as $key => $name) {
-				$month_day = explode("-", $key);
-				$date = mktime(0,0,0,$month_day[0],$month_day[1],$year);
-				
-				$holiday = new Holiday();
-				$holiday->name = $name;
-				$holiday->date = date('Y-m-d',$date);
-				$holiday->region = $locale;
-				$holiday->save();
+			foreach($holidays['fix'] as $key => $record) {
+				if (is_string($record)) {
+					$month_day = explode("-", $key);
+					$date = mktime(0,0,0,$month_day[0],$month_day[1],$year);
+
+					$holiday = new Holiday();
+					$holiday->name = $record;
+					$holiday->date = date('Y-m-d',$date);
+					$holiday->region = $locale;
+					$holiday->save();
+				} else if (is_array($record)) {
+					$month_day = explode("-", $key);
+					$date = mktime(0,0,0,$month_day[0],$month_day[1],$year);
+
+					$holiday = new Holiday();
+					$holiday->name = $record['name'];
+					$holiday->date = date('Y-m-d',$date);
+					$holiday->region = $locale;
+					$holiday->free_day = $record['free'];
+					$holiday->save();
+				}
 			}
 		}
 		
@@ -234,29 +247,52 @@ class Holiday extends \GO\Base\Db\ActiveRecord {
 			$easterDT = \GO\Base\Util\Date\DateTime::getEasterDatetime($year);
 			$easter_day = $easterDT->format('U');
 			
-			foreach($holidays['var'] as $key => $name) {
-				$date = strtotime($key." days", $easter_day);
-		
-				
-				$holiday = new Holiday();
-				$holiday->name = $name;
-				$holiday->date = date('Y-m-d',$date);
-				$holiday->region = $locale;
-				$holiday->save();
+			foreach($holidays['var'] as $key => $record) {
+				if (is_string($record)) {
+					$date = strtotime($key." days", $easter_day);
+
+
+					$holiday = new Holiday();
+					$holiday->name = $record;
+					$holiday->date = date('Y-m-d',$date);
+					$holiday->region = $locale;
+					$holiday->save();
+				} else if (is_array($record)) {
+					$date = strtotime($key." days", $easter_day);
+
+					$holiday = new Holiday();
+					$holiday->name = $record['name'];
+					$holiday->date = date('Y-m-d',$date);
+					$holiday->region = $locale;
+					$holiday->free_day = $record['free'];
+					$holiday->save();
+				}
 			}
 		}
 
 		if(isset($holidays['spc'])) {
 			$weekday = $this->get_weekday("24","12",$year);
-			foreach($holidays['spc'] as $key => $name) {
-				$count = $key - $weekday;
-				$date = strtotime($count." days", mktime(0,0,0,"12","24",$year));
-				
-				$holiday = new Holiday();
-				$holiday->name = $name;
-				$holiday->date = date('Y-m-d',$date);
-				$holiday->region = $locale;
-				$holiday->save();
+			foreach($holidays['spc'] as $key => $record) {
+				if (is_string($record)) {
+					$count = $key - $weekday;
+					$date = strtotime($count." days", mktime(0,0,0,"12","24",$year));
+
+					$holiday = new Holiday();
+					$holiday->name = $record;
+					$holiday->date = date('Y-m-d',$date);
+					$holiday->region = $locale;
+					$holiday->save();
+				} else if (is_array($record)) {
+					$count = $key - $weekday;
+					$date = strtotime($count." days", mktime(0,0,0,"12","24",$year));
+
+					$holiday = new Holiday();
+					$holiday->name = $record['name'];
+					$holiday->date = date('Y-m-d',$date);
+					$holiday->region = $locale;
+					$holiday->free_day = $record['free'];
+					$holiday->save();
+				}
 			}
 		}
 		
@@ -264,11 +300,14 @@ class Holiday extends \GO\Base\Db\ActiveRecord {
 	
 			foreach($holidays['fn'] as $def) {
 			
-				$holiday = new Holiday();
-				$holiday->name = $def[0];
-				$holiday->date = call_user_func($def[1], $year);
-				$holiday->region = $locale;
-				$holiday->save();
+				$d = call_user_func($def[1], $year);
+				if(!empty($d)){
+					$holiday = new Holiday();
+					$holiday->name = $def[0];
+					$holiday->date = $d;
+					$holiday->region = $locale;
+					$holiday->save();
+				}
 			}
 		}
 	}
@@ -292,7 +331,8 @@ class Holiday extends \GO\Base\Db\ActiveRecord {
 			'background'=>'f1f1f1',
 			'model_name'=>'',
 			'day'=>$dayString[date('w', strtotime($this->date))].' '.\GO\Base\Util\Date::get_timestamp(strtotime($this->date),false),
-			'read_only'=>true
+			'read_only'=>true,
+			'is_virtual'=>true,
 			);
 	}
 	
@@ -302,7 +342,7 @@ class Holiday extends \GO\Base\Db\ActiveRecord {
 	 * 
 	 * If no match can be found then the self::$systemDefaultLocale variable is used.
 	 * 
-	 * @param string $countryCode
+	 * @param StringHelper $countryCode
 	 * @return mixed the locale for the holidays or false when none found
 	 */
 	public static function localeFromCountry($countryCode){

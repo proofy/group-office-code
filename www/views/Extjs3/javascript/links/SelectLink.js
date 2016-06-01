@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: SelectLink.js 14816 2013-05-21 08:31:20Z mschering $
+ * @version $Id: SelectLink.js 17828 2014-07-24 12:17:07Z wsmits $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -68,15 +68,17 @@ Ext.extend(GO.form.SelectLink, GO.form.ComboBoxReset,{
 	onTriggerClick : function(){
 
 		if(!GO.selectLinkDialog){
-			GO.selectLinkDialog = new GO.dialog.LinksDialog({
+			GO.selectLinkDialog = new GO.dialog.LinksDialog({				
 				singleSelect:true,
 				selectLinkField:this,
 				linkItems : function()	{
 					var selectionModel = this.grid.searchGrid.getSelectionModel();
 					var record = selectionModel.getSelected();
-
+					var oldValue = this.selectLinkField.getValue();
 					this.selectLinkField.setValue(record.get('model_name_and_id'));
 					this.selectLinkField.setRemoteText(record.get('name_and_type'));
+					this.selectLinkField.fireEvent('change',this.selectLinkField, this.selectLinkField.getValue(),oldValue);
+					
 					this.hide();
 				}
 			});

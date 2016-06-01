@@ -47,7 +47,7 @@ class MemoryFile extends File{
 		return true;
 	}
 	
-	public function move($destinationFolder, $newFileName = false, $isUploadedFile = false, $appendNumberToNameIfDestinationExists = false) {
+	public function move(Base $destinationFolder, $newFileName = false, $isUploadedFile = false, $appendNumberToNameIfDestinationExists = false) {
 		throw Exception("move not implemented for memory file");
 	}
 	
@@ -78,7 +78,7 @@ class MemoryFile extends File{
 		
 	/**
 	 * Change owner
-	 * @param string $user
+	 * @param StringHelper $user
 	 * @return boolean 
 	 */
 	public function chown($user){
@@ -88,7 +88,7 @@ class MemoryFile extends File{
 	/**
 	 * Change group
 	 * 
-	 * @param string $group
+	 * @param StringHelper $group
 	 * @return boolean 
 	 */
 	public function chgrp($group){

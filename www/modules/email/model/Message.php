@@ -35,6 +35,8 @@
 
 namespace GO\Email\Model;
 
+use GO;
+
 
 abstract class Message extends \GO\Base\Model {
 
@@ -62,19 +64,12 @@ abstract class Message extends \GO\Base\Model {
 			'flagged' => 0,
 			'answered' => 0,
 			'forwarded' => 0,
-			'account',
 			'smime_signed'=>false
 	);
 
 	protected $attachments=array();
 
 	protected $defaultCharset='UTF-8';
-	
-	/**
-	 * Custom labels set on IMAP server
-	 * @var array 
-	 */
-	public $labels=array();
 
 	/**
 	 * True iff the actual message's body is larger than the maximum allowed. See
@@ -94,7 +89,7 @@ abstract class Message extends \GO\Base\Model {
 	/**
 	 * PHP getter magic method.
 	 * This method is overridden so that AR attributes can be accessed like properties.
-	 * @param string $name property name
+	 * @param StringHelper $name property name
 	 * @return mixed property value
 	 * @see getAttribute
 	 */
@@ -170,7 +165,7 @@ abstract class Message extends \GO\Base\Model {
 	 * Get the body in HTML format. If no HTML body was found the text version will
 	 * be converted to HTML.
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	abstract public function getHtmlBody();
 
@@ -178,14 +173,14 @@ abstract class Message extends \GO\Base\Model {
 	 * Get the body in plain text format. If no plain text body was found the HTML version will
 	 * be converted to plain text.
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	abstract public function getPlainBody();
 
 	/**
 	 * Return the raw MIME source as string
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	abstract public function getSource();
 
@@ -213,7 +208,7 @@ abstract class Message extends \GO\Base\Model {
 	 * Get an attachment by MIME partnumber.
 	 * eg. 1.1 or 2
 	 *
-	 * @param string $number
+	 * @param StringHelper $number
 	 * @return array See getAttachments
 	 */
 	public function getAttachment($number){
@@ -236,7 +231,9 @@ abstract class Message extends \GO\Base\Model {
 		if (($pos = strpos($body, "\nbegin ")) === false)
 			return;
 
-		$regex = "/(begin ([0-7]{3}) (.+))\n/";
+//		$regex = "/(begin ([0-7]{3}) (.+))\n/";
+		$regex = "/(begin ([0-7]{1,3}) (.+))\n/";
+//		$regex = "/(begin ([0-7]+) (.+))\n/";
 
 
 
@@ -257,7 +254,7 @@ abstract class Message extends \GO\Base\Model {
 				if($endpos){
 
 					if(!isset($startPosAtts))
-						$startPosAtts=$offset;
+						$startPosAtts= $matches[0][$i][1];
 
 					$att = str_replace(array("\r"), "", substr($body, $offset, $endpos));
 
@@ -275,6 +272,7 @@ abstract class Message extends \GO\Base\Model {
 
 			$body = substr($body, 0, $startPosAtts);
 		}
+		\GO::debug($matches);
 	}
 
 	private function _convertRecipientArray($r){
@@ -309,6 +307,12 @@ abstract class Message extends \GO\Base\Model {
 		//$response['seen']=$this->seen;
 
 		$from = $this->from->getAddress();
+		
+		$response['seen']=$this->seen;		
+		$response['forwarded']=$this->forwarded;
+		$response['flagged']=$this->flagged;
+		$response['answered']=$this->answered;
+		
 		$response['from'] = $from['personal'];
 		$response['sender'] = $from['email'];
 		$response['to'] = $recipientsAsString ? (string) $this->to : $this->_convertRecipientArray($this->to->getAddresses());
@@ -329,15 +333,20 @@ abstract class Message extends \GO\Base\Model {
 		$response['date'] = \GO\Base\Util\Date::get_timestamp($this->udate);
 		$response['size'] = $this->size;
 
-		$labels = \GO\Email\Model\Label::model()->getUserLabels();
+		$labels = array();
+		if (property_exists($this, 'account')) {
+			$labels = \GO\Email\Model\Label::model()->getAccountLabels($this->account->id);
+		}
 
 		$response['labels'] = array();
-		foreach ($this->labels as $label) {
-			if (isset($labels[$label])) {
-				$response['labels'][] = array(
-					'name' => $labels[$label]->name,
-					'color' => $labels[$label]->color
-				);
+		if(!empty($this->labels)){
+			foreach ($this->labels as $label) {
+				if (isset($labels[$label])) {
+					$response['labels'][] = array(
+						'name' => $labels[$label]->name,
+						'color' => $labels[$label]->color
+					);
+				}
 			}
 		}
 
@@ -366,6 +375,26 @@ abstract class Message extends \GO\Base\Model {
 		$attachments = $this->getAttachments();
 
 		foreach($attachments as $att){
+			
+			if($html && $att->disposition != 'attachment') {				
+				if($att->mime == 'text/html') {
+					$htmlPartStr = $att->getData();
+					$htmlPartStr = \GO\Base\Util\StringHelper::convertLinks($htmlPartStr);
+					$htmlPartStr = \GO\Base\Util\StringHelper::sanitizeHtml($htmlPartStr);
+
+					$response['htmlbody'] .= '<hr />'.$htmlPartStr;
+					continue;
+
+				}else if($att->mime == 'text/plain') {
+					$htmlPartStr = $att->getData();
+					$htmlPartStr = \GO\Base\Util\StringHelper::text_to_html($htmlPartStr);
+
+					$response['htmlbody'] .= '<hr />'.$htmlPartStr;
+				}
+			}
+				
+			
+			
 			$replaceCount = 0;
 
 			$a = $att->getAttributes();
@@ -390,8 +419,15 @@ abstract class Message extends \GO\Base\Model {
 
 		}
 
+		
+		$response['contact_name']="";			
+		$response['contact_thumb_url']=GO::config()->host.'modules/addressbook/themes/Default/images/unknown-person.png';
+		
 		$response['blocked_images']=0;
 		$response['xssDetected']=false;
+		
+		
+		$this->fireEvent('tooutputarray', array(&$response, $this));
 
 		return $response;
 	}

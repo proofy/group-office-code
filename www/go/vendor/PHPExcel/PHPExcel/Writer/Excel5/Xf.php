@@ -164,7 +164,7 @@ class PHPExcel_Writer_Excel5_Xf
 	/**
 	 * Generate an Excel BIFF XF record (style or cell).
 	 *
-	 * @return string The XF record
+	 * @return StringHelper The XF record
 	 */
 	function writeXf()
 	{
@@ -400,7 +400,7 @@ class PHPExcel_Writer_Excel5_Xf
 	/**
 	 * Map border style
 	 *
-	 * @param string $borderStyle
+	 * @param StringHelper $borderStyle
 	 * @return int
 	 */
 	private static function _mapBorderStyle($borderStyle) {
@@ -439,7 +439,7 @@ class PHPExcel_Writer_Excel5_Xf
 	/**
 	 * Map fill type
 	 *
-	 * @param string $fillType
+	 * @param StringHelper $fillType
 	 * @return int
 	 */
 	private static function _mapFillType($fillType) {
@@ -463,7 +463,7 @@ class PHPExcel_Writer_Excel5_Xf
 	/**
 	 * Map to BIFF2-BIFF8 codes for horizontal alignment
 	 *
-	 * @param string $hAlign
+	 * @param StringHelper $hAlign
 	 * @return int
 	 */
 	private function _mapHAlign($hAlign)
@@ -486,7 +486,7 @@ class PHPExcel_Writer_Excel5_Xf
 	/**
 	 * Map to BIFF2-BIFF8 codes for vertical alignment
 	 *
-	 * @param string $vAlign
+	 * @param StringHelper $vAlign
 	 * @return int
 	 */
 	private static function _mapVAlign($vAlign) {
@@ -516,7 +516,7 @@ class PHPExcel_Writer_Excel5_Xf
 	/**
 	 * Map locked
 	 *
-	 * @param string
+	 * @param StringHelper
 	 * @return int
 	 */
 	private static function _mapLocked($locked) {
@@ -531,7 +531,7 @@ class PHPExcel_Writer_Excel5_Xf
 	/**
 	 * Map hidden
 	 *
-	 * @param string
+	 * @param StringHelper
 	 * @return int
 	 */
 	private static function _mapHidden($hidden) {

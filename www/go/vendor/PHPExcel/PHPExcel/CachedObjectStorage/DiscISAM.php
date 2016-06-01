@@ -38,7 +38,7 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 	/**
 	 * Name of the file for this cache
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_fileName = NULL;
 
@@ -52,7 +52,7 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
 	/**
 	 * Directory/Folder where the cache file is located
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_cacheDirectory = NULL;
 
@@ -104,7 +104,7 @@ class PHPExcel_CachedObjectStorage_DiscISAM extends PHPExcel_CachedObjectStorage
     /**
      * Get cell at a specific coordinate
      *
-     * @param 	string 			$pCoord		Coordinate of the cell
+     * @param 	StringHelper 			$pCoord		Coordinate of the cell
      * @throws 	PHPExcel_Exception
      * @return 	PHPExcel_Cell 	Cell that was found, or null if not found
      */

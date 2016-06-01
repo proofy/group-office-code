@@ -8,7 +8,7 @@ $l["userIsMemberOf"]='Der Benutzer ist Mitglied von';
 $l["userVisibleTo"]='Der Benutzer ist sichtbar für';
 $l["cmdPanelPersonal"]='Persönlich';
 $l["cmdPanelPassword"]='Kennwort';
-$l["cmdPanelCompany"]='Firma';
+$l["cmdPanelCompany"]='Organisation';
 $l["cmdPanelPermissions"]='Berechtigungen';
 $l["cmdPanelLogin"]='Anmelden';
 $l["cmdPanelLookFeel"]='Erscheinungsbild';
@@ -45,7 +45,7 @@ $l["cmdFormLabelThousandSeperator"]='Tausendertrennzeichen';
 $l["cmdFormLabelDecimalSeperator"]='Dezimaltrennzeichen';
 $l["cmdFormLabelCurrency"]='Währung';
 $l["account"]='Benutzerdaten';
-$l["companyProfile"]='Firmendaten';
+$l["companyProfile"]='Organisationsdaten';
 $l["loginInfo"]='Loginstatistik';
 $l["changePassword"]='Kennwort ändern';
 $l["currentPassword"]='Aktuelles Kennwort';
@@ -132,3 +132,13 @@ $l['show_addresslists_panel']= 'Adresslistenelement anzeigen';
 $l['enabled_cf_tabs']= 'Aktivierte Zusatzfelder Tabs';
 
 $l['cmdFormLabelHolidaySet'] = 'Feiertage';
+
+$l['diskSpace'] = 'Festplattenspeicher';
+$l['diskQuota'] = 'Festplatten-Kontingent';
+$l['spaceUsed'] = 'Davon verwendet';
+
+$l['noReminders']= 'Keine Erinnerungen für mich erstellen';
+$l['transferData'] = 'Übertragen';
+
+$l['desktopNotificationsActive']= 'Desktopbenachrichtigung aktiv';
+$l['id']= 'ID';

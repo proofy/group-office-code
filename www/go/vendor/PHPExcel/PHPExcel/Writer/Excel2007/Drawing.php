@@ -41,7 +41,7 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 	 * @param 	PHPExcel_Worksheet	$pWorksheet
 	 * @param	int					&$chartRef		Chart ID
 	 * @param	boolean				$includeCharts	Flag indicating if we should include drawing details for charts
-	 * @return 	string 				XML Output
+	 * @return 	StringHelper 				XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	public function writeDrawings(PHPExcel_Worksheet $pWorksheet = null, &$chartRef, $includeCharts = FALSE)
@@ -383,7 +383,7 @@ class PHPExcel_Writer_Excel2007_Drawing extends PHPExcel_Writer_Excel2007_Writer
 	 * Write VML header/footer images to XML format
 	 *
 	 * @param 	PHPExcel_Worksheet				$pWorksheet
-	 * @return 	string 								XML Output
+	 * @return 	StringHelper 								XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	public function writeVMLHeaderFooterImages(PHPExcel_Worksheet $pWorksheet = null)

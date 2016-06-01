@@ -7,7 +7,7 @@
  * If you have questions write an e-mail to info@intermesh.nl
  * 
  * @copyright Copyright Intermesh
- * @version $Id: SelectContactDialog.js 16635 2014-01-17 14:37:56Z mschering $
+ * @version $Id: SelectContactDialog.js 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @author Merijn Schering <mschering@intermesh.nl>
  *
  * Params:
@@ -167,15 +167,40 @@ GO.addressbook.SelectContactDialog = function(config){
 				handler: function(){this.hide();},
 				scope: this
 			}
-		]
+		],
+                tbar: [{
+                        style: " margin-bottom: 10px; ",
+                        iconCls: 'btn-add',
+			text: GO.addressbook.lang['addEmployee'],
+			cls: 'x-btn-text-icon', 
+                        handler: function(){
+                            if(!this.contactDialog) {
+                                this.contactDialog = new GO.addressbook.ContactDialog({});
+                                
+                            }
+                            this.contactDialog.show(0 ,{values: {company_id: this.company_id}});
+                        },
+                        scope: this
+                        
+                }] 
     });
 };
 
 Ext.extend(GO.addressbook.SelectContactDialog, Ext.Window, {
 
-	show : function(addressbookId){		
+	show : function(config){		
 		
-		this.addressbookId = addressbookId || 0;
+		config = config || {};
+		
+		if(config.values) {
+			this.addressbookId = config.values.addressbookId || 0;
+			this.company_id = config.values.company_id || 0;
+		} else {
+			this.company_id = 0;
+			this.addressbookId = 0;
+		}
+		
+		
 		this.addressbooksGrid.setDisabled(this.addressbookId>0);
 		
 		GO.addressbook.SelectContactDialog.superclass.show.call(this);

@@ -8,8 +8,8 @@
 /**
  * write out a file to disk
  *
- * @param string $filename
- * @param string $contents
+ * @param StringHelper $filename
+ * @param StringHelper $contents
  * @param boolean $create_dirs
  * @return boolean
  */

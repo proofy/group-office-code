@@ -7,7 +7,10 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  */
- 
+
+namespace GO\Tasks\Model;
+use Sabre;
+
 /**
  * The Task model
  *
@@ -38,12 +41,6 @@
  * @property int $project_id
  * @property int $percentage_complete
  */
-
-
-namespace GO\Tasks\Model;
-use Sabre;
-
-
 class Task extends \GO\Base\Db\ActiveRecord {
 	
 	const STATUS_NEEDS_ACTION = "NEEDS-ACTION";
@@ -84,6 +81,25 @@ class Task extends \GO\Base\Db\ActiveRecord {
 		parent::init();
 	}
 	
+	
+	public function getUri() {
+		if(isset($this->_setUri)) {
+			return $this->_setUri;
+		}
+		
+		return str_replace('/','+',$this->uuid).'-'.$this->id;
+	}
+	
+	private $_setUri;
+	
+	public function setUri($uri) {
+		$this->_setUri = $uri;					
+	}
+	
+	public function getETag() {
+		return '"' . date('Ymd H:i:s', $this->mtime). '-'.$this->id.'"';
+	}
+	
 	protected function getLocalizedName() {
 		return \GO::t('task', 'tasks');
 	}
@@ -112,7 +128,8 @@ class Task extends \GO\Base\Db\ActiveRecord {
 		return array(
 				'tasklist' => array('type' => self::BELONGS_TO, 'model' => 'GO\Tasks\Model\Tasklist', 'field' => 'tasklist_id', 'delete' => false),
 				'category' => array('type' => self::BELONGS_TO, 'model' => 'GO\Tasks\Model\Category', 'field' => 'category_id', 'delete' => false),
-				'project' => array('type' => self::BELONGS_TO, 'model' => 'GO\Projects\Model\Project', 'field' => 'project_id', 'delete' => false)
+				'project' => array('type' => self::BELONGS_TO, 'model' => 'GO\Projects\Model\Project', 'field' => 'project_id', 'delete' => false),
+				'project2' => array('type' => self::BELONGS_TO, 'model' => 'GO\Projects2\Model\Project', 'field' => 'project_id', 'delete' => false)
 				);
 	}
 	
@@ -129,14 +146,22 @@ class Task extends \GO\Base\Db\ActiveRecord {
 	
 	public function afterSave($wasNew) {
 		
-		if($this->reminder>0){
+		if($this->isModified('reminder')) {
 			$this->deleteReminders();
-			if($this->reminder>time() && $this->status!='COMPLETED')
-				$this->addReminder($this->name, $this->reminder, $this->tasklist->user_id);
-		}	
+			if($this->reminder>0) {
+				if($this->reminder>time() && $this->status!='COMPLETED')
+					$this->addReminder($this->name, $this->reminder, $this->tasklist->user_id);
+			}	
+		}
 		
 		if($this->isModified('project_id') && $this->project)
 			$this->link($this->project);
+		if($this->isModified('project_id') && !empty($this->project2))
+			$this->link($this->project2);
+		
+		if($this->isModified()) {
+			Tasklist::versionUp($this->tasklist_id);
+		}
 		
 		return parent::afterSave($wasNew);
 	}
@@ -158,6 +183,8 @@ class Task extends \GO\Base\Db\ActiveRecord {
 	
 	protected function afterDelete() {
 		$this->deleteReminders();
+
+		Tasklist::versionUp($this->tasklist_id);
 		return parent::afterDelete();
 	}
 	
@@ -172,6 +199,28 @@ class Task extends \GO\Base\Db\ActiveRecord {
 		}
 	}
 	
+	/**
+	 * Find all tasks that you are going to work on today
+	 * @param $date unix timestamp
+	 * @param $tasklist_id the task list to search in
+	 * @return ActiveStatement
+	 */
+	static public function findByDate($date, $tasklist_id=null) {
+		$date = \GO\Base\Util\Date::clear_time($date);
+		$criteria = \GO\Base\Db\FindCriteria::newInstance();
+		if(!empty($tasklist_id))
+			$criteria->addCondition('tasklist_id', $tasklist_id);
+		$criteria1 = \GO\Base\Db\FindCriteria::newInstance()
+				->addCondition('start_time', $date+24*3600, '<')
+				->addCondition('start_time', $date, '>=');
+		$criteria2 = \GO\Base\Db\FindCriteria::newInstance()
+				->addCondition('due_time', $date+24*3600, '<')
+				->addCondition('due_time', $date, '>=');
+		$tasks = \GO\Tasks\Model\Task::model()->find(\GO\Base\Db\FindParams::newInstance()->criteria(
+				$criteria->mergeWith($criteria1->mergeWith($criteria2, false), true))
+		);
+		return $tasks;
+	}
 	
 	/**
 	 * Set the task to completed or not completed.
@@ -213,14 +262,25 @@ class Task extends \GO\Base\Db\ActiveRecord {
 			$nextDueTime = $rrule->getNextRecurrence($this->due_time+1);
 			
 			if($nextDueTime){
-			
-				$this->duplicate(array(
+				
+				$data = array(
 					'completion_time'=>0,
 					'start_time'=>$nextDueTime-$this->due_time+$this->start_time,
 					'due_time'=>$nextDueTime,
 					'status'=>Task::STATUS_NEEDS_ACTION,
 					'percentage_complete'=>0
-				));
+				);
+				
+				// If a reminder is set, then calculate the difference between the start dates of the old and the new task.
+				// Then add that difference to the reminder time for the new event. (So the reminder will also move forward)
+				if(!empty($this->reminder)){
+					$diff = $data['start_time'] - $this->start_time;
+					$data['reminder'] = $this->reminder + $diff;
+				}
+
+				$dup = $this->duplicate($data);
+				
+				$this->copyLinks($dup);
 			}
 		}
 	}
@@ -235,23 +295,38 @@ class Task extends \GO\Base\Db\ActiveRecord {
 	
 	public function defaultAttributes() {
 		$settings = Settings::model()->getDefault(\GO::user());
+		$defaultTasklist = Tasklist::model()->findByPk($settings->default_tasklist_id);
+		if(empty($defaultTasklist)) {
+			$oldPermissions = \GO::setIgnoreAclPermissions(true);
+			$defaultTasklist = new Tasklist();
+			$defaultTasklist->name = \GO::user()->name;
+			$defaultTasklist->user_id = \GO::user()->id;
+			if($defaultTasklist->save()) {
+				$settings->default_tasklist_id=$defaultTasklist->id;
+				$settings->save();
+			}
+			\GO::setIgnoreAclPermissions($oldPermissions);
+		}
 		
 		$defaults = array(
 				'status' => Task::STATUS_NEEDS_ACTION,
 				//'remind' => $settings->remind,
 				'start_time'=> time(),
 				'due_time'=> time(),
-				'tasklist_id'=>$settings->default_tasklist_id,
+				'tasklist_id'=>$defaultTasklist->id,
 				//'reminder' =>$this->getDefaultReminder(time())
 		);
-		if($settings->remind)
-			$defaults['reminder']=$this->getDefaultReminder(time());
+		$defaults['reminder']=$this->getDefaultReminder(time());
 		
 		return $defaults;
 	}
 	
 	public function getDefaultReminder($startTime){
 		$settings = Settings::model()->getDefault(\GO::user());
+		
+		if(!$settings->remind){
+			return 0;
+		}
 		
 		$tmp = \GO\Base\Util\Date::date_add($startTime, -$settings->reminder_days);
 		
@@ -267,7 +342,7 @@ class Task extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Get vcalendar data for an *.ics file.
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function toICS() {		
 		
@@ -310,36 +385,26 @@ class Task extends \GO\Base\Db\ActiveRecord {
 		$ctimeDateTime->setTimezone(new \DateTimeZone('UTC'));
 		$e->add('created', $ctimeDateTime);
 		
-    $e->summary = $this->name;
+		$e->summary = $this->name;
 		
 		$e->status = $this->status;
 		
 		$dateType = "DATE";
 		
-//		$dtstart = new Sabre\VObject\Property\DateTime('dtstart',$dateType);
-//		$dtstart->setDateTime(\GO\Base\Util\Date\DateTime::fromUnixtime($this->start_time));		
-//		$e->add($dtstart);
-//		
-		$e->add('dtstart', \GO\Base\Util\Date\DateTime::fromUnixtime($this->start_time), array('VALUE'=>$dateType));
-		
-		
-		
-//		$due = new Sabre\VObject\Property\DateTime('due',$dateType);
-//		$due->setDateTime(\GO\Base\Util\Date\DateTime::fromUnixtime($this->due_time));		
-//		$e->add($due);
+		if(!empty($this->start_time)) {
+			$e->add('dtstart', \GO\Base\Util\Date\DateTime::fromUnixtime($this->start_time), array('VALUE'=>$dateType));
+		}
 		
 		$e->add('due', \GO\Base\Util\Date\DateTime::fromUnixtime($this->due_time), array('VALUE'=>$dateType));
 		
 		
 		
 		if($this->completion_time>0){
-//			$completed = new Sabre\VObject\Property\DateTime('completed',Sabre\VObject\Property\DateTime::LOCALTZ);
-//			$completed->setDateTime(\GO\Base\Util\Date\DateTime::fromUnixtime($this->completion_time));		
-//			$e->add($completed);
-			
 			$e->add('completed', \GO\Base\Util\Date\DateTime::fromUnixtime($this->completion_time), array('VALUE'=>$dateType));
-		
 		}
+		
+		if(!empty($this->percentage_complete))
+			$e->add('percent-complete',$this->percentage_complete);
 		
 		if(!empty($this->description))
 			$e->description=$this->description;
@@ -349,18 +414,32 @@ class Task extends \GO\Base\Db\ActiveRecord {
 			$e->rrule=str_replace('RRULE:','',$this->rrule);					
 		}
 		
-		switch($this->priority){
-			case self::PRIORITY_HIGH:
-				$e->priority=1;
-				break;
-			
+		switch($this->priority) {
 			case self::PRIORITY_LOW:
-				$e->priority=10;
-				break;
+				$e->priority = 9; break;
+			case self::PRIORITY_HIGH:
+				$e->priority = 1; break;
+			default: $e->priority = 5;
+		}
+		
+		if($this->reminder>0){
 			
-			default:
-				$e->priority=3;
-				break;
+			$a=$calendar->createComponent('VALARM');
+			
+//			BEGIN:VALARM
+//ACTION:DISPLAY
+//TRIGGER;VALUE=DURATION:-PT5M
+//DESCRIPTION:Default Mozilla Description
+//END:VALARM
+			
+			$a->action='DISPLAY';			
+			$a->add('trigger',date('Ymd\THis', $this->reminder), array('value'=>'DATE-TIME'));			
+			$a->description="Alarm";			
+		
+						
+			//for funambol compatibility, the \GO\Base\VObject\Reader class use this to convert it to a vcalendar 1.0 aalarm tag.
+			$e->{"X-GO-REMINDER-TIME"}=date('Ymd\THis', $this->reminder);
+			$e->add($a);
 		}
 		
 		return $e;
@@ -393,9 +472,9 @@ class Task extends \GO\Base\Db\ActiveRecord {
 		
 		if(!empty($vobject->due)){
 			$this->due_time = $vobject->due->getDateTime()->format('U');
-			
-			if(empty($vobject->dtstart))
-				$this->start_time=$this->due_time;
+		}
+		if(empty($vobject->dtstart)){
+			$this->start_time = 0;
 		}
 				
 		if($vobject->dtstamp)
@@ -403,9 +482,6 @@ class Task extends \GO\Base\Db\ActiveRecord {
 		
 		if(empty($this->due_time))
 			$this->due_time=time();
-		
-		if(empty($this->start_time))
-			$this->start_time=$this->due_time;
 		
 		if($vobject->rrule){			
 			$rrule = new \GO\Base\Util\Icalendar\Rrule();
@@ -455,15 +531,18 @@ class Task extends \GO\Base\Db\ActiveRecord {
 		if($this->status=='COMPLETED' && empty($this->completion_time))
 			$this->completion_time=time();
 		
-		if($vobject->valarm){
-			
-		}else
-		{
-			$this->reminder=0;
+		$this->reminder=0;
+		if($vobject->valarm && $vobject->valarm->trigger){
+			$date = $vobject->valarm->getEffectiveTriggerTime();
+			if($date) {
+				$this->reminder = $date->format('U');
+			}
 		}		
 		
 		$this->setAttributes($attributes, false);
 		$this->cutAttributeLengths();
+		if($this->due_time < $this->start_time)
+			$this->due_time = $this->start_time;
 		$this->save();
 		
 		return $this;
@@ -475,6 +554,12 @@ class Task extends \GO\Base\Db\ActiveRecord {
 	 * @return boolean 
 	 */
 	public function isLate(){
-		return $this->status!='COMPLETED' && $this->due_time<time();
+		$today = date("Ymd");
+		return $this->status!='COMPLETED' && date("Ymd",$this->due_time) < $today;
+	}
+	
+	public function isActive() {
+		$today = date("Ymd");
+		return (date("Ymd",$this->start_time) <= $today && date("Ymd",$this->due_time) >= $today);
 	}
 }

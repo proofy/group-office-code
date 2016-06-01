@@ -27,14 +27,14 @@ interface Swift_KeyCache_KeyCacheInputStream extends Swift_InputByteStream
     /**
      * Set the nsKey which will be written to.
      *
-     * @param string $nsKey
+     * @param StringHelper $nsKey
      */
     public function setNsKey($nsKey);
 
     /**
      * Set the itemKey which will be written to.
      *
-     * @param string $itemKey
+     * @param StringHelper $itemKey
      */
     public function setItemKey($itemKey);
 

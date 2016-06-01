@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: MainPanel.js 15285 2013-07-23 13:51:52Z mschering $
+ * @version $Id: MainPanel.js 17914 2014-08-06 13:41:29Z wilmar1980 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -279,4 +279,19 @@ Ext.extend(GO.summary.MainPanel, GO.summary.Portal, {
 GO.moduleManager.addModule('summary', GO.summary.MainPanel, {
 	title : GO.summary.lang.summary,
 	iconCls : 'go-tab-icon-summary'
+});
+
+
+
+GO.mainLayout.onReady(function(){
+	
+	GO.request({
+		url: 'summary/announcement/checkLatestRead',
+		success: function(response,options,result) {
+			if (result.has_unread) {
+				GO.mainLayout.openModule('summary');
+			}
+		}
+	});
+	
 });

@@ -35,7 +35,7 @@
  * @version    1.0
  * @param array
  * @param Smarty
- * @return string
+ * @return StringHelper
  * @uses smarty_function_escape_special_chars()
  */
 function smarty_function_html_checkboxes($params, &$smarty)

@@ -28,6 +28,10 @@ class FilesModule extends \GO\Base\Module{
 	public static function initListeners() {
 		\GO\Base\Model\User::model()->addListener('save', "GO\Files\FilesModule", "saveUser");
 		\GO\Base\Model\User::model()->addListener('delete', "GO\Files\FilesModule", "deleteUser");
+		
+		$c = new \GO\Core\Controller\BatchEditController();
+		
+		$c->addListener('store', "GO\Files\FilesModule", "afterBatchEditStore");
 	}
 	
 
@@ -44,12 +48,15 @@ class FilesModule extends \GO\Base\Module{
 			
 			//In some cases the acl id of the home folder was copied from the user. We will correct that here.
 			if(!$folder->acl || $folder->acl_id==$user->acl_id){
-				$folder->setNewAcl($user->id);
-				$folder->user_id=$user->id;
-				$folder->visible=0;
-				$folder->readonly=1;
-				$folder->save();
+				$folder->setNewAcl($user->id);				
 			}
+			
+			$folder->user_id=$user->id;
+			$folder->visible=1;
+			$folder->readonly=1;			
+			$folder->save();
+			
+			$folder->fsFolder->create();
 			//$folder->syncFilesystem();		
 			
 		}
@@ -132,6 +139,71 @@ class FilesModule extends \GO\Base\Module{
 		$template->extension='odt';
 		$template->save();	
 		$template->acl->addGroup(\GO::config()->group_internal, \GO\Base\Model\Acl::READ_PERMISSION);
+	}
+	
+	
+	public static function afterBatchEditStore(&$this, &$response, &$tmpModel, &$params) {
+		$countCustomfield = 0;
+		$countCustomfieldCategory = array();
+		
+		$module = call_user_func_array($params['model_name'].'::model', array());
+		$stmt = call_user_func_array(array($module, 'find'), 
+							array(\GO\Base\Db\FindParams::newInstance()->debugSql()->ignoreAcl()
+							->criteria(
+											\GO\Base\Db\FindCriteria::newInstance()
+											->addInCondition($params['primaryKey'], json_decode($params['keys']))
+											)
+									)
+							);		
+		
+		foreach ($stmt as $model) {
+			
+			$customfields = \GO\Customfields\Controller\CategoryController::getEnabledCategoryData("GO\Files\Model\File", $model->folder_id);
+			
+			$countCustomfield++;
+			if(isset($customfields['enabled_categories'])) {
+				foreach ($customfields['enabled_categories'] as $id) {
+
+						if(isset($countCustomfieldCategory[$id])) {
+							$countCustomfieldCategory[$id]++;
+						} else {
+							$countCustomfieldCategory[$id] = 1;
+						}
+
+				}
+			}else
+			{
+				if(!isset($allCats)) {
+					$allCats = \GO\Customfields\Model\Category::model()->findByModel("GO\Files\Model\File")->fetchAll();
+				}
+				
+				foreach($allCats as $cat) {
+					$id = $cat->id;
+					if(isset($countCustomfieldCategory[$id])) {
+						$countCustomfieldCategory[$id]++;
+					} else {
+						$countCustomfieldCategory[$id] = 1;
+					}
+				}
+			}
+			
+		}
+		
+		// remove fields
+		foreach ($response['results']  as $key => $results) {
+			if($results['gotype'] == 'customfield') {
+				
+				
+				if(!isset($countCustomfieldCategory[$results['category_id']]) || $countCustomfieldCategory[$results['category_id']] != $countCustomfield) {
+					
+					unset($response['results'][$key]);
+				}
+				
+			}
+		}
+		
+		$response['results'] = array_values($response['results']);
+		
 	}
 	
 }

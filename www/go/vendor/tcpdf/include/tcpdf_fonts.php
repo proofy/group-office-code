@@ -1561,7 +1561,7 @@ class TCPDF_FONTS {
 	 * </pre>
 	 * @param $unicode (array) array containing UTF-8 unicode values
 	 * @param $setbom (boolean) if true set the Byte Order Mark (BOM = 0xFEFF)
-	 * @return string
+	 * @return StringHelper
 	 * @protected
 	 * @author Nicola Asuni
 	 * @since 2.1.000 (2008-01-08)
@@ -1677,7 +1677,7 @@ class TCPDF_FONTS {
 
 	/**
 	 * Return fonts path
-	 * @return string
+	 * @return StringHelper
 	 * @public static
 	 */
 	public static function _getfontpath() {
@@ -1694,7 +1694,7 @@ class TCPDF_FONTS {
 	 * Return font full path
 	 * @param $file (string) Font file name.
 	 * @param $fontdir (string) Font directory (set to false fto search on default directories)
-	 * @return string Font full path or empty string
+	 * @return StringHelper Font full path or empty string
 	 * @author Nicola Asuni
 	 * @since 6.0.025
 	 * @public static
@@ -1896,7 +1896,7 @@ class TCPDF_FONTS {
 	 * @param $str (string) string to process.
 	 * @param $isunicode (boolean) True when the documetn is in Unicode mode, false otherwise.
 	 * @param $currentfont (array) Reference to current font array.
-	 * @return string
+	 * @return StringHelper
 	 * @since 3.2.000 (2008-06-23)
 	 * @public static
 	 */
@@ -1911,7 +1911,7 @@ class TCPDF_FONTS {
 	 * @param $setbom (boolean) if true set the Byte Order Mark (BOM = 0xFEFF)
 	 * @param $isunicode (boolean) True when the documetn is in Unicode mode, false otherwise.
 	 * @param $currentfont (array) Reference to current font array.
-	 * @return string
+	 * @return StringHelper
 	 * @author Nicola Asuni
 	 * @since 1.53.0.TC005 (2005-01-05)
 	 * @public static
@@ -1931,7 +1931,7 @@ class TCPDF_FONTS {
 	 * @param $forcertl (bool) if true forces RTL text direction
 	 * @param $isunicode (boolean) True if the document is in Unicode mode, false otherwise.
 	 * @param $currentfont (array) Reference to current font array.
-	 * @return string
+	 * @return StringHelper
 	 * @author Nicola Asuni
 	 * @since 2.1.000 (2008-01-08)
 	 * @public static
@@ -1948,7 +1948,7 @@ class TCPDF_FONTS {
 	 * @param $forcertl (bool) if true forces RTL text direction
 	 * @param $isunicode (boolean) True if the document is in Unicode mode, false otherwise.
 	 * @param $currentfont (array) Reference to current font array.
-	 * @return string
+	 * @return StringHelper
 	 * @author Nicola Asuni
 	 * @since 4.9.000 (2010-03-27)
 	 * @public static

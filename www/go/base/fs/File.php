@@ -48,8 +48,8 @@ class File extends Base{
 	/**
 	 * Get a unique temporary file.
 	 * 
-	 * @param string $filename
-	 * @param string $extension
+	 * @param StringHelper $filename
+	 * @param StringHelper $extension
 	 * @return File 
 	 */
 	public static function tempFile($filename='',$extension=''){
@@ -74,7 +74,7 @@ class File extends Base{
 	 * Get the size formatted nicely like 1.5 MB
 	 * 
 	 * @param int $decimals
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function humanSize($decimals = 1) {
 		$size = $this->size();
@@ -128,7 +128,7 @@ class File extends Base{
 	 * Returns the extension of a filename
 	 *
 	 * @access public
-	 * @return string  The extension of a filename
+	 * @return StringHelper  The extension of a filename
 	 */
 	public function extension() {
 		return self::getExtension($this->name());
@@ -137,8 +137,8 @@ class File extends Base{
 	/**
 	 * Get the extension of a filename
 	 * 
-	 * @param string $filename
-	 * @return string
+	 * @param StringHelper $filename
+	 * @return StringHelper
 	 */
 	public static function getExtension($filename) {
 		$extension = '';
@@ -168,9 +168,9 @@ class File extends Base{
 	/**
 	 * Checks if a filename exists and renames it.
 	 *
-	 * @param	string $filepath The complete path to the file
+	 * @param	StringHelper $filepath The complete path to the file
 	 * @access public
-	 * @return string  New filepath
+	 * @return StringHelper  New filepath
 	 */
 	public function appendNumberToNameIfExists()
 	{
@@ -190,7 +190,7 @@ class File extends Base{
 	/**
 	 * Put data in the file. (See php function file_put_contents())
 	 * 
-	 * @param string $data
+	 * @param StringHelper $data
 	 * @param type $flags
 	 * @param type $context
 	 * @return boolean 
@@ -226,8 +226,8 @@ class File extends Base{
 	/**
 	 * Get human friendly file type description. eg. Text document.
 	 * 
-	 * @param string $extension
-	 * @return string 
+	 * @param StringHelper $extension
+	 * @return StringHelper 
 	 */
 	public static function getFileTypeDescription($extension) {		
 		$lang = \GO::t($extension,'base','filetypes');
@@ -263,7 +263,7 @@ class File extends Base{
 			{
 				$pos++;
 
-				$start_of_line = \GO\Base\Util\String::rstrpos($types, "\n", $pos);
+				$start_of_line = \GO\Base\Util\StringHelper::rstrpos($types, "\n", $pos);
 				$end_of_mime = strpos($types, ' ', $start_of_line);
 				$mime = substr($types, $start_of_line+1, $end_of_mime-$start_of_line-1);
 
@@ -293,7 +293,7 @@ class File extends Base{
 	 * @return boolean 
 	 */
 	public function isImage(){
-		switch($this->extension()){
+		switch(strtolower($this->extension())){
 			case 'ico':
 			case 'jpg':
 			case 'jpeg':
@@ -312,8 +312,8 @@ class File extends Base{
 	 * Output the contents of this file to standard out (browser).
 	 */
 	public function output() {
-		@ob_clean();
-		@flush();
+		@ob_end_clean();
+		@ob_end_flush();
 
 		//readfile somehow caused a memory exhausted error. This stopped when I added 
 		//ob_clean and flush above, but the browser hung with presenting the download 
@@ -337,7 +337,7 @@ class File extends Base{
 	 * Move a file to another folder.
 	 * 
 	 * @param Folder|File $destination If a file is given it will be replaced.
-	 * @param string $newFileName Optionally rename the file too.
+	 * @param StringHelper $newFileName Optionally rename the file too.
 	 * @param boolean $isUploadedFile Check if this file was upload for security reasons.
 	 * @param boolean $appendNumberToNameIfDestinationExists Rename the file like "File (1)" if it already exists. 
 	 * @return boolean
@@ -454,7 +454,7 @@ class File extends Base{
 	/**
 	 * Try to detect the encoding. See PHP manual mb_detect_encoding
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function detectEncoding($str){
 		$enc = false;
@@ -491,14 +491,14 @@ class File extends Base{
 			$str = substr($str, 3);
 		}
 		
-		return $this->putContents(\GO\Base\Util\String::clean_utf8($str, $enc));
+		return $this->putContents(\GO\Base\Util\StringHelper::clean_utf8($str, $enc));
 
 	}
 	
 	/**
 	 * Get the md5 hash from this file
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function md5Hash(){
 		return md5_file($this->path);
@@ -535,7 +535,7 @@ class File extends Base{
 	 * Get the end of a text file.
 	 * 
 	 * @param int $lines Number of lines
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function tail($lines=20) {
     //global $fsize;

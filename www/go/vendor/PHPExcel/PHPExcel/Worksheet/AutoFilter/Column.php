@@ -47,7 +47,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	/**
 	 * Types of autofilter rules
 	 *
-	 * @var string[]
+	 * @var StringHelper[]
 	 */
 	private static $_filterTypes = array(
 		//	Currently we're not handling
@@ -67,7 +67,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	/**
 	 * Join options for autofilter rules
 	 *
-	 * @var string[]
+	 * @var StringHelper[]
 	 */
 	private static $_ruleJoins = array(
 		self::AUTOFILTER_COLUMN_JOIN_AND,
@@ -85,7 +85,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	/**
 	 * Autofilter Column Index
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_columnIndex = '';
 
@@ -93,7 +93,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	/**
 	 * Autofilter Column Filter Type
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_filterType = self::AUTOFILTER_FILTERTYPE_FILTER;
 
@@ -101,7 +101,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	/**
 	 * Autofilter Multiple Rules And/Or
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_join = self::AUTOFILTER_COLUMN_JOIN_OR;
 
@@ -125,7 +125,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	/**
 	 * Create a new PHPExcel_Worksheet_AutoFilter_Column
 	 *
-	 *	@param	string		                   $pColumn		Column (e.g. A)
+	 *	@param	StringHelper		                   $pColumn		Column (e.g. A)
 	 *	@param	PHPExcel_Worksheet_AutoFilter  $pParent		Autofilter for this column
 	 */
 	public function __construct($pColumn, PHPExcel_Worksheet_AutoFilter $pParent = NULL)
@@ -137,7 +137,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	/**
 	 * Get AutoFilter Column Index
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getColumnIndex() {
 		return $this->_columnIndex;
@@ -186,7 +186,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	/**
 	 * Get AutoFilter Type
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getFilterType() {
 		return $this->_filterType;
@@ -212,7 +212,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	/**
 	 * Get AutoFilter Multiple Rules And/Or Join
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getJoin() {
 		return $this->_join;
@@ -240,7 +240,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	/**
 	 *	Set AutoFilter Attributes
 	 *
-	 *	@param	string[]		$pAttributes
+	 *	@param	StringHelper[]		$pAttributes
 	 *	@throws	PHPExcel_Exception
 	 *	@return PHPExcel_Worksheet_AutoFilter_Column
 	 */
@@ -267,7 +267,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	/**
 	 * Get AutoFilter Column Attributes
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getAttributes() {
 		return $this->_attributes;
@@ -277,7 +277,7 @@ class PHPExcel_Worksheet_AutoFilter_Column
 	 * Get specific AutoFilter Column Attribute
 	 *
 	 *	@param	string		$pName		Attribute Name
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getAttribute($pName) {
 		if (isset($this->_attributes[$pName]))

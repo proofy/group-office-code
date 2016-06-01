@@ -71,7 +71,7 @@ class Person extends GO\Base\Ldap\Record {
 	
 	/**
 	 * Get an LDAP person record by username
-	 * @param string $username just the username
+	 * @param StringHelper $username just the username
 	 * @return \GO\Ldapauth\Model\Person
 	 */
 	public static function findByUsername($username) {
@@ -97,7 +97,7 @@ class Person extends GO\Base\Ldap\Record {
 		if($this->_ldapConn->bind($this->getDn(), $password))
 			return true;
 		
-		GO::debug("LDAP: authentication FAILED for " . $this->username);
+		GO::debug("LDAP: authentication FAILED for " . $this->getDn());
 		GO::session()->logout();
 		return false;
 	}

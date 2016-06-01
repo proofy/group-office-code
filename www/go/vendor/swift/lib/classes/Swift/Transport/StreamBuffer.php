@@ -69,7 +69,7 @@ class Swift_Transport_StreamBuffer extends Swift_ByteStream_AbstractFilterableIn
     /**
      * Set an individual param on the buffer (e.g. switching to SSL).
      *
-     * @param string $param
+     * @param StringHelper $param
      * @param mixed  $value
      */
     public function setParam($param, $value)
@@ -126,7 +126,7 @@ class Swift_Transport_StreamBuffer extends Swift_ByteStream_AbstractFilterableIn
      *
      * This could replace LF with CRLF for example.
      *
-     * @param string[] $replacements
+     * @param StringHelper[] $replacements
      */
     public function setWriteTranslations(array $replacements)
     {
@@ -155,7 +155,7 @@ class Swift_Transport_StreamBuffer extends Swift_ByteStream_AbstractFilterableIn
      *
      * @param integer $sequence of last write to scan from
      *
-     * @return string
+     * @return StringHelper
      *
      * @throws Swift_IoException
      */
@@ -187,7 +187,7 @@ class Swift_Transport_StreamBuffer extends Swift_ByteStream_AbstractFilterableIn
      *
      * @param integer $length
      *
-     * @return string|boolean
+     * @return StringHelper|boolean
      *
      * @throws Swift_IoException
      */

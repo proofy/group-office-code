@@ -24,7 +24,7 @@ interface Swift_CharacterStream
     /**
      * Set the character set used in this CharacterStream.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      */
     public function setCharacterSet($charset);
 
@@ -46,7 +46,7 @@ interface Swift_CharacterStream
      * Import a string a bytes into this CharacterStream, overwriting any existing
      * data in the stream.
      *
-     * @param string $string
+     * @param StringHelper $string
      */
     public function importString($string);
 
@@ -56,7 +56,7 @@ interface Swift_CharacterStream
      *
      * @param integer $length
      *
-     * @return string
+     * @return StringHelper
      */
     public function read($length);
 
@@ -73,7 +73,7 @@ interface Swift_CharacterStream
     /**
      * Write $chars to the end of the stream.
      *
-     * @param string $chars
+     * @param StringHelper $chars
      */
     public function write($chars);
 

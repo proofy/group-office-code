@@ -22,10 +22,10 @@ require_once $smarty->_get_plugin_filepath('shared', 'make_timestamp');
  * @link http://smarty.php.net/manual/en/language.modifier.date.format.php
  *          date_format (Smarty online manual)
  * @author   Monte Ohrt <monte at ohrt dot com>
- * @param string
- * @param string
- * @param string
- * @return string|void
+ * @param StringHelper
+ * @param StringHelper
+ * @param StringHelper
+ * @return StringHelper|void
  * @uses smarty_make_timestamp()
  */
 function smarty_modifier_date_format($string, $format = '%b %e, %Y', $default_date = '')

@@ -39,7 +39,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * Prefix used to uniquely identify cache data for this worksheet
      *
      * @access    private
-     * @var string
+     * @var StringHelper
      */
     private $_cachePrefix = null;
 
@@ -78,7 +78,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * Add or Update a cell in cache identified by coordinate address
      *
      * @access  public
-     * @param   string         $pCoord  Coordinate address of the cell to update
+     * @param   StringHelper         $pCoord  Coordinate address of the cell to update
      * @param   PHPExcel_Cell  $cell    Cell to update
      * @return  void
      * @throws  PHPExcel_Exception
@@ -101,7 +101,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * Is a value set in the current PHPExcel_CachedObjectStorage_ICache for an indexed cell?
      *
      * @access  public
-     * @param   string  $pCoord  Coordinate address of the cell to check
+     * @param   StringHelper  $pCoord  Coordinate address of the cell to check
      * @return  void
      * @return  boolean
      */
@@ -128,7 +128,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * Get cell at a specific coordinate
      *
      * @access  public
-     * @param   string         $pCoord  Coordinate of the cell
+     * @param   StringHelper         $pCoord  Coordinate of the cell
      * @throws  PHPExcel_Exception
      * @return  PHPExcel_Cell  Cell that was found, or null if not found
      */
@@ -180,7 +180,7 @@ class PHPExcel_CachedObjectStorage_APC extends PHPExcel_CachedObjectStorage_Cach
      * Delete a cell in cache identified by coordinate address
      *
      * @access  public
-     * @param   string  $pCoord  Coordinate address of the cell to delete
+     * @param   StringHelper  $pCoord  Coordinate address of the cell to delete
      * @throws  PHPExcel_Exception
      */
     public function deleteCacheData($pCoord) {

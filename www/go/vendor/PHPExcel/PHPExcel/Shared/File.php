@@ -96,8 +96,8 @@ class PHPExcel_Shared_File
 	/**
 	 * Returns canonicalized absolute pathname, also for ZIP archives
 	 *
-	 * @param string $pFilename
-	 * @return string
+	 * @param StringHelper $pFilename
+	 * @return StringHelper
 	 */
 	public static function realpath($pFilename) {
 		// Returnvalue
@@ -130,7 +130,7 @@ class PHPExcel_Shared_File
 	/**
 	 * Get the systems temporary directory.
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public static function sys_get_temp_dir()
 	{

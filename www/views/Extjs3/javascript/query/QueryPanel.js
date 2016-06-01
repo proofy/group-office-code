@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: QueryPanel.js 14816 2013-05-21 08:31:20Z mschering $
+ * @version $Id: QueryPanel.js 18475 2014-11-13 14:28:55Z wilmar1980 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -32,6 +32,11 @@ GO.query.QueryPanel = function(config){
 		fields: ['name','label','gotype'],
 		remoteSort: true
 	});
+	
+	var idRecord = new Ext.data.Record({'name':'t.id','label':'ID','gotype':'numberfield'},'id');
+	this.typesStore.on('load',function(){
+		this.typesStore.insert(0,[idRecord]);
+	},this);
 	
 	config.layout='fit';
 	config.autoScroll=true;

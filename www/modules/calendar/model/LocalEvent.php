@@ -52,27 +52,27 @@ class LocalEvent extends \GO\Base\Model {
 	
 	/**
 	 *
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	private $_startTime;
 	
 	/**
 	 *
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	private $_endTime;
 
 	/**
 	 * The end time of an recurring event in the current period
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	private $_alternateEndTime;
 	
 	/**
 	 * The start time of an recurring event in the current period
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	private $_alternateStartTime;
 	
@@ -80,8 +80,8 @@ class LocalEvent extends \GO\Base\Model {
 	 * Constructor
 	 * 
 	 * @param Event $event
-	 * @param string $periodStartTime
-	 * @param string $periodEndTime 
+	 * @param StringHelper $periodStartTime
+	 * @param StringHelper $periodEndTime 
 	 */
 	public function __construct(Event $event, $periodStartTime, $periodEndTime){
 		$this->_event = $event;
@@ -151,7 +151,7 @@ class LocalEvent extends \GO\Base\Model {
 		$response['ctime'] = date('Y-m-d H:i',  $this->_event->ctime);
 		$response['mtime'] = date('Y-m-d H:i',  $this->_event->mtime);
 		$response['event_id'] = $this->_event->id;
-		$response['description'] = nl2br(htmlspecialchars(\GO\Base\Util\String::cut_string($this->_event->description, 800), ENT_COMPAT, 'UTF-8'));
+		$response['description'] = nl2br(htmlspecialchars(\GO\Base\Util\StringHelper::cut_string($this->_event->description, 800), ENT_COMPAT, 'UTF-8'));
 		$response['private'] = $this->isPrivate();
 		
 		$response['private_enabled']=$this->_event->private;
@@ -237,10 +237,17 @@ class LocalEvent extends \GO\Base\Model {
 	
 	public function mergeWithEvent($event){
 		
+		//echo $this->_event->user->getShortName().' : '. $event->getEvent()->user->getShortName().', ';
+		
+			
 		$this->_isMerged = true;
 		$this->_initials[] = $event->getEvent()->user->getShortName();
 		$this->_calendarNames[] = $event->getCalendar()->name;
 		$this->_backgroundColor = 'FFFFFF';
+		
+		if($event->getEvent()->is_organizer){
+			$this->_event = $event->getEvent();
+		}
 		
 	}
 
@@ -291,7 +298,7 @@ class LocalEvent extends \GO\Base\Model {
 	/**
 	 * Get the period start time
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function getPeriodStartTime(){
 		return $this->_startTime;
@@ -300,7 +307,7 @@ class LocalEvent extends \GO\Base\Model {
 	/**
 	 * Get the period end time
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function getPeriodEndTime(){
 		return $this->_endTime;
@@ -335,7 +342,7 @@ class LocalEvent extends \GO\Base\Model {
 	/**
 	 * Get the formatted starting date of this event
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function getFormattedDate(){
 		return date(\GO::user()->date_format,$this->_event->start_time);
@@ -344,7 +351,7 @@ class LocalEvent extends \GO\Base\Model {
 	/**
 	 * Get the formatted starting date and time of this event
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function getFormattedDateAndTime(){
 		return date(\GO::user()->date_format.' '.\GO::user()->time_format,$this->_event->start_time);
@@ -353,7 +360,7 @@ class LocalEvent extends \GO\Base\Model {
 	/**
 	 * Get the formatted starting time of this event
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function getFormattedTime(){
 		return date(\GO::user()->time_format,$this->_event->start_time);
@@ -362,7 +369,7 @@ class LocalEvent extends \GO\Base\Model {
 	/**
 	 * Get the day this event starts on.
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function getDay(){
 		$dayString = \GO::t('full_days','common');
@@ -418,7 +425,7 @@ class LocalEvent extends \GO\Base\Model {
 	 */
 	public function isReadOnly(){
 		return 
-						$this->_isMerged ||
+						//$this->_isMerged ||
 						$this->_event->read_only || 
 						!$this->_event->is_organizer || 
 						$this->isPrivate() && \GO::user()->id != $this->_event->user_id || 

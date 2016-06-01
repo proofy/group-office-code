@@ -38,21 +38,21 @@ abstract class PHPExcel_Writer_PDF_Core extends PHPExcel_Writer_HTML
     /**
      * Temporary storage directory
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_tempDir = '';
 
     /**
      * Font
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_font = 'freesans';
 
     /**
      * Orientation (Over-ride)
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_orientation    = NULL;
 
@@ -67,7 +67,7 @@ abstract class PHPExcel_Writer_PDF_Core extends PHPExcel_Writer_HTML
     /**
      * Temporary storage for Save Array Return type
      *
-     * @var string
+     * @var StringHelper
      */
 	private $_saveArrayReturnType;
 
@@ -226,7 +226,7 @@ abstract class PHPExcel_Writer_PDF_Core extends PHPExcel_Writer_HTML
     /**
      *  Get Font
      *
-     *  @return string
+     *  @return StringHelper
      */
     public function getFont()
     {
@@ -240,7 +240,7 @@ abstract class PHPExcel_Writer_PDF_Core extends PHPExcel_Writer_HTML
      *      'arialunicid0-korean'
      *      'arialunicid0-japanese'
      *
-     *  @param    string    $fontName
+     *  @param    StringHelper    $fontName
      */
     public function setFont($fontName)
     {
@@ -261,7 +261,7 @@ abstract class PHPExcel_Writer_PDF_Core extends PHPExcel_Writer_HTML
     /**
      *  Set Paper Size
      *
-     *  @param  string  $pValue Paper size
+     *  @param  StringHelper  $pValue Paper size
      *  @return PHPExcel_Writer_PDF
      */
     public function setPaperSize($pValue = PHPExcel_Worksheet_PageSetup::PAPERSIZE_LETTER)
@@ -273,7 +273,7 @@ abstract class PHPExcel_Writer_PDF_Core extends PHPExcel_Writer_HTML
     /**
      *  Get Orientation
      *
-     *  @return string
+     *  @return StringHelper
      */
     public function getOrientation()
     {
@@ -283,7 +283,7 @@ abstract class PHPExcel_Writer_PDF_Core extends PHPExcel_Writer_HTML
     /**
      *  Set Orientation
      *
-     *  @param string $pValue  Page orientation
+     *  @param StringHelper $pValue  Page orientation
      *  @return PHPExcel_Writer_PDF
      */
     public function setOrientation($pValue = PHPExcel_Worksheet_PageSetup::ORIENTATION_DEFAULT)
@@ -295,7 +295,7 @@ abstract class PHPExcel_Writer_PDF_Core extends PHPExcel_Writer_HTML
     /**
      *  Get temporary storage directory
      *
-     *  @return string
+     *  @return StringHelper
      */
     public function getTempDir()
     {
@@ -305,7 +305,7 @@ abstract class PHPExcel_Writer_PDF_Core extends PHPExcel_Writer_HTML
     /**
      *  Set temporary storage directory
      *
-     *  @param     string        $pValue        Temporary storage directory
+     *  @param     StringHelper        $pValue        Temporary storage directory
      *  @throws    PHPExcel_Writer_Exception    when directory does not exist
      *  @return    PHPExcel_Writer_PDF
      */
@@ -322,7 +322,7 @@ abstract class PHPExcel_Writer_PDF_Core extends PHPExcel_Writer_HTML
     /**
      *  Save PHPExcel to PDF file, pre-save
      *
-     *  @param     string     $pFilename   Name of the file to save as
+     *  @param     StringHelper     $pFilename   Name of the file to save as
      *  @throws    PHPExcel_Writer_Exception
      */
     protected function prepareForSave($pFilename = NULL)

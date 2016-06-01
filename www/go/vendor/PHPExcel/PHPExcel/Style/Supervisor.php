@@ -98,7 +98,7 @@ abstract class PHPExcel_Style_Supervisor
 	 * Get the currently active cell coordinate in currently active sheet.
 	 * Only used for supervisor
 	 *
-	 * @return string E.g. 'A1'
+	 * @return StringHelper E.g. 'A1'
 	 */
 	public function getSelectedCells()
 	{
@@ -109,7 +109,7 @@ abstract class PHPExcel_Style_Supervisor
 	 * Get the currently active cell coordinate in currently active sheet.
 	 * Only used for supervisor
 	 *
-	 * @return string E.g. 'A1'
+	 * @return StringHelper E.g. 'A1'
 	 */
 	public function getActiveCell()
 	{

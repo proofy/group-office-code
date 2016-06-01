@@ -1,5 +1,5 @@
 @media print {
- .em-autolink-message,.em-contact-link-container{ display: none !important; }
+ .em-autolink-message,.em-contact-link-container,.em-link-message{ display: none !important; }
 }
 
 .em-autolink-message{
@@ -14,6 +14,27 @@
 	text-decoration:underline;
 }
 
+.em-link-link{
+	cursor:pointer;
+	text-decoration:underline;
+	padding-left:18px;
+	margin-left:5px;
+	background-repeat: no-repeat;
+	display:inline-block;
+	width: auto !important;
+}
+
+.em-link-message{
+	padding:5px;
+	border:1px solid #ddd;
+	background-color:#f1f1f1;
+	margin-bottom:20px;
+}
+
+.em-spam-move-block {
+	float:right;
+	color: lightgray;
+}
 
 .em-tree-node-noselect .x-tree-node-anchor span, .em-readonly a span{
 	font-style:italic;
@@ -247,6 +268,14 @@ margin:5px 2px;
 	text-align:left;
 	line-height:20px;
 }
+
+.message-move {
+	color: gray;
+	padding: 0 8px 0 8px;
+	text-align: right !important;
+	line-height: 20px;
+}
+
 .message-icalendar-icon{
 	background-repeat:no-repeat;
 	background-position:0 2px;
@@ -419,4 +448,9 @@ div.em-messages-grid-labels-container > div {
 	height: 16px;
 	margin: 0 4px 4px 0;
 	width: 16px;
+}
+
+.ml-deleted{
+	color:#777777;
+	text-decoration: line-through;
 }

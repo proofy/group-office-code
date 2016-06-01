@@ -92,14 +92,14 @@ class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements P
 	/**
 	 * Format Code
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_formatCode	=	PHPExcel_Style_NumberFormat::FORMAT_GENERAL;
 
 	/**
 	 * Built-in format Code
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_builtInFormatCode	= 0;
 
@@ -179,7 +179,7 @@ class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements P
 	/**
 	 * Get Format Code
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getFormatCode()
 	{
@@ -196,7 +196,7 @@ class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements P
 	/**
 	 * Set Format Code
 	 *
-	 * @param string $pValue
+	 * @param StringHelper $pValue
 	 * @return PHPExcel_Style_NumberFormat
 	 */
 	public function setFormatCode($pValue = PHPExcel_Style_NumberFormat::FORMAT_GENERAL)
@@ -315,7 +315,7 @@ class PHPExcel_Style_NumberFormat extends PHPExcel_Style_Supervisor implements P
 	 * Get built-in format code
 	 *
 	 * @param	int		$pIndex
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function builtInFormatCode($pIndex)
 	{

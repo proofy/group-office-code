@@ -8,7 +8,7 @@ class Pager extends \GO\Site\Components\Widget {
 
 	/**
 	 * A prefix for the pager parameter
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	protected $requestPrefix = '';
 
@@ -21,13 +21,13 @@ class Pager extends \GO\Site\Components\Widget {
 	
 	/**
 	 * The classname for the previous link
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	public $previousPageClass = 'previous';
 	
 	/**
 	 * The classname for the previous link
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	public $nextPageClass = 'next';
 	
@@ -92,7 +92,7 @@ class Pager extends \GO\Site\Components\Widget {
 	/**
 	 * The link for the page with the given number
 	 * @param int $pageNum number of page
-	 * @return string URL to page
+	 * @return StringHelper URL to page
 	 */
 	private function getPageUrl($pageNum){
 		$params = array_merge($_GET,array($this->requestPrefix.$this->pageParam=>$pageNum));

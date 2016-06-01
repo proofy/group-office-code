@@ -25,7 +25,7 @@ interface Swift_Plugins_Decorator_Replacements
      * If no replacements can be found, an empty value (NULL) should be returned
      * and no replacements will then be made on the message.
      *
-     * @param string $address
+     * @param StringHelper $address
      *
      * @return array
      */

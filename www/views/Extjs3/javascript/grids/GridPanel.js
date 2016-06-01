@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: GridPanel.js 17292 2014-04-08 11:19:49Z mschering $
+ * @version $Id: GridPanel.js 20049 2016-05-10 08:09:14Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -70,6 +70,13 @@ GO.grid.GridPanel =Ext.extend(Ext.grid.GridPanel, {
 				forceFit: true,
 				emptyText: GO.lang.strNoItems
 			});
+		}
+		
+		if(this.view instanceof Ext.grid.GroupingView){
+			//GroupingViews sometimes have rendering issues
+			this.addListener('show', function(){
+				this.doLayout();
+			}, this);
 		}
 
 		if(!this.keys)
@@ -136,7 +143,7 @@ GO.grid.GridPanel =Ext.extend(Ext.grid.GridPanel, {
 		this.store.on('load', function(){
 //			this.changed=false;
 			
-			if(this.store.reader.jsonData){
+			if(this.store.reader && this.store.reader.jsonData){
 				if(this.store.reader.jsonData.title)
 					this.setTitle(this.store.reader.jsonData.title);
 				
@@ -456,16 +463,23 @@ GO.grid.GridPanel =Ext.extend(Ext.grid.GridPanel, {
 		
 //		this.changed=true;
 	},
-
-	getGridData : function(){
+	/**
+	 * Fetch alle the row dat aof the grid's store
+	 * @param {boolean} dirtyOnly fetch only attributes of dirty rows (but all ids)
+	 * @returns {Array}
+	 */
+	getGridData : function(dirtyOnly){
 
 		var data = [];
 		var record;
 
 		for (var i = 0; i < this.store.data.items.length;  i++)
 		{
+			if(dirtyOnly && !this.store.data.items[i].dirty) {
+				data.push({id: this.store.data.items[i].data.id});
+				continue;
+			}
 			var r = this.store.data.items[i].data;
-
 			record={};
 
 			for(var key in r)

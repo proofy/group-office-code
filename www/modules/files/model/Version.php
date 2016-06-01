@@ -1,5 +1,4 @@
 <?php
-
 /*
  * Copyright Intermesh BV.
  *
@@ -8,6 +7,8 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  */
+
+namespace GO\Files\Model;
 
 /**
  * The \GO\files\Model\Template model
@@ -22,13 +23,10 @@
  * @property int $user_id 
  * @property int $mtime 
  * @property File $file
- * @property string $path
+ * @property StringHelper $path
  * @property int $version
+ * @property int $size_bytes the file size of this version in bytes
  */
-
-namespace GO\Files\Model;
-
-
 class Version extends \GO\Base\Db\ActiveRecord {
 
 	/**
@@ -76,7 +74,7 @@ class Version extends \GO\Base\Db\ActiveRecord {
 	protected function beforeSave() {
 		
 		$this->mtime=$this->file->fsFile->mtime();
-		$this->path = 'versioning/'.$this->file_id.'/'.date('Ymd_Gis', $this->file->fsFile->mtime()).'_'.$this->file->name;
+		$this->path = $this->file->getVersionStoragePath().'/'.date('Ymd_Gis', $this->file->fsFile->mtime()).'_'.$this->file->name;
 		
 		$lastVersion = $this->_findLastVersion();
 		if($lastVersion)
@@ -99,11 +97,15 @@ class Version extends \GO\Base\Db\ActiveRecord {
 	protected function afterSave($wasNew) {
 		$file = $this->getFilesystemFile();
 		$folder = $file->parent();
-		$folder->create();
+		$folder->create();		
+		
+		$quotaUser = $this->file->folder->quotaUser;
+		if($quotaUser) {
+			$quotaUser->calculatedDiskUsage($this->size_bytes)->save(true); //user quota
+		}
+		\GO::config()->save_setting("file_storage_usage", \GO::config()->get_setting('file_storage_usage')+$this->size_bytes);
 		
 		$this->file->fsFile->move($folder, $file->name());
-		
-		\GO::config()->save_setting("file_storage_usage", \GO::config()->get_setting('file_storage_usage')+$file->size());
 		
 		$this->_deleteOld(); 
 		
@@ -114,9 +116,15 @@ class Version extends \GO\Base\Db\ActiveRecord {
 		
 		$file = $this->getFilesystemFile();
 		
-		\GO::config()->save_setting("file_storage_usage", \GO::config()->get_setting('file_storage_usage')-$file->size());
-		
-		$file->delete();
+		if($file->delete()) {
+			
+			$quotaUser = $this->file->folder->quotaUser;
+			if($quotaUser) {
+				$quotaUser->calculatedDiskUsage(0 - $this->size_bytes)->save(true); //user quota
+			}
+			
+			\GO::config()->save_setting("file_storage_usage", \GO::config()->get_setting('file_storage_usage')-$this->size_bytes);
+		}
 		
 		return parent::beforeDelete();
 	}

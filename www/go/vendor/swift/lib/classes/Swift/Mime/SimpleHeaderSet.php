@@ -36,7 +36,7 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
      * Create a new SimpleHeaderSet with the given $factory.
      *
      * @param Swift_Mime_HeaderFactory $factory
-     * @param string                   $charset
+     * @param StringHelper                   $charset
      */
     public function __construct(Swift_Mime_HeaderFactory $factory, $charset = null)
     {
@@ -49,7 +49,7 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
     /**
      * Set the charset used by these headers.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      */
     public function setCharset($charset)
     {
@@ -61,8 +61,8 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
     /**
      * Add a new Mailbox Header with a list of $addresses.
      *
-     * @param string       $name
-     * @param array|string $addresses
+     * @param StringHelper       $name
+     * @param array|StringHelper $addresses
      */
     public function addMailboxHeader($name, $addresses = null)
     {
@@ -73,7 +73,7 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
     /**
      * Add a new Date header using $timestamp (UNIX time).
      *
-     * @param string  $name
+     * @param StringHelper  $name
      * @param integer $timestamp
      */
     public function addDateHeader($name, $timestamp = null)
@@ -85,8 +85,8 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
     /**
      * Add a new basic text header with $name and $value.
      *
-     * @param string $name
-     * @param string $value
+     * @param StringHelper $name
+     * @param StringHelper $value
      */
     public function addTextHeader($name, $value = null)
     {
@@ -97,8 +97,8 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
     /**
      * Add a new ParameterizedHeader with $name, $value and $params.
      *
-     * @param string $name
-     * @param string $value
+     * @param StringHelper $name
+     * @param StringHelper $value
      * @param array  $params
      */
     public function addParameterizedHeader($name, $value = null, $params = array())
@@ -109,8 +109,8 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
     /**
      * Add a new ID header for Message-ID or Content-ID.
      *
-     * @param string       $name
-     * @param string|array $ids
+     * @param StringHelper       $name
+     * @param StringHelper|array $ids
      */
     public function addIdHeader($name, $ids = null)
     {
@@ -120,8 +120,8 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
     /**
      * Add a new Path header with an address (path) in it.
      *
-     * @param string $name
-     * @param string $path
+     * @param StringHelper $name
+     * @param StringHelper $path
      */
     public function addPathHeader($name, $path = null)
     {
@@ -133,7 +133,7 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
      *
      * If multiple headers match, the actual one may be specified by $index.
      *
-     * @param string  $name
+     * @param StringHelper  $name
      * @param integer $index
      *
      * @return boolean
@@ -168,7 +168,7 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
      * If multiple headers match, the actual one may be specified by $index.
      * Returns NULL if none present.
      *
-     * @param string  $name
+     * @param StringHelper  $name
      * @param integer $index
      *
      * @return Swift_Mime_Header
@@ -185,7 +185,7 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
     /**
      * Get all headers with the given $name.
      *
-     * @param string $name
+     * @param StringHelper $name
      *
      * @return array
      */
@@ -228,7 +228,7 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
      *
      * If multiple headers match, the actual one may be specified by $index.
      *
-     * @param string  $name
+     * @param StringHelper  $name
      * @param integer $index
      */
     public function remove($name, $index = 0)
@@ -240,7 +240,7 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
     /**
      * Remove all headers with the given $name.
      *
-     * @param string $name
+     * @param StringHelper $name
      */
     public function removeAll($name)
     {
@@ -285,7 +285,7 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
     /**
      * Notify this observer that the entity's charset has changed.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      */
     public function charsetChanged($charset)
     {
@@ -295,7 +295,7 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
     /**
      * Returns a string with a representation of all headers.
      *
-     * @return string
+     * @return StringHelper
      */
     public function toString()
     {
@@ -318,7 +318,7 @@ class Swift_Mime_SimpleHeaderSet implements Swift_Mime_HeaderSet
     /**
      * Returns a string representation of this object.
      *
-     * @return string
+     * @return StringHelper
      *
      * @see toString()
      */

@@ -60,7 +60,7 @@ class Swift_Mime_ContentEncoder_Base64ContentEncoder extends Swift_Encoder_Base6
      * Get the name of this encoding scheme.
      * Returns the string 'base64'.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getName()
     {

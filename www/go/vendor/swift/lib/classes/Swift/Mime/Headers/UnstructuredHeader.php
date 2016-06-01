@@ -20,14 +20,14 @@ class Swift_Mime_Headers_UnstructuredHeader extends Swift_Mime_Headers_AbstractH
     /**
      * The value of this Header.
      *
-     * @var string
+     * @var StringHelper
      */
     private $_value;
 
     /**
      * Creates a new SimpleHeader with $name.
      *
-     * @param string                   $name
+     * @param StringHelper                   $name
      * @param Swift_Mime_HeaderEncoder $encoder
      * @param Swift_Mime_Grammar       $grammar
      */
@@ -56,7 +56,7 @@ class Swift_Mime_Headers_UnstructuredHeader extends Swift_Mime_Headers_AbstractH
      *
      * This method takes a string for the field value.
      *
-     * @param string $model
+     * @param StringHelper $model
      */
     public function setFieldBodyModel($model)
     {
@@ -68,7 +68,7 @@ class Swift_Mime_Headers_UnstructuredHeader extends Swift_Mime_Headers_AbstractH
      *
      * This method returns a string.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFieldBodyModel()
     {
@@ -78,7 +78,7 @@ class Swift_Mime_Headers_UnstructuredHeader extends Swift_Mime_Headers_AbstractH
     /**
      * Get the (unencoded) value of this header.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getValue()
     {
@@ -88,7 +88,7 @@ class Swift_Mime_Headers_UnstructuredHeader extends Swift_Mime_Headers_AbstractH
     /**
      * Set the (unencoded) value of this header.
      *
-     * @param string $value
+     * @param StringHelper $value
      */
     public function setValue($value)
     {
@@ -99,7 +99,7 @@ class Swift_Mime_Headers_UnstructuredHeader extends Swift_Mime_Headers_AbstractH
     /**
      * Get the value of this header prepared for rendering.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFieldBody()
     {

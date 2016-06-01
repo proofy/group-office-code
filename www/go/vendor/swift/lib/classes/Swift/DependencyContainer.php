@@ -73,7 +73,7 @@ class Swift_DependencyContainer
      *
      * @see register()
      *
-     * @param string $itemName
+     * @param StringHelper $itemName
      *
      * @return boolean
      */
@@ -88,7 +88,7 @@ class Swift_DependencyContainer
      *
      * @see register()
      *
-     * @param string $itemName
+     * @param StringHelper $itemName
      *
      * @return mixed
      *
@@ -117,7 +117,7 @@ class Swift_DependencyContainer
     /**
      * Create an array of arguments passed to the constructor of $itemName.
      *
-     * @param string $itemName
+     * @param StringHelper $itemName
      *
      * @return array
      */
@@ -139,7 +139,7 @@ class Swift_DependencyContainer
      * dependency.
      * @see asNewInstanceOf(), asSharedInstanceOf(), asValue()
      *
-     * @param string $itemName
+     * @param StringHelper $itemName
      *
      * @return Swift_DependencyContainer
      */
@@ -172,7 +172,7 @@ class Swift_DependencyContainer
     /**
      * Specify the previously registered item as an alias of another item.
      *
-     * @param string $lookup
+     * @param StringHelper $lookup
      *
      * @return Swift_DependencyContainer
      */
@@ -194,7 +194,7 @@ class Swift_DependencyContainer
      *
      * @see withDependencies(), addConstructorValue(), addConstructorLookup()
      *
-     * @param string $className
+     * @param StringHelper $className
      *
      * @return Swift_DependencyContainer
      */
@@ -212,7 +212,7 @@ class Swift_DependencyContainer
      *
      * {@link register()} must be called before this will work.
      *
-     * @param string $className
+     * @param StringHelper $className
      *
      * @return Swift_DependencyContainer
      */
@@ -274,7 +274,7 @@ class Swift_DependencyContainer
      *
      * @see withDependencies(), addConstructorValue()
      *
-     * @param string $lookup
+     * @param StringHelper $lookup
      *
      * @return Swift_DependencyContainer
      */

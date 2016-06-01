@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS `cf_enabled_categories` (
 -- DROP TABLE IF EXISTS `cf_fields`;
 CREATE TABLE IF NOT EXISTS `cf_fields` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `category_id` tinyint(4) NOT NULL DEFAULT '0',
+  `category_id` int(11) NOT NULL DEFAULT '0',
   `name` VARCHAR( 255 ) NOT NULL,
   `datatype` varchar(100) NOT NULL DEFAULT 'GO_Customfields_Customfieldtype_Text',
   `sort_index` int(11) NOT NULL DEFAULT '0',
@@ -67,7 +67,9 @@ CREATE TABLE IF NOT EXISTS `cf_fields` (
 	`unique_values` tinyint(1) NOT NULL DEFAULT '0',
 	`max_length` INT( 5 ) NOT NULL DEFAULT '50',
 	`addressbook_ids` VARCHAR(255) NOT NULL DEFAULT '',
-	`extra_options` VARCHAR(255) NOT NULL DEFAULT '',
+	`extra_options` TEXT,
+	`prefix` VARCHAR(32) NOT NULL DEFAULT '',
+	`suffix` VARCHAR(32) NOT NULL DEFAULT '',
   PRIMARY KEY (`id`),
   KEY `type` (`category_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

@@ -11,6 +11,10 @@ class FileController extends \GO\Base\Controller\AbstractModelController {
 	protected function allowGuests() {
 		return array('download'); //permissions will be checked manually in that action
 	}
+	
+	protected function ignoreAclPermissions() {
+		return array('correctquotauser');
+	}
     
 	/**
 	 * Will calculate the used diskspace per user
@@ -20,18 +24,49 @@ class FileController extends \GO\Base\Controller\AbstractModelController {
 	protected function actionRecalculateDiskUsage($id=false) {
 		
 		\GO::session()->closeWriting();
-						
+		
+		$users = array();
 		if(!empty($id)) {
 			$user = \GO\Base\Model\User::model()->findByPk($id);
-			if(!empty($user) && $user->calculatedDiskUsage()->save())
-				echo $user->getName() . ' uses ' . $user->disk_usage. "<br>\n";
+			if(!empty($user)) {
+				$users[] = $user;
+			}
 		} else {
 			$users = \GO\Base\Model\User::model()->find();
-			foreach($users as $user) {
-				if($user->calculatedDiskUsage()->save())
-					echo $user->getName() . ' uses ' . $user->disk_usage. "<br>\n";
-			}
 		}
+		
+		foreach($users as $user) {
+			if($user->calculatedDiskUsage()->save())
+				echo $user->getName() . ' uses ' . $user->disk_usage. "<br>\n";
+		}
+	}
+	
+	protected function actionCorrectQuotaUser() {
+		$time_start = microtime(true); 
+		$count = 0;
+		
+		$userFolder = \GO\Files\Model\Folder::model()->findByPath('users');
+		foreach($userFolder->folders() as $homeFolder) {
+			$homeId = $homeFolder->user_id;
+			
+			$walkSubfolders = function($folder) use($homeId, &$walkSubfolders, &$count) {
+				
+				//echo $folder->path.' -> '.$homeId.'<br />';
+				$folder->quota_user_id = $homeId;
+				if(!$folder->save()) {
+					throw new \Exception("Could not save folder: ".var_export($folder->getValidationErrors(), true));
+				}
+
+				foreach($folder->folders() as $subFolder) {
+					$walkSubfolders($subFolder);					
+					$count++;
+				}
+			};
+			$walkSubfolders($homeFolder);
+		}
+		$time_end = microtime(true);
+		$execution_time = ($time_end - $time_start);
+		echo '<b>'.$count.' Folders updated in:</b> '.$execution_time.' Seconds';
 	}
 	
 	protected function actionDisplay($params) {
@@ -89,7 +124,7 @@ class FileController extends \GO\Base\Controller\AbstractModelController {
 						$qp = json_decode($params['query_params'], true);
 						if (isset($qp['content_all'])){
 
-							$c = new \GO\Filesearch\Controller\Filesearch();
+							$c = new \GO\Filesearch\Controller\FilesearchController();
 
 							$response['data']['text'] = $c->highlightSearchParams($qp, $response['data']['text']);
 						}
@@ -118,6 +153,12 @@ class FileController extends \GO\Base\Controller\AbstractModelController {
 		
 		$response['data']['name']=$model->fsFile->nameWithoutExtension();
 		
+		if (!empty($model->user))
+			$response['data']['username']=$model->user->name;
+		if (!empty($model->mUser))
+			$response['data']['musername'] = $model->mUser->name;
+		$response['data']['locked_user_name']=$model->lockedByUser ? $model->lockedByUser->name : '';
+		
 		if (\GO::modules()->customfields)
 			$response['customfields'] = \GO\Customfields\Controller\CategoryController::getEnabledCategoryData("GO\Files\Model\File", $model->folder_id);
 		
@@ -141,8 +182,10 @@ class FileController extends \GO\Base\Controller\AbstractModelController {
 	
 	protected function beforeSubmit(&$response, &$model, &$params) {
 		
-		if(isset($params['name']))		
-			$params['name'].='.'.$model->fsFile->extension();		
+		if(isset($params['name'])){		
+			$params['name'] = \GO\Base\Fs\File::stripInvalidChars($params['name']); // Strip invalid chars
+			$params['name'].='.'.$model->fsFile->extension();
+		}
 		
 		if(isset($params['lock'])){
 			//GOTA sends lock parameter It does not know the user ID.
@@ -219,6 +262,8 @@ class FileController extends \GO\Base\Controller\AbstractModelController {
 	protected function actionDownload($params) {
 		\GO::session()->closeWriting();
 		
+		\GO::setMaxExecutionTime(0);
+		
 		if(isset($params['path'])){
 			$folder = \GO\Files\Model\Folder::model()->findByPath(dirname($params['path']));
 			$file = $folder->hasFile(\GO\Base\Fs\File::utf8Basename($params['path']));
@@ -238,11 +283,17 @@ class FileController extends \GO\Base\Controller\AbstractModelController {
 				throw new \Exception(\GO::t('downloadLinkExpired', 'files'));				
 		}else
 		{
-			if(!\GO::user())
-				\GO\Base\Util\Http::basicAuth();
-				
-			if(!$file->checkPermissionLevel(\GO\Base\Model\Acl::READ_PERMISSION))
-				throw new \GO\Base\Exception\AccessDenied();
+			
+			$public = substr($file->path,0,6)=='public';
+			
+			if(!$public){
+			
+				if(!\GO::user())
+					\GO\Base\Util\Http::basicAuth();
+
+				if(!$file->checkPermissionLevel(\GO\Base\Model\Acl::READ_PERMISSION))
+					throw new \GO\Base\Exception\AccessDenied();
+			}
 		}
 
 		
@@ -252,6 +303,14 @@ class FileController extends \GO\Base\Controller\AbstractModelController {
 			$inline = false;
 
 		\GO\Base\Util\Http::outputDownloadHeaders($file->fsFile, $inline, !empty($params['cache']));
+		$file->open();
+		
+		$this->fireEvent('beforedownload', array(
+				&$this,
+				&$params,
+				&$file
+		));
+		
 		$file->fsFile->output();
 	}
 
@@ -284,7 +343,7 @@ class FileController extends \GO\Base\Controller\AbstractModelController {
 	 * - int template_id: id of used template
 	 * - int alias_id: id of alias to mail from
 	 * - string content_type : html | plain  
-	 * @return string Json response
+	 * @return StringHelper Json response
 	 */
 	protected function actionEmailDownloadLink($params){
 

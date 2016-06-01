@@ -43,7 +43,7 @@ class fpdi_pdf_parser extends pdf_parser {
     
     /**
      * PDF Version of imported Document
-     * @var string
+     * @var StringHelper
      */
     var $pdfVersion;
     
@@ -63,7 +63,7 @@ class fpdi_pdf_parser extends pdf_parser {
     /**
      * Constructor
      *
-     * @param string $filename  Source-Filename
+     * @param StringHelper $filename  Source-Filename
      * @param object $fpdi      Object of type fpdi
      */
     function fpdi_pdf_parser($filename, &$fpdi) {
@@ -84,7 +84,7 @@ class fpdi_pdf_parser extends pdf_parser {
     /**
      * Overwrite parent::error()
      *
-     * @param string $msg  Error-Message
+     * @param StringHelper $msg  Error-Message
      */
     function error($msg) {
     	$this->fpdi->error($msg);	
@@ -159,7 +159,7 @@ class fpdi_pdf_parser extends pdf_parser {
      *
      * If more /Contents is an array, the streams are concated
      *
-     * @return string
+     * @return StringHelper
      */
     function getContent() {
         $buffer = '';
@@ -205,7 +205,7 @@ class fpdi_pdf_parser extends pdf_parser {
      * Rebuild content-streams
      *
      * @param array $obj
-     * @return string
+     * @return StringHelper
      */
     function _rebuildContentStream($obj) {
         $filters = array();
@@ -271,7 +271,7 @@ class fpdi_pdf_parser extends pdf_parser {
      * Arrayformat is same as used by fpdf_tpl
      *
      * @param array $page a /Page
-     * @param string $box_index Type of Box @see $availableBoxes
+     * @param StringHelper $box_index Type of Box @see $availableBoxes
      * @param float Scale factor from user space units to points
      * @return array
      */

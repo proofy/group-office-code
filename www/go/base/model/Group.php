@@ -30,9 +30,15 @@
 
 namespace GO\Base\Model;
 
+use GO;
 
 class Group extends \GO\Base\Db\ActiveRecord {
 
+
+	const GROUP_EVERYONE = 'GROUP_EVERYONE';
+	const GROUP_ADMINS = 'GROUP_ADMINS';
+	const GROUP_INTERNAL = 'GROUP_INTERNAL';
+	
 	/**
 	 * Returns a static model of itself
 	 * 
@@ -59,6 +65,15 @@ class Group extends \GO\Base\Db\ActiveRecord {
   
 	public function tableName() {
 		return 'go_groups';
+	}
+	
+	/**
+	 * Check module permission for creating new Groups
+	 * Needs overwrite because ActiveRecord check if module belongs to base
+	 * @return int permission level of moduel
+	 */
+	protected function getPermissionLevelForNewModel(){
+		return \GO::modules()->groups->permissionLevel;
 	}
 	
 	protected function beforeDelete() {
@@ -91,7 +106,12 @@ class Group extends \GO\Base\Db\ActiveRecord {
     
     return array(
 				'users' => array('type'=>self::MANY_MANY, 'model'=>'GO\Base\Model\User', 'field'=>'group_id', 'linkModel' => 'GO\Base\Model\UserGroup'),
-		);
+				'user_group' => array('type'=>self::HAS_MANY, 'model'=>'GO\Base\Model\UserGroup', 'field'=>'group_id', 'delete' => self::DELETE_CASCADE),
+				'aclGroups' => array('type'=>self::HAS_MANY, 
+						'model'=>'GO\Base\Model\AclUsersGroups', 
+						'field'=>'group_id', 
+						'delete'=>self::DELETE_CASCADE)
+			);
   }
   
   public function addUser($user_id){
@@ -137,6 +157,31 @@ class Group extends \GO\Base\Db\ActiveRecord {
 		}
 		
 		return parent::checkDatabase();
+	}
+	
+	/**
+	 * 
+	 * @param String $groupName
+	 * @return self
+	 */
+	public function findByName($groupName) {
+		
+			switch (trim($groupName)) {
+				case Group::GROUP_EVERYONE:
+					$group = Group::model()->findByPk(GO::config()->group_everyone);
+					break;
+				case Group::GROUP_ADMINS:
+					$group = Group::model()->findByPk(GO::config()->group_root);
+					break;
+				case Group::GROUP_INTERNAL:
+					$group = Group::model()->findByPk(GO::config()->group_internal);
+					break;
+				default:
+					$group = Group::model()->findSingleByAttribute('name', trim($groupName));
+					break;
+			}
+			return $group;
+		
 	}
   
 }

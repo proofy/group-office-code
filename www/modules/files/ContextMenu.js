@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: ContextMenu.js 16414 2013-12-05 13:13:44Z mschering $
+ * @version $Id: ContextMenu.js 20071 2016-05-25 09:38:11Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -75,6 +75,16 @@ GO.files.FilesContextMenu = function(config)
 		cls: 'x-btn-text-icon',
 		handler: function(){
 			this.fireEvent('delete', this, this.records, this.clickedAt);
+		},
+		scope: this
+	});
+	
+	this.batchEditButton = new Ext.menu.Item({
+		iconCls: 'btn-edit',
+		text: GO.files.lang.editSelection,
+		cls: 'x-btn-text-icon',
+		handler: function(){
+			this.fireEvent('batchEdit', this, this.records, this.clickedAt);
 		},
 		scope: this
 	});
@@ -217,12 +227,13 @@ GO.files.FilesContextMenu = function(config)
 
 	config['items'].push(this.bookmarkButton);
 
-	config['items'].push(new Ext.menu.Separator());
+	config['items'].push(this.cutSeparator = new Ext.menu.Separator());
 	config['items'].push(this.cutButton);
 	config['items'].push(this.copyButton);
 	//this.pasteButton,
-	config['items'].push(new Ext.menu.Separator());
+	config['items'].push(this.deleteSeparator = new Ext.menu.Separator());
 	config['items'].push(this.deleteButton);
+	config['items'].push(this.batchEditButton);
 	config['items'].push(this.compressSeparator = new Ext.menu.Separator());
 	config['items'].push(this.compressButton);
 	config['items'].push(this.decompressButton);
@@ -261,6 +272,19 @@ GO.files.FilesContextMenu = function(config)
 		});
 		config['items'].push(this.emailFilesButton);
 	}
+	
+	// Download selected (As Zip)
+	this.downloadSelectedFilesButton = new Ext.menu.Item({
+			iconCls: 'filetype-zip',
+			text: GO.files.lang.downloadSelected,
+			cls: 'x-btn-text-icon',
+			handler: function(){
+				this.fireEvent('download_selected', this, this.records, this.clickedAt);
+			},
+			scope: this
+		});
+		config['items'].push(this.downloadSelectedFilesButton);
+	
 
 	GO.files.FilesContextMenu.superclass.constructor.call(this, config);
 
@@ -275,7 +299,8 @@ GO.files.FilesContextMenu = function(config)
 		'decompress' : true,
 		'download_link' : true,
 		'email_files' : true,
-		'addBookmark' : true
+		'addBookmark' : true,
+		'download_selected': true
 
 	});
 
@@ -288,132 +313,152 @@ Ext.extend(GO.files.FilesContextMenu, Ext.menu.Menu,{
 
 	records : [],
 
-	showAt : function(xy, records, clickedAt)
+	showAt : function(xy, records, clickedAt, forFileSearchModule)
 	{
-		if(clickedAt)
-			this.clickedAt = clickedAt;
-
-		var extension = '';
-		this.records = records;
-		if(records.length=='1')
-		{
-			extension = records[0].data.extension;
-
-			switch(extension)
-			{
-				case 'zip':
-				case 'tar':
-				case 'tgz':
-				case 'gz':
-					this.downloadButton.show();
-					this.openButton.show();
-					this.openWithButton.show(); 
-
-					this.decompressButton.show();
-					this.compressButton.hide();
-					if(this.downloadLinkButton)
-						this.downloadLinkButton.show();
-					this.createDownloadLinkButton.show();
-					
-					if(this.emailFilesButton)
-						this.emailFilesButton.show();
-					
-					this.bookmarkButton.hide();
-					
-					break;
-
-//				case '':
-//					
-//					this.downloadButton.show();
-//
-//					this.decompressButton.show();
-//					this.compressButton.hide();
-//					if(this.downloadLinkButton)
-//						this.downloadLinkButton.show();
-//					this.createDownloadLinkButton.show();
-//
-//					if(this.emailFilesButton)
-//						this.emailFilesButton.show();
-//
-//					
-//					this.bookmarkButton.hide();
-//					
-//					break;
-				case 'folder':
-					
-					this.lockButton.hide();
-					this.unlockButton.setVisible(false);
-					this.downloadButton.hide();
-					this.openWithButton.hide();
-					this.openButton.hide();
-
-					this.decompressButton.hide();
-					clickedAt == 'tree' || records[0].store.reader.jsonData['permission_level']<GO.permissionLevels['create'] ? this.compressButton.hide() : this.compressButton.show();
-					
-					if(this.downloadLinkButton)
-						this.downloadLinkButton.hide();
-					
-					
-					this.createDownloadLinkButton.hide();
-					
-					if(this.emailFilesButton)
-						this.emailFilesButton.hide();
-
-					this.bookmarkButton.show();
-
-					break;
-
-				default:
-					this.lockButton.show();
-
-
-					this.lockButton.setDisabled(this.records[0].data.locked_user_id>0);
-					this.unlockButton.setVisible(this.records[0].data.locked_user_id>0);
-					this.unlockButton.setDisabled(!this.records[0].data.unlock_allowed);
-
+		forFileSearchModule = forFileSearchModule || false;
 		
-					this.downloadButton.show();
-					this.openWithButton.show();
-					this.openButton.show();
-					
-					clickedAt == 'tree' ? this.compressButton.hide() : this.compressButton.show();
-					this.decompressButton.hide();
-					
-					if(this.downloadLinkButton)
-						this.downloadLinkButton.show();
-					
-					this.createDownloadLinkButton.show();
-					
-					if(this.emailFilesButton)
-						this.emailFilesButton.show();
-					
-					this.bookmarkButton.hide();
-					
-					break;
-			}
-		}else
-		{
-
-			clickedAt == 'tree' ? this.compressButton.hide() : this.compressButton.show();
-			this.decompressButton.hide();
-			this.downloadButton.hide();
-			this.openWithButton.hide();
-			this.openButton.hide();
+		if(forFileSearchModule){	
+			this.decompressButton.setVisible(!forFileSearchModule);
+			this.openButton.setVisible(!forFileSearchModule);
+			this.cutSeparator.setVisible(!forFileSearchModule);
+			this.cutButton.setVisible(!forFileSearchModule);
+			this.copyButton.setVisible(!forFileSearchModule);
+			this.lockButton.setVisible(!forFileSearchModule);
+			this.unlockButton.setVisible(!forFileSearchModule);
+			this.downloadSelectedFilesButton.setVisible(!forFileSearchModule);
+			this.compressButton.setVisible(!forFileSearchModule);
 			
-			this.createDownloadLinkButton.hide();
+		} else {
+		
+			if(clickedAt)
+				this.clickedAt = clickedAt;
 
-			if(this.emailFilesButton)
-				this.emailFilesButton.show();
+			var extension = '';
+			this.records = records;
+			if(records.length=='1')
+			{
+				extension = records[0].data.extension;
 
-			Ext.each(this.records, function(record) {
-				if (record.data.extension == 'folder') {
-					
-					if(this.emailFilesButton)
-						this.emailFilesButton.hide();
-					
-					return false;
+				switch(extension)
+				{
+					case 'zip':
+					case 'tar':
+					case 'tgz':
+					case 'gz':
+						this.downloadButton.show();
+						this.openButton.show();
+						this.openWithButton.show(); 
+
+						this.decompressButton.show();
+						this.compressButton.hide();
+						if(this.downloadLinkButton)
+							this.downloadLinkButton.show();
+						this.createDownloadLinkButton.show();
+
+						if(this.emailFilesButton)
+							this.emailFilesButton.show();
+
+						this.bookmarkButton.hide();
+
+						break;
+
+	//				case '':
+	//					
+	//					this.downloadButton.show();
+	//
+	//					this.decompressButton.show();
+	//					this.compressButton.hide();
+	//					if(this.downloadLinkButton)
+	//						this.downloadLinkButton.show();
+	//					this.createDownloadLinkButton.show();
+	//
+	//					if(this.emailFilesButton)
+	//						this.emailFilesButton.show();
+	//
+	//					
+	//					this.bookmarkButton.hide();
+	//					
+	//					break;
+					case 'folder':
+
+						this.lockButton.hide();
+						this.unlockButton.setVisible(false);
+						this.downloadButton.hide();
+						this.openWithButton.hide();
+						this.openButton.hide();
+
+						this.decompressButton.hide();
+						clickedAt == 'tree' || records[0].store.reader.jsonData['permission_level']<GO.permissionLevels['create'] ? this.compressButton.hide() : this.compressButton.show();
+
+						if(this.downloadLinkButton)
+							this.downloadLinkButton.hide();
+						
+						this.batchEditButton.hide();
+
+						this.createDownloadLinkButton.hide();
+
+						if(this.emailFilesButton)
+							this.emailFilesButton.hide();
+
+						this.bookmarkButton.show();
+
+						break;
+
+					default:
+						this.lockButton.show();
+
+
+						this.lockButton.setDisabled(this.records[0].data.locked_user_id>0);
+						this.unlockButton.setVisible(this.records[0].data.locked_user_id>0);
+						this.unlockButton.setDisabled(!this.records[0].data.unlock_allowed);
+
+
+						this.downloadButton.show();
+						this.openWithButton.show();
+						this.openButton.show();
+
+						clickedAt == 'tree' ? this.compressButton.hide() : this.compressButton.show();
+						this.decompressButton.hide();
+
+						if(this.downloadLinkButton)
+							this.downloadLinkButton.show();
+						
+						this.batchEditButton.show();
+						
+						this.createDownloadLinkButton.show();
+
+						if(this.emailFilesButton)
+							this.emailFilesButton.show();
+
+						this.bookmarkButton.hide();
+
+						break;
 				}
-			}, this);
+			}else
+			{
+
+				clickedAt == 'tree' ? this.compressButton.hide() : this.compressButton.show();
+				this.decompressButton.hide();
+				this.downloadButton.hide();
+				this.openWithButton.hide();
+				this.openButton.hide();
+
+				this.createDownloadLinkButton.hide();
+
+				if(this.emailFilesButton)
+					this.emailFilesButton.show();
+
+				Ext.each(this.records, function(record) {
+					if (record.data.extension == 'folder') {
+
+						if(this.emailFilesButton)
+							this.emailFilesButton.hide();
+
+						return false;
+					}
+				}, this);
+
+			}
 
 		}
 

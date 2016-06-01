@@ -51,7 +51,7 @@ class PHPExcel_Shared_OLE_ChainedBlockStream
 
 	/**
 	 * The binary data of the file.
-	 * @var  string
+	 * @var  StringHelper
 	 */
 	public $data;
 
@@ -69,7 +69,7 @@ class PHPExcel_Shared_OLE_ChainedBlockStream
 	 *									ole-chainedblockstream://oleInstanceId=1
 	 * @param	string	$mode			only "r" is supported
 	 * @param	int		$options		mask of STREAM_REPORT_ERRORS and STREAM_USE_PATH
-	 * @param	string  &$openedPath	absolute path of the opened stream (out parameter)
+	 * @param	StringHelper  &$openedPath	absolute path of the opened stream (out parameter)
 	 * @return	bool    true on success
 	 */
 	public function stream_open($path, $mode, $options, &$openedPath)
@@ -142,7 +142,7 @@ class PHPExcel_Shared_OLE_ChainedBlockStream
 	 * Implements support for fread(), fgets() etc.
 	 *
 	 * @param   int		$count	maximum number of bytes to read
-	 * @return  string
+	 * @return  StringHelper
 	 */
 	public function stream_read($count)
 	{

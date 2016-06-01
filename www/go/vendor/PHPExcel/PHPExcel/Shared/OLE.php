@@ -90,7 +90,7 @@ class PHPExcel_Shared_OLE
 	 * Reads an OLE container from the contents of the file given.
 	 *
 	 * @acces public
-	 * @param string $file
+	 * @param StringHelper $file
 	 * @return mixed true on success, PEAR_Error on failure
 	*/
 	public function read($file)
@@ -404,7 +404,7 @@ class PHPExcel_Shared_OLE
 	* @param integer $position The position from which to start reading
 	*                          (relative to the PPS)
 	* @param integer $length   The amount of bytes to read (at most)
-	* @return string The binary string containing the data requested
+	* @return StringHelper The binary string containing the data requested
 	* @see OLE_PPS_File::getStream()
 	*/
 	public function getData($index, $position, $length)
@@ -440,8 +440,8 @@ class PHPExcel_Shared_OLE
 	*
 	* @access public
 	* @static
-	* @param string $ascii The ASCII string to transform
-	* @return string The string in Unicode
+	* @param StringHelper $ascii The ASCII string to transform
+	* @return StringHelper The string in Unicode
 	*/
 	public static function Asc2Ucs($ascii)
 	{
@@ -459,7 +459,7 @@ class PHPExcel_Shared_OLE
 	* @access public
 	* @static
 	* @param integer $date A timestamp
-	* @return string The string for the OLE container
+	* @return StringHelper The string for the OLE container
 	*/
 	public static function LocalDate2OLE($date = null)
 	{
@@ -504,7 +504,7 @@ class PHPExcel_Shared_OLE
 	* @access public
 	* @static
 	* @param integer $string A binary string with the encoded date
-	* @return string The timestamp corresponding to the string
+	* @return StringHelper The timestamp corresponding to the string
 	*/
 	public static function OLE2LocalDate($string)
 	{

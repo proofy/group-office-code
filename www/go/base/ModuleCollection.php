@@ -75,7 +75,7 @@ class ModuleCollection extends Model\ModelCollection{
 	/**
 	 * Check if a module is available
 	 * 
-	 * @param string $moduleId
+	 * @param StringHelper $moduleId
 	 * @param boolean Check the module manager class isAvailable function too. (Used in pro modules to check license for example).
 	 * @return boolean
 	 */
@@ -118,7 +118,7 @@ class ModuleCollection extends Model\ModelCollection{
 	 * Call a method of a module class. eg. \GO\Notes\NotesModule::firstRun
 	 * 
 	 * @deprecated Preferrably use events with listeners because it has better performance
-	 * @param string $method
+	 * @param StringHelper $method
 	 * @param array $params 
 	 */
 	public function callModuleMethod($method, $params=array(), $ignoreAclPermissions=true){
@@ -153,30 +153,38 @@ class ModuleCollection extends Model\ModelCollection{
 	public function __get($name) {
 		
 		if(!isset($this->_modules[$name])){		
-			if(!$this->isAvailable($name))
+			if(!$this->isAvailable($name)){			
 				return false;
+			}
 
 			$model = parent::__get($name);
-
-			if(!$model)
+			
+			if(!$model || !$model->enabled){
 				$model=false;
+			}
 
 			$this->_modules[$name]=$model;
 		}
 		
-		return $this->_modules[$name];
+		$module = $this->_modules[$name];
+		
+		if(\GO::$ignoreAclPermissions){
+			unset($this->_modules[$name]);
+		}
+		
+		return $module;
 	}
 	
 	/**
 	 * Check if a module is installed.
 	 * 
-	 * @param string $moduleId
+	 * @param StringHelper $moduleId
 	 * @return Model\Module 
 	 */
 	public function isInstalled($moduleId){
 		$model = $this->model->findByPk($moduleId, false, true);
 		
-		if(!$model || !$this->_isAllowed($model->id))
+		if(!$model || !$model->enabled || !$this->_isAllowed($model->id))
 				return false;
 		
 		return $model;
@@ -221,7 +229,7 @@ class ModuleCollection extends Model\ModelCollection{
 	 * 
 	 * For example findClassses("model") finds all models.
 	 * 
-	 * @param string $subfolder
+	 * @param StringHelper $subfolder
 	 * @return ReflectionClass array
 	 */
 	public function findClasses($subfolder){

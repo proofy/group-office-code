@@ -57,7 +57,7 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
      * If your server doesn't have a domain name, use the IP in square
      * brackets (i.e. [127.0.0.1]).
      *
-     * @param string $domain
+     * @param StringHelper $domain
      *
      * @return Swift_Transport_AbstractSmtpTransport
      */
@@ -71,7 +71,7 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
     /**
      * Get the name of the domain Swift will identify as.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getLocalDomain()
     {
@@ -81,7 +81,7 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
     /**
      * Sets the source IP.
      *
-     * @param string $source
+     * @param StringHelper $source
      */
     public function setSourceIp($source)
     {
@@ -91,7 +91,7 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
     /**
      * Returns the IP used to connect to the destination
      *
-     * @return string
+     * @return StringHelper
      */
     public function getSourceIp()
     {
@@ -144,7 +144,7 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
      * The return value is the number of recipients who were accepted for delivery.
      *
      * @param Swift_Mime_Message $message
-     * @param string[]           $failedRecipients An array of failures by-reference
+     * @param StringHelper[]           $failedRecipients An array of failures by-reference
      *
      * @return int
      */
@@ -264,11 +264,11 @@ abstract class Swift_Transport_AbstractSmtpTransport implements Swift_Transport
      * If no response codes are given, the response will not be validated.
      * If codes are given, an exception will be thrown on an invalid response.
      *
-     * @param string   $command
+     * @param StringHelper   $command
      * @param int[]    $codes
-     * @param string[] $failures An array of failures by-reference
+     * @param StringHelper[] $failures An array of failures by-reference
      *
-     * @return string
+     * @return StringHelper
      */
     public function executeCommand($command, $codes = array(), &$failures = null)
     {

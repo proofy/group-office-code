@@ -1,5 +1,6 @@
 <?php
 
+
 $l["bookmarks"]='Marques-pages';
 $l["bookmark"]='Marque-page';
 $l["category"]='Catégorie';
@@ -15,8 +16,10 @@ $l["uploadLogo"]='Envoyer un logo';
 $l["showAll"]='Tout afficher';
 $l["sharedCategory"]='Catégorie partagée';
 $l['name']='Marques-pages';
-$l['description']='Un module pour gérer les marques-pages.';
+$l['description']='Gestion des marques-pages.';
 $l['general']='Géneral';
 $l['googleDescription']="Rechercher sur le web";
-$l['behaveAsModule']='Comportement comme un module (Rechargement navigateur nécessaire)';
-$l['confirmDelete']='Êtes-vous sûr de vouloir supprimer ce signet ?';
+$l['behaveAsModule']='Ouvrir comme un module (Rechargement du navigateur nécessaire)';
+$l['confirmDelete']='Êtes-vous sûr de vouloir supprimer ce marque-page ?';
+$l['toggle']='Permuter la vue';
+$l['showCategoryInStartMenu'] = 'Grouper les marques-pages dans le menu \'Applications\' (Rechargement du navigateur nécessaire)';

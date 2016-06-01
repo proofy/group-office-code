@@ -8,9 +8,9 @@
 /**
  * assemble filepath of requested plugin
  *
- * @param string $type
- * @param string $name
- * @return string|false
+ * @param StringHelper $type
+ * @param StringHelper $name
+ * @return StringHelper|false
  */
 function smarty_core_assemble_plugin_filepath($params, &$smarty)
 {

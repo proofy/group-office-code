@@ -73,7 +73,7 @@ class PHPExcel_Writer_Excel5_Font
 	/**
 	 * Get font record data
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function writeFont()
 	{
@@ -153,7 +153,7 @@ class PHPExcel_Writer_Excel5_Font
 	/**
 	 * Map underline
 	 *
-	 * @param string
+	 * @param StringHelper
 	 * @return int
 	 */
 	private static function _mapUnderline($underline) {

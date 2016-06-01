@@ -74,7 +74,7 @@ class PHPExcel_Writer_PDF
     /**
      *  Magic method to handle direct calls to the configured PDF renderer wrapper class.
      *
-     *  @param   string   $name        Renderer library method name
+     *  @param   StringHelper   $name        Renderer library method name
      *  @param   mixed[]  $arguments   Array of arguments to pass to the renderer method
      *  @return  mixed    Returned data from the PDF renderer wrapper method
      */

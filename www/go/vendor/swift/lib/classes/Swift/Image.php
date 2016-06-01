@@ -22,9 +22,9 @@ class Swift_Image extends Swift_EmbeddedFile
      *
      * Details may be optionally provided to the constructor.
      *
-     * @param string|Swift_OutputByteStream $data
-     * @param string                        $filename
-     * @param string                        $contentType
+     * @param StringHelper|Swift_OutputByteStream $data
+     * @param StringHelper                        $filename
+     * @param StringHelper                        $contentType
      */
     public function __construct($data = null, $filename = null, $contentType = null)
     {
@@ -34,9 +34,9 @@ class Swift_Image extends Swift_EmbeddedFile
     /**
      * Create a new Image.
      *
-     * @param string|Swift_OutputByteStream $data
-     * @param string                        $filename
-     * @param string                        $contentType
+     * @param StringHelper|Swift_OutputByteStream $data
+     * @param StringHelper                        $filename
+     * @param StringHelper                        $contentType
      *
      * @return Swift_Image
      */
@@ -48,7 +48,7 @@ class Swift_Image extends Swift_EmbeddedFile
     /**
      * Create a new Image from a filesystem path.
      *
-     * @param string $path
+     * @param StringHelper $path
      *
      * @return Swift_Image
      */

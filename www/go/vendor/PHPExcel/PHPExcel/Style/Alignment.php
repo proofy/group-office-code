@@ -52,14 +52,14 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 	/**
 	 * Horizontal
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_horizontal	= PHPExcel_Style_Alignment::HORIZONTAL_GENERAL;
 
 	/**
 	 * Vertical
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_vertical		= PHPExcel_Style_Alignment::VERTICAL_BOTTOM;
 
@@ -187,7 +187,7 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 	/**
 	 * Get Horizontal
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getHorizontal() {
 		if ($this->_isSupervisor) {
@@ -199,7 +199,7 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 	/**
 	 * Set Horizontal
 	 *
-	 * @param string $pValue
+	 * @param StringHelper $pValue
 	 * @return PHPExcel_Style_Alignment
 	 */
 	public function setHorizontal($pValue = PHPExcel_Style_Alignment::HORIZONTAL_GENERAL) {
@@ -220,7 +220,7 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 	/**
 	 * Get Vertical
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getVertical() {
 		if ($this->_isSupervisor) {
@@ -232,7 +232,7 @@ class PHPExcel_Style_Alignment extends PHPExcel_Style_Supervisor implements PHPE
 	/**
 	 * Set Vertical
 	 *
-	 * @param string $pValue
+	 * @param StringHelper $pValue
 	 * @return PHPExcel_Style_Alignment
 	 */
 	public function setVertical($pValue = PHPExcel_Style_Alignment::VERTICAL_BOTTOM) {

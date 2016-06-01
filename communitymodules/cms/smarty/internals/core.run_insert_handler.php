@@ -9,7 +9,7 @@
  * Handle insert tags
  *
  * @param array $args
- * @return string
+ * @return StringHelper
  */
 function smarty_core_run_insert_handler($params, &$smarty)
 {

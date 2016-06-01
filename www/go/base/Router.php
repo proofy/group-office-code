@@ -53,7 +53,7 @@ class Router{
 	/**
 	 * Get the controller route. eg. email/message/view
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function getControllerRoute(){
 		return $this->_r;
@@ -72,7 +72,7 @@ class Router{
 	 * Get the currently processing controller action in lowercase and without the
 	 * action prefix.
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getControllerAction(){
 		return $this->_action;
@@ -86,7 +86,7 @@ class Router{
 	public function runController($params=false){
 		
 		if(!$params){
-			$params = \GO::request()->getParams();
+			$params = array_merge($_REQUEST, \GO::request()->post);
 		}
 						
 		$r = !empty($params['r']) ?  explode('/', $params['r']): array();		

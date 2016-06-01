@@ -28,6 +28,17 @@ namespace GO\Calendar\Model;
 
 
 class Category extends \GO\Base\Db\ActiveRecord{
+    
+      protected function getPermissionLevelForNewModel() {
+  
+            
+            if(empty($this->calendar_id)) {
+                return parent::getPermissionLevelForNewModel();
+            }else
+            {
+                return $this->calendar->getPermissionLevel();
+            }
+        }
 
 	/**
 	 * Returns a static model of itself
@@ -74,7 +85,7 @@ class Category extends \GO\Base\Db\ActiveRecord{
 	  * Find a category by name. It searches the global and calendar categories
 	  * 
 	  * @param int $calendar_id
-	  * @param string $name
+	  * @param StringHelper $name
 	  * @return Category
 	  */
 	 public function findByName($calendar_id, $name){

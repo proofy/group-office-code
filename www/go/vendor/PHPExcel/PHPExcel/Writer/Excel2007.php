@@ -59,7 +59,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 	/**
 	 * Private string table
 	 *
-	 * @var string[]
+	 * @var StringHelper[]
 	 */
 	private $_stringTable	= array();
 
@@ -147,7 +147,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 	/**
 	 * Get writer part
 	 *
-	 * @param 	string 	$pPartName		Writer part name
+	 * @param 	StringHelper 	$pPartName		Writer part name
 	 * @return 	PHPExcel_Writer_Excel2007_WriterPart
 	 */
 	public function getWriterPart($pPartName = '') {
@@ -161,7 +161,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
 	/**
 	 * Save PHPExcel to file
 	 *
-	 * @param 	string 		$pFilename
+	 * @param 	StringHelper 		$pFilename
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	public function save($pFilename = null)
@@ -389,7 +389,7 @@ class PHPExcel_Writer_Excel2007 extends PHPExcel_Writer_Abstract implements PHPE
     /**
      * Get string table
      *
-     * @return string[]
+     * @return StringHelper[]
      */
     public function getStringTable() {
     	return $this->_stringTable;

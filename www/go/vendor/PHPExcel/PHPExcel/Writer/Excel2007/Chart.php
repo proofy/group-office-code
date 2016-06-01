@@ -39,7 +39,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 	 * Write charts to XML format
 	 *
 	 * @param 	PHPExcel_Chart				$pChart
-	 * @return 	string 						XML Output
+	 * @return 	StringHelper 						XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	public function writeChart(PHPExcel_Chart $pChart = null)
@@ -649,7 +649,7 @@ class PHPExcel_Writer_Excel2007_Chart extends PHPExcel_Writer_Excel2007_WriterPa
 	 * Get the data series type(s) for a chart plot series
 	 *
 	 * @param 	PHPExcel_Chart_PlotArea		$plotArea
-	 * @return	string|array
+	 * @return	StringHelper|array
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	private static function _getChartType($plotArea)

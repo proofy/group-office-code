@@ -41,6 +41,10 @@ class TaskController extends \GO\Base\Controller\AbstractModelController{
 		if(\GO::modules()->projects && $model->project){
 			$response['data']['project_name']=$model->project->name;
 		}
+		if(\GO::modules()->projects2 && $model->project2){
+			$response['data']['project_name']=$model->project2->name;
+		}
+		
 		
 		return parent::afterDisplay($response, $model, $params);
 	}
@@ -63,8 +67,8 @@ class TaskController extends \GO\Base\Controller\AbstractModelController{
 			$response['data']['remind_date']=date(\GO::user()->completeDateFormat, $model->reminder);
 			$response['data']['remind_time']=date(\GO::user()->time_format, $model->reminder);
 		}	else {
-			$response['data']['remind_date']=date(\GO::user()->completeDateFormat, $model->getDefaultReminder($model->start_time));
-			$response['data']['remind_time']=date(\GO::user()->time_format, $model->getDefaultReminder($model->start_time));
+			$response['data']['remind_date']=$model->getDefaultReminder($model->start_time) == 0 ? date(\GO::user()->completeDateFormat):date(\GO::user()->completeDateFormat, $model->getDefaultReminder($model->start_time));
+			$response['data']['remind_time']=$model->getDefaultReminder($model->start_time) == 0 ? date(\GO::user()->time_format) : date(\GO::user()->time_format, $model->getDefaultReminder($model->start_time));
 		}
 		
 		if(!empty($params['project_id']) && empty($params['id'])){
@@ -95,11 +99,14 @@ class TaskController extends \GO\Base\Controller\AbstractModelController{
 			}
 		}
 		
-		if(isset($params['remind'])) // Check for a setted reminder
+		if(!empty($params['remind'])) // Check for a setted reminder
 			$model->reminder= \GO\Base\Util\Date::to_unixtime($params['remind_date'].' '.$params['remind_time']);
+		else
+			$model->reminder = 0; 
 		
-		if($model->isNew && !isset($params['remind']) && !isset($params['priority'])) //This checks if it is called from the quickadd bar
+		if($model->isNew && empty($params['remind']) && !isset($params['priority'])){ //This checks if it is called from the quickadd bar
 		  $model->reminder = $model->getDefaultReminder(\GO\Base\Util\Date::to_unixtime ($params['start_time']));
+		}
 	  
 		return parent::beforeSubmit($response, $model, $params);
 	}
@@ -134,6 +141,8 @@ class TaskController extends \GO\Base\Controller\AbstractModelController{
 		
 		if(\GO::modules()->projects)
 			$combos['project_id']='$model->project->path';
+		if(\GO::modules()->projects2)
+			$combos['project_id']='$model->project2->path';
 		
 		return $combos;
 	}
@@ -176,15 +185,20 @@ class TaskController extends \GO\Base\Controller\AbstractModelController{
 	
 	protected function formatColumns(\GO\Base\Data\ColumnModel $columnModel) {
 		
-		$columnModel->formatColumn('completion_time','$model->getAttribute("completion_time","formatted")',array(),array('incomplete','completion_time'));
+		$columnModel->formatColumn('completion_time','$model->getAttribute("completion_time","formatted")',array(),'completion_time');
 		$columnModel->formatColumn('completed','$model->status=="COMPLETED" ? 1 : 0');
+		$columnModel->formatColumn('is_active','$model->isActive()');
 //		$columnModel->formatColumn('status', '$l["statuses[\'".$model->status."\']"');
 		//$columnModel->formatColumn('category_name','$model->category->name',array(),'category_id');
 		$columnModel->formatColumn('tasklist_name','$model->tasklist_name');
 		$columnModel->formatColumn('late','$model->isLate();');
 		$columnModel->formatColumn('user_name','$model->user->name');
 		
-		//$colModel->formatColumn('project_name','$model->project->name'); TODO: Implement the project from the ID and not from the name
+		if (\GO::modules()->projects2)
+			$columnModel->formatColumn('project_name','$model->project2->name');
+		elseif (\GO::modules()->projects)
+			$columnModel->formatColumn('project_name','$model->project->name');
+		
 		return parent::formatColumns($columnModel);
 	}
 
@@ -223,22 +237,22 @@ class TaskController extends \GO\Base\Controller\AbstractModelController{
 			->joinCustomFields()
 			->criteria(\GO\Base\Db\FindCriteria::newInstance()
 				->addModel(\GO\Tasks\Model\Task::model(),'t')
-					)										
+			)										
 			//->select('t.*, tl.name AS tasklist_name')
 			->select($fields.', tl.name AS tasklist_name, cat.name AS category_name, completion_time=0 AS incomplete')
 			->joinModel(array(
-					'model'=>'GO\Tasks\Model\Tasklist',
-					'localField'=>'tasklist_id',
-					'tableAlias'=>'tl', //Optional table alias
+				'model'=>'GO\Tasks\Model\Tasklist',
+				'localField'=>'tasklist_id',
+				'tableAlias'=>'tl', //Optional table alias
 			));
 		
 		
 		$storeParams->joinModel(array(
-					'type'=>'LEFT',
-					'model'=>'GO\Tasks\Model\Category',
-					'localField'=>'category_id',
-					'tableAlias'=>'cat', //Optional table alias
-			));
+			'type'=>'LEFT',
+			'model'=>'GO\Tasks\Model\Category',
+			'localField'=>'category_id',
+			'tableAlias'=>'cat', //Optional table alias
+		));
 		
 		$storeParams = $this->checkFilterParams($params['show'],$storeParams);
 		
@@ -246,6 +260,9 @@ class TaskController extends \GO\Base\Controller\AbstractModelController{
 		//	$storeParams->select("t.*, tl.name AS tasklist_name,p.name AS project_name");
 			$storeParams->select("t.*, tl.name AS tasklist_name,p.name AS project_name, cat.name AS category_name");
 			$storeParams->joinModel(array('model'=>'GO\Projects\Model\Project', 'foreignField'=>'id', 'localField'=>'project_id', 'tableAlias'=>'p',  'type'=>'LEFT' ));
+		} elseif(\GO::modules()->projects2) {
+			$storeParams->select("t.*, tl.name AS tasklist_name,p.name AS project_name, cat.name AS category_name");
+			$storeParams->joinModel(array('model'=>'GO\Projects2\Model\Project', 'foreignField'=>'id', 'localField'=>'project_id', 'tableAlias'=>'p',  'type'=>'LEFT' ));
 		}
 		
 		return $storeParams;
@@ -385,7 +402,7 @@ class TaskController extends \GO\Base\Controller\AbstractModelController{
 	 * Move the selected tasks to an other addressbook.
 	 * 
 	 * @param array $params
-	 * @return string $response
+	 * @return StringHelper $response
 	 */
 	protected function actionMove($params){
 		$response = array();
@@ -412,5 +429,38 @@ class TaskController extends \GO\Base\Controller\AbstractModelController{
 		
 		return $response;
 	}
+	
+	
+	public function actionExportIcs($params){
+				
+		$tasklist = \GO\Tasks\Model\Tasklist::model()->findByPk($params["tasklist_id"]);		
+		
+		if(!$tasklist->checkPermissionLevel(\GO\Base\Model\Acl::READ_PERMISSION)) {
+			throw new \GO\Base\Exception\AccessDenied();
+		}
+		
+		$findParams = \GO\Base\Db\FindParams::newInstance();
+		$findParams->getCriteria()->addCondition("tasklist_id", $tasklist->id);
+		
+		$stmt = \GO\Tasks\Model\Task::model()->find($findParams);	
+		
+		
+		\GO\Base\Util\Http::outputDownloadHeaders(new \GO\Base\FS\File($tasklist->name.'.ics'));
+		
+		//start vtodo
+		echo "BEGIN:VTODO\r\nVERSION:2.0\r\nPRODID:-//Intermesh//NONSGML ".\GO::config()->product_name." ".\GO::config()->version."//EN\r\n";
+		
+		
+		$t = new \GO\Base\VObject\VTimezone();
+		echo $t->serialize();
+		
+		while($event = $stmt->fetch()){
+			$v = $event->toVObject();
+			echo $v->serialize();
+		}
+		
+		echo "END:VTODO\r\n";
+	}
+	
 }
 	

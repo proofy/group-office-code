@@ -8,8 +8,8 @@
 /**
  * write the compiled resource
  *
- * @param string $compile_path
- * @param string $compiled_content
+ * @param StringHelper $compile_path
+ * @param StringHelper $compiled_content
  * @return true
  */
 function smarty_core_write_compiled_resource($params, &$smarty)

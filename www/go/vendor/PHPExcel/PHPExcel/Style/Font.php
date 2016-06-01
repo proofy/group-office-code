@@ -45,7 +45,7 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
 	/**
 	 * Font Name
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_name			= 'Calibri';
 
@@ -87,7 +87,7 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
 	/**
 	 * Underline
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_underline		= self::UNDERLINE_NONE;
 
@@ -226,7 +226,7 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
 	/**
 	 * Get Name
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getName() {
 		if ($this->_isSupervisor) {
@@ -238,7 +238,7 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
 	/**
 	 * Set Name
 	 *
-	 * @param string $pValue
+	 * @param StringHelper $pValue
 	 * @return PHPExcel_Style_Font
 	 */
 	public function setName($pValue = 'Calibri') {
@@ -414,7 +414,7 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
 	/**
 	 * Get Underline
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getUnderline() {
 		if ($this->_isSupervisor) {
@@ -426,7 +426,7 @@ class PHPExcel_Style_Font extends PHPExcel_Style_Supervisor implements PHPExcel_
 	/**
 	 * Set Underline
 	 *
-	 * @param string|boolean $pValue	PHPExcel_Style_Font underline type
+	 * @param StringHelper|boolean $pValue	PHPExcel_Style_Font underline type
 	 *									If a boolean is passed, then TRUE equates to UNDERLINE_SINGLE,
 	 *										false equates to UNDERLINE_NONE
 	 * @return PHPExcel_Style_Font

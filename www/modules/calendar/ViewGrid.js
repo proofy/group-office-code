@@ -7,7 +7,7 @@
  * If you have questions write an e-mail to info@intermesh.nl
  * 
  * @copyright Copyright Intermesh
- * @version $Id: ViewGrid.js 16148 2013-10-31 10:45:13Z mschering $
+ * @version $Id: ViewGrid.js 19970 2016-04-18 11:09:10Z mschering $
  * @author Merijn Schering <mschering@intermesh.nl>
  */
 
@@ -35,7 +35,9 @@ GO.grid.ViewGrid = Ext.extend(Ext.Panel, {
      * @cfg {Date} The date where the grid starts. This can be recalculated after a user sets a date
      */
 	startDate : false,
-	
+
+	categories: '[]',
+
 	//private var that is used when an event is dragged to another location
 	dragEvent : false,
 	
@@ -856,6 +858,7 @@ GO.grid.ViewGrid = Ext.extend(Ext.Panel, {
 			this.recurrenceDialog.on('cancel', function()
 			{
 				this.recurrenceDialog.hide();
+				this.reload(); 
 			},this)
 			
 		}
@@ -929,6 +932,8 @@ GO.grid.ViewGrid = Ext.extend(Ext.Panel, {
 		params['view_id']=this.view_id;
 		params['start_time']=this.startDate.format(this.dateTimeFormat);
 		params['end_time']=this.endDate.format(this.dateTimeFormat);
+
+		params['categories'] = this.categories;
 
 		GO.request({
 			maskEl:this.body,

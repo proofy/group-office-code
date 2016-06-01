@@ -39,8 +39,8 @@ class PHPExcel_Writer_Excel2007_StringTable extends PHPExcel_Writer_Excel2007_Wr
 	 * Create worksheet stringtable
 	 *
 	 * @param 	PHPExcel_Worksheet 	$pSheet				Worksheet
-	 * @param 	string[] 				$pExistingTable 	Existing table to eventually merge with
-	 * @return 	string[] 				String table for worksheet
+	 * @param 	StringHelper[] 				$pExistingTable 	Existing table to eventually merge with
+	 * @return 	StringHelper[] 				String table for worksheet
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	public function createStringTable($pSheet = null, $pExistingTable = null)
@@ -88,8 +88,8 @@ class PHPExcel_Writer_Excel2007_StringTable extends PHPExcel_Writer_Excel2007_Wr
 	/**
 	 * Write string table to XML format
 	 *
-	 * @param 	string[] 	$pStringTable
-	 * @return 	string 		XML Output
+	 * @param 	StringHelper[] 	$pStringTable
+	 * @return 	StringHelper 		XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	public function writeStringTable($pStringTable = null)
@@ -225,7 +225,7 @@ class PHPExcel_Writer_Excel2007_StringTable extends PHPExcel_Writer_Excel2007_Wr
 	 * Write Rich Text
 	 *
 	 * @param 	PHPExcel_Shared_XMLWriter	$objWriter 		XML Writer
-	 * @param 	string|PHPExcel_RichText	$pRichText		text string or Rich text
+	 * @param 	StringHelper|PHPExcel_RichText	$pRichText		text string or Rich text
 	 * @param 	string						$prefix			Optional Namespace prefix
 	 * @throws 	PHPExcel_Writer_Exception
 	 */

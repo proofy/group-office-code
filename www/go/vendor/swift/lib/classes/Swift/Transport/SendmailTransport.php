@@ -64,7 +64,7 @@ class Swift_Transport_SendmailTransport extends Swift_Transport_AbstractSmtpTran
      * The recommended mode is "-bs" since it is interactive and failure notifications
      * are hence possible.
      *
-     * @param string $command
+     * @param StringHelper $command
      *
      * @return Swift_Transport_SendmailTransport
      */
@@ -78,7 +78,7 @@ class Swift_Transport_SendmailTransport extends Swift_Transport_AbstractSmtpTran
     /**
      * Get the sendmail command which will be invoked.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getCommand()
     {
@@ -95,7 +95,7 @@ class Swift_Transport_SendmailTransport extends Swift_Transport_AbstractSmtpTran
      * they bounce (i.e. send() will always return 100% success).
      *
      * @param Swift_Mime_Message $message
-     * @param string[]           $failedRecipients An array of failures by-reference
+     * @param StringHelper[]           $failedRecipients An array of failures by-reference
      *
      * @return int
      */

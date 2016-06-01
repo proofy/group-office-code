@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: FileBrowser.js 17205 2014-03-26 12:29:01Z mschering $
+ * @version $Id: FileBrowser.js 20022 2016-05-02 12:19:19Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -306,7 +306,7 @@ GO.files.FileBrowser = function(config){
 	},this);
 
 
-	this.filesContextMenu = new GO.files.FilesContextMenu();
+this.filesContextMenu = new GO.files.FilesContextMenu();
 
 	this.filesContextMenu.on('properties', function(menu, records){
 		this.showPropertiesDialog(records[0]);
@@ -344,6 +344,36 @@ GO.files.FileBrowser = function(config){
 	this.filesContextMenu.on('addBookmark', function(menu, folderId){
 		this.bookmarksGrid.store.load();
 	}, this);
+
+	this.filesContextMenu.on('download_selected', function(menu, records, clickedAt){
+		this.onDownloadSelected(records);
+	}, this);
+	this.filesContextMenu.on('batchEdit', function(menu, records, clickedAt){
+		var ids = [];
+		Ext.each(records, function (selected) {
+			
+			if(selected.get('locked')) {
+				// error
+				Ext.MessageBox.alert(GO.lang['strError'], GO.files.lang.fileIsLocked + " :: " + selected.get('name'));
+				return false;
+			} else if(selected.get('type') == 'Folder') {
+				// error
+				Ext.MessageBox.alert(GO.lang['strError'], GO.files.lang.dontEditFolder + " :: " + selected.get('name'));
+				return false;
+			} else {
+				ids.push(selected.get('id'));
+			}
+		});
+		
+		if(ids.length > 0) {
+			
+			
+			GO.base.model.showBatchEditModelDialog('GO\\Files\\Model\\File', ids, 'id',{}, 'id,folder_id,type_id,type,size,unlock_allowed,timestamp,thumb_url,readonly,permission_level,path,mtime,locked_user_id,locked,handler,extension,acl_id,name,status_id,muser_id,user_id,expire_time,random_code,delete_when_expired' ,GO.files.lang.editSelection);
+		}
+
+	}, this);
+
+//	this.filesContextMenu= this.filesContextMenu;
 
 	this.gridPanel.on('rowcontextmenu', this.onGridRowContextMenu, this);
 
@@ -509,7 +539,9 @@ GO.files.FileBrowser = function(config){
 						});
 						if(!failures.length){
 							uploadpanel.onDeleteAll();
-							uploadpanel.ownerCt.hide();
+							
+							if(GO.settings.upload_quickselect !== false)
+								uploadpanel.ownerCt.hide();
 						}
 					}
 				}
@@ -842,7 +874,9 @@ GO.files.FileBrowser = function(config){
     this.on('search',function(){
 
       // turn off buttons
-      this._enableFilesContextMenuButtons(false);
+	  this.filesContextMenu.compressButton.setDisabled(true);
+      this.filesContextMenu.decompressButton.setDisabled(true);
+      //this._enableFilesContextMenuButtons(false);
       this.setWritePermission(0);
 
     },this);
@@ -855,11 +889,11 @@ Ext.extend(GO.files.FileBrowser, Ext.Panel,{
 
 	fileClickHandler : false,
 	scope : this,
-	pasteSelections : Array(),
+//	pasteSelections : Array(),
 	/*
 	 * cut or copy
 	 */
-	pasteMode : 'cut',
+//	pasteMode : 'cut',
 
 	path : '',
 
@@ -878,6 +912,8 @@ Ext.extend(GO.files.FileBrowser, Ext.Panel,{
             
             if (!GO.util.empty(this.filesContextMenu.emailFilesButton))
                 this.filesContextMenu.emailFilesButton.setDisabled(!enable);
+							
+			this.filesContextMenu.downloadSelectedFilesButton.setDisabled(!enable);
         },
 
 	saveCMState: function(state) {
@@ -900,12 +936,15 @@ Ext.extend(GO.files.FileBrowser, Ext.Panel,{
 		{
 			state = Ext.state.Manager.get(this.gridPanel.id);
 		}
-		if (store.reader.jsonData.disk_usage!=='undifined' && store.reader.jsonData.disk_quota!=='undifined') {
+
+		if (store.reader.jsonData.disk_usage!==null && store.reader.jsonData.disk_quota!==null) {
 			GO.settings.disk_usage = store.reader.jsonData.disk_usage;
 			GO.settings.disk_quota = store.reader.jsonData.disk_quota;
-			
+		}
+		if(typeof GO.settings.disk_usage!='undefined' && typeof GO.settings.disk_quota!='undefined') {
+
 			//Tell plupload the maximun filesize is the disk quota
-			var remainingDiskSpace = Math.floor(GO.settings.disk_quota-GO.settings.disk_usage);
+			var remainingDiskSpace = Math.ceil((GO.settings.disk_quota-GO.settings.disk_usage)*1024*1024);
 			this.uploadItem.lowerMaxFileSize(remainingDiskSpace);
 			
 			var quotaPercentage = (GO.settings.disk_quota && GO.settings.disk_quota>0) ? GO.settings.disk_usage/GO.settings.disk_quota : 0;
@@ -923,8 +962,8 @@ Ext.extend(GO.files.FileBrowser, Ext.Panel,{
 			else if(quotaPercentage*100 > 75)
 				this.quotaBar.addClass('warning');
 
-		}
-
+			}
+		
 		//state.sort=store.sortInfo;
 
 		if(state){
@@ -971,6 +1010,16 @@ Ext.extend(GO.files.FileBrowser, Ext.Panel,{
 		}
 
 		this.parentID = store.reader.jsonData.parent_id;
+		var folderId = store.baseParams.folder_id;
+		
+		if(this.parentID && !this.treePanel.getNodeById(folderId)) {
+			this.treePanel.getLoader().on('load', function(){
+				this.upButton.setDisabled((!this.parentID || !this.treePanel.getNodeById(this.parentID)));
+			}, this);
+			this.treePanel.setExpandFolderId(folderId);
+			this.treePanel.getRootNode().reload();
+		}
+		
 		if(!this.parentID || !this.treePanel.getNodeById(this.parentID))
 		{
 			this.upButton.setDisabled(true);
@@ -1281,6 +1330,55 @@ Ext.extend(GO.files.FileBrowser, Ext.Panel,{
 		}
 
 	},
+	
+	onDownloadSelected : function(records, filename, utf8)	{
+
+		var params = {
+			sources: []
+		};
+
+		for(var i=0;i<records.length;i++){
+			params.sources.push(records[i].data.path);
+		}
+
+		if(!filename || filename == ''){
+			
+			this.compressRecords = records;
+
+			if(!this.compressDialog){
+				this.compressDialog = new GO.files.CompressDialog ({
+					scope:this,
+					handler:function(win, filename, utf8){
+						this.onDownloadSelected(this.compressRecords, filename, utf8);
+					}
+				});
+			}
+
+			this.compressDialog.show();
+			
+		} else {
+			
+			params.archive_name=filename;
+			params.utf8=utf8 ? '1' : '0';
+			params.sources=Ext.encode(params.sources);
+			
+			GO.request({
+				timeout:300000,
+				maskEl:this.getEl(),
+				url:'files/folder/compressAndDownload',
+				params:params,
+				success:function(response, options, result){
+					
+					if(!GO.util.empty(result.archive)){
+						window.open(GO.url("core/downloadTempFile",{path:result.archive}));
+					} else {
+						GO.message.alert('No archive build','error');
+					}
+
+				}
+			});
+		}
+	},
 
 	getSelectedTreeRecords : function(){
 		var sm = this.treePanel.getSelectionModel();
@@ -1318,9 +1416,9 @@ Ext.extend(GO.files.FileBrowser, Ext.Panel,{
 	},
 
 	onCutCopy : function(pasteMode, records){
-		this.pasteSelections=records;
-		this.pasteMode=pasteMode;
-		if(this.pasteSelections.length)
+		GO.files.pasteSelections=records;
+		GO.files.pasteMode=pasteMode;
+		if(GO.files.pasteSelections.length)
 		{
 			this.pasteButton.setDisabled(false);
 		}
@@ -1328,9 +1426,11 @@ Ext.extend(GO.files.FileBrowser, Ext.Panel,{
 
 	onPaste : function(){
             if (GO.util.empty(this.gridStore.baseParams['query']))
-		this.paste(this.pasteMode, this.folder_id, this.pasteSelections);
+		this.paste(GO.files.pasteMode, this.folder_id, GO.files.pasteSelections);
             else
                 Ext.MessageBox.alert('', GO.files.lang['notInSearchMode']);
+							
+		GO.files.pasteSelections = Array();
 	},
 
 	onDelete : function(clickedAt){
@@ -1367,7 +1467,7 @@ Ext.extend(GO.files.FileBrowser, Ext.Panel,{
 		}else
 		{
 			//detect grid on selModel. thumbs doesn't have that
-			if(this.cardPanel.getLayout().activeItem.selModel)
+			if(this.cardPanel.getLayout().activeItem.id == this.gridPanel.id)
 			{
 				this.gridPanel.deleteSelected({
 					callback:function(){
@@ -1413,107 +1513,7 @@ Ext.extend(GO.files.FileBrowser, Ext.Panel,{
 	},
 
 	onDownloadLink : function(records,email){
-
-		this.emailDownloadLink=email;
-		
-		this.downloadLinkIds = [];
-		for(var i=0; i<records.length; i++)
-			this.downloadLinkIds.push(records[i].data.id);
-		
-		this.file_data = records[0].data;
-
-		if (!this.expireDateWindow) {
-			this.datePicker = new Ext.DatePicker({
-					itemId: 'expire_time',
-					name : 'expire_time',
-					format: GO.settings.date_format,
-					hideLabel: true
-			});
-			this.expireDateWindow = new GO.Window({
-				title: GO.files.lang.expireTime,
-				height:310,
-				width:260,
-				border:false,
-				maximizable:true,
-				collapsible:true,
-				closeAction:'hide',
-				items: [this.deleteWhenExpiredCB = new Ext.ux.form.XCheckbox({
-					hideLabel: true,
-					anchor: '-20',
-					boxLabel: GO.files.lang['deleteWhenExpired'],
-					name: 'delete_when_expired',
-					value: false,
-					disabled: true,
-					hidden: true
-				}), new Ext.Panel({
-					autoHeight:true,
-					cls:'go-date-picker-wrap-outer',
-					baseCls:'x-plain',
-					items:[
-						new Ext.Panel({
-							cls:'go-date-picker-wrap',
-							items:[this.datePicker]
-						})
-					]
-				})]
-			});
-			this.datePicker.on('select', function(field,date){
-				
-				if (!this.deleteWhenExpiredCB.disabled)
-					var deleteWhenExpired = this.deleteWhenExpiredCB.getValue() ? 1 : 0;
-				else
-					var deleteWhenExpired = 0;
-				
-				if(this.emailDownloadLink){
-
-					GO.email.showComposer({
-						loadUrl:GO.url('files/file/emailDownloadLink'),
-						loadParams:{
-							ids: Ext.encode(this.downloadLinkIds),
-							expire_time: parseInt(date.setDate(date.getDate())/1000),
-							delete_when_expired: deleteWhenExpired
-						}
-					});
-				} else {
-					GO.request({
-						maskEl: this.getEl(),
-						url: 'files/file/createDownloadLink',
-						params: {
-							id:this.file_data.id,
-							expire_time: parseInt(date.setDate(date.getDate())/1000),
-							delete_when_expired: deleteWhenExpired
-						},
-						success: function(options, response, result)
-						{
-							this.filePanel.reload();
-						},
-						scope:this
-					});
-				}
-
-				this.expireDateWindow.hide();
-			}, this);
-		}
-
-		this.expireDateWindow.on('show', function(){
-			GO.request({
-				url: 'files/email/checkDeleteCron',
-				success: function(options, response, result) {
-					this.deleteWhenExpiredCB.setValue(false);
-					this.deleteWhenExpiredCB.setVisible(result.data.enabled);
-					this.deleteWhenExpiredCB.setDisabled(!result.data.enabled);
-				},
-				scope: this
-			});
-//			var myDate = new Date;
-//			var unixtime_ms = myDate.setDate(myDate.getDate()+7);
-//			var unixtime = parseInt(unixtime_ms/1000);
-//			this.expireForm.items.get('expire_time').setValue(myDate.format(GO.settings.date_format));
-//			//this.expireForm.items.get('expire_unixtime').setValue(unixtime);
-		}, this);
-
-
-		this.expireDateWindow.show();
+		GO.files.createDownloadLink(records,email);
 	},
 
 	onGridNotifyOver : function(dd, e, data){
@@ -1849,7 +1849,7 @@ Ext.extend(GO.files.FileBrowser, Ext.Panel,{
                 
                 this.copyButton.setDisabled(permissionLevel<=0);
                 
-		this.pasteButton.setDisabled(!writePermission || !this.pasteSelections.length);
+		this.pasteButton.setDisabled(!writePermission || !GO.files.pasteSelections.length);
 
 	//this.filesContextMenu.deleteButton.setDisabled(!writePermission);
 	},
@@ -1883,7 +1883,7 @@ Ext.extend(GO.files.FileBrowser, Ext.Panel,{
 			},
 			scope:this
 		});
-
+		
 	},
 	
 	updateLocation : function(){
@@ -1941,6 +1941,15 @@ Ext.extend(GO.files.FileBrowser, Ext.Panel,{
 	}
 });
 
+
+GO.files.createDownloadLink = function(records,email){
+
+	if(!GO.files.expireDateDialog){
+		GO.files.expireDateDialog = new GO.files.ExpireDateDialog();
+	}
+	
+	GO.files.expireDateDialog.show(records,email);
+},
 
 GO.files.showFilePropertiesDialog = function(file_id){
 
@@ -2180,3 +2189,6 @@ GO.moduleManager.addModule('files', GO.files.FileBrowser, {
 	title : GO.files.lang.files,
 	iconCls : 'go-tab-icon-files'
 });
+
+GO.files.pasteSelections = new Array();
+GO.files.pasteMode = 'copy';

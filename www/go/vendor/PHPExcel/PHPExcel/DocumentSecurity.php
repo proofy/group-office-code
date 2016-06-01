@@ -59,14 +59,14 @@ class PHPExcel_DocumentSecurity
 	/**
 	 * RevisionsPassword
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_revisionsPassword;
 
 	/**
 	 * WorkbookPassword
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_workbookPassword;
 
@@ -157,7 +157,7 @@ class PHPExcel_DocumentSecurity
     /**
      * Get RevisionsPassword (hashed)
      *
-     * @return string
+     * @return StringHelper
      */
     function getRevisionsPassword() {
     	return $this->_revisionsPassword;
@@ -166,7 +166,7 @@ class PHPExcel_DocumentSecurity
     /**
      * Set RevisionsPassword
      *
-     * @param string 	$pValue
+     * @param StringHelper 	$pValue
      * @param boolean 	$pAlreadyHashed If the password has already been hashed, set this to true
      * @return PHPExcel_DocumentSecurity
      */
@@ -181,7 +181,7 @@ class PHPExcel_DocumentSecurity
     /**
      * Get WorkbookPassword (hashed)
      *
-     * @return string
+     * @return StringHelper
      */
     function getWorkbookPassword() {
     	return $this->_workbookPassword;
@@ -190,7 +190,7 @@ class PHPExcel_DocumentSecurity
     /**
      * Set WorkbookPassword
      *
-     * @param string 	$pValue
+     * @param StringHelper 	$pValue
      * @param boolean 	$pAlreadyHashed If the password has already been hashed, set this to true
      * @return PHPExcel_DocumentSecurity
      */

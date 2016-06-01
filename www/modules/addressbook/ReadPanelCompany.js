@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: ReadPanelCompany.js 16920 2014-02-26 14:44:19Z mschering $
+ * @version $Id: ReadPanelCompany.js 19324 2015-08-18 10:17:13Z wsmits $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -28,10 +28,11 @@ GO.addressbook.CompanyReadPanel = Ext.extend(GO.DisplayPanel,{
 		this.loadUrl = ("addressbook/company/display");
  
 			this.template = ''+
-				'<table class="display-panel" cellpadding="0" cellspacing="0" border="0">'+
-				'<tr>'+
-						'<td colspan="3" class="display-panel-heading">'+GO.addressbook.lang.company+': {name}</td>'+
-				'</tr>'+
+				'{[this.collapsibleSectionHeader(GO.addressbook.lang.company+": "+ values.name, "companypane2-"+values.panelId, "name")]}'+
+				'<table class="display-panel" cellpadding="0" cellspacing="0" border="0" id="companypane2-{panelId}">'+
+//				'<tr>'+
+//						'<td colspan="3" class="display-panel-heading">'+GO.addressbook.lang.company+': {name}</td>'+
+//				'</tr>'+
 					/*'<tr>'+
 						'<tpl if="this.isCompanySecondColumn(values)">'+
 							'<td colspan="2" valign="top" class="display-panel-heading">'+
@@ -76,18 +77,11 @@ GO.addressbook.CompanyReadPanel = Ext.extend(GO.DisplayPanel,{
 					'</tpl>'+
 					
 				'</tr>'+
-				'<tr>'+
-					'<tpl if="this.isCompanySecondColumn(values)">'+
-						'<td colspan="3" valign="top" class="display-panel-heading">'+
-					'</tpl>'+
-
-					'<tpl if="this.isCompanySecondColumn(values) == false">'+
-						'<td colspan="2" valign="top" class="display-panel-heading">'+
-					'</tpl>'+
-
-					GO.addressbook.lang['cmdFieldsetContact']+
-					'</td>'+
-				'</tr>'+
+				'</table>'+
+				
+				'{[this.collapsibleSectionHeader(GO.addressbook.lang.cmdFieldsetContact, "contactpane2-"+values.panelId, "name")]}'+
+				'<table class="display-panel" cellpadding="0" cellspacing="0" border="0" id="contactpane2-{panelId}">'+
+				
 
 				'<tr>'+
 
@@ -162,8 +156,8 @@ GO.addressbook.CompanyReadPanel = Ext.extend(GO.DisplayPanel,{
 						'</td>'+
 					'</tpl>'+
 				'</tr>'+
-
-
+				
+				
 					'<tr>'+	
 						// COMPANY DETAILS+ 1e KOLOM
 						'<tpl if="this.isCompanySecondColumn(values)">'+
@@ -316,6 +310,12 @@ GO.addressbook.CompanyReadPanel = Ext.extend(GO.DisplayPanel,{
 			this.template +=GO.linksTemplate;
 			
 	  Ext.apply(this.templateConfig,{
+			replaceWithUnderscore: function(str){
+				if(!GO.util.empty(str)){
+					str = str.replace(/\\/g,"_");
+				}
+				return str;
+			},
 		  addSlashes : function(str)
 			{
 				str = GO.util.html_entity_decode(str, 'ENT_QUOTES');
@@ -452,11 +452,11 @@ GO.addressbook.CompanyReadPanel = Ext.extend(GO.DisplayPanel,{
 			
 		GO.addressbook.CompanyReadPanel.superclass.initComponent.call(this);
 		
-		if(GO.tasks)
-		{
-			this.scheduleCallItem = new GO.tasks.ScheduleCallMenuItem();
-			this.newMenuButton.menu.add(this.scheduleCallItem);
-		}
+//		if(GO.tasks)
+//		{
+//			this.scheduleCallItem = new GO.tasks.ScheduleCallMenuItem();
+//			this.newMenuButton.menu.add(this.scheduleCallItem);
+//		}
 	},
 	createTopToolbar : function(){
 		var tbar = GO.addressbook.ContactReadPanel.superclass.createTopToolbar.call(this);
@@ -490,26 +490,26 @@ GO.addressbook.CompanyReadPanel = Ext.extend(GO.DisplayPanel,{
 		if(this.mergeButton)
 			this.mergeButton.setDisabled(!data.write_permission)
 					
-		if(data.write_permission)
-		{
-			if(this.scheduleCallItem)
-			{				
-				var name = this.data.name;
-				
-				if(this.data.phone!='')
-				{
-					name += ' ('+this.data.phone+')';
-				}
-				
-				this.scheduleCallItem.setLinkConfig({
-					name: name,
-					model_id: this.data.id, 
-					model_name:"GO\\Addressbook\\Model\\Company",
-					callback:this.reload,
-					scope: this
-				});
-			}
-		}
+//		if(data.write_permission)
+//		{
+//			if(this.scheduleCallItem)
+//			{				
+//				var name = this.data.name;
+//				
+//				if(this.data.phone!='')
+//				{
+//					name += ' ('+this.data.phone+')';
+//				}
+//				
+//				this.scheduleCallItem.setLinkConfig({
+//					name: name,
+//					model_id: this.data.id, 
+//					model_name:"GO\\Addressbook\\Model\\Company",
+//					callback:this.reload,
+//					scope: this
+//				});
+//			}
+//		}
 		this.newMenuButton.menu.taskShowConfig= {company_id:this.data.id};
 	}
 });

@@ -24,6 +24,7 @@
  * @property int $opened
  * @property int $campaign_id
  * @property int $campaign_status_id
+ * @property string $temp_pass The temporary password for sending newsletters
  * 
  * @property \GO\Base\Fs\File $logFile
  * @property \GO\Base\Fs\File $messageFile

@@ -57,9 +57,9 @@ class CSSMin
 
     /**
      * Minify a string of CSS
-     * @param string $css
+     * @param StringHelper $css
      * @param int|bool $linebreak_pos
-     * @return string
+     * @return StringHelper
      */
     public function run($css = '', $linebreak_pos = FALSE)
     {
@@ -155,7 +155,7 @@ class CSSMin
 
     /**
      * Sets the memory limit for this script
-     * @param int|string $limit
+     * @param int|StringHelper $limit
      */
     public function set_memory_limit($limit)
     {
@@ -164,7 +164,7 @@ class CSSMin
 
     /**
      * Sets the maximum execution time for this script
-     * @param int|string $seconds
+     * @param int|StringHelper $seconds
      */
     public function set_max_execution_time($seconds)
     {
@@ -213,9 +213,9 @@ class CSSMin
 
     /**
      * Does bulk of the minification
-     * @param string $css
+     * @param StringHelper $css
      * @param int|bool $linebreak_pos
-     * @return string
+     * @return StringHelper
      */
     private function minify($css, $linebreak_pos)
     {
@@ -416,8 +416,8 @@ class CSSMin
      * compressing, to avoid performance issues running some of the subsequent
      * regexes against large strings chunks.
      *
-     * @param string $css
-     * @return string
+     * @param StringHelper $css
+     * @return StringHelper
      */
     private function extract_data_urls($css)
     {
@@ -494,8 +494,8 @@ class CSSMin
      * DOES NOT compress invalid hex values.
      * e.g. background-color: #aabbccdd
      *
-     * @param string $css
-     * @return string
+     * @param StringHelper $css
+     * @return StringHelper
      */
     private function compress_hex_colors($css)
     {
@@ -694,8 +694,8 @@ class CSSMin
      * PHP port of Javascript's "indexOf" function for strings only
      * Author: Tubal Martin http://blog.margenn.com
      *
-     * @param string $haystack
-     * @param string $needle
+     * @param StringHelper $haystack
+     * @param StringHelper $needle
      * @param int    $offset index (optional)
      * @return int
      */
@@ -711,10 +711,10 @@ class CSSMin
      * Author: Tubal Martin http://blog.margenn.com
      * Tests: http://margenn.com/tubal/str_slice/
      *
-     * @param string   $str
+     * @param StringHelper   $str
      * @param int      $start index
      * @param int|bool $end index (optional)
-     * @return string
+     * @return StringHelper
      */
     private function str_slice($str, $start = 0, $end = FALSE)
     {

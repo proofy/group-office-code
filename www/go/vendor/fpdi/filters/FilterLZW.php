@@ -39,7 +39,7 @@ if (!class_exists('FilterLZW', false)) {
         /**
          * Method to decode LZW compressed data.
          *
-         * @param string data    The compressed data.
+         * @param StringHelper data    The compressed data.
          */
         function decode($data) {
     

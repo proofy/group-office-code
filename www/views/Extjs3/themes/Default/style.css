@@ -65,8 +65,12 @@
 	width:10px;
 }
 
-.go-html-formatted, .go-html-formatted p, .go-html-formatted li, .go-html-formatted td{
+.go-html-formatted{
 	font: 12px Arial, Helvetica Sans-serif;
+}
+
+.go-html-formatted div, .go-html-formatted dl, .go-html-formatted dt, .go-html-formatted dd, .go-html-formatted ul, .go-html-formatted ol, .go-html-formatted li, .go-html-formatted h1, .go-html-formatted h2, .go-html-formatted h3, .go-html-formatted h4, .go-html-formatted h5, .go-html-formatted h6, .go-html-formatted pre, .go-html-formatted form, .go-html-formatted fieldset, .go-html-formatted input, .go-html-formatted p, .go-html-formatted blockquote, .go-html-formatted th, .go-html-formatted td, .go-html-formatted span {
+    font: inherit;
 }
 
 .go-html-formatted  blockquote {  
@@ -388,6 +392,10 @@ a.normal-link:hover{
 
 .btn-add {
 	background-image:url('images/16x16/gtk-add.png') !important;
+}
+
+.btn-windows {
+	background-image:url('images/16x16/gnome-windows.png') !important;
 }
 
 .btn-alert {

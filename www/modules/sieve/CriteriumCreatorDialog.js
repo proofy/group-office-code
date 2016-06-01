@@ -81,8 +81,15 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 		if (typeof(record)=='object') {
 			
 			this._recordId = record.get('id');
-			
+			this.cmbOperator.store = GO.sieve.cmbOperatorStore;
 			switch(record.get('test')) {
+				
+				case 'currentdate':
+					this.cmbField.setValue('currentdate');
+					this.cmbDateOperator.setValue(record.get('type'));
+					this.dateCriterium.setValue(record.get('arg'));
+					this._transForm(this.cmbField.getValue());
+				break;
 				case 'size':
 					// We know for sure this record corresponds with a size criterium
 					this.cmbField.setValue('size');
@@ -123,6 +130,12 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 					this.txtCustom.setValue(record.get('arg1'));
 					this._setOperatorField(record);
 					break;
+				case 'body':
+					this.cmbField.setValue('body');
+					this._transForm(this.cmbField.getValue());
+					this.txtCriterium.setValue(record.get('arg'));
+					this._setOperatorField(record);
+					break;
 			}
 		}
 		GO.sieve.CriteriumCreatorDialog.superclass.show.call(this);
@@ -134,10 +147,13 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 		
 		switch (type) {
 			case 'contains':
-				if (not)
+				if (not) {
 					this.cmbOperator.setValue('notcontains');
-				else
+					this.cmbBodyOperator.setValue('notcontains');
+				} else {
 					this.cmbOperator.setValue('contains');
+					this.cmbBodyOperator.setValue('contains');
+				}
 				break;
 			case 'is':
 				if (not)
@@ -147,9 +163,9 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 				break;
 			default:
 				if (not)
-					this.cmbOperator.setValue('notexists')
+					this.cmbOperator.setValue('notexists');
 				else
-					this.cmbOperator.setValue('exists')
+					this.cmbOperator.setValue('exists');
 				break;
 		}
 	},
@@ -160,6 +176,7 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 	 ****************************************************************************/
 	
 	_transForm : function(type){
+		this._toggleFieldUse(this.cmbBodyOperator,false);
 		switch(type)
 		{
 			case 'size':
@@ -169,17 +186,22 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 				this._toggleFieldUse(this.numberCriterium,true);
 				this._toggleFieldUse(this.cmbUnderOver,true);
 				this._toggleFieldUse(this.rgSize,true);
+				this._toggleFieldUse(this.cmbDateOperator,false);
+				this._toggleFieldUse(this.dateCriterium,false);
 				break;
+			case 'body':
+				this._toggleFieldUse(this.cmbBodyOperator,true);
 			case 'From':
 			case 'To':
 			case 'Subject':
-//			case 'body':
 				this._toggleFieldUse(this.txtCustom,false);
-				this._toggleFieldUse(this.cmbOperator,true);
+				this._toggleFieldUse(this.cmbOperator,type!='body');
 				this._toggleFieldUse(this.txtCriterium,!(this.cmbOperator.getValue() == 'exists' || this.cmbOperator.getValue() == 'notexists'));
 				this._toggleFieldUse(this.numberCriterium,false);
 				this._toggleFieldUse(this.cmbUnderOver,false);
 				this._toggleFieldUse(this.rgSize,false);
+				this._toggleFieldUse(this.cmbDateOperator,false);
+				this._toggleFieldUse(this.dateCriterium,false);
 				break;
 			case 'X-Spam-Flag':
 				this._toggleFieldUse(this.txtCustom,false);
@@ -188,6 +210,8 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 				this._toggleFieldUse(this.numberCriterium,false);
 				this._toggleFieldUse(this.cmbUnderOver,false);
 				this._toggleFieldUse(this.rgSize,false);
+				this._toggleFieldUse(this.cmbDateOperator,false);
+				this._toggleFieldUse(this.dateCriterium,false);
 				break;
 			case 'custom':
 				this._toggleFieldUse(this.txtCustom,true);
@@ -196,6 +220,18 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 				this._toggleFieldUse(this.numberCriterium,false);
 				this._toggleFieldUse(this.cmbUnderOver,false);
 				this._toggleFieldUse(this.rgSize,false);
+				this._toggleFieldUse(this.cmbDateOperator,false);
+				this._toggleFieldUse(this.dateCriterium,false);
+				break;
+			case 'currentdate':
+				this._toggleFieldUse(this.txtCustom,false);
+				this._toggleFieldUse(this.cmbOperator,false);
+				this._toggleFieldUse(this.txtCriterium,false);
+				this._toggleFieldUse(this.numberCriterium,false);
+				this._toggleFieldUse(this.cmbUnderOver,false);
+				this._toggleFieldUse(this.rgSize,false);
+				this._toggleFieldUse(this.cmbDateOperator,true);
+				this._toggleFieldUse(this.dateCriterium,true);
 				break;
 			default:
 				this._toggleFieldUse(this.txtCustom,false);
@@ -204,6 +240,8 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 				this._toggleFieldUse(this.numberCriterium,false);
 				this._toggleFieldUse(this.cmbUnderOver,false);
 				this._toggleFieldUse(this.rgSize,false);
+				this._toggleFieldUse(this.cmbDateOperator,false);
+				this._toggleFieldUse(this.dateCriterium,false);
 				break;
 		}
 		this.doLayout();
@@ -234,6 +272,7 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 		var _arg = '';
 		var _arg1 = this.cmbField.getValue();
 		var _arg2 = this.txtCriterium.getValue();
+		var _part = '';
 
 		// Workaround for _arg2 check
 		if(this.cmbOperator.getValue() == 'exists' || this.cmbOperator.getValue() == 'notexists' || this.cmbField.getValue() == 'X-Spam-Flag')
@@ -265,6 +304,14 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 					_arg = '';
 					_arg1 = 'X-Spam-Flag';
 					_arg2 = 'YES';
+					break;
+				case 'body':
+					_test = 'body';
+					_not = (this.cmbBodyOperator.getValue() == 'notexists' || this.cmbBodyOperator.getValue() == 'notcontains');
+					_type = 'contains';
+					_arg = this.txtCriterium.getValue();
+					_arg1 = '';
+					_arg2 = '';
 					break;
 				default:
 					if(this.cmbOperator.getValue() == 'exists' || this.cmbOperator.getValue() == 'notexists')
@@ -299,6 +346,14 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 				_arg = this.numberCriterium.getValue();
 			else
 				_arg = this.numberCriterium.getValue() + this.rgSize.getValue().inputValue;
+		} else if(this.cmbField.getValue()=='currentdate'){
+				_test = 'currentdate';
+				_not = false;
+				_arg = this.dateCriterium.getRawValue();
+				_part = "date";
+				_arg1 = '';
+				_arg2 = '';
+				_type = this.cmbDateOperator.getValue();
 		}
 		
 		return {
@@ -308,7 +363,8 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 			type: _type,
 			arg:	_arg,
 			arg1: _arg1,
-			arg2: _arg2
+			arg2: _arg2,
+			part: _part
 		};
 		
 	},
@@ -360,6 +416,53 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 			width:110,
 			emptyText:GO.sieve.lang.operator,
 			disabled: true,
+			hidden: true
+		});
+		
+		this.cmbBodyOperator = new GO.form.ComboBox({
+			hiddenName:'type',
+			value:'contains',
+			valueField:'value',
+			displayField:'field',
+			store: GO.sieve.cmbBodyOperatorStore,
+			mode:'local',
+			triggerAction:'all',
+			editable:false,
+			selectOnFocus:true,
+			forceSelection:true,
+			allowBlank:false,
+			width:110,
+			emptyText:GO.sieve.lang.operator,
+			disabled: true,
+			hidden: true
+		});
+
+
+	this.cmbDateOperator = new GO.form.ComboBox({
+			hiddenName:'type',
+			value:'is',
+			valueField:'value',
+			displayField:'field',
+			store: GO.sieve.cmbDateOperatorStore,
+			mode:'local',
+			triggerAction:'all',
+			editable:false,
+			selectOnFocus:true,
+			forceSelection:true,
+			allowBlank:false,
+			width:110,
+			emptyText:GO.sieve.lang.operator,
+			disabled: true,
+			hidden: true
+		});
+
+		this.dateCriterium = new Ext.form.DateField({
+			name: 'arg2' ,
+			emptyText: '...',
+			allowBlank:false,
+			width:150,
+			disabled: true,
+			format : "Y-m-d",
 			hidden: true
 		});
 
@@ -447,9 +550,12 @@ Ext.extend(GO.sieve.CriteriumCreatorDialog, GO.Window,{
 						this.txtCustom,
 						this.cmbUnderOver,
 						this.cmbOperator, 
+						this.cmbBodyOperator, 
+						this.cmbDateOperator,
 						this.txtCriterium,
 						this.numberCriterium,
-						this.rgSize
+						this.rgSize,
+						this.dateCriterium
 					],
 					hideLabel: true
 				}

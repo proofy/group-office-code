@@ -108,7 +108,7 @@ class TCPDFBarcode {
 	 * @param $w (int) Minimum width of a single bar in user units.
 	 * @param $h (int) Height of barcode in user units.
 	 * @param $color (string) Foreground color (in SVG format) for bar elements (background is transparent).
- 	 * @return string SVG code.
+ 	 * @return StringHelper SVG code.
  	 * @public
 	 */
 	public function getBarcodeSVGcode($w=2, $h=30, $color='black') {
@@ -141,7 +141,7 @@ class TCPDFBarcode {
 	 * @param $w (int) Width of a single bar element in pixels.
 	 * @param $h (int) Height of a single bar element in pixels.
 	 * @param $color (string) Foreground color for bar elements (background is transparent).
- 	 * @return string HTML code.
+ 	 * @return StringHelper HTML code.
  	 * @public
 	 */
 	public function getBarcodeHTML($w=2, $h=30, $color='black') {
@@ -662,7 +662,7 @@ class TCPDFBarcode {
 	/**
 	 * Calculate CODE 93 checksum (modulo 47).
 	 * @param $code (string) code to represent.
-	 * @return string checksum code.
+	 * @return StringHelper checksum code.
 	 * @protected
 	 */
 	protected function checksum_code93($code) {
@@ -2154,7 +2154,7 @@ class TCPDFBarcode {
 	 * Convert large integer number to hexadecimal representation.
 	 * (requires PHP bcmath extension)
 	 * @param $number (string) number to convert specified as a string
-	 * @return string hexadecimal representation
+	 * @return StringHelper hexadecimal representation
 	 */
 	public function dec_to_hex($number) {
 		$i = 0;
@@ -2178,7 +2178,7 @@ class TCPDFBarcode {
 	 * Convert large hexadecimal number to decimal representation (string).
 	 * (requires PHP bcmath extension)
 	 * @param $hex (string) hexadecimal number to convert specified as a string
-	 * @return string hexadecimal representation
+	 * @return StringHelper hexadecimal representation
 	 */
 	public function hex_to_dec($hex) {
 		$dec = 0;

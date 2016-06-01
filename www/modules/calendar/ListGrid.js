@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: ListGrid.js 16920 2014-02-26 14:44:19Z mschering $
+ * @version $Id: ListGrid.js 18814 2015-02-23 10:30:33Z wilmar1980 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -43,13 +43,15 @@ GO.calendar.ListGrid = function(config)
 			'has_reminder',
 			'calendar_id',
 			'calendar_name',
+			'read_only',
 //			'has_other_participants',
 			'participant_ids',
 			'ctime',
 			'mtime',
 			'username',
 			'musername',
-			'resources'
+			'resources',
+			'model_name'
 			]
 		}),
 		proxy: new Ext.data.HttpProxy({
@@ -192,6 +194,9 @@ Ext.extend(GO.calendar.ListGrid, Ext.grid.GridPanel, {
 		this.on("rowdblclick", function(grid, rowIndex, e){
 			var record = grid.getStore().getAt(rowIndex);
 
+			if(record.data.read_only)
+					return false;
+
 			if(record.data.event_id)
 			{
 				GO.calendar.showEventDialog({
@@ -218,8 +223,20 @@ Ext.extend(GO.calendar.ListGrid, Ext.grid.GridPanel, {
 				sm.selectRow(rowIndex);
 			}
 
-			var event = grid.getStore().getAt(rowIndex).data;
-			this.showContextMenu(e, event);
+			var theEventData = grid.getStore().getAt(rowIndex).data;
+			console.log(theEventData);
+			if (theEventData.model_name=='GO\\Tasks\\Model\\Task') {
+				if (GO.tasks) {
+					if (!this.taskContextMenu)
+						this.taskContextMenu = new GO.calendar.TaskContextMenu();
+
+					e.stopEvent();
+					this.taskContextMenu.setTask(theEventData);
+					this.taskContextMenu.showAt(e.getXY());
+				}
+			} else {
+				this.showContextMenu(e, theEventData);
+			}
 		}, this);
 		
 	},

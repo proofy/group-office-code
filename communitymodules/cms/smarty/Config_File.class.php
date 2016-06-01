@@ -67,7 +67,7 @@ class Config_File {
     /**
      * Constructs a new config file class.
      *
-     * @param string $config_path (optional) path to the config files
+     * @param StringHelper $config_path (optional) path to the config files
      */
     function Config_File($config_path = NULL)
     {
@@ -79,7 +79,7 @@ class Config_File {
     /**
      * Set the path where configuration files can be found.
      *
-     * @param string $config_path path to the config files
+     * @param StringHelper $config_path path to the config files
      */
     function set_path($config_path)
     {
@@ -100,10 +100,10 @@ class Config_File {
     /**
      * Retrieves config info based on the file, section, and variable name.
      *
-     * @param string $file_name config file to get info for
-     * @param string $section_name (optional) section to get info for
-     * @param string $var_name (optional) variable to get info for
-     * @return string|array a value or array of values
+     * @param StringHelper $file_name config file to get info for
+     * @param StringHelper $section_name (optional) section to get info for
+     * @param StringHelper $var_name (optional) variable to get info for
+     * @return StringHelper|array a value or array of values
      */
     function get($file_name, $section_name = NULL, $var_name = NULL)
     {
@@ -142,7 +142,7 @@ class Config_File {
      * Retrieves config info based on the key.
      *
      * @param $file_name string config key (filename/section/var)
-     * @return string|array same as get()
+     * @return StringHelper|array same as get()
      * @uses get() retrieves information from config file and returns it
      */
     function &get_key($config_key)
@@ -166,7 +166,7 @@ class Config_File {
     /**
      * Get all section names from a loaded file.
      *
-     * @param string $file_name config file to get section names from
+     * @param StringHelper $file_name config file to get section names from
      * @return array an array of section names from the specified file
      */
     function get_section_names($file_name)
@@ -184,8 +184,8 @@ class Config_File {
     /**
      * Get all global or section variable names.
      *
-     * @param string $file_name config file to get info for
-     * @param string $section_name (optional) section to get info for
+     * @param StringHelper $file_name config file to get info for
+     * @param StringHelper $section_name (optional) section to get info for
      * @return array an array of variables names from the specified file/section
      */
     function get_var_names($file_name, $section = NULL)
@@ -208,7 +208,7 @@ class Config_File {
     /**
      * Clear loaded config data for a certain file or all files.
      *
-     * @param string $file_name file to clear config data for
+     * @param StringHelper $file_name file to clear config data for
      */
     function clear($file_name = NULL)
     {
@@ -222,7 +222,7 @@ class Config_File {
     /**
      * Load a configuration file manually.
      *
-     * @param string $file_name file name to load
+     * @param StringHelper $file_name file name to load
      * @param boolean $prepend_path whether current config path should be
      *                              prepended to the filename
      */
@@ -250,8 +250,8 @@ class Config_File {
     /**
      * Store the contents of a file manually.
      *
-     * @param string $config_file file name of the related contents
-     * @param string $contents the file-contents to parse
+     * @param StringHelper $config_file file name of the related contents
+     * @param StringHelper $contents the file-contents to parse
      */
     function set_file_contents($config_file, $contents)
     {
@@ -262,7 +262,7 @@ class Config_File {
     /**
      * parse the source of a configuration file manually.
      *
-     * @param string $contents the file-contents to parse
+     * @param StringHelper $contents the file-contents to parse
      */
     function parse_contents($contents)
     {
@@ -340,7 +340,7 @@ class Config_File {
     /**#@+ @access private */
     /**
      * @param array &$container
-     * @param string $var_name
+     * @param StringHelper $var_name
      * @param mixed $var_value
      * @param boolean $booleanize determines whether $var_value is converted to
      *                            to true/false
@@ -376,7 +376,7 @@ class Config_File {
 
     /**
      * @uses trigger_error() creates a PHP warning/error
-     * @param string $error_msg
+     * @param StringHelper $error_msg
      * @param integer $error_type one of
      */
     function _trigger_error_msg($error_msg, $error_type = E_USER_WARNING)

@@ -40,8 +40,12 @@ class CustomcssController extends AbstractJsonController {
 */
 
 /* this will override the logo at the top right */
-#headerLeft{
+#go-logo, #headerLeft {
 background-image:url(/insert/url/here) !important;
+/*
+background-size: auto 36px;
+background-position: 0 -5px;
+*/
 }
 
 /* this will override the logo at the login screen */

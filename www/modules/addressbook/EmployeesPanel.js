@@ -32,7 +32,7 @@ GO.addressbook.EmployeesPanel = function(config)
 			},
 
 			{
-				name:'phone'
+				name:'work_phone'
 			},
 
 			{
@@ -62,7 +62,7 @@ GO.addressbook.EmployeesPanel = function(config)
 			},
 			{
 				header: GO.lang['strPhone'],
-				dataIndex: 'phone' ,
+				dataIndex: 'work_phone' ,
 				width: 100
 			},
 			{
@@ -94,9 +94,24 @@ GO.addressbook.EmployeesPanel = function(config)
 		config.collapsible= false;
 		config.disabled=true;
   
-		config.tbar=[{
+		config.tbar = [
+		{
 			iconCls: 'btn-add',
-			text: GO.lang['cmdAdd'],
+			text: GO.addressbook.lang['addEmployee'],
+			cls: 'x-btn-text-icon',
+			handler: function () {
+				if (!this.contactDialog) {
+					this.contactDialog = new GO.addressbook.ContactDialog({});
+
+				}
+				this.contactDialog.show(0, {values: {company_id: this.company_id}});
+			},
+			scope: this
+
+		},
+		{
+			iconCls: 'btn-add',
+			text: GO.addressbook.lang['addExistingEmployee'],
 			cls: 'x-btn-text-icon',
 			handler: function(){
 				if(!this.selectContactDialog)
@@ -114,7 +129,7 @@ GO.addressbook.EmployeesPanel = function(config)
 				
 				var addressbookId = this.ownerCt.ownerCt.ownerCt.companyForm.form.findField('addressbook_id').getValue();
 				this.selectContactDialog.grid.store.baseParams.addressbook_id=addressbookId;
-				this.selectContactDialog.show(addressbookId);
+				this.selectContactDialog.show({values:{addressbookId: addressbookId, company_id: this.company_id}});
 			
 			},
 			scope: this
@@ -146,6 +161,7 @@ Ext.extend(GO.addressbook.EmployeesPanel, GO.grid.GridPanel,{
 		if(company_id!=this.store.baseParams.company_id)
 		{
 			this.loaded=false;
+                        this.company_id = company_id;
 			this.store.baseParams.company_id=company_id;
 			this.setDisabled(company_id==0);
 		}

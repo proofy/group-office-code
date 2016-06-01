@@ -25,7 +25,7 @@ class DeleteExpiredLinks extends AbstractCron {
     /**
      * Get the unique name of the Cronjob
      *
-     * @return string
+     * @return StringHelper
      */
     public function getLabel()
     {
@@ -35,7 +35,7 @@ class DeleteExpiredLinks extends AbstractCron {
     /**
      * Get the unique name of the Cronjob
      *
-     * @return string
+     * @return StringHelper
      */
     public function getDescription()
     {
@@ -46,9 +46,8 @@ class DeleteExpiredLinks extends AbstractCron {
      * The code that needs to be called when the cron is running
      *
      * @param GO\Base\Cron\CronJob $cronJob
-     * @param GO\Base\Model\User $user
      */
-    public function run(GO\Base\Cron\CronJob $cronJob, GO\Base\Model\User $user = null)
+    public function run(GO\Base\Cron\CronJob $cronJob)
     {
 			
 			$filesStmt = File::model()->find(

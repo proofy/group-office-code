@@ -42,7 +42,7 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
 	 * Algorithm type to use for best-fit
 	 * (Name of this trend class)
 	 *
-	 * @var	string
+	 * @var	StringHelper
 	 **/
 	protected $_bestFitType		= 'power';
 
@@ -73,7 +73,7 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
 	 * Return the Equation of the best-fit line
 	 *
 	 * @param	 int		$dp		Number of places of decimal precision to display
-	 * @return	 string
+	 * @return	 StringHelper
 	 **/
 	public function getEquation($dp=0) {
 		$slope = $this->getSlope($dp);
@@ -87,7 +87,7 @@ class PHPExcel_Power_Best_Fit extends PHPExcel_Best_Fit
 	 * Return the Value of X where it intersects Y = 0
 	 *
 	 * @param	 int		$dp		Number of places of decimal precision to display
-	 * @return	 string
+	 * @return	 StringHelper
 	 **/
 	public function getIntersect($dp=0) {
 		if ($dp != 0) {

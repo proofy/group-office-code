@@ -89,7 +89,7 @@ class PHPExcel_Worksheet_ColumnDimension
     /**
      * Create a new PHPExcel_Worksheet_ColumnDimension
      *
-     * @param string $pIndex Character column index
+     * @param StringHelper $pIndex Character column index
      */
     public function __construct($pIndex = 'A')
     {
@@ -103,7 +103,7 @@ class PHPExcel_Worksheet_ColumnDimension
     /**
      * Get ColumnIndex
      *
-     * @return string
+     * @return StringHelper
      */
     public function getColumnIndex() {
     	return $this->_columnIndex;
@@ -112,7 +112,7 @@ class PHPExcel_Worksheet_ColumnDimension
     /**
      * Set ColumnIndex
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Worksheet_ColumnDimension
      */
     public function setColumnIndex($pValue) {

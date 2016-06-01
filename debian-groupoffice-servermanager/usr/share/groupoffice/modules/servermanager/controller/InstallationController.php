@@ -90,6 +90,21 @@ class InstallationController extends \GO\Base\Controller\AbstractModelController
 		
 	}
 	
+	
+	public function actionImportAllMigrated($params) {
+		$this->checkRequiredParameters(array('source'), $params);
+		
+		$sourceFolder = new \GO\Base\Fs\Folder($params['source']);
+		
+		$children = $sourceFolder->ls();
+		
+		foreach($children as $child) {
+			$this->actionImportMigrated(array('source' => $child->path(), 'name' => $child->name()));
+		}
+		
+		echo "Done\n";			
+	}
+	
 	public function actionImportMigrated($params){
 		$this->requireCli();
 		
@@ -198,9 +213,13 @@ class InstallationController extends \GO\Base\Controller\AbstractModelController
 		
 		$config = $installation->getConfig();
 		
-		echo "Disabling installation\n";
-		
-		$installation->setConfigVariable('enabled','0');
+		if(!empty($params['disable'])) {
+			echo "WARNING: Disabling installation\n";		
+			$installation->setConfigVariable('enabled','0');
+		}else
+		{
+			echo "WARNING: NOT disabling installation\n";		
+		}
 		
 		$fsFolder = new \GO\Base\Fs\Folder($config['file_storage_path']);
 		
@@ -228,7 +247,33 @@ class InstallationController extends \GO\Base\Controller\AbstractModelController
 		if($status!=0)
 			throw new Exception("Command exitted with failure status ".$status);
 		
-		echo "Done!\n";
+		echo "Done!\n";		
+	}
+	
+	
+	
+	public function actionMigrateAll($params) {
+		$this->checkRequiredParameters(array('target'), $params);
+		$installations = GO\ServerManager\Model\Installation::model()->find();
+
+		foreach ($installations as $installation) {
+			if ($installation->getConfigWithGlobals()->disabled) {
+				continue;
+			}
+
+
+			if ($installation->name == 'servermanager') {
+				continue;
+			}
+			
+			$params['name'] = $installation->name;
+
+			$this->actionMigrate($params);
+			
+		}
+		echo "Done\n";
+		
+	
 		
 	}
 	
@@ -344,9 +389,9 @@ class InstallationController extends \GO\Base\Controller\AbstractModelController
 	 * Create database, dbuser, symlinks and configfile
 	 * Only run this action as root on the commandline
 	 * 
-	 * @param string $params[name] name is installation to create
-	 * @param string $params[tmp_config] path to temp config file
-	 * @param string $params[adminpassword] ??
+	 * @param StringHelper $params[name] name is installation to create
+	 * @param StringHelper $params[tmp_config] path to temp config file
+	 * @param StringHelper $params[adminpassword] ??
 	 * @throws Exception if not called from CLI
 	 * @throws Exception if installation is not found
 	 */
@@ -435,7 +480,7 @@ class InstallationController extends \GO\Base\Controller\AbstractModelController
 	 * );
 	 * 
 	 * 
-	 * @param string $name The name of the new group
+	 * @param StringHelper $name The name of the new group
 	 * @param array $permissions Array of permission options for the group
 	 */
 	private function _createGroup($name,$permissions){
@@ -461,8 +506,8 @@ class InstallationController extends \GO\Base\Controller\AbstractModelController
 	 * Set the rights for the created group.
 	 * 
 	 * @param \GO\Base\Model\Group $group The group to set the rights for.
-	 * @param string $modules A comma separated string with the module names.
-	 * @param string $type Permission type, possible values: 'read','manage' defaults to 'read'.
+	 * @param StringHelper $modules A comma separated string with the module names.
+	 * @param StringHelper $type Permission type, possible values: 'read','manage' defaults to 'read'.
 	 */
 	private function _setGroupRights($group,$modules,$type='read'){
 		$modules =  explode(',',$modules);
@@ -578,7 +623,7 @@ class InstallationController extends \GO\Base\Controller\AbstractModelController
 			$response['data']['theme'] = $c['theme'];
 
 			$response['data']['default_decimal_separator'] = $c['default_decimal_separator'];
-			$response['data']['first_weekday'] = $c['first_weekday'];
+			$response['data']['default_first_weekday'] = $c['default_first_weekday'];
 
 
 			$response['data']['allow_themes'] = !empty($c['allow_themes']);
@@ -680,7 +725,7 @@ class InstallationController extends \GO\Base\Controller\AbstractModelController
 			$config['db_name']=$model->dbName;
 			$config['db_user']=$model->dbUser;
 			$config['db_host']=\GO::config()->db_host;
-			$config['db_pass']= \GO\Base\Util\String::randomPassword(8,'a-z,A-Z,1-9');
+			$config['db_pass']= \GO\Base\Util\StringHelper::randomPassword(8,'a-z,A-Z,1-9');
 			$config['host']='/';
 			$config['root_path']=$model->installPath.'groupoffice/';
 			$config['tmpdir']='/tmp/'.$model->name.'/';
@@ -703,7 +748,7 @@ class InstallationController extends \GO\Base\Controller\AbstractModelController
 		$config['theme'] = $params['theme'];
 
 		$config['default_decimal_separator'] = $params['default_decimal_separator'];
-		$config['first_weekday'] = $params['first_weekday'];
+		$config['default_first_weekday'] = $params['default_first_weekday'];
 
 
 		$config['allow_themes'] = !empty($params['allow_themes']);
@@ -719,7 +764,7 @@ class InstallationController extends \GO\Base\Controller\AbstractModelController
 		if (intval($config['max_users']) < 1)
 			throw new Exception('You must set a maximum number of users');
 
-		if (!\GO\Base\Util\String::validate_email($config['webmaster_email']))
+		if (!\GO\Base\Util\StringHelper::validate_email($config['webmaster_email']))
 			throw new Exception(\GO::t('invalidEmail','servermanager'));
 		
 		$tmpFile = \GO\Base\Fs\File::tempFile('', 'php');
@@ -781,7 +826,7 @@ class InstallationController extends \GO\Base\Controller\AbstractModelController
 	 * Returns a list with all modules availible for installation
 	 * Get executed when clicking Modules tab in installationdialog
 	 * @param array $params the $_REQUEST
-	 * @return string JSON encode array for extjs datagrid
+	 * @return StringHelper JSON encode array for extjs datagrid
 	 */
 	protected function actionModules($params){
 
@@ -1220,5 +1265,23 @@ class InstallationController extends \GO\Base\Controller\AbstractModelController
 	}
 	
 	
+	public function actionEmailAddresses() {
+		
+		$installations = GO\ServerManager\Model\Installation::model()->find();
+		
+		$addresses = new \GO\Base\Mail\EmailRecipients();
+		
+		
+		foreach($installations as $installation) {
+			if(!$installation->getConfigWithGlobals()->disabled) {
+				$addresses->addRecipient($installation->admin_email, $installation->admin_name);
+			}
+		}
+		
+		echo $addresses;
+		
+	}
 	
+	
+
 }

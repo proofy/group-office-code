@@ -7,7 +7,7 @@
  * If you have questions write an e-mail to info@intermesh.nl
  * 
  * @copyright Copyright Intermesh
- * @version $Id: CompanyDialog.js 16919 2014-02-26 14:12:07Z mschering $
+ * @version $Id: CompanyDialog.js 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @author Merijn Schering <mschering@intermesh.nl>
  */
 
@@ -151,9 +151,14 @@ GO.addressbook.CompanyDialog = function(config)
 		{
 			items.push(GO.customfields.types["GO\\Addressbook\\Model\\Company"].panels[i]);
 		}
-	}	
+	}
 	
-	this.companyForm = new Ext.FormPanel({
+	if(GO.comments){
+		this.commentsGrid = new GO.comments.CommentsGrid({title:GO.comments.lang.comments});
+		items.push(this.commentsGrid);
+	}
+	
+	this.companyForm = this.formPanel = new Ext.FormPanel({
 		fileUpload : true,
 		waitMsgTarget:true,		
 		border: false,
@@ -178,7 +183,7 @@ GO.addressbook.CompanyDialog = function(config)
 	this.modal= false;
 	this.shadow= false;
 	this.border= false;
-	this.height= 560;
+	this.height= 640;
 	this.width= 820;
 	this.plain= true;
 	this.closeAction= 'hide';
@@ -304,14 +309,14 @@ GO.addressbook.CompanyDialog = function(config)
 	
 Ext.extend(GO.addressbook.CompanyDialog, GO.Window, {
 
-	show : function(company_id)
+	show : function(company_id, config)
 	{
 		if(!GO.addressbook.writableAddressbooksStore.loaded)
 		{
 			GO.addressbook.writableAddressbooksStore.load(
 			{
 				callback: function(){
-					this.show(company_id);
+					this.show(company_id, config);
 				},
 				scope:this
 			});
@@ -319,16 +324,14 @@ Ext.extend(GO.addressbook.CompanyDialog, GO.Window, {
 		{
 			GO.addressbook.writableAddresslistsStore.load({
 				callback:function(){
-					this.show(company_id);
+					this.show(company_id, config);
 				},
 				scope:this
 			});
 		}else
 		{
-			var tempAddressbookID = this.personalPanel.formAddressBooks.getValue();
 			this.companyForm.form.reset();
 
-			this.personalPanel.formAddressBooks.setValue(tempAddressbookID);
 			
 			if(!this.rendered)
 			{
@@ -341,26 +344,6 @@ Ext.extend(GO.addressbook.CompanyDialog, GO.Window, {
 			} else {
 				this.company_id = 0;
 			}	
-
-			if(!GO.util.empty(GO.addressbook.defaultAddressbook)){
-				var store = this.personalPanel.formAddressBooks.store;
-				//add record to store if not loaded
-				var r = store.getById(GO.addressbook.defaultAddressbook.id);
-				if(!r)
-				{
-					store.add(GO.addressbook.defaultAddressbook);
-				}
-
-				this.personalPanel.setAddressbookID(GO.addressbook.defaultAddressbook.id);
-				//this.personalPanel.formAddressBooks.setValue(GO.addressbook.defaultAddressbook);
-			}else if(tempAddressbookID>0 && this.personalPanel.formAddressBooks.store.getById(tempAddressbookID))
-			{
-				this.personalPanel.setAddressbookID(tempAddressbookID);
-			}else
-			{
-				this.personalPanel.formAddressBooks.selectFirst();
-				this.personalPanel.setAddressbookID(this.personalPanel.formAddressBooks.getValue());
-			}
 			
 			this.moveEmployeesButton.setDisabled(true);
 		
@@ -368,7 +351,7 @@ Ext.extend(GO.addressbook.CompanyDialog, GO.Window, {
 			
 //			if(this.company_id > 0)
 //			{
-				this.loadCompany(company_id);				
+				this.loadCompany(company_id, config);				
 //			} else {
 //				this.employeePanel.setCompanyId(0);
 //				var tempAddressbookID = this.personalPanel.formAddressBooks.getValue();
@@ -406,18 +389,16 @@ Ext.extend(GO.addressbook.CompanyDialog, GO.Window, {
 //		}
 	},
 
-	loadCompany : function(id)
+	loadCompany : function(id, config)
 	{
 		this.beforeLoad();
 		
+		var params = config.values || {};
+		params.id = id;
+		
 		this.companyForm.form.load({
 			url:GO.url('addressbook/company/load'),
-			params: {
-				id: id,
-				addressbook_id:this.companyForm.form.findField('addressbook_id').getValue()
-				
-			},
-			
+			params: params,
 			success: function(form, action) {
 				
 
@@ -434,9 +415,25 @@ Ext.extend(GO.addressbook.CompanyDialog, GO.Window, {
 					GO.customfields.disableTabs(this.tabPanel, action.result);	
 				
 				
-				this.personalPanel.formAddressBooks.setRemoteText(action.result.remoteComboTexts.addressbook_id);
+				GO.dialog.TabbedFormDialog.prototype.setRemoteComboTexts.call(this, action);
 				
-				
+				//this.personalPanel.formAddressBooks.setRemoteText(action.result.remoteComboTexts.addressbook_id);
+	
+				if(GO.comments){	
+					if(action.result.data['id'] > 0){
+						if (!GO.util.empty(action.result.data['action_date'])) {
+							this.commentsGrid.actionDate = action.result.data['action_date'];
+						} else {
+							this.commentsGrid.actionDate = false;
+						}
+						this.commentsGrid.setLinkId(action.result.data['id'], 'GO\\Addressbook\\Model\\Company');
+						this.commentsGrid.store.load();
+						this.commentsGrid.setDisabled(false);
+					}else {
+						this.commentsGrid.setDisabled(true);
+					}
+				}
+
 				this.afterLoad(action);
 
 				GO.addressbook.CompanyDialog.superclass.show.call(this);

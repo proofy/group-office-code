@@ -9,7 +9,7 @@ class Validate {
 	* Checks the given Ip is valid (ipv4 and ipv6).
 	* * Needs PHP 5.2 or higher
 	* 
-	* @param string $ip
+	* @param StringHelper $ip
 	* @return boolean $isValid
 	*/
 	public static function ip($ip){
@@ -25,18 +25,18 @@ class Validate {
 	/**
 	 * Check if an email adress is in a valid format
 	 *
-	 * @param	string $email E-mail address
+	 * @param	StringHelper $email E-mail address
 	 * @return bool
 	 */
 	public static function email($email) {
-		return preg_match(String::get_email_validation_regex(), $email);
+		return preg_match(StringHelper::get_email_validation_regex(), $email);
 	}
 	
 /**
 	* Checks the given Ip if it is an internal one or not (ipv4 and ipv6).
 	* * Needs PHP 5.2 or higher
 	* 
-	* @param string $ip
+	* @param StringHelper $ip
 	* @return boolean $isInternal
 	*/
 	public static function internalIp($ip){
@@ -53,7 +53,7 @@ class Validate {
 	* Checks the given Ip is an ipV6 address.
 	* * Needs PHP 5.2 or higher
 	* 
-	* @param string $ip
+	* @param StringHelper $ip
 	* @return boolean $isIpV6
 	*/
 	public static function ipV6($ip){
@@ -70,7 +70,7 @@ class Validate {
 	* Checks the given Ip is an ipV4 address.
 	* * Needs PHP 5.2 or higher
 	* 
-	* @param string $ip
+	* @param StringHelper $ip
 	* @return boolean $isIpV4
 	*/
 	public static function ipV4($ip){
@@ -132,7 +132,7 @@ class Validate {
 	/**
 	 * Check for the given country if it is an EU country or not.
 	 * 
-	 * @param string $country eg. "NL" or "BE"
+	 * @param StringHelper $country eg. "NL" or "BE"
 	 * @return boolean  
 	 */
 	public static function isEUCountry($country){
@@ -142,9 +142,9 @@ class Validate {
 	/**
 	 * Check if a customer needs to pay VAT.
 	 * 
-	 * @param string $customerCountry eg. NL Country 
+	 * @param StringHelper $customerCountry eg. NL Country 
 	 * @param boolean $hasVatNo Customer has a valid vat number
-	 * @param string $merchantCountry eg. NL This is the country the merchant lives in. If the customer comes from the same country he should always pay VAT.
+	 * @param StringHelper $merchantCountry eg. NL This is the country the merchant lives in. If the customer comes from the same country he should always pay VAT.
 	 */
 	public static function vatApplicable($customerCountry, $hasVatNo, $merchantCountry){
 		return strtolower($customerCountry)==strtolower($merchantCountry) || 
@@ -154,8 +154,8 @@ class Validate {
 	/**
 	 * Check if a vat number is correct.
 	 * 
-	 * @param string $countryCode The country code: eg. "NL" or "BE"
-	 * @param string $vat The vat number
+	 * @param StringHelper $countryCode The country code: eg. "NL" or "BE"
+	 * @param StringHelper $vat The vat number
 	 * @return boolean true
 	 */
 	public static function checkVat($countryCode, $vat) {
@@ -231,7 +231,7 @@ class Validate {
 	 * 4. Require at least one special char
 	 * 5. Require at least 5 unique chars
 	 * 
-	 * @param string $password
+	 * @param StringHelper $password
 	 * @return boolean
 	 */
 	public static function strongPassword($password){

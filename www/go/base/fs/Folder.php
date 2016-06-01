@@ -27,7 +27,7 @@ class Folder extends Base {
 	/**
 	 * Get the temporary files folder or obitonally a subfolder of it.
 	 * 
-	 * @var string $sub Optionally create a sub folder
+	 * @var StringHelper $sub Optionally create a sub folder
 	 * @return Folder 
 	 */
 	public static function tempFolder($sub=''){
@@ -44,7 +44,7 @@ class Folder extends Base {
 	 * Get folder directory listing.
 	 * 
 	 * @param boolean $getHidden
-	 * @param boolean|string $sort 'mtime','ctime' or 'name'
+	 * @param boolean|StringHelper $sort 'mtime','ctime' or 'name'
 	 * @return File or Folder
 	 */
 	public function ls($getHidden=false, $sort=false) {
@@ -123,7 +123,7 @@ class Folder extends Base {
 	 * Move the folder to another folder.
 	 * 
 	 * @param Folder $destinationFolder 
-	 * @param string $newFolderName Optionally rename the folder too.
+	 * @param StringHelper $newFolderName Optionally rename the folder too.
 	 * @param boolean $appendNumberToNameIfDestinationExists Rename the folder like "folder (1)" if it already exists.	 * 
 	 * @return Folder $destinationFolder
 	 */
@@ -252,7 +252,7 @@ class Folder extends Base {
 	 * Create a symbolic link in this folder
 	 * 
 	 * @param Folder $target
-	 * @param string $linkName optional link name. If omitted the name will be the same as the target folder name
+	 * @param StringHelper $linkName optional link name. If omitted the name will be the same as the target folder name
 	 * @return File
 	 * @throws Exception
 	 */
@@ -284,9 +284,9 @@ class Folder extends Base {
 	/**
 	 * Checks if a filename exists and renames it.
 	 *
-	 * @param	string $filepath The complete path to the file
+	 * @param	StringHelper $filepath The complete path to the file
 	 * @access public
-	 * @return string  New filepath
+	 * @return StringHelper  New filepath
 	 */
 	public function appendNumberToNameIfExists()
 	{

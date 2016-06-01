@@ -1,5 +1,7 @@
 GO.calendar.CategoryDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 	
+	hidePermissions : true,
+	
 	initComponent : function(){
 		
 		Ext.apply(this, {
@@ -176,6 +178,34 @@ GO.calendar.CategoryDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 	},
 	
 	setCalendarId : function(id){
+		
+		var hide = true;
+		
+		if(id == 0){
+			hide = false;
+		}
+				
+		this.hidePermissionsTab(hide);
+		
 		this.addBaseParam('calendar_id',id);
+	},
+	
+	afterRender : function(){
+		GO.calendar.CategoryDialog.superclass.afterRender.call(this);
+				
+		if(this.hidePermissions){
+			this._tabPanel.hideTabStripItem(this.permissionsPanel);
+		}
+	},
+	
+	hidePermissionsTab : function(hide){
+		
+		this.hidePermissions = hide;
+
+		if(hide){
+			this._tabPanel.hideTabStripItem(this.permissionsPanel);
+		} else {
+			this._tabPanel.unhideTabStripItem(this.permissionsPanel);
+		}
 	}
 });

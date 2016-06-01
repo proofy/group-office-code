@@ -16,20 +16,20 @@ abstract class MultilingualActiveRecord extends ActiveRecord {
 	/**
 	 * The name of the relation with the language.
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	protected $languageRelationName = 'languages';
 	/**
 	 * The column name of the language_id field in the language table.
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	protected $languageIdColumnName = 'language_id';
 	
 	/**
 	 * The column name of the value field in the language table.
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	protected $languageValueColumnName = 'name';
 	
@@ -39,6 +39,8 @@ abstract class MultilingualActiveRecord extends ActiveRecord {
 	 * @var boolean 
 	 */
 	private $_multiLingualAttributesLoaded;	
+	
+	private $_mlAttr;
 	
 	/**
 	 * Get an activestatement with the available languages
@@ -53,8 +55,8 @@ abstract class MultilingualActiveRecord extends ActiveRecord {
 	 * Get the value of the attribute in the default language 
 	 * (First language in the table)
 	 * 
-	 * @param string $attr
-	 * @return string The attribute value 
+	 * @param StringHelper $attr
+	 * @return StringHelper The attribute value 
 	 */
 	public function getDefaultLanguageAttribute($attr) {
 		$relationName = $this->languageRelationName;
@@ -99,7 +101,7 @@ abstract class MultilingualActiveRecord extends ActiveRecord {
 	/**
 	 * Extracts the attribute to attribute name and language id
 	 * 
-	 * @param string $name The attribute to extract (like: name_1 or description_1)
+	 * @param StringHelper $name The attribute to extract (like: name_1 or description_1)
 	 * @return array $attr The array with the extracted attributes 
 	 */
 	private function _extractMultilingualAttribute($name){
@@ -132,20 +134,22 @@ abstract class MultilingualActiveRecord extends ActiveRecord {
 	/**
 	 * Check if an attribute is a multilangualattribute or not.
 	 * 
-	 * @param string $name
+	 * @param StringHelper $name
 	 * @return boolean 
 	 */
 	private function _isMultilingualAttribute($name){
 		
 		$attr = explode('_', $name);
 		
-		return is_array($attr) && count($attr) > 1;
+//		var_dump($attr);
+		
+		return count($attr) > 1 && in_array($attr[0], $this->multilingualAttributes);
 	}
 	
 	/**
 	 * PHP getter magic method.
 	 * This method is overridden so that AR attributes can be accessed like properties.
-	 * @param string $name property name
+	 * @param StringHelper $name property name
 	 * @return mixed property value
 	 * @see getAttribute
 	 */
@@ -161,7 +165,7 @@ abstract class MultilingualActiveRecord extends ActiveRecord {
 	/**
 	 * Sets the named attribute value.
 	 * You may also use $this->AttributeName to set the attribute value.
-	 * @param string $name the attribute name
+	 * @param StringHelper $name the attribute name
 	 * @param mixed $value the attribute value.
 	 * @return boolean whether the attribute exists and the assignment is conducted successfully
 	 * @see hasAttribute
@@ -170,14 +174,32 @@ abstract class MultilingualActiveRecord extends ActiveRecord {
 		
 		//hack to force save
 		$this->forceSave();
-						
-		return parent::setAttribute($name, $value, $format);
+		
+		if ($this->_isMultilingualAttribute($name)) {
+			$this->_mlAttr[$name] = $value;
+		}else
+		{						
+			return parent::setAttribute($name, $value, $format);
+		}
+	}
+	
+	
+	public function setAttributes($attributes, $format = null) {
+		
+		foreach($attributes as $key => $value){
+			if($this->_isMultilingualAttribute($key)){
+				$this->_mlAttr[$key] = $value;
+				unset($attributes[$key]);
+			}
+		}
+		
+		return parent::setAttributes($attributes, $format);
 	}
 
 	/**
 	 * Returns all column attribute values.
 	 * Note, related objects are not returned.
-	 * @param string $outputType Can be 
+	 * @param StringHelper $outputType Can be 
 	 * 
 	 * raw: return values as they are stored in the db
 	 * formatted: return the values formatted for an input form
@@ -231,11 +253,12 @@ abstract class MultilingualActiveRecord extends ActiveRecord {
 		$languageRelationArray = $this->_getRelationArray();
 		$activeLanguages = $this->activeLanguages();
 
+
 		while ($lang = $activeLanguages->fetch()) {
 			foreach ($this->multilingualAttributes as $mLAttribute) {
 
 				$completeAttributeName = $mLAttribute . '_' . $lang->id;
-				if (!empty($this->$completeAttributeName)) {
+				if (!empty($this->_mlAttr[$completeAttributeName])) {
 
 						$l = $relationModelInstance->findByPk(array($languageRelationArray['field'] => $this->id, $lColName => $lang->id));
 
@@ -245,7 +268,7 @@ abstract class MultilingualActiveRecord extends ActiveRecord {
 							$l->$lColName = $lang->id;
 						}
 
-						$l->$lColValue = $this->$completeAttributeName;
+						$l->$lColValue = $this->_mlAttr[$completeAttributeName];
 						$l->save();
 				}
 			}

@@ -150,7 +150,7 @@ class PHPExcel_Worksheet_Protection
 	/**
 	 * Password
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_password				= '';
 
@@ -508,7 +508,7 @@ class PHPExcel_Worksheet_Protection
     /**
      * Get Password (hashed)
      *
-     * @return string
+     * @return StringHelper
      */
     function getPassword() {
     	return $this->_password;
@@ -517,7 +517,7 @@ class PHPExcel_Worksheet_Protection
     /**
      * Set Password
      *
-     * @param string 	$pValue
+     * @param StringHelper 	$pValue
      * @param boolean 	$pAlreadyHashed If the password has already been hashed, set this to true
      * @return PHPExcel_Worksheet_Protection
      */

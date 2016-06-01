@@ -78,8 +78,8 @@ class Template extends \GO\Base\Db\ActiveRecord{
 	/**
 	 * Add a default tag value.
 	 * 
-	 * @param string $key
-	 * @param string $value 
+	 * @param StringHelper $key
+	 * @param StringHelper $value 
 	 */
 	public function addDefaultTag($key, $value){
 		$this->_defaultTags[$key]=$value;
@@ -122,6 +122,24 @@ class Template extends \GO\Base\Db\ActiveRecord{
 				
 		if($model->customfieldsRecord){
 			$attributes = array_merge($attributes, $model->customfieldsRecord->getAttributes('formatted'));
+			
+			// For multiselect fields, replace the | with a ,
+			$cfCols = $model->customfieldsRecord->getColumns();
+			
+			foreach($cfCols as $cfColName => $cfCol){
+				if(isset($cfCol['customfield'])){
+					$cfType = $cfCol['customfield']->customfieldtype;
+
+					if($cfType instanceof \GO\Customfields\Customfieldtype\Select){
+
+						$isMultiSelect = $cfType->getField()->getAttribute('multiselect');
+
+						if($isMultiSelect && isset($attributes[$cfColName])){
+							$attributes[$cfColName] = str_replace('|', ', ', $attributes[$cfColName]);
+						}
+					}
+				}		
+			}
 		}
 
 		$attributes = $this->_addTagPrefixAndRemoveEmptyValues($attributes, $tagPrefix);
@@ -155,10 +173,10 @@ class Template extends \GO\Base\Db\ActiveRecord{
 	 * 
 	 * {user:modelAttributeName}
 	 * 
-	 * @param string $content Containing the tags
+	 * @param StringHelper $content Containing the tags
 	 * @param Contact $contact
 	 * @param boolean $leaveEmptyTags Set to true if you don't want unreplaced tags to be cleaned up.
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function replaceContactTags($content, Contact $contact, $leaveEmptyTags=false){
 		
@@ -173,6 +191,10 @@ class Template extends \GO\Base\Db\ActiveRecord{
 		$attributes['contact:sirmadam']=$contact->sex=="M" ? \GO::t('sir') : \GO::t('madam');
 		
 		$attributes = array_merge($attributes, $this->_getModelAttributes($contact, 'contact:'));
+		
+		// By default this was replaced just by M or F but now it will be replaced by the whole text Male or Female.
+		$attributes['contact:sex']=$contact->sex=="M" ? \GO::t('male','addressbook') : \GO::t('female','addressbook');
+		
 		if($contact->company)
 		{
 			$attributes = array_merge($attributes, $this->_getModelAttributes($contact->company, 'company:'));
@@ -194,11 +216,11 @@ class Template extends \GO\Base\Db\ActiveRecord{
 	 * 
 	 * {$tagPrefix:modelAttributeName}
 	 * 
-	 * @param string $content Containing the tags
+	 * @param StringHelper $content Containing the tags
 	 * @param \GO\Base\Db\ActiveRecord $model
-	 * @param string $tagPrefix
+	 * @param StringHelper $tagPrefix
 	 * @param boolean $leaveEmptyTags Set to true if you don't want unreplaced tags to be cleaned up.
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function replaceModelTags($content, $model, $tagPrefix='', $leaveEmptyTags=false){
 		
@@ -231,7 +253,7 @@ class Template extends \GO\Base\Db\ActiveRecord{
 	 */
 	private function _replaceRelations($content, $model, $tagPrefix='', $leaveEmptyTags=false){
 		
-		$relations = $model->relations();
+		$relations = $model->getRelations();
 		$pattern = '/'.preg_quote($tagPrefix,'/').'([^:]+):[^\}]+\}/';
 		if(preg_match_all($pattern,$content, $matches)){
 			foreach($matches[1] as $relation){
@@ -273,9 +295,9 @@ class Template extends \GO\Base\Db\ActiveRecord{
 	 * 
 	 * {user:modelAttributeName}
 	 * 
-	 * @param string $content Containing the tags
+	 * @param StringHelper $content Containing the tags
 	 * @param boolean $leaveEmptyTags Set to true if you don't want unreplaced tags to be cleaned up.
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function replaceUserTags($content, $leaveEmptyTags=false){
 		if(\GO::modules()->customfields)
@@ -300,10 +322,10 @@ class Template extends \GO\Base\Db\ActiveRecord{
 	 * 
 	 * {$key}
 	 * 
-	 * @param string $content Containing the tags
+	 * @param StringHelper $content Containing the tags
 	 * @param array $attributes
 	 * @param boolean $leaveEmptyTags Set to true if you don't want unreplaced tags to be cleaned up.
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function replaceCustomTags($content, $attributes, $leaveEmptyTags=false){
 		return $this->_parse($content, $attributes, $leaveEmptyTags);
@@ -325,4 +347,83 @@ class Template extends \GO\Base\Db\ActiveRecord{
 //		return $this->_getMessage()->getHtmlBody();
 //	}
 	
+	
+	/**
+	 * Replace the {link} tag with a div
+	 * 
+	 * @param StringHelper $content
+	 * @param \GO\Email\Model\SavedMessage $message
+	 * @return StringHelper
+	 */
+	public function replaceLinkTag($content, $message){
+		
+		$content = str_replace('{link}', '<span class="go-composer-link"></span>', $content);
+
+		return $content;
+	}
+	
+	/**
+	 * Search for an image inside the ODF document with the given tag.
+	 * When the tag is found, then replace the image inside the ODF file with the 
+	 * replacement image.
+	 *  
+	 * @param StringHelper $content		The XML content file of the ODF.
+	 * @param \GO\Base\Fs\Folder $extractedOdfFolder	The folder object of the extracted ODF file
+	 * @param StringHelper $tag		The tag to search for in the content
+	 * @param \GO\Base\Fs\File $replacementImage		The image that needs to be replaced
+	 * @return StringHelper The XML content file of the ODF.
+	 */
+	public function replaceODFImage($content, \GO\Base\Fs\Folder $extractedOdfFolder, $tag, \GO\Base\Fs\File $replacementImage){
+			
+		if(!$replacementImage->exists()){
+			\GO::debug('Contact has no image set for the tag: '.$tag);
+			return $content;
+		}
+		
+		// Find an xml element with the attribute draw:name="$tag"
+		// If the attribute is found, then search for the attribute
+		// <draw:image xlink:href="" and get the path that is stored with it.
+		$reader = new \DOMDocument('1.0', 'UTF-8');
+		
+		$reader->preserveWhiteSpace  = false;
+		$reader->loadXML($content);
+		$frames = $reader->getElementsByTagName('frame');
+		
+		$replaceImages = array();
+		
+		foreach($frames as $frame){
+			
+			$name = $frame->getAttributeNode('draw:name');
+			
+			if(!empty($name) && $name->value===$tag){
+				$images = $frame->getElementsByTagName('image');
+				foreach($images as $image){
+					$href = $image->getAttributeNode('xlink:href');
+
+					if(!empty($href) && !empty($href->value)){
+						$replaceImages[] = $href->value;
+					}
+				}	
+			}			
+		}
+		
+		$picturesFolder = $extractedOdfFolder->child('Pictures');
+		
+		foreach($replaceImages as $replaceImage){
+			
+			/* @var $picture \GO\Base\Fs\File */
+			$picture = $picturesFolder->child(basename($replaceImage));
+			
+			if($picture){
+				//If the image is a .jpg (or .JPG) then replace the content of $picture 
+				//with the $replacementImage content (Both are \GO\Base\Fs\File objects)
+				if(strtolower($picture->extension()) == 'jpg'){
+					$picture->putContents($replacementImage->getContents());
+				}
+			}
+		}
+
+		return $content;
+
+	}	
 }

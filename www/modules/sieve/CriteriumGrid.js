@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: CriteriumGrid.js 14816 2013-05-21 08:31:20Z mschering $
+ * @version $Id: CriteriumGrid.js 19355 2015-08-28 13:05:30Z wsmits $
  * @copyright Copyright Intermesh
  * @author Wesley Smits <wsmits@intermesh.nl>
  * @author WilmarVB <wilmar@intermesh.nl>
@@ -23,7 +23,7 @@ GO.sieve.CriteriumGrid = function(config){
 	config.border=true;
 	config.cls = 'go-grid3-hide-headers';
 	var fields ={
-		fields:['test','not','type','arg','arg1','arg2','text'],
+		fields:['test','not','type','arg','arg1','arg2','text','part'],
 		header: false,
 		columns:[
 //		{
@@ -49,11 +49,41 @@ GO.sieve.CriteriumGrid = function(config){
 			header:false,
 			dataIndex:'text',
 			renderer:function(value, metaData, record, rowIndex, colIndex, store){
-
+				
+				console.log(record);
+				
 				var txtToDisplay = '';
 
 				switch(record.data.test)
 				{
+					case 'currentdate':
+				
+//						id: 1, test: "currentdate", not: false, type: "is", arg: Date 2015-08-19T22:00:00.000Z, arg1: "", arg2: ""
+						switch(record.data.type){
+							case 'value-le':
+								txtToDisplay = GO.sieve.lang.currentdate+' '+GO.sieve.lang.before+' '+record.data.arg;
+								break;
+							case 'is':
+								txtToDisplay = GO.sieve.lang.currentdate+' '+GO.sieve.lang.is+' '+record.data.arg;
+								break;
+							case 'value-ge':
+								txtToDisplay = GO.sieve.lang.currentdate+' '+GO.sieve.lang.after+' '+record.data.arg;
+								break;
+						}
+
+					break;
+						
+					case 'body':
+						if(record.data.type == 'contains')
+						{
+							if(record.data.not)
+							{
+								txtToDisplay = GO.sieve.lang.bodycontainsnot+' '+record.data.arg;
+							} else {
+								txtToDisplay = GO.sieve.lang.bodycontains+' '+record.data.arg;
+							}
+						}
+						break;
 					case 'header':
 						if(record.data.type == 'contains')
 						{

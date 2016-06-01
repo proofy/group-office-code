@@ -73,7 +73,7 @@ class PHPExcel_Chart_DataSeries
 	/**
 	 * Series Plot Type
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_plotType = null;
 
@@ -94,7 +94,7 @@ class PHPExcel_Chart_DataSeries
 	/**
 	 * Plot Style
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_plotStyle = null;
 
@@ -122,7 +122,7 @@ class PHPExcel_Chart_DataSeries
 	/**
 	 * Smooth Line
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_smoothLine = null;
 
@@ -159,7 +159,7 @@ class PHPExcel_Chart_DataSeries
 	/**
 	 * Get Plot Type
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getPlotType() {
 		return $this->_plotType;
@@ -168,7 +168,7 @@ class PHPExcel_Chart_DataSeries
 	/**
 	 * Set Plot Type
 	 *
-	 * @param string $plotType
+	 * @param StringHelper $plotType
 	 */
 	public function setPlotType($plotType = '') {
 		$this->_plotType = $plotType;
@@ -177,7 +177,7 @@ class PHPExcel_Chart_DataSeries
 	/**
 	 * Get Plot Grouping Type
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getPlotGrouping() {
 		return $this->_plotGrouping;
@@ -186,7 +186,7 @@ class PHPExcel_Chart_DataSeries
 	/**
 	 * Set Plot Grouping Type
 	 *
-	 * @param string $groupingType
+	 * @param StringHelper $groupingType
 	 */
 	public function setPlotGrouping($groupingType = null) {
 		$this->_plotGrouping = $groupingType;
@@ -195,7 +195,7 @@ class PHPExcel_Chart_DataSeries
 	/**
 	 * Get Plot Direction
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getPlotDirection() {
 		return $this->_plotDirection;
@@ -204,7 +204,7 @@ class PHPExcel_Chart_DataSeries
 	/**
 	 * Set Plot Direction
 	 *
-	 * @param string $plotDirection
+	 * @param StringHelper $plotDirection
 	 */
 	public function setPlotDirection($plotDirection = null) {
 		$this->_plotDirection = $plotDirection;
@@ -213,7 +213,7 @@ class PHPExcel_Chart_DataSeries
 	/**
 	 * Get Plot Order
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getPlotOrder() {
 		return $this->_plotOrder;
@@ -270,7 +270,7 @@ class PHPExcel_Chart_DataSeries
 	/**
 	 * Get Plot Style
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getPlotStyle() {
 		return $this->_plotStyle;
@@ -279,7 +279,7 @@ class PHPExcel_Chart_DataSeries
 	/**
 	 * Set Plot Style
 	 *
-	 * @param string $plotStyle
+	 * @param StringHelper $plotStyle
 	 */
 	public function setPlotStyle($plotStyle = null) {
 		$this->_plotStyle = $plotStyle;

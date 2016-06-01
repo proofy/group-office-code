@@ -83,7 +83,8 @@ GO.smime.PublicCertsGrid = function(config){
 				maskEl:this.certPanel.getEl(),
 				url: "smime/certificate/verify",
 				params:{
-					cert_id:record.id
+					cert_id:record.id,
+					email:record.data.email
 				},
 				scope: this,
 				success: function(options, response, result)

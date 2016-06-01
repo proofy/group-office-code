@@ -36,7 +36,7 @@ class ContactController extends \GO\Base\Controller\AbstractModelController{
 		$this->checkMaxPostSizeExceeded();
 		
 		//if user typed in a new company name manually we set this attribute so a new company will be autocreated.
-		if(!is_numeric($params['company_id'])){
+		if(isset($params['company_id']) && !is_numeric($params['company_id'])){
 			$model->company_name = $params['company_id'];
 		}
 		
@@ -121,8 +121,12 @@ class ContactController extends \GO\Base\Controller\AbstractModelController{
 	
 	
 	protected function actionPhoto($params){
-		//fetching contact will check read permission
-		$contact = \GO\Addressbook\Model\Contact::model()->findByPk($params['id']);
+		$contact = \GO\Addressbook\Model\Contact::model()->findByPk($params['id'], false, true);
+		
+		//all user photos visible
+		if(!GO::user() || (!$contact->go_user_id && !$contact->getPermissionLevel())) {
+			throw new \GO\Base\Exception\AccessDenied();
+		}
 		
 		\GO\Base\Util\Http::outputDownloadHeaders($contact->getPhotoFile(), true, true);
 		$contact->getPhotoFile()->output();
@@ -140,9 +144,26 @@ class ContactController extends \GO\Base\Controller\AbstractModelController{
 		if($company){					
 			$response['data']['company_name'] = $company->name;
 			$response['data']['company_name2'] = $company->name2;
+			$response['data']['company_formatted_address'] = nl2br($company->getFormattedAddress());
+			$response['data']['company_google_maps_link']=\GO\Base\Util\Common::googleMapsLink(
+						$company->address, $company->address_no,$company->city, $company->country);
+			
+			$response['data']['company_formatted_post_address'] = nl2br($company->getFormattedPostAddress());
+			$response['data']['company_google_maps_post_link']=\GO\Base\Util\Common::googleMapsLink(
+						$company->post_address, $company->post_address_no,$company->post_city, $company->post_country);
+			
+			
+			$response['data']['company_email'] = $company->email;
+			$response['data']['company_phone'] = $company->phone;
 		} else {
 			$response['data']['company_name'] = '';
 			$response['data']['company_name2'] = '';
+			$response['data']['company_formatted_address'] = '';
+			$response['data']['company_google_maps_link']='';
+			$response['data']['company_formatted_post_address'] = '';
+			$response['data']['company_google_maps_post_link']='';
+			$response['data']['company_email'] = '';
+			$response['data']['company_phone'] = '';
 		}
 		
 		$response['data']['google_maps_link']=\GO\Base\Util\Common::googleMapsLink(
@@ -469,10 +490,28 @@ class ContactController extends \GO\Base\Controller\AbstractModelController{
 		}
 	}
 	
+	
+	
+	
+	
 	protected function afterAttributes(&$attributes, &$response, &$params, \GO\Base\Db\ActiveRecord $model) {
 		unset($attributes['t.company_id']);
 		//$attributes['name']=\GO::t('strName');
 		$attributes['companies.name']=array('name'=>'companies.name','label'=>\GO::t('company','addressbook'));
+		
+		
+		/**
+		 * add the writebel addresslists to te maping store
+		 */
+		$findParams = new \GO\Base\Db\FindParams();
+		$findParams->permissionLevel(\GO\Base\Model\Acl::WRITE_PERMISSION);
+		
+		$addresslists = \GO\Addressbook\Model\Addresslist::model()->find($findParams);
+		foreach ($addresslists as $rec) {
+			
+			$attributes['addresslist_'. $rec->id] = array('name'=>'addresslist.addresslist_' . $rec->id, 'label'=>'' .GO::t('addresslists', 'addressbook'). ': ' .$rec->name, 'gotype'=>'boolean');
+			
+		}
 		
 		return parent::afterAttributes($attributes, $response, $params, $model);
 	}
@@ -521,11 +560,11 @@ class ContactController extends \GO\Base\Controller\AbstractModelController{
 			$model->company_id = $companyModel->id;
 		}
 		
-        if(isset($attributes['email']) && !\GO\Base\Util\String::validate_email($attributes['email']))
+        if(isset($attributes['email']) && !\GO\Base\Util\StringHelper::validate_email($attributes['email']))
           unset($attributes['email']);
-        if(isset($attributes['email2']) && !\GO\Base\Util\String::validate_email($attributes['email2']))
+        if(isset($attributes['email2']) && !\GO\Base\Util\StringHelper::validate_email($attributes['email2']))
           unset($attributes['email2']);
-        if(isset($attributes['email3']) && !\GO\Base\Util\String::validate_email($attributes['email3']))
+        if(isset($attributes['email3']) && !\GO\Base\Util\StringHelper::validate_email($attributes['email3']))
           unset($attributes['email3']);
         
 		return parent::beforeImport($params, $model, $attributes, $record);
@@ -535,13 +574,30 @@ class ContactController extends \GO\Base\Controller\AbstractModelController{
 		$account = \GO\Email\Model\Account::model()->findByPk($params['account_id']);
 		$imap = $account->openImapConnection($params['mailbox']);
 		
-		$tmpFile =\GO\Base\Fs\File::tempFile($params['filename'], 'vcf');
+		$tmpFile =\GO\Base\Fs\File::tempFile($params['filename']);
 		$imap->save_to_file($params['uid'], $tmpFile->path(), $params['number'], $params['encoding']);
-				
-
-		GO\Base\Util\Http::outputDownloadHeaders($tmpFile);
 		
-		echo $tmpFile->getContents();
+		if(!isset($params['importVCard'])) {
+			\GO\Base\Util\Http::outputDownloadHeaders($tmpFile);
+			echo $tmpFile->getContents();
+			return;
+		}
+		
+		$options = \Sabre\VObject\Reader::OPTION_FORGIVING + \Sabre\VObject\Reader::OPTION_IGNORE_INVALID_LINES;
+		$card = \Sabre\VObject\Reader::read($tmpFile->getContents(),$options);
+		$contact = new \GO\Addressbook\Model\Contact();
+		$contact->importVObject($card, array(), false);
+		
+		//format utf-8 attributes
+		foreach($contact->getAttributes('raw') as $key => $value) {
+			try {
+				$contact->{$key} = utf8_decode($value);
+			} catch (\Exception $e) {}
+		}
+		
+		//GO\Base\Util\Http::outputDownloadHeaders($tmpFile);
+		return array('success'=>true, 'contacts'=>array($contact->getAttributes()));
+		//echo $tmpFile->getContents();
 
 	}
 	
@@ -593,7 +649,7 @@ class ContactController extends \GO\Base\Controller\AbstractModelController{
 		$file->convertToUtf8();
 		
 		$options = \Sabre\VObject\Reader::OPTION_FORGIVING + \Sabre\VObject\Reader::OPTION_IGNORE_INVALID_LINES;
-		$vcards = new Sabre\VObject\Splitter\VCard(fopen($file->path(),'r+'), $options);
+		$vcards = new \Sabre\VObject\Splitter\VCard(fopen($file->path(),'r+'), $options);
 
 
 		unset($params['file']);
@@ -906,4 +962,31 @@ class ContactController extends \GO\Base\Controller\AbstractModelController{
 		
 		return $response;
 	}
+	
+	
+	
+	protected function afterImport(&$model, &$attributes, $record) {
+		
+		
+		foreach ($attributes as $key => $value) {
+			
+			/**
+			 * pares the mapping loking for 'addresslist_'
+			 */
+			
+			if(stripos($key, 'addresslist_') !== FALSE) {
+				$data = explode('_', $key);
+				$id = $data[1];
+				
+				if($value == 1) {
+					
+					$addresslistModel = \GO\Addressbook\Model\Addresslist::model()->findByPk($id);
+					$addresslistModel->addManyMany ('contacts', $model->id);
+				}
+			}
+			
+		}
+		
+	}
+	
 }

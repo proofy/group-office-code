@@ -35,7 +35,7 @@ interface Swift_Transport_IoBuffer extends Swift_InputByteStream, Swift_OutputBy
     /**
      * Set an individual param on the buffer (e.g. switching to SSL).
      *
-     * @param string $param
+     * @param StringHelper $param
      * @param mixed  $value
      */
     public function setParam($param, $value);
@@ -51,7 +51,7 @@ interface Swift_Transport_IoBuffer extends Swift_InputByteStream, Swift_OutputBy
      *
      * This could replace LF with CRLF for example.
      *
-     * @param string[] $replacements
+     * @param StringHelper[] $replacements
      */
     public function setWriteTranslations(array $replacements);
 
@@ -63,7 +63,7 @@ interface Swift_Transport_IoBuffer extends Swift_InputByteStream, Swift_OutputBy
      *
      * @param integer $sequence of last write to scan from
      *
-     * @return string
+     * @return StringHelper
      */
     public function readLine($sequence);
 }

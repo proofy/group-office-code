@@ -20,7 +20,7 @@ class Swift_MailTransport extends Swift_Transport_MailTransport
     /**
      * Create a new MailTransport, optionally specifying $extraParams.
      *
-     * @param string $extraParams
+     * @param StringHelper $extraParams
      */
     public function __construct($extraParams = '-f%s')
     {
@@ -36,7 +36,7 @@ class Swift_MailTransport extends Swift_Transport_MailTransport
     /**
      * Create a new MailTransport instance.
      *
-     * @param string $extraParams To be passed to mail()
+     * @param StringHelper $extraParams To be passed to mail()
      *
      * @return Swift_MailTransport
      */

@@ -57,21 +57,21 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
 	/**
 	 * Rendering function
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_renderingFunction;
 
 	/**
 	 * Mime type
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_mimeType;
 
 	/**
 	 * Unique name
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_uniqueName;
 
@@ -119,7 +119,7 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
     /**
      * Get rendering function
      *
-     * @return string
+     * @return StringHelper
      */
     public function getRenderingFunction() {
     	return $this->_renderingFunction;
@@ -128,7 +128,7 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
     /**
      * Set rendering function
      *
-     * @param string $value
+     * @param StringHelper $value
      * @return PHPExcel_Worksheet_MemoryDrawing
      */
     public function setRenderingFunction($value = PHPExcel_Worksheet_MemoryDrawing::RENDERING_DEFAULT) {
@@ -139,7 +139,7 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
     /**
      * Get mime type
      *
-     * @return string
+     * @return StringHelper
      */
     public function getMimeType() {
     	return $this->_mimeType;
@@ -148,7 +148,7 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
     /**
      * Set mime type
      *
-     * @param string $value
+     * @param StringHelper $value
      * @return PHPExcel_Worksheet_MemoryDrawing
      */
     public function setMimeType($value = PHPExcel_Worksheet_MemoryDrawing::MIMETYPE_DEFAULT) {
@@ -159,7 +159,7 @@ class PHPExcel_Worksheet_MemoryDrawing extends PHPExcel_Worksheet_BaseDrawing im
     /**
      * Get indexed filename (using image index)
      *
-     * @return string
+     * @return StringHelper
      */
     public function getIndexedFilename() {
 		$extension 	= strtolower($this->getMimeType());

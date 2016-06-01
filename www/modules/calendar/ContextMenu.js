@@ -21,7 +21,7 @@ GO.calendar.ContextMenu = function(config){
 		text: GO.lang.copy,
 		cls: 'x-btn-text-icon',
 		scope:this,		
-		disabled:true,
+		disabled:false,
 		handler: function()
 		{
 			this.showSelectDateDialog(true, false);
@@ -55,7 +55,19 @@ GO.calendar.ContextMenu = function(config){
 			this.fireEvent("deleteEvent", this);
 		}
 	}),'-',
-	this.newMenuItem = new GO.NewMenuItem()
+	this.newMenuItem = new GO.NewMenuItem(),
+	'-',
+	this.actionExportAsIcs = new Ext.menu.Item({
+		iconCls: 'btn-export',
+		text: GO.calendar.lang['exportAsIcs'],
+		cls: 'x-btn-text-icon',
+		scope:this,
+		handler: function()
+		{
+			if (!GO.util.empty(this.event) && this.event.event_id>0)
+			window.open(GO.url('calendar/event/exportEventAsIcs')+'&event_id='+this.event.event_id);
+		}
+	})
 	]
 
 	if (GO.email) {
@@ -108,24 +120,68 @@ Ext.extend(GO.calendar.ContextMenu, Ext.menu.Menu, {
 	event:null,
 	view_id: 0,
 	
+	initComponent: function() {
+		
+		Ext.applyIf(this,{
+			listeners: {
+				beforeshow: function() {
+//					console.log(this.event);
+					if(this.event && !!this.event.is_virtual) {
+						return false; // don't show menu for virtual items
+					}
+				},
+				scope: this
+			}
+		});
+		
+		GO.calendar.ContextMenu.superclass.initComponent.call(this);
+	},
+	
 	setEvent : function(event, view_id)
 	{
 		this.event = event;
+		
+		var isEvent = event.model_name == "GO\\Calendar\\Model\\Event";
 
 		this.view_id = (view_id) ? view_id : 0;
+		
+		var isOrganizer = typeof(this.event.is_organizer)!='undefined' && this.event.is_organizer;
 
-		this.actionCopy.setDisabled(this.event.read_only);
+//		this.actionCopy.setDisabled(this.event.read_only);
 		this.actionCut.setDisabled(this.event.read_only);
 		
+		if (GO.email) {
+		// Disable "Create email for participants" when it's a private event and it's not yours
+			if(this.event.private && this.event.user_id != GO.settings.user_id){
+				this.actionCreateMail.setDisabled(true);
+			}	else {
+				this.actionCreateMail.setDisabled(false);
+			}
+		}
+		
+		if(this.event.private && this.event.user_id != GO.settings.user_id){
+			this.actionCopy.setDisabled(true);
+			this.actionInfo.setDisabled(true);
+		} else {
+			this.actionCopy.setDisabled(!isOrganizer);
+			this.actionInfo.setDisabled(false);
+		}
+		
 		var deleteEnabled=false;
-		if(typeof(this.event.is_organizer)!='undefined' && !this.event.is_organizer)
-			deleteEnabled=true;
-		else
-			deleteEnabled=!this.event.read_only;
+//		if(isOrganizer){
+//			deleteEnabled=true;
+//		} else{ 
+//			deleteEnabled=!this.event.read_only;
+//		}
+		
+		if(this.event && isEvent && this.event.permission_level >= GO.permissionLevels.writeAndDelete){
+				deleteEnabled=true;
+		}
 		
 		this.actionDelete.setDisabled(!deleteEnabled);
 		
-		this.actionInfo.setDisabled(!event.event_id);
+//		this.actionInfo.setDisabled(!event.event_id);
+		
 		if(this.actionAddTimeRegistration)
 			this.actionAddTimeRegistration.setDisabled(!event.event_id);
 		

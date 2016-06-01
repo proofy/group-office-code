@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: MainPanel.js 16920 2014-02-26 14:44:19Z mschering $
+ * @version $Id: MainPanel.js 19225 2015-06-22 15:07:34Z wsmits $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  * @author Boy Wijnmaalen <bwijnmaalen@intermesh.nl>
@@ -68,9 +68,7 @@ GO.users.MainPanel = function(config)
 		  		text: GO.lang['cmdDelete'], 
 		  		cls: 'x-btn-text-icon', 
 		  		handler: function(){
-						Ext.Ajax.timeout = 180000; //3 minutes
 						this.usersGridPanel.deleteSelected();
-						Ext.Ajax.timeout = 30000; //30 seconds
 					},
 		  		scope: this
 		  	},{
@@ -97,6 +95,19 @@ GO.users.MainPanel = function(config)
 				},
 				scope:this
 			},
+			this.exportMenu = new GO.base.ExportMenu({className:'GO\\Users\\Export\\CurrentGrid'}),
+			{
+				iconCls: 'bsync-btn-sync',
+				text: GO.users.lang['transferData'],
+				handler:function(){
+					if(!this.transferDialog)
+					{
+						this.transferDialog = new GO.users.TransferDialog();
+					}
+					this.transferDialog.show();
+				},
+				scope:this
+			},
 //			{
 //				enableToggle:true,
 //				text:GO.users.lang.showProUsers,
@@ -110,6 +121,8 @@ GO.users.MainPanel = function(config)
 		         GO.lang['strSearch']+':',
 		        this.searchField
 		    ]});
+			
+	this.exportMenu.setColumnModel(this.usersGridPanel.getColumnModel());
 	
 	config.items= [
 		this.groupsGrid,

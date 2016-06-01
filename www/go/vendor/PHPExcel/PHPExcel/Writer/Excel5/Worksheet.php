@@ -552,8 +552,8 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 * always fixed range
 	 * See section 2.5.14 in OpenOffice.org's Documentation of the Microsoft Excel File Format
 	 *
-	 * @param string $range E.g. 'A1' or 'A1:B6'
-	 * @return string Binary data
+	 * @param StringHelper $range E.g. 'A1' or 'A1:B6'
+	 * @return StringHelper Binary data
 	 */
 	private function _writeBIFF8CellRangeAddressFixed($range = 'A1')
 	{
@@ -584,7 +584,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 * Retrieves data from memory in one chunk, or from disk in $buffer
 	 * sized chunks.
 	 *
-	 * @return string The data
+	 * @return StringHelper The data
 	 */
 	function getData()
 	{
@@ -668,7 +668,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 *
 	 * @param int $row Row index (0-based)
 	 * @param int $col Column index (0-based)
-	 * @param string $str The string
+	 * @param StringHelper $str The string
 	 * @param int $xfIndex Index to XF record
 	 */
 	private function _writeString($row, $col, $str, $xfIndex)
@@ -681,7 +681,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 * It differs from _writeString by the writing of rich text strings.
 	 * @param int $row Row index (0-based)
 	 * @param int $col Column index (0-based)
-	 * @param string $str The string
+	 * @param StringHelper $str The string
 	 * @param mixed   $xfIndex The XF format index for the cell
 	 * @param array $arrcRun Index to Font record and characters beginning
 	 */
@@ -712,7 +712,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 * @access public
 	 * @param integer $row	Zero indexed row
 	 * @param integer $col	Zero indexed column
-	 * @param string  $str	The string to write
+	 * @param StringHelper  $str	The string to write
 	 * @param mixed   $xfIndex The XF format index for the cell
 	 * @return integer
 	 */
@@ -748,7 +748,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 * @access public
 	 * @param integer $row	Zero indexed row
 	 * @param integer $col	Zero indexed column
-	 * @param string  $str	The string to write
+	 * @param StringHelper  $str	The string to write
 	 * @param mixed   $xfIndex The XF format index for the cell
 	 * @return integer
 	 */
@@ -776,7 +776,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 *
 	 * @param integer $row	Zero indexed row
 	 * @param integer $col	Zero indexed column
-	 * @param string  $note   The note to write
+	 * @param StringHelper  $note   The note to write
 	 */
 	private function _writeNote($row, $col, $note)
 	{
@@ -858,7 +858,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 *
 	 * @param integer $row	 Zero indexed row
 	 * @param integer $col	 Zero indexed column
-	 * @param string  $formula The formula text string
+	 * @param StringHelper  $formula The formula text string
 	 * @param mixed   $xfIndex  The XF format index
 	 * @param mixed   $calculatedValue  Calculated value
 	 * @return integer
@@ -943,7 +943,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	/**
 	 * Write a STRING record. This
 	 *
-	 * @param string $stringValue
+	 * @param StringHelper $stringValue
 	 */
 	private function _writeStringRecord($stringValue)
 	{
@@ -973,7 +973,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 *
 	 * @param integer $row	Row
 	 * @param integer $col	Column
-	 * @param string  $url	URL string
+	 * @param StringHelper  $url	URL string
 	 * @return integer
 	 */
 	private function _writeUrl($row, $col, $url)
@@ -994,7 +994,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 * @param integer $col1   Start column
 	 * @param integer $row2   End row
 	 * @param integer $col2   End column
-	 * @param string  $url	URL string
+	 * @param StringHelper  $url	URL string
 	 * @return integer
 	 */
 	function _writeUrlRange($row1, $col1, $row2, $col2, $url)
@@ -1020,7 +1020,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 * @param integer $col1   Start column
 	 * @param integer $row2   End row
 	 * @param integer $col2   End column
-	 * @param string  $url	URL string
+	 * @param StringHelper  $url	URL string
 	 * @return integer
 	 */
 	function _writeUrlWeb($row1, $col1, $row2, $col2, $url)
@@ -1065,7 +1065,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 * @param integer $col1   Start column
 	 * @param integer $row2   End row
 	 * @param integer $col2   End column
-	 * @param string  $url	URL string
+	 * @param StringHelper  $url	URL string
 	 * @return integer
 	 */
 	function _writeUrlInternal($row1, $col1, $row2, $col2, $url)
@@ -1118,7 +1118,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 * @param integer $col1   Start column
 	 * @param integer $row2   End row
 	 * @param integer $col2   End column
-	 * @param string  $url	URL string
+	 * @param StringHelper  $url	URL string
 	 * @return integer
 	 */
 	function _writeUrlExternal($row1, $col1, $row2, $col2, $url)
@@ -1698,7 +1698,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 * reference to all of the external worksheets the EXTERNSHEET index is the same
 	 * as the worksheet index.
 	 *
-	 * @param string $sheetname The name of a external worksheet
+	 * @param StringHelper $sheetname The name of a external worksheet
 	 */
 	private function _writeExternsheet($sheetname)
 	{
@@ -2607,7 +2607,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	 * MSDN library.
 	 *
 	 * @access private
-	 * @param string $bitmap The bitmap to process
+	 * @param StringHelper $bitmap The bitmap to process
 	 * @return array Array with data and properties of the bitmap
 	 */
 	function _processBitmap($bitmap)
@@ -2970,7 +2970,7 @@ class PHPExcel_Writer_Excel5_Worksheet extends PHPExcel_Writer_Excel5_BIFFwriter
 	/**
 	 * Map Error code
 	 *
-	 * @param string $errorCode
+	 * @param StringHelper $errorCode
 	 * @return int
 	 */
 	private static function _mapErrorCode($errorCode) {

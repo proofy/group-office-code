@@ -43,7 +43,7 @@ class Record extends Model{
 			for($i=0;$i<$attributes['count'];$i++){
 				//echo $attributes[$i]." : ".$attributes[$attributes[$i]]."\n";
 				$key = $keyToLowerCase ? strtolower($attributes[$i]) : $attributes[$i];
-				$this->_attributes[$key]=$attributes[$attributes[$i]];
+				$this->_attributes[$key] = $this->_convertUTF8($attributes[$attributes[$i]]);
 				unset($this->_attributes[$key]['count']);
 			}
 			unset($this->_attributes['objectclass']);
@@ -51,6 +51,20 @@ class Record extends Model{
 		
 		return $this->_attributes;
 	}
+	
+	private function _convertUTF8($attr) {
+		if(is_array($attr)) {
+			$new = array();
+			foreach($attr as $key => $val) {
+				$new[$key] = $this->_convertUTF8($val);
+			}
+		}
+		else {
+			$new = GO\Base\Util\StringHelper::clean_utf8($attr);
+		}
+		
+		return $new;
+    }
 	
 	public function getAttribute($name) {
 		$mapping = static::getMapping();
@@ -143,7 +157,7 @@ class Record extends Model{
 	
 	/**
 	 * Get the DN of this record.
-	 * @return string The distinguished name of an LDAP entity.
+	 * @return StringHelper The distinguished name of an LDAP entity.
 	 */
 	public function getDn(){
 		return ldap_get_dn($this->_ldapConn->getLink(),$this->_entryId);

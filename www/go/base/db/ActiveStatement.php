@@ -177,8 +177,8 @@ class ActiveStatement implements \IteratorAggregate {
 	 * You need to specify which column needs to be used as key column and which 
 	 * culumn needs to be used as value column
 	 * 
-	 * @param string $keyColumn
-	 * @param string $valueColumn
+	 * @param StringHelper $keyColumn
+	 * @param StringHelper $valueColumn
 	 * @return array 
 	 */
 	public function fetchKeyValueArray($keyColumn, $valueColumn){

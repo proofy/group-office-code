@@ -38,7 +38,7 @@ class PHPExcel_CachedObjectStorage_PHPTemp extends PHPExcel_CachedObjectStorage_
 	/**
 	 * Name of the file for this cache
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_fileHandle = null;
 
@@ -96,7 +96,7 @@ class PHPExcel_CachedObjectStorage_PHPTemp extends PHPExcel_CachedObjectStorage_
     /**
      * Get cell at a specific coordinate
      *
-     * @param 	string 			$pCoord		Coordinate of the cell
+     * @param 	StringHelper 			$pCoord		Coordinate of the cell
      * @throws 	PHPExcel_Exception
      * @return 	PHPExcel_Cell 	Cell that was found, or null if not found
      */

@@ -52,7 +52,7 @@ class Swift_KeyCache_SimpleKeyCacheInputStream implements Swift_KeyCache_KeyCach
     /**
      * Writes $bytes to the end of the stream.
      *
-     * @param string                $bytes
+     * @param StringHelper                $bytes
      * @param Swift_InputByteStream $is    optional
      */
     public function write($bytes, Swift_InputByteStream $is = null)
@@ -101,7 +101,7 @@ class Swift_KeyCache_SimpleKeyCacheInputStream implements Swift_KeyCache_KeyCach
     /**
      * Set the nsKey which will be written to.
      *
-     * @param string $nsKey
+     * @param StringHelper $nsKey
      */
     public function setNsKey($nsKey)
     {
@@ -111,7 +111,7 @@ class Swift_KeyCache_SimpleKeyCacheInputStream implements Swift_KeyCache_KeyCach
     /**
      * Set the itemKey which will be written to.
      *
-     * @param string $itemKey
+     * @param StringHelper $itemKey
      */
     public function setItemKey($itemKey)
     {

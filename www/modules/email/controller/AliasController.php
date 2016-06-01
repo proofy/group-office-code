@@ -41,12 +41,13 @@ class AliasController extends \GO\Base\Controller\AbstractModelController {
 	}
 
 	public function formatStoreRecord($record, $model, $store) {
-
+		
 		$r = new \GO\Base\Mail\EmailRecipients();
 		$r->addRecipient($model->email, $model->name);
 		$record['from'] = (string) $r;
-		$record['html_signature'] = \GO\Base\Util\String::text_to_html($model->signature);
+		$record['html_signature'] = \GO\Base\Util\StringHelper::text_to_html($model->signature);
 		$record['plain_signature'] = $model->signature;
+		$record['signature_below_reply'] = $model->account->signature_below_reply;
 		$record['template_id']=0;
 		
 		if(\GO::modules()->addressbook){

@@ -11,6 +11,7 @@
 
 namespace GO\Addressbook\Controller;
 
+use GO;
 
 class ExportContactsWithCompaniesController extends \GO\Base\Controller\AbstractExportController{
 	
@@ -20,14 +21,32 @@ class ExportContactsWithCompaniesController extends \GO\Base\Controller\Abstract
 	 * @param array $params
 	 */
 	public function export($params) {
-
+		
+		GO::$disableModelCache=true;		
+		GO::setMaxExecutionTime(420);
+		
+		$companyMode = false;
+		if(isset($params['viewState']) && $params['viewState'] == 'company') { 
+			$companyMode = true;
+		}
 		// Load the data from the session.
-		$findParams = \GO::session()->values['contact']['findParams'];
+		if($companyMode) { 
+			$findParams = \GO::session()->values['company']['findParams'];
+			$model = \GO::getModel(\GO::session()->values['company']['model']);
+		} else {
+			$findParams = \GO::session()->values['contact']['findParams'];
+			$model = \GO::getModel(\GO::session()->values['contact']['model']);
+		}
+		
 		$findParams->getCriteria()->recreateTemporaryTables();
-		$model = \GO::getModel(\GO::session()->values['contact']['model']);
 		
 		// Include the companies
-		$findParams->joinRelation('company','LEFT');
+		if($companyMode) {
+			
+			$findParams->joinRelation('contacts','LEFT');
+		} else {
+			$findParams->joinRelation('company','LEFT');
+		}
 						
 		// Let the export handle all found records without a limit
 		$findParams->limit(0); 
@@ -44,29 +63,67 @@ class ExportContactsWithCompaniesController extends \GO\Base\Controller\Abstract
 		$csvWriter = new \GO\Base\Csv\Writer('php://output');
 		
 		$headerPrinted = false; 
-		
+		$attrs = array();
+		$compAttrs = array();
+			
 		foreach($stmt as $m){
 			
-			$attrs = $m->getAttributes();
-			$compAttrs = $m->company->getAttributes();
-
+			
+			$iterationStartUnix = time();
+			
+			
 			$header = array();
 			$record = array();
-			foreach($attrs as $attr=>$val){
-				$header[$attr] = $m->getAttributeLabel($attr);
-				$record[$attr] = $m->{$attr};
-			}
 			
-			foreach($compAttrs as $cattr=>$cval){
-				$header[\GO::t('company','addressbook').$cattr] = \GO::t('company','addressbook').':'.$m->company->getAttributeLabel($cattr);
-				$record[\GO::t('company','addressbook').$cattr] = $m->company->{$cattr};
-			}
 			
+				$attrs = $m->getAttributes();
+				if($companyMode) { 
+					
+					foreach ($m->contacts as $compAttrs) {
+						$header = array();
+						foreach($attrs as $attr=>$val){
+							if (!$headerPrinted)
+								$header[$attr] = $m->getAttributeLabel($attr);
+							$record[$attr] = $m->{$attr};
+						}
+
+						foreach($compAttrs->getAttributes() as $cattr=>$cval){
+
+								if (!$headerPrinted) {
+									$header[GO::t('contacts','addressbook').$cattr] = GO::t('contacts','addressbook').':'.$compAttrs->getAttributeLabel($cattr);
+								}
+								$record[GO::t('contacts','addressbook').$cattr] = $compAttrs->{$cattr};
+							}
+
+						}
+					
+					
+				} else {
+					
+					$compAttrs = $m->company->getAttributes();
+					
+					foreach($attrs as $attr=>$val){
+						if (!$headerPrinted)
+							$header[$attr] = $m->getAttributeLabel($attr);
+						$record[$attr] = $m->{$attr};
+					}
+					
+					
+					foreach($compAttrs as $cattr=>$cval){
+
+						if (!$headerPrinted) {
+							$header[GO::t('company','addressbook').$cattr] = GO::t('company','addressbook').':'.$m->company->getAttributeLabel($cattr);
+						}
+						$record[GO::t('company','addressbook').$cattr] = $m->company->{$cattr};
+					}
+			
+				}
+					
 			if(!$headerPrinted){
 				$csvWriter->putRecord($header);
 				$headerPrinted = true;
 			}
-			
+
 			$csvWriter->putRecord($record);
 		}
 	}

@@ -193,7 +193,7 @@ class Content extends \GO\Base\Db\ActiveRecord{
 	 /**
 	  * Find a content item by it's slug (and siteId)
 	  * 
-	  * @param string $slug
+	  * @param StringHelper $slug
 	  * @param int $siteId
 	  * @return Content
 	  * @throws \GO\Base\Exception\NotFound
@@ -218,9 +218,9 @@ class Content extends \GO\Base\Db\ActiveRecord{
 	 /**
 	  * Get the url to this content item.
 	  * 
-	  * @param string $route parameter can be set when you have "special" 
+	  * @param StringHelper $route parameter can be set when you have "special" 
 	  * controller actions to handle your content
-	  * @return string
+	  * @return StringHelper
 	  */
 	 public function getUrl($route='site/front/content'){
 		 
@@ -292,7 +292,7 @@ class Content extends \GO\Base\Db\ActiveRecord{
 					'cls' => 'site-node-content',
 					'iconCls' => 'go-model-icon-GO_Site_Model_Content', 
 					//'expanded' => !$hasChildren,
-					'expanded' => !$hasChildren || SiteModel::isExpandedNode($this->site_id.'_content_'.$this->id),
+					'expanded' => !$hasChildren || \GO\Site\Model\Site::isExpandedNode($this->site_id.'_content_'.$this->id),
 					'hasChildren' => $hasChildren,
 					'children'=> $hasChildren ? $this->getChildrenTree() : array(),
 					'text' => $this->title,
@@ -355,14 +355,14 @@ class Content extends \GO\Base\Db\ActiveRecord{
 	  * 
 	  * @param int $length
 	  * @param boolean $cutwords
-	  * @param string $append
-	  * @return string
+	  * @param StringHelper $append
+	  * @return StringHelper
 	  */
 	 public function getShortText($length=100,$cutwords=false,$append='...'){
 		 
-//		 $text = \GO\Base\Util\String::html_to_text($this->content);
+//		 $text = \GO\Base\Util\StringHelper::html_to_text($this->content);
 		 
-		 $text = \GO\Base\Util\String::cut_string($this->content,$length,!$cutwords,$append);
+		 $text = \GO\Base\Util\StringHelper::cut_string($this->content,$length,!$cutwords,$append);
 		 $html = MarkdownExtra::defaultTransform($text);
 		 return strip_tags($html);
 	 }
@@ -647,7 +647,7 @@ class Content extends \GO\Base\Db\ActiveRecord{
 	 /**
 	  * Get the meta title of this content item.
 	  * 
-	  * @return string
+	  * @return StringHelper
 	  */
 	 public function getMetaTitle(){
 		 if(!empty($this->meta_title))

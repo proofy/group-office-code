@@ -145,10 +145,12 @@ GO.CheckerPanel = Ext.extend(function(config){
 			]
 		}),
 		groupField:'type',
-		sortInfo: {
-			field: 'time',
-			direction: 'ASC'
-		}
+		remoteSort: true,
+		remoteGroup: true
+//		sortInfo: {
+//			field: 'time',
+//			direction: 'ASC'
+//		}
 	});
 
 	var action = new Ext.ux.grid.RowActions({
@@ -191,17 +193,20 @@ GO.CheckerPanel = Ext.extend(function(config){
 		width:28,
 		dataIndex: 'icon',
 		renderer: this.iconRenderer,
-		hideable: false
+		hideable: false,
+		groupable: false
 	},
 	{
 		header:GO.lang.strTime,
 		dataIndex: 'local_time',
-		width: 80
+		width: 80,
+		groupable: false
 	},
 	{
 		header:GO.lang['strName'],
 		dataIndex: 'name',
-		id:'name'
+		id:'name',
+		groupable: false
 	},
 	{
 		width:80,
@@ -221,7 +226,8 @@ GO.CheckerPanel = Ext.extend(function(config){
 			editable : false,
 			selectOnFocus : true,
 			forceSelection : true
-		})
+		}),
+		groupable: false
 	},
 	action]);
 
@@ -386,15 +392,18 @@ Ext.extend(GO.Checker, Ext.util.Observable, {
 		Ext.TaskMgr.start({
 			run: this.checkForNotifications,
 			scope:this,
-			interval:GO.settings.config.checker_interval*1000
+			interval: GO.settings.config.checker_interval*1000,
+			//			interval:10000 // debug / test config
 		});
 	},
   
 	// See modules/email/EmailClient.js and search for "GO.checker.registerRequest" for an usage example
 	registerRequest : function(url, params, callback, scope){
 		params.r=url;	
-	
-		var requestId=Ext.id();
+		if(url == 'email/account/checkUnseen')
+			var requestId = 'emails';
+		else
+			var requestId=Ext.id();
 		this.params.requests[requestId] = params;	
 		this.callbacks[requestId] = {
 			callback:callback,
@@ -428,69 +437,148 @@ Ext.extend(GO.Checker, Ext.util.Observable, {
 						getParams:{}
 					};	
 					
-					var storeData={};
-	
-
 					for(var id in result){
-						if(id=="reminders"){
-							storeData =result[id];
-						}else if (id!='success')
-						{				
-							this.callbacks[id].callback.call(this.callbacks[id].scope, this, result[id],data)
+						if(id=="reminders") {
+							this.handleReminderResponse(result[id], {
+								alarm:false,
+								popup:false,
+								getParams:{}
+							});
+						} else if (id!='success') {
+							this.callbacks[id].callback.call(this.callbacks[id].scope, this, result[id],data);
+						}
+						if (id=="emails") {
+
+							if((!result[id].email_status.has_new && this.countEmailShown) 
+											|| result[id].email_status.total_unseen <= 0  
+											|| (this.countEmailShown && this.countEmailShown >= result[id].email_status.total_unseen)){
+								
+								this.countEmailShown = result[id].email_status.total_unseen;
+								continue;
+							} else {
+								this.countEmailShown = result[id].email_status.total_unseen;
+							}
+							
+//							if (this.countEmailShown && (!result[id].email_status.has_new || result[id].email_status.total_unseen <= 0)) {
+//								return;
+//							}
+							
+							if(GO.util.empty(GO.settings.mute_new_mail_sound)){
+								GO.playAlarm('message-new-email');
+							}
+							
+							if (GO.settings.popup_emails) {
+								this.triggerEmailNotification(result[id].email_status);
+							}
 						}
 					}
 					
-					this.handleReminderResponse(storeData, data);
-
+					
 				}
 			//this.fireEvent('endcheck', this, data);
 			},
 			scope:this
 		});
 	},
+	
+	notifyDesktop : function(storeData){
+		var convertResultsToText = function(storeData) {
+
+			var notificationText = '';
+
+			for (var i = 0, l = storeData.results.length; i < l; i++) {
+				notificationText += storeData.results[i].type+': ';
+				notificationText += storeData.results[i].name+' [';
+				notificationText += storeData.results[i].time+']';
+			}		
+			return notificationText;
+
+		};
+
+		var notificationText = convertResultsToText(storeData);
+		var title = GO.lang.reminders;
+		var options = {
+			body: notificationText,
+			icon: 'views/Extjs3/themes/Group-Office/images/32x32/reminder.png'
+		};
+
+		if (Notification.permission === "granted") {
+			var notification = new Notification(title,options);
+		} else if (Notification.permission !== 'denied' || Notification.permission === "default") {
+		  Notification.requestPermission(function (permission) { // ask first
+			if (permission === "granted") {
+			  var notification = new Notification(title,options);
+			}
+		  });
+		}
+	},
+	
+	showPopup : function(data) {
+		GO.reminderPopup = GO.util.popup({
+			width:400,
+			height:400,
+			url:GO.url("reminder/display", data.getParams),
+			target:'groupofficeReminderPopup',
+			position:'br',
+			closeOnFocus:false
+		});
+	},
+	
+	triggerEmailNotification : function(email_status) {
+
+		this.countEmailShown = true;
+		var title = GO.lang['newEmail'];
+		var options = {
+			body: GO.lang.unreadEmailMessage.replace('%d',email_status.total_unseen),
+			icon: 'modules/email/themes/Group-Office/images/22x22/email.png'
+		};
+
+		if (Notification.permission === "granted") {
+			var notification = new Notification(title,options);
+		} else if (Notification.permission !== 'denied' || Notification.permission === "default") {
+		  Notification.requestPermission(function (permission) { // ask first
+			if (permission === "granted") {
+			  var notification = new Notification(title,options);
+			}
+		  });
+		}
+		
+	},
+	
   
 	handleReminderResponse : function(storeData, data){
-		if(data)
-		{
-			
-//			this.fireEvent('check', this, data);
-
-			if(storeData.results)
+//		this.fireEvent('check', this, data);
+		if(storeData.total && storeData.total > 0) {
+			this.checkerWindow.checkerGrid.store.loadData(storeData);
+			if(this.lastCount != this.checkerWindow.checkerGrid.store.getCount())
 			{
-				this.checkerWindow.checkerGrid.store.loadData(storeData);
-				if(this.lastCount != this.checkerWindow.checkerGrid.store.getCount())
-				{
-					this.lastCount = this.checkerWindow.checkerGrid.store.getCount();
-					if(this.lastCount>0)
-						this.checkerWindow.show();
-					else
-						this.checkerWindow.hide();
-					
-					this.reminderIcon.setDisplayed(true);
+				this.lastCount = this.checkerWindow.checkerGrid.store.getCount();
+				if(this.lastCount>0)
+					this.checkerWindow.show();
+				else
+					this.checkerWindow.hide();
 
-					data.alarm=true;
-					data.popup=true;			
-				}
-			}else
-			{
-				this.reminderIcon.setDisplayed(false);
-			}
+				this.reminderIcon.setDisplayed(true);
 
-			if(data.alarm && GO.util.empty(GO.settings.mute_reminder_sound)){
-				GO.playAlarm();				
+				data.alarm=true;
+				data.popup=true;			
 			}
-			
 			if(data.popup && !GO.util.empty(GO.settings.popup_reminders)){
-				GO.reminderPopup = GO.util.popup({
-					width:400,
-					height:400,
-					url:GO.url("reminder/display", data.getParams),
-					target:'groupofficeReminderPopup',
-					position:'br',
-					closeOnFocus:false
-				});
+				if (!("Notification" in window)) {
+					this.showPopup(data);
+				} else {
+					this.notifyDesktop(storeData);
+				}
 			}
+			
+		} else {
+			this.reminderIcon.setDisplayed(false);
 		}
+		
+		if(data.alarm && GO.util.empty(GO.settings.mute_reminder_sound)){
+			GO.playAlarm('message-new-email');				
+		}
+
 		
 	}
 });

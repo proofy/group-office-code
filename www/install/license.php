@@ -13,7 +13,7 @@ printHead();
 <p>The following license applies to this product:</p>
 <div class="cmd">
 <?php
-echo \GO\Base\Util\String::text_to_html(file_get_contents('../LICENSE.TXT'));
+echo \GO\Base\Util\StringHelper::text_to_html(file_get_contents('../LICENSE.TXT'));
 ?>
 </div>
 

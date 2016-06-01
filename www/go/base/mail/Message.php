@@ -14,6 +14,8 @@ namespace GO\Base\Mail;
 use GO;
 use GO\Base\Fs\Folder;
 
+use Exception;
+
 
 //make sure temp dir exists
 $cacheFolder = new Folder(GO::config()->tmpdir);
@@ -35,23 +37,42 @@ class Message extends \Swift_Message{
 	
 	private $_loadedBody;
 	
+	/**
+	 * The path in where the temporary attachments are stored
+	 * 
+	 * @var boolean/string 
+	 */
+	private $_tmpDir = false;
+	
 	public function __construct($subject = null, $body = null, $contentType = null, $charset = null) {
 		parent::__construct($subject, $body, $contentType, $charset);
 		
 		$headers = $this->getHeaders();
 
-		$headers->addTextHeader("X-Mailer", \GO::config()->product_name);
-		$headers->addTextHeader("X-MimeOLE", "Produced by ".\GO::config()->product_name);
-		$remoteAddr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : 'cli';
-		$headers->addTextHeader("X-Remote-Addr", "[".$remoteAddr."]");
+		$headers->addTextHeader("User-Agent", GO::config()->product_name);
+		
+		
+		
+		//Override qupted-prinatble encdoding with base64 because it uses much less memory on larger bodies. See also:
+		//https://github.com/swiftmailer/swiftmailer/issues/356
+		$this->setEncoder(new \Swift_Mime_ContentEncoder_Base64ContentEncoder());
+	}
+	
+	/**
+	 * Get the tmp directory in where the temporary attachments are stored
+	 * 
+	 * @return StringHelper The path to the tmp directory
+	 */
+	public function getTmpDir(){
+		return $this->_tmpDir;
 	}
 	
 	/**
    * Create a new Message.
-   * @param string $subject
-   * @param string $body
-   * @param string $contentType
-   * @param string $charset
+   * @param StringHelper $subject
+   * @param StringHelper $body
+   * @param StringHelper $contentType
+   * @param StringHelper $charset
    * @return Message
    */
   public static function newInstance($subject = null, $body = null,
@@ -86,6 +107,20 @@ class Message extends \Swift_Message{
 		{
 			//$mail->ConfirmReadingTo = $structure->headers['disposition-notification-to'];
 		}
+		
+		
+		//fix for [20150125 05:43:24] PHP Warning: strpos() expects parameter 1 to be string, array given in /usr/share/groupoffice/go/base/mail/Message.php on line 105
+		if(isset($structure->headers['to']) && is_array($structure->headers['to'])){
+			$structure->headers['to'] = implode(',', $structure->headers['to']);
+		}
+		
+		if(isset($structure->headers['cc']) && is_array($structure->headers['cc'])){
+			$structure->headers['cc'] = implode(',', $structure->headers['cc']);
+		}
+		
+		if(isset($structure->headers['bcc']) && is_array($structure->headers['bcc'])){
+			$structure->headers['bcc'] = implode(',', $structure->headers['bcc']);
+		}
 
 		$to = isset($structure->headers['to']) && strpos($structure->headers['to'],'undisclosed')===false ? $structure->headers['to'] : '';
 		$cc = isset($structure->headers['cc']) && strpos($structure->headers['cc'],'undisclosed')===false ? $structure->headers['cc'] : '';
@@ -98,18 +133,33 @@ class Message extends \Swift_Message{
 	
 		$toList = new EmailRecipients($to);
 		$to =$toList->getAddresses();
-		foreach($to as $email=>$personal)
-			$this->addTo($email, $personal);
+		foreach($to as $email=>$personal){
+			try{
+				$this->addTo($email, $personal);
+			} catch (Exception $e){
+				trigger_error('Failed to add receipient address: '.$e);
+			}
+		}
 		
 		$ccList = new EmailRecipients($cc);
 		$cc =$ccList->getAddresses();
-		foreach($cc as $email=>$personal)
-			$this->addCc($email, $personal);
+		foreach($cc as $email=>$personal){
+			try{
+				$this->addCc($email, $personal);
+			} catch (Exception $e){
+				trigger_error('Failed to add CC address: '.$e);
+			}
+		}
 		
 		$bccList = new EmailRecipients($bcc);
 		$bcc =$bccList->getAddresses();
-		foreach($bcc as $email=>$personal)
-			$this->addBcc($email, $personal);
+		foreach($bcc as $email=>$personal){
+			try{
+				$this->addBcc($email, $personal);
+			} catch (Exception $e){
+				trigger_error('Failed to add BCC address: '.$e);
+			}
+		}
 
 		if(isset($structure->headers['from'])){
 			
@@ -167,7 +217,24 @@ class Message extends \Swift_Message{
 			
 		//add text version of the HTML body
 		$htmlToText = new \GO\Base\Util\Html2Text($htmlBody);
-		$this->addPart($htmlToText->get_text(), 'text/plain','UTF-8');
+		$part= $this->addPart($htmlToText->get_text(), 'text/plain','UTF-8');
+		
+		
+		//Override qupted-prinatble encdoding with base64 because it uses much less memory on larger bodies. See also:
+		//https://github.com/swiftmailer/swiftmailer/issues/356
+		$part->setEncoder(new \Swift_Mime_ContentEncoder_Base64ContentEncoder());
+			
+//	Was testing this but didn't seem to work		
+//			$plainTextPart = $this->findPlainTextBody();
+//		if(!$plainTextPart) {
+//			$part= $this->addPart($htmlToText->get_text(), 'text/plain','UTF-8');
+//			//Override qupted-prinatble encdoding with base64 because it uses much less memory on larger bodies. See also:
+//			//https://github.com/swiftmailer/swiftmailer/issues/356
+//			$part->setEncoder(new \Swift_Mime_ContentEncoder_Base64ContentEncoder());
+//		}else
+//		{
+//			$plainTextPart->setBody($htmlToText->get_text());
+//		}
 		
 		return $this;
 	}
@@ -202,7 +269,7 @@ class Message extends \Swift_Message{
 		}
 
 		if($charset!='UTF-8'){
-			$part->body = \GO\Base\Util\String::to_utf8($part->body, $charset);
+			$part->body = \GO\Base\Util\StringHelper::to_utf8($part->body, $charset);
 			
 			$part->body = str_ireplace($charset, 'UTF-8', $part->body);
 			
@@ -242,14 +309,14 @@ class Message extends \Swift_Message{
 				}elseif($part->ctype_primary=='multipart')
 				{
 
-				}else
+				}elseif(isset($part->body))
 				{
 					//attachment
 
-					$dir=\GO::config()->tmpdir.'attachments/';
+					$this->_tmpDir =\GO::config()->tmpdir.'attachments/'.  uniqid().'/';
 
-					if(!is_dir($dir))
-						mkdir($dir, 0755, true);
+					if(!is_dir($this->_tmpDir ))
+						mkdir($this->_tmpDir , 0755, true);
 
 					//unset($part->body);
 					//var_dump($part);
@@ -269,7 +336,7 @@ class Message extends \Swift_Message{
 						$filename=uniqid(time());
 					}
 
-					$tmp_file = $dir.$filename;
+					$tmp_file = $this->_tmpDir .$filename;
 					file_put_contents($tmp_file, $part->body);
 
 					$mime_type = $part->ctype_primary.'/'.$part->ctype_secondary;
@@ -336,7 +403,7 @@ class Message extends \Swift_Message{
 	 * 
 	 * In outgoing messages we don't want them so we make them absolute again.
 	 * 
-	 * @param string $body
+	 * @param StringHelper $body
 	 * @return type 
 	 */
 	private function _fixRelativeUrls($body){		
@@ -370,7 +437,11 @@ class Message extends \Swift_Message{
 	 * @return boolean 
 	 */
 	public function hasRecipients(){
-		return count($this->getTo()) || count($this->getCc()) || count($this->getBcc());
+		return $this->countRecipients() > 0;
+	}
+	
+	public function countRecipients(){
+		return count($this->getTo()) + count($this->getCc()) + count($this->getBcc());
 	}
 	
 	/**
@@ -414,7 +485,7 @@ class Message extends \Swift_Message{
 				$this->setReadReceiptTo(array($alias->email=>$alias->name));
 		}
 		
-		if(isset($params['priority']))
+		if(isset($params['priority']) && $params['priority'] != 3)
 			$this->setPriority ($params['priority']);
 		
 		
@@ -441,7 +512,8 @@ class Message extends \Swift_Message{
 
 						//$tmpFile = new \GO\Base\Fs\File(\GO::config()->tmpdir.$ia['tmp_file']);
 						if(empty($ia->tmp_file)){
-							throw new \Exception("No temp file for inline attachment ".$ia->name);
+							continue; // Continue to the next inline attachment for processing.
+							//throw new Exception("No temp file for inline attachment ".$ia->name);
 						}
 
 						$path = empty($ia->from_file_storage) ? \GO::config()->tmpdir.$ia->tmp_file : \GO::config()->file_storage_path.$ia->tmp_file;
@@ -457,7 +529,7 @@ class Message extends \Swift_Message{
 								$contentId = $this->embed($img);
 
 								//$tmpFile->delete();								
-								$params['htmlbody'] = \GO\Base\Util\String::replaceOnce($matches[1], $contentId, $params['htmlbody']);
+								$params['htmlbody'] = \GO\Base\Util\StringHelper::replaceOnce($matches[1], $contentId, $params['htmlbody']);
 							}else
 							{
 								//this may happen when an inline image was attached but deleted in the editor afterwards.

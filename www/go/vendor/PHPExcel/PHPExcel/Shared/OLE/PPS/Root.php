@@ -32,7 +32,7 @@ class PHPExcel_Shared_OLE_PPS_Root extends PHPExcel_Shared_OLE_PPS
 
 	/**
 	 * Directory for temporary files
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_tmp_dir		= NULL;
 
@@ -64,7 +64,7 @@ class PHPExcel_Shared_OLE_PPS_Root extends PHPExcel_Shared_OLE_PPS
 	* If a resource pointer to a stream created by fopen() is passed
 	* it will be used, but you have to close such stream by yourself.
 	*
-	* @param string|resource $filename The name of the file or stream where to save the OLE container.
+	* @param StringHelper|resource $filename The name of the file or stream where to save the OLE container.
 	* @access public
 	* @return mixed true on success
 	*/

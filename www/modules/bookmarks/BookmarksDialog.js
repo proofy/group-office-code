@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: BookmarksDialog.js 14816 2013-05-21 08:31:20Z mschering $
+ * @version $Id: BookmarksDialog.js 19244 2015-07-27 07:17:02Z wsmits $
  * @copyright Copyright Intermesh
  * @author Twan Verhofstad
  */
@@ -173,9 +173,17 @@ Ext.extend(GO.bookmarks.BookmarksDialog, Ext.Window,{
 				xtype: 'textfield',
 				fieldLabel: 'URL',
 				anchor: '100%',
-				vtype: 'url',
+//				vtype: 'url',
 				value:'http://',
 				allowBlank: false,
+				validator: function(value) {
+					// The following allows also URLs like 'https://wiki:username@wiki.mydomain.org'
+//					var urlRegexp = /(((^https?)|(^ftp)):\/\/(([\-\w]+\.)+\w{2,3}(\/[%\-\w]+(\.\w{2,})?)*(([\w\-\.\?\\\/+@&#;`~=%!]*)(\.\w{2,})?)*\/?)|([\-\w]+\:)+([\-\w]+\@)+([\-\w]+\.)+\w{2,3}(\/[%\-\w]+(\.\w{2,})?)*(([\w\-\.\?\\\/+@&#;`~=%!]*)(\.\w{2,})?)*\/?)/i;
+					// The following also accepts: http://intranet/foo/bar
+					var urlRegexp = /(((^https?)|(^ftp)):\/\/(\w{2,3}(\/[%\-\w]+(\.\w{2,})?)*(([\w\-\.\?\\\/+@&#;`~=%!]*)(\.\w{2,})?)*\/?)|([\-\w]+\:)+([\-\w]+\@)+([\-\w]+\.)+\w{2,3}(\/[%\-\w]+(\.\w{2,})?)*(([\w\-\.\?\\\/+@&#;`~=%!]*)(\.\w{2,})?)*\/?)/i;
+					
+					return urlRegexp.test(value);
+				},
 				listeners:{
 					change:function(combo){
 						this.el.mask(GO.lang.waitMsgLoad);

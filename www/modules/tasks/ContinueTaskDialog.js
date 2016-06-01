@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: ContinueTaskDialog.js 15954 2013-10-17 12:04:36Z mschering $
+ * @version $Id: ContinueTaskDialog.js 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -40,7 +40,7 @@ GO.tasks.ContinueTaskDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 		var now = new Date();
 		var tomorrow = now.add(Date.DAY, 1);
 		var eight = Date.parseDate(tomorrow.format('Y-m-d')+' 08:00', 'Y-m-d G:i' );
-
+		
 		this.datePicker = new Ext.DatePicker({
 					internalRender:true,
 					xtype:'datepicker',
@@ -63,15 +63,19 @@ GO.tasks.ContinueTaskDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 					items:this.datePicker,
 					width:240,
 					style:'margin:auto;'
-				},new GO.form.HtmlComponent({html:'<br />'}),{
+				},
+				new GO.form.HtmlComponent({html:'<br />'}),
+				{
 					xtype:'timefield',
 					name:'remind_time',
 					width:220,
 					format: GO.settings.time_format,
 					value:eight.format(GO.settings['time_format']),
 					fieldLabel:GO.lang.strTime,
-				anchor:'100%'
-				},new GO.tasks.SelectTaskStatus({anchor:'100%'}),{
+					anchor:'100%'
+				},
+				this.statusProgressField = new GO.tasks.StatusProgressField({}),
+				{
 					xtype: 'textarea',
 					name: 'comment',
 					anchor: '100%',

@@ -29,7 +29,7 @@ interface Swift_OutputByteStream
      *
      * @param integer $length
      *
-     * @return string|boolean
+     * @return StringHelper|boolean
      *
      * @throws Swift_IoException
      */

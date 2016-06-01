@@ -13,7 +13,7 @@
  * formats numbers according to the user preferences.
  *  
  * @copyright Copyright Intermesh
- * @version $Id: Number.php 16708 2014-01-24 15:53:48Z mschering $
+ * @version $Id: Number.php 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @author Merijn Schering <mschering@intermesh.nl>
  * @package GO.base.util
  * @since Group-Office 3.0
@@ -31,7 +31,7 @@ class Number {
 	 * @param	int $number The number
 	 * @param	int $decimals Number of decimals to display
 	 * @access public
-	 * @return string
+	 * @return StringHelper
 	 */
 
 	public static function localize($number, $decimals=2)
@@ -50,7 +50,7 @@ class Number {
 	 * @param	int $number The number
 	 * @param	int $decimals Number of decimals to display
 	 * @access public
-	 * @return string
+	 * @return StringHelper
 	 */
 
 	public static function unlocalize($number)
@@ -77,7 +77,7 @@ class Number {
 	 * @param	int $size The size in bytes
 	 * @param	int $decimals Number of decimals to display
 	 * @access public
-	 * @return string
+	 * @return StringHelper
 	 */
 
 	public static function formatSize($size, $decimals = 1) {

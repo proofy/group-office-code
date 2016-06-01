@@ -109,7 +109,7 @@ class PHPExcel_Shared_TimeZone
 	 *	Return the Timezone offset used for date/time conversions to/from UST
 	 *	This requires both the timezone and the calculated date/time to allow for local DST
 	 *
-	 *	@param		string	 			$timezone		The timezone for finding the adjustment to UST
+	 *	@param		StringHelper	 			$timezone		The timezone for finding the adjustment to UST
 	 *	@param		integer	 			$timestamp		PHP date/time value
 	 *	@return	 	integer				Number of seconds for timezone adjustment
 	 *	@throws		PHPExcel_Exception

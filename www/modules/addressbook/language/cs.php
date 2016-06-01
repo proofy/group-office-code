@@ -62,6 +62,7 @@ $l["cmdFieldsetSelectAddressbook"]= 'Adresář';
 $l["cmdFieldsetPersonalDetails"]= 'Profil kontaktu';
 $l["cmdFieldsetAddress"]= 'Adresa';
 $l["cmdFieldsetContact"]= 'Kontakt';
+$l["cmdFieldsetCompany"]= 'Detail společnosti';
 $l["cmdFieldsetWork"]= 'Práce';
 $l["cmdPanelContact"]= 'Detail kontaktu';
 $l["cmdPanelComments"]= 'Komentář';
@@ -74,6 +75,7 @@ $l["cmdSir"]= 'pane';
 $l["cmdCompanyDetailsFor"]= 'Profil';
 $l["cmdPanelCompany"]= 'Profil společnosti';
 $l["cmdFormLabelBankNo"]= 'Číslo účtu';
+$l['bankBicNo'] = 'Bankovní BIC číslo';
 $l["cmdFormLabelVatNo"]= 'DPH';
 $l["cmdFormLabelInvoiceEmail"]= 'Fakturační zpráva';
 $l["cmdFieldsetCompanyDetails"]= 'Profil společnosti';
@@ -257,6 +259,7 @@ $l["contactWork_phone"] = "Telefon (Práce)";
 $l["contactFax"] = "Fax (Domov)";
 $l["contactWork_fax"] = "Fax (práce)";
 $l["contactCellular"] = "Mobil";
+$l["contactCellular2"] = "Mobil (2.)";
 $l["contactCountry"] = "Země";
 $l["contactState"] = "Stát";
 $l["contactCity"] = "Město";
@@ -306,4 +309,31 @@ $l['addAddresslistSuccess']='Položek bylo úspěšně přidáno do skupiny adre
 
 $l['addContactsSuccess'] = '%i kontaktů bylo úspěšně přidáno do skupiny adres.';
 
+$l['searchForImages']='Vyhledat fotografie';
+$l['downloadPhotoUrl']='Stáhnout fotografii z URL adresy';
+$l['orBrowseComputer']='nebo nahrát z Vašeho počítače';
 
+$l['currentImage']='Aktuální fotografie';
+$l['downloadFullImage']='Stáhnout v plné velikosti';
+
+$l['upcomingBirthdays'] = "Nadcházející narozeniny";
+$l['age'] = "Věk";
+$l['actionDate']='Datum akce';
+$l['selectCurrentActions']='Zobrazit aktivní';
+$l['showActieveToolTip']='Zobrazit pouze kontakty, které mají aktuální datum akce.';
+$l['linkedinUrl'] = 'LinkedIn URL';
+$l['facebookUrl'] = 'Facebook URL';
+$l['twitterUrl'] = 'Twitter URL';
+$l['skypeName'] = 'Skype jméno';
+$l['cmdPanelSocialMedia'] = 'Sociální média';
+
+$l['setCurrentTemplateAsDefaultEAccount']='Nastavit aktuální šablonu jako výchozí pro tento e-mailový účet';
+
+$l['callOnSkype'] = 'Volání na Skype';
+
+$l['userDefaultTemplate'] = 'Výchozí šablona uživatele';
+$l['exportContactsWithCompanies'] = 'Kontakty se společnostmi';
+
+$l['mustBeSameAddressbook'] = 'Kontakt nemůže být uložen, protože společnost se musí nacházet ve stejném adresáři jako kontakt.';
+
+$l['privateAddress'] = 'Privátní adresa';

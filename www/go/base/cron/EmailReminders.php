@@ -4,7 +4,7 @@ namespace GO\Base\Cron;
 
 
 class EmailReminders extends AbstractCron {
-	
+
 	/**
 	 * Return true or false to enable the selection for users and groups for 
 	 * this cronjob.
@@ -45,9 +45,8 @@ class EmailReminders extends AbstractCron {
 	 * $user parameter is null and the run function will be called only once.
 	 * 
 	 * @param CronJob $cronJob
-	 * @param \GO\Base\Model\User $user [OPTIONAL]
 	 */
-	public function run(CronJob $cronJob,\GO\Base\Model\User $user = null){
+	public function run(CronJob $cronJob){
 		
 		\GO::session()->runAsRoot();
 		$usersStmt = \GO\Base\Model\User::model()->findByAttribute('mail_reminders', 1);

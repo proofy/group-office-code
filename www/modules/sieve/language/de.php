@@ -118,3 +118,25 @@ $l['sieveWarning']='Es wird empfohlen, die Sieve-Filter zu benutzen, falls sie v
 $l['stopEndError']='Am Ende muss \'Regelauswertung abbrechen\' stehen!';
 
 $l['body']='Body';
+
+$l['outOfOffice']='Abwesenheit';
+$l['message']='Nachricht';
+$l['aliasses']='Aliase';
+$l['schedule']='Zeitplan';
+$l['activateAt']='Erster Abwesenheitstag';
+$l['deactivateAt']='Letzter Abwesenheitstag';
+$l['scheduleText']='Hier können Sie festlegen, in welchem Zeitraum die Abwesenheitsnachricht aktiv sein soll.';
+$l['messageText']='Tragen Sie hier Ihre Nachricht ein.';
+$l['aliassesText']='Tragen Sie alle E-Mail-Aliase ein, für die diese Nachricht gültig ist. Sollten Sie mehrere Aliase besitzen, bitte mit Komma (,) getrennt eintragen.';
+$l['activateText']='Aktivieren Sie diese Filterregel durch Auswahl der Checkbox.';
+
+$l['bodycontainsnot']= 'Body enthält nicht';
+$l['bodycontains']= 'Body enthält';
+
+$l['standardvacationsubject']='Ich bin nicht am Platze';
+$l['subjectText']='Betreff der Antwort im unten stehenden Feld ausfüllen.';
+$l['advancedOptions']= 'Erweiterte Optionen';
+
+$l['currentdate']= 'Aktuelles Datum';
+$l['before']= 'vor';
+$l['after']= 'nach';

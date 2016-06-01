@@ -22,7 +22,7 @@ class SavedMessage extends ComposerMessage {
 	/**
 	 * Get a model instance loaded from  MIME data string.
 	 * 
-	 * @param string $mimeData MIME data string
+	 * @param StringHelper $mimeData MIME data string
 	 * @return SavedMessage 
 	 */
 	public function createFromMimeData($mimeData) {
@@ -34,7 +34,7 @@ class SavedMessage extends ComposerMessage {
 	/**
 	 * Reads a MIME file and creates a SavedMessage model from it.
 	 * 
-	 * @param string $path Relative path from file_storage_path or tmpdir where the MIME file is stored
+	 * @param StringHelper $path Relative path from file_storage_path or tmpdir where the MIME file is stored
 	 * @param bookean $isTempFile Indicates if path it relative from tmpdir or file_storage_path
 	 * @return SavedMessage
 	 */
@@ -55,7 +55,7 @@ class SavedMessage extends ComposerMessage {
 	
 	/**
 	 * Reads MIME data and creates a SavedMessage model from it.
-	 * @param string $mimeData The MIME data string.
+	 * @param StringHelper $mimeData The MIME data string.
 	 * @return SavedMessage 
 	 */
 	public function setMimeData($mimeData) {
@@ -113,11 +113,11 @@ class SavedMessage extends ComposerMessage {
 		
 		$this->_getParts($structure);
 		
-		//$this->_loadedBody=  \GO\Base\Util\String::clean_utf8($this->_loadedBody);
+		//$this->_loadedBody=  \GO\Base\Util\StringHelper::clean_utf8($this->_loadedBody);
 		//
 		//$this->_loadedBody = str_replace("\x80","€", $this->_loadedBody);
 		//TODO make style rules valid in the container.
-		$this->_loadedBody=\GO\Base\Util\String::sanitizeHtml($this->_loadedBody);
+		$this->_loadedBody=\GO\Base\Util\StringHelper::sanitizeHtml($this->_loadedBody);
 	}
 	
 	private function _getTempDir(){
@@ -132,7 +132,7 @@ class SavedMessage extends ComposerMessage {
 	}
 	
 	public function getPlainBody() {
-		return \GO\Base\Util\String::html_to_text($this->_loadedBody);
+		return \GO\Base\Util\StringHelper::html_to_text($this->_loadedBody);
 	}
 	
 	public function getSource(){
@@ -178,13 +178,13 @@ class SavedMessage extends ComposerMessage {
 
 				if ($part->ctype_primary == 'text' && ($part->ctype_secondary == 'plain' || $part->ctype_secondary == 'html') && (!isset($part->disposition) || $part->disposition != 'attachment') && empty($part->d_parameters['filename'])) {
 					$charset = isset($part->ctype_parameters['charset']) ? $part->ctype_parameters['charset'] : 'UTF-8';
-					$body = \GO\Base\Util\String::clean_utf8($part->body, $charset);
+					$body = \GO\Base\Util\StringHelper::clean_utf8($part->body, $charset);
 					
 					if (stripos($part->ctype_secondary, 'plain') !== false) {
 						$body = nl2br($body);
 					} else {
-						$body = \GO\Base\Util\String::convertLinks($body);
-						$body = \GO\Base\Util\String::sanitizeHtml($body);
+						$body = \GO\Base\Util\StringHelper::convertLinks($body);
+						$body = \GO\Base\Util\StringHelper::sanitizeHtml($body);
 						$body = $body;
 					}
 					$this->_loadedBody .= $body;
@@ -248,14 +248,14 @@ class SavedMessage extends ComposerMessage {
 			}
 		} elseif (isset($structure->body)) {			
 			$charset = isset($structure->ctype_parameters['charset']) ? $structure->ctype_parameters['charset'] : 'UTF-8';
-			$text_part = \GO\Base\Util\String::clean_utf8( $structure->body,$charset);
+			$text_part = \GO\Base\Util\StringHelper::clean_utf8( $structure->body,$charset);
 			//convert text to html
 			if (stripos($structure->ctype_secondary, 'plain') !== false) {
 				$this->extractUuencodedAttachments($text_part);
 				$text_part = nl2br($text_part);
 			}else{
-				$text_part = \GO\Base\Util\String::convertLinks($text_part);
-				$text_part = \GO\Base\Util\String::sanitizeHtml($text_part);
+				$text_part = \GO\Base\Util\StringHelper::convertLinks($text_part);
+				$text_part = \GO\Base\Util\StringHelper::sanitizeHtml($text_part);
 			}
 			
 			$this->_loadedBody .= $text_part;

@@ -25,8 +25,8 @@ class Swift_StreamFilters_StringReplacementFilter implements Swift_StreamFilter
     /**
      * Create a new StringReplacementFilter with $search and $replace.
      *
-     * @param string|array $search
-     * @param string|array $replace
+     * @param StringHelper|array $search
+     * @param StringHelper|array $replace
      */
     public function __construct($search, $replace)
     {
@@ -37,7 +37,7 @@ class Swift_StreamFilters_StringReplacementFilter implements Swift_StreamFilter
     /**
      * Returns true if based on the buffer passed more bytes should be buffered.
      *
-     * @param string $buffer
+     * @param StringHelper $buffer
      *
      * @return boolean
      */
@@ -56,9 +56,9 @@ class Swift_StreamFilters_StringReplacementFilter implements Swift_StreamFilter
     /**
      * Perform the actual replacements on $buffer and return the result.
      *
-     * @param string $buffer
+     * @param StringHelper $buffer
      *
-     * @return string
+     * @return StringHelper
      */
     public function filter($buffer)
     {

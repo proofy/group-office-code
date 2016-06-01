@@ -11,7 +11,7 @@ GO.email.SearchDialog = function(config){
 				
 				this.formPanel = new Ext.FormPanel({
 					defaults: {
-						anchor: '100%'
+						anchor: '96%'
 					},
 					defaultType: 'textfield',
 					autoHeight:true,
@@ -249,12 +249,12 @@ GO.email.SearchDialog = function(config){
 			
 			if(before!='')
 			{
-				query += 'BEFORE "'+before.format('d')+'-'+months[before.format('n')-1]+'-'+before.format('Y')+'" ';
+				query += 'BEFORE '+before.format('j')+'-'+months[before.format('n')-1]+'-'+before.format('Y')+' ';
 			}
 			
 			if(since!='')
 			{
-				query += 'SINCE "'+since.format('d')+'-'+months[since.format('n')-1]+'-'+since.format('Y')+'" ';
+				query += 'SINCE '+since.format('j')+'-'+months[since.format('n')-1]+'-'+since.format('Y');
 			}
 			
 			if (flagged != '') {

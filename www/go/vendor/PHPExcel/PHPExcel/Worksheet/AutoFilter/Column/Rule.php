@@ -240,7 +240,7 @@ class PHPExcel_Worksheet_AutoFilter_Column_Rule
 	/**
 	 * Autofilter Rule Type
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_ruleType = self::AUTOFILTER_RULETYPE_FILTER;
 
@@ -248,21 +248,21 @@ class PHPExcel_Worksheet_AutoFilter_Column_Rule
 	/**
 	 * Autofilter Rule Value
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_value = '';
 
 	/**
 	 * Autofilter Rule Operator
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_operator = '';
 
 	/**
 	 * DateTimeGrouping Group Value
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_grouping = '';
 
@@ -280,7 +280,7 @@ class PHPExcel_Worksheet_AutoFilter_Column_Rule
 	/**
 	 * Get AutoFilter Rule Type
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getRuleType() {
 		return $this->_ruleType;
@@ -306,7 +306,7 @@ class PHPExcel_Worksheet_AutoFilter_Column_Rule
 	/**
 	 * Get AutoFilter Rule Value
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getValue() {
 		return $this->_value;
@@ -315,7 +315,7 @@ class PHPExcel_Worksheet_AutoFilter_Column_Rule
 	/**
 	 *	Set AutoFilter Rule Value
 	 *
-	 *	@param	string|string[]		$pValue
+	 *	@param	StringHelper|StringHelper[]		$pValue
 	 *	@throws	PHPExcel_Exception
 	 *	@return PHPExcel_Worksheet_AutoFilter_Column_Rule
 	 */
@@ -346,7 +346,7 @@ class PHPExcel_Worksheet_AutoFilter_Column_Rule
 	/**
 	 * Get AutoFilter Rule Operator
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getOperator() {
 		return $this->_operator;
@@ -374,7 +374,7 @@ class PHPExcel_Worksheet_AutoFilter_Column_Rule
 	/**
 	 * Get AutoFilter Rule Grouping
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getGrouping() {
 		return $this->_grouping;
@@ -404,7 +404,7 @@ class PHPExcel_Worksheet_AutoFilter_Column_Rule
 	 *	Set AutoFilter Rule
 	 *
 	 *	@param	string				$pOperator
-	 *	@param	string|string[]		$pValue
+	 *	@param	StringHelper|StringHelper[]		$pValue
 	 *	@param	string				$pGrouping
 	 *	@throws	PHPExcel_Exception
 	 *	@return PHPExcel_Worksheet_AutoFilter_Column_Rule

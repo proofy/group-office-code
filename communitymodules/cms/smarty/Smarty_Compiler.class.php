@@ -217,9 +217,9 @@ class Smarty_Compiler extends Smarty {
      * compile a resource
      *
      * sets $compiled_content to the compiled source
-     * @param string $resource_name
-     * @param string $source_content
-     * @param string $compiled_content
+     * @param StringHelper $resource_name
+     * @param StringHelper $source_content
+     * @param StringHelper $compiled_content
      * @return true
      */
     function _compile_file($resource_name, $source_content, &$compiled_content)
@@ -429,8 +429,8 @@ class Smarty_Compiler extends Smarty {
     /**
      * Compile a template tag
      *
-     * @param string $template_tag
-     * @return string
+     * @param StringHelper $template_tag
+     * @return StringHelper
      */
     function _compile_tag($template_tag)
     {
@@ -598,9 +598,9 @@ class Smarty_Compiler extends Smarty {
      * compile the custom compiler tag
      *
      * sets $output to the compiled custom compiler tag
-     * @param string $tag_command
-     * @param string $tag_args
-     * @param string $output
+     * @param StringHelper $tag_command
+     * @param StringHelper $tag_args
+     * @param StringHelper $output
      * @return boolean
      */
     function _compile_compiler_tag($tag_command, $tag_args, &$output)
@@ -666,10 +666,10 @@ class Smarty_Compiler extends Smarty {
      * compile block function tag
      *
      * sets $output to compiled block function tag
-     * @param string $tag_command
-     * @param string $tag_args
-     * @param string $tag_modifier
-     * @param string $output
+     * @param StringHelper $tag_command
+     * @param StringHelper $tag_args
+     * @param StringHelper $tag_modifier
+     * @param StringHelper $output
      * @return boolean
      */
     function _compile_block_tag($tag_command, $tag_args, $tag_modifier, &$output)
@@ -758,10 +758,10 @@ class Smarty_Compiler extends Smarty {
     /**
      * compile custom function tag
      *
-     * @param string $tag_command
-     * @param string $tag_args
-     * @param string $tag_modifier
-     * @return string
+     * @param StringHelper $tag_command
+     * @param StringHelper $tag_args
+     * @param StringHelper $tag_modifier
+     * @return StringHelper
      */
     function _compile_custom_tag($tag_command, $tag_args, $tag_modifier, &$output)
     {
@@ -831,10 +831,10 @@ class Smarty_Compiler extends Smarty {
     /**
      * compile a registered object tag
      *
-     * @param string $tag_command
+     * @param StringHelper $tag_command
      * @param array $attrs
-     * @param string $tag_modifier
-     * @return string
+     * @param StringHelper $tag_modifier
+     * @return StringHelper
      */
     function _compile_registered_object_tag($tag_command, $attrs, $tag_modifier)
     {
@@ -925,8 +925,8 @@ class Smarty_Compiler extends Smarty {
     /**
      * Compile {insert ...} tag
      *
-     * @param string $tag_args
-     * @return string
+     * @param StringHelper $tag_args
+     * @return StringHelper
      */
     function _compile_insert_tag($tag_args)
     {
@@ -963,8 +963,8 @@ class Smarty_Compiler extends Smarty {
     /**
      * Compile {include ...} tag
      *
-     * @param string $tag_args
-     * @return string
+     * @param StringHelper $tag_args
+     * @return StringHelper
      */
     function _compile_include_tag($tag_args)
     {
@@ -1016,8 +1016,8 @@ class Smarty_Compiler extends Smarty {
     /**
      * Compile {include ...} tag
      *
-     * @param string $tag_args
-     * @return string
+     * @param StringHelper $tag_args
+     * @return StringHelper
      */
     function _compile_include_php_tag($tag_args)
     {
@@ -1048,8 +1048,8 @@ class Smarty_Compiler extends Smarty {
     /**
      * Compile {section ...} tag
      *
-     * @param string $tag_args
-     * @return string
+     * @param StringHelper $tag_args
+     * @return StringHelper
      */
     function _compile_section_start($tag_args)
     {
@@ -1153,8 +1153,8 @@ class Smarty_Compiler extends Smarty {
     /**
      * Compile {foreach ...} tag.
      *
-     * @param string $tag_args
-     * @return string
+     * @param StringHelper $tag_args
+     * @return StringHelper
      */
     function _compile_foreach_start($tag_args)
     {
@@ -1213,8 +1213,8 @@ class Smarty_Compiler extends Smarty {
      * Compile {capture} .. {/capture} tags
      *
      * @param boolean $start true if this is the {capture} tag
-     * @param string $tag_args
-     * @return string
+     * @param StringHelper $tag_args
+     * @return StringHelper
      */
 
     function _compile_capture_tag($start, $tag_args = '')
@@ -1246,9 +1246,9 @@ class Smarty_Compiler extends Smarty {
     /**
      * Compile {if ...} tag
      *
-     * @param string $tag_args
+     * @param StringHelper $tag_args
      * @param boolean $elseif if true, uses elseif instead of if
-     * @return string
+     * @return StringHelper
      */
     function _compile_if_tag($tag_args, $elseif = false)
     {
@@ -1451,7 +1451,7 @@ class Smarty_Compiler extends Smarty {
     /**
      * Parse is expression
      *
-     * @param string $is_arg
+     * @param StringHelper $is_arg
      * @param array $tokens
      * @return array
      */
@@ -1513,7 +1513,7 @@ class Smarty_Compiler extends Smarty {
     /**
      * Parse attribute string
      *
-     * @param string $tag_args
+     * @param StringHelper $tag_args
      * @return array
      */
     function _parse_attrs($tag_args)
@@ -1611,9 +1611,9 @@ class Smarty_Compiler extends Smarty {
      * compile single variable and section properties token into
      * PHP code
      *
-     * @param string $val
-     * @param string $tag_attrs
-     * @return string
+     * @param StringHelper $val
+     * @param StringHelper $tag_attrs
+     * @return StringHelper
      */
     function _parse_var_props($val)
     {
@@ -1672,8 +1672,8 @@ class Smarty_Compiler extends Smarty {
     /**
      * expand quoted text with embedded variables
      *
-     * @param string $var_expr
-     * @return string
+     * @param StringHelper $var_expr
+     * @return StringHelper
      */
     function _expand_quoted_text($var_expr)
     {
@@ -1697,9 +1697,9 @@ class Smarty_Compiler extends Smarty {
     /**
      * parse variable expression into PHP code
      *
-     * @param string $var_expr
-     * @param string $output
-     * @return string
+     * @param StringHelper $var_expr
+     * @param StringHelper $output
+     * @return StringHelper
      */
     function _parse_var($var_expr)
     {
@@ -1833,8 +1833,8 @@ class Smarty_Compiler extends Smarty {
     /**
      * parse arguments in function call parenthesis
      *
-     * @param string $parenth_args
-     * @return string
+     * @param StringHelper $parenth_args
+     * @return StringHelper
      */
     function _parse_parenth_args($parenth_args)
     {
@@ -1851,7 +1851,7 @@ class Smarty_Compiler extends Smarty {
     /**
      * parse configuration variable expression into PHP code
      *
-     * @param string $conf_var_expr
+     * @param StringHelper $conf_var_expr
      */
     function _parse_conf_var($conf_var_expr)
     {
@@ -1871,8 +1871,8 @@ class Smarty_Compiler extends Smarty {
     /**
      * parse section property expression into PHP code
      *
-     * @param string $section_prop_expr
-     * @return string
+     * @param StringHelper $section_prop_expr
+     * @return StringHelper
      */
     function _parse_section_prop($section_prop_expr)
     {
@@ -1896,8 +1896,8 @@ class Smarty_Compiler extends Smarty {
      * parse modifier chain into PHP code
      *
      * sets $output to parsed modified chain
-     * @param string $output
-     * @param string $modifier_string
+     * @param StringHelper $output
+     * @param StringHelper $modifier_string
      */
     function _parse_modifiers(&$output, $modifier_string)
     {
@@ -1964,8 +1964,8 @@ class Smarty_Compiler extends Smarty {
     /**
      * add plugin
      *
-     * @param string $type
-     * @param string $name
+     * @param StringHelper $type
+     * @param StringHelper $name
      * @param boolean? $delayed_loading
      */
     function _add_plugin($type, $name, $delayed_loading = null)
@@ -1984,8 +1984,8 @@ class Smarty_Compiler extends Smarty {
     /**
      * Compiles references of type $smarty.foo
      *
-     * @param string $indexes
-     * @return string
+     * @param StringHelper $indexes
+     * @return StringHelper
      */
     function _compile_smarty_ref(&$indexes)
     {
@@ -2139,9 +2139,9 @@ class Smarty_Compiler extends Smarty {
      * without the paramter-list that would have follow to make the
      * call valid php-syntax
      *
-     * @param string $type
-     * @param string $name
-     * @return string
+     * @param StringHelper $type
+     * @param StringHelper $name
+     * @return StringHelper
      */
     function _compile_plugin_call($type, $name) {
         if (isset($this->_plugins[$type][$name])) {
@@ -2195,8 +2195,8 @@ class Smarty_Compiler extends Smarty {
     /**
      * Quote subpattern references
      *
-     * @param string $string
-     * @return string
+     * @param StringHelper $string
+     * @return StringHelper
      */
     function _quote_replace($string)
     {
@@ -2206,9 +2206,9 @@ class Smarty_Compiler extends Smarty {
     /**
      * display Smarty syntax error
      *
-     * @param string $error_msg
+     * @param StringHelper $error_msg
      * @param integer $error_type
-     * @param string $file
+     * @param StringHelper $file
      * @param integer $line
      */
     function _syntax_error($error_msg, $error_type = E_USER_ERROR, $file=null, $line=null)
@@ -2221,7 +2221,7 @@ class Smarty_Compiler extends Smarty {
      * check if the compilation changes from cacheable to
      * non-cacheable state with the beginning of the current
      * plugin. return php-code to reflect the transition.
-     * @return string
+     * @return StringHelper
      */
     function _push_cacheable_state($type, $name) {
         $_cacheable = !isset($this->_plugins[$type][$name]) || $this->_plugins[$type][$name][4];
@@ -2239,7 +2239,7 @@ class Smarty_Compiler extends Smarty {
      * check if the compilation changes from non-cacheable to
      * cacheable state with the end of the current plugin return
      * php-code to reflect the transition.
-     * @return string
+     * @return StringHelper
      */
     function _pop_cacheable_state($type, $name) {
         $_cacheable = !isset($this->_plugins[$type][$name]) || $this->_plugins[$type][$name][4];
@@ -2253,7 +2253,7 @@ class Smarty_Compiler extends Smarty {
 
     /**
      * push opening tag-name, file-name and line-number on the tag-stack
-     * @param string the opening tag's name
+     * @param StringHelper the opening tag's name
      */
     function _push_tag($open_tag)
     {
@@ -2263,8 +2263,8 @@ class Smarty_Compiler extends Smarty {
     /**
      * pop closing tag-name
      * raise an error if this stack-top doesn't match with the closing tag
-     * @param string the closing tag's name
-     * @return string the opening tag's name
+     * @param StringHelper the closing tag's name
+     * @return StringHelper the opening tag's name
      */
     function _pop_tag($close_tag)
     {
@@ -2304,8 +2304,8 @@ class Smarty_Compiler extends Smarty {
  * compare to values by their string length
  *
  * @access private
- * @param string $a
- * @param string $b
+ * @param StringHelper $a
+ * @param StringHelper $b
  * @return 0|-1|1
  */
 function _smarty_sort_length($a, $b)

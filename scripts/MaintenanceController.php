@@ -41,7 +41,7 @@ class Maintenance extends \GO\Base\Controller\AbstractController {
 			self::$_DELETED_LOG_FILE->log('Dry run. The following messages would have been deleted if this weren\'t a dry run:');
 		
 		
-		if (!empty($params['email']) && \GO\Base\Util\String::validate_email($params['email'])) {
+		if (!empty($params['email']) && \GO\Base\Util\StringHelper::validate_email($params['email'])) {
 		
 		
 			$this->_handleEmailAccount($params['email']);
@@ -197,8 +197,8 @@ class Maintenance extends \GO\Base\Controller\AbstractController {
 	/**
 	 * Find an account by e-mail address and host name.
 	 *
-	 * @param string $email
-	 * @param string $hostName
+	 * @param StringHelper $email
+	 * @param StringHelper $hostName
 	 * @return \GO\Email\Model\Account
 	 */
 	private function _findAccountByEmailAndHost($email,$hostName){

@@ -39,7 +39,7 @@ class PHPExcel_Writer_Excel2007_Style extends PHPExcel_Writer_Excel2007_WriterPa
 	 * Write styles to XML format
 	 *
 	 * @param 	PHPExcel	$pPHPExcel
-	 * @return 	string 		XML Output
+	 * @return 	StringHelper 		XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	public function writeStyles(PHPExcel $pPHPExcel = null)

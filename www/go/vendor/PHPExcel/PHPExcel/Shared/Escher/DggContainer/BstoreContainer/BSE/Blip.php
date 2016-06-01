@@ -44,14 +44,14 @@ class PHPExcel_Shared_Escher_DggContainer_BstoreContainer_BSE_Blip
 	/**
 	 * Raw image data
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_data;
 
 	/**
 	 * Get the raw image data
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getData()
 	{
@@ -61,7 +61,7 @@ class PHPExcel_Shared_Escher_DggContainer_BstoreContainer_BSE_Blip
 	/**
 	 * Set the raw image data
 	 *
-	 * @param string
+	 * @param StringHelper
 	 */
 	public function setData($data)
 	{

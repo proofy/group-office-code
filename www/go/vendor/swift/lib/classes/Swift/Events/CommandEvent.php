@@ -20,7 +20,7 @@ class Swift_Events_CommandEvent extends Swift_Events_EventObject
     /**
      * The command sent to the server.
      *
-     * @var string
+     * @var StringHelper
      */
     private $_command;
 
@@ -35,7 +35,7 @@ class Swift_Events_CommandEvent extends Swift_Events_EventObject
      * Create a new CommandEvent for $source with $command.
      *
      * @param Swift_Transport $source
-     * @param string          $command
+     * @param StringHelper          $command
      * @param array           $successCodes
      */
     public function __construct(Swift_Transport $source, $command, $successCodes = array())
@@ -48,7 +48,7 @@ class Swift_Events_CommandEvent extends Swift_Events_EventObject
     /**
      * Get the command which was sent to the server.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getCommand()
     {

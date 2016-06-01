@@ -33,7 +33,7 @@ class PHPExcel_Shared_OLE_PPS_File extends PHPExcel_Shared_OLE_PPS
 	* The constructor
 	*
 	* @access public
-	* @param string $name The name of the file (in Unicode)
+	* @param StringHelper $name The name of the file (in Unicode)
 	* @see OLE::Asc2Ucs()
 	*/
 	public function __construct($name)
@@ -66,7 +66,7 @@ class PHPExcel_Shared_OLE_PPS_File extends PHPExcel_Shared_OLE_PPS
 	* Append data to PPS
 	*
 	* @access public
-	* @param string $data The data to append
+	* @param StringHelper $data The data to append
 	*/
 	public function append($data)
 	{

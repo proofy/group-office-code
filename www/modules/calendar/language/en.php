@@ -157,6 +157,7 @@ $l['printAllDayMultiple']='All day from %s till %s';
 $l['calendars']='Calendars';
 $l['open_resource']='Open booking';
 $l['resource_mail_subject']='Resource \'%s\' booked for \'%s\' on \'%s\'';//%s is resource name, %s is event name, %s is start date;
+$l['resource_confirmed_mail_body']='%s has made a booking for the resource \'%s\' and confirmed the booking. You are the maintainer of this resource. Use the link below if you want to decline the booking.';
 $l['resource_mail_body']='%s has made a booking for the resource \'%s\'. You are the maintainer of this resource. Please open the booking to decline or approve it.'; //First %s is the name of the person who created the event. Second is the calendar name;
 $l['resource_modified_mail_subject']='Resource \'%s\' booking for \'%s\' on \'%s\' modified';//%s is resource name, %s is event name, %s is start date;
 $l['resource_modified_mail_body']='%s has modified a booking for the resource \'%s\'. You are the maintainer of this resource. Please open the booking to decline or approve it.'; //First %s is the name of the person who created the event. Second is the calendar name;
@@ -269,3 +270,9 @@ $l['cannotHandleInvitation2']='Could not update the event because you have too l
 
 $l['tooltip'] = 'Tooltip text';
 $l['moveEventResourceError'] = 'Could not move event because the following resources are not available:';
+
+$l['resourceUsedIn'] = 'Resource used in';
+
+$l['exportAsIcs'] = 'Export as ICS';
+
+$l['noDefaultCalendar'] = "You don't have a default calendar configured. Please select one at your settings.";

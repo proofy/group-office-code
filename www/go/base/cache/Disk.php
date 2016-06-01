@@ -60,7 +60,7 @@ class Disk implements CacheInterface{
 	}
 	/**
 	 * Store any value in the cache
-	 * @param string $key
+	 * @param StringHelper $key
 	 * @param mixed $value Will be serialized
 	 * @param int $ttl Seconds to live
 	 */
@@ -84,7 +84,7 @@ class Disk implements CacheInterface{
 	/**
 	 * Get a value from the cache
 	 * 
-	 * @param string $key
+	 * @param StringHelper $key
 	 * @return boolean 
 	 */
 	public function get($key){
@@ -115,7 +115,7 @@ class Disk implements CacheInterface{
 	/**
 	 * Delete a value from the cache
 	 * 
-	 * @param string $key 
+	 * @param StringHelper $key 
 	 */
 	public function delete($key){
 		$key = \GO\Base\Fs\File::stripInvalidChars($key, '-');

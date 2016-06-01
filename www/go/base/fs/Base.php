@@ -30,7 +30,7 @@ abstract class Base{
 	/**
 	 * Constructor of a file or folder
 	 * 
-	 * @param string $path The absolute path must be suplied
+	 * @param StringHelper $path The absolute path must be suplied
 	 * @throws Exception
 	 */
 	public function __construct($path) {
@@ -59,7 +59,7 @@ abstract class Base{
 	/**
 	 * Create a folder or file from a path string
 	 * 
-	 * @param string $path
+	 * @param StringHelper $path
 	 * @return File|Folder
 	 */
 	public static function createFromPath($path){
@@ -101,7 +101,7 @@ abstract class Base{
 	/**
 	 * Get a child file or folder.
 	 * 
-	 * @param string $filename
+	 * @param StringHelper $filename
 	 * @return \File|\Folder|boolean 
 	 */
 	public function child($filename){
@@ -119,7 +119,7 @@ abstract class Base{
 	/** 
 	 * Create a new file object. Filesystem file is not created automatically.
 	 * 
-	 * @param string $filename
+	 * @param StringHelper $filename
 	 * @param boolean $isFile
 	 * @return \File|\Folder 
 	 */
@@ -212,7 +212,7 @@ abstract class Base{
 		
 	/**
 	 * Change owner
-	 * @param string $user
+	 * @param StringHelper $user
 	 * @return boolean 
 	 */
 	public function chown($user){
@@ -222,7 +222,7 @@ abstract class Base{
 	/**
 	 * Change group
 	 * 
-	 * @param string $group
+	 * @param StringHelper $group
 	 * @return boolean 
 	 */
 	public function chgrp($group){
@@ -303,8 +303,8 @@ abstract class Base{
 	/**
 	 * Remove unwanted characters from a string so it can safely be used as a filename.
 	 * 
-	 * @param string $filename
-	 * @return string 
+	 * @param StringHelper $filename
+	 * @return StringHelper 
 	 */
 	public static function stripInvalidChars($filename, $replace=''){
 		$filename = trim(preg_replace(self::INVALID_CHARS,$replace, $filename));
@@ -313,15 +313,15 @@ abstract class Base{
 		//We must do this ourselves so the filenames will match.
 		$filename =  preg_replace('/\s+/', ' ', $filename);
 
-		//strip dots from start
-		$filename=ltrim($filename, '.');
+		//strip dots from start and end (end . is not allowed on windows)
+		$filename=trim($filename, '.');
 
 		if(empty($filename)){
 			$filename = 'unnamed';
 		}
 		
 		if(\GO::config()->convert_utf8_filenames_to_ascii)
-			$filename = \GO\Base\Util\String::utf8ToASCII($filename);
+			$filename = \GO\Base\Util\StringHelper::utf8ToASCII($filename);
 		
 		if(strlen($filename)>255)
 			$filename = substr($filename, 0,255);
@@ -372,7 +372,7 @@ abstract class Base{
 	/**
 	 * Get the path without \GO::config()->file_storage_path.
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function stripFileStoragePath(){
 		return str_replace(\GO::config()->file_storage_path,'', $this->path());
@@ -381,7 +381,7 @@ abstract class Base{
 	/**
 	 * Get the path without \GO::config()->root_path.
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function stripRootPath(){
 		return str_replace(\GO::config()->root_path,'', $this->path());
@@ -390,7 +390,7 @@ abstract class Base{
 	/**
 	 * Get the path without \GO::config()->tmpdir.
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function stripTempPath(){
 		return str_replace(\GO::config()->tmpdir,'', $this->path());

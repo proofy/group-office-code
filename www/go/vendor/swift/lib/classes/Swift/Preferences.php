@@ -41,7 +41,7 @@ class Swift_Preferences
     /**
      * Set the default charset used.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      *
      * @return Swift_Preferences
      */
@@ -56,7 +56,7 @@ class Swift_Preferences
     /**
      * Set the directory where temporary files can be saved.
      *
-     * @param string $dir
+     * @param StringHelper $dir
      *
      * @return Swift_Preferences
      */
@@ -71,7 +71,7 @@ class Swift_Preferences
     /**
      * Set the type of cache to use (i.e. "disk" or "array").
      *
-     * @param string $type
+     * @param StringHelper $type
      *
      * @return Swift_Preferences
      */

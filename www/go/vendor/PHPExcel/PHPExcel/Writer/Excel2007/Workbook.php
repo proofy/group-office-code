@@ -40,7 +40,7 @@ class PHPExcel_Writer_Excel2007_Workbook extends PHPExcel_Writer_Excel2007_Write
 	 *
 	 * @param 	PHPExcel	$pPHPExcel
 	 * @param	boolean		$recalcRequired	Indicate whether formulas should be recalculated before writing
-	 * @return 	string 		XML Output
+	 * @return 	StringHelper 		XML Output
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	public function writeWorkbook(PHPExcel $pPHPExcel = null, $recalcRequired = FALSE)
@@ -232,10 +232,10 @@ class PHPExcel_Writer_Excel2007_Workbook extends PHPExcel_Writer_Excel2007_Write
 	 * Write sheet
 	 *
 	 * @param 	PHPExcel_Shared_XMLWriter 	$objWriter 		XML Writer
-	 * @param 	string 						$pSheetname 		Sheet name
+	 * @param 	StringHelper 						$pSheetname 		Sheet name
 	 * @param 	int							$pSheetId	 		Sheet id
 	 * @param 	int							$pRelId				Relationship ID
-	 * @param   string                      $sheetState         Sheet state (visible, hidden, veryHidden)
+	 * @param   StringHelper                      $sheetState         Sheet state (visible, hidden, veryHidden)
 	 * @throws 	PHPExcel_Writer_Exception
 	 */
 	private function _writeSheet(PHPExcel_Shared_XMLWriter $objWriter = null, $pSheetname = '', $pSheetId = 1, $pRelId = 1, $sheetState = 'visible')

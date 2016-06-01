@@ -45,7 +45,7 @@ class Swift_CharacterStream_ArrayCharacterStream implements Swift_CharacterStrea
      * Create a new CharacterStream with the given $chars, if set.
      *
      * @param Swift_CharacterReaderFactory $factory for loading validators
-     * @param string                       $charset used in the stream
+     * @param StringHelper                       $charset used in the stream
      */
     public function __construct(Swift_CharacterReaderFactory $factory, $charset)
     {
@@ -57,7 +57,7 @@ class Swift_CharacterStream_ArrayCharacterStream implements Swift_CharacterStrea
     /**
      * Set the character set used in this CharacterStream.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      */
     public function setCharacterSet($charset)
     {
@@ -112,7 +112,7 @@ class Swift_CharacterStream_ArrayCharacterStream implements Swift_CharacterStrea
      * Import a string a bytes into this CharacterStream, overwriting any existing
      * data in the stream.
      *
-     * @param string $string
+     * @param StringHelper $string
      */
     public function importString($string)
     {
@@ -126,7 +126,7 @@ class Swift_CharacterStream_ArrayCharacterStream implements Swift_CharacterStrea
      *
      * @param integer $length
      *
-     * @return string
+     * @return StringHelper
      */
     public function read($length)
     {
@@ -181,7 +181,7 @@ class Swift_CharacterStream_ArrayCharacterStream implements Swift_CharacterStrea
     /**
      * Write $chars to the end of the stream.
      *
-     * @param string $chars
+     * @param StringHelper $chars
      */
     public function write($chars)
     {

@@ -59,7 +59,8 @@ class Connection{
 			if(!$this->_link)
 				throw new \Exception ("LDAP connection to ".$this->_host." on ".$this->_port." failed");
 			
-			ldap_set_option($this->_link,LDAP_OPT_PROTOCOL_VERSION,3);
+			ldap_set_option($this->_link, LDAP_OPT_PROTOCOL_VERSION, 3);
+			ldap_set_option($this->_link, LDAP_OPT_REFERRALS, 0);
 			
 			if($this->_tls){
 				\GO::debug('LDAP: Starting LDAP TLS');
@@ -82,8 +83,8 @@ class Connection{
 	/**
 	 * Bind to the LDAP directory
 	 * 
-	 * @param string $bindRdn eg . cn=admin,dc=intermesh,dc=dev
-	 * @param string $password
+	 * @param StringHelper $bindRdn eg . cn=admin,dc=intermesh,dc=dev
+	 * @param StringHelper $password
 	 * @return boolean 
 	 */
 	public function bind($bindRdn, $password){
@@ -97,8 +98,8 @@ class Connection{
 	/**
 	 * Search the LDAP directory
 	 * 
-	 * @param string $baseDN
-	 * @param string $query
+	 * @param StringHelper $baseDN
+	 * @param StringHelper $query
 	 * @param array $attributes
 	 * @return Result 
 	 */

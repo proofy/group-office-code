@@ -41,7 +41,7 @@ class BookmarkController extends \GO\Base\Controller\AbstractModelController {
 
 						$charset = strtolower(trim($match[1]));
 						if ($charset != 'utf-8')
-							$html = \GO\Base\Util\String::to_utf8($html, $charset);
+							$html = \GO\Base\Util\StringHelper::to_utf8($html, $charset);
 					}
 
 					preg_match_all('/<meta[^>]*>/i', $html, $matches);
@@ -93,8 +93,8 @@ class BookmarkController extends \GO\Base\Controller\AbstractModelController {
 			}
 		}
 		
-		$response['title']=\GO\Base\Util\String::cut_string($response['title'], 64, true, "");
-		$response['description']=\GO\Base\Util\String::cut_string($response['description'], 255, true, "");
+		$response['title']=\GO\Base\Util\StringHelper::cut_string($response['title'], 64, true, "");
+		$response['description']=\GO\Base\Util\StringHelper::cut_string($response['description'], 255, true, "");
 		return $response;
 	}
 

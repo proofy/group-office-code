@@ -44,21 +44,21 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
 	/**
 	 * Delimiter
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_delimiter	= ',';
 
 	/**
 	 * Enclosure
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_enclosure	= '"';
 
 	/**
 	 * Line ending
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_lineEnding	= PHP_EOL;
 
@@ -145,7 +145,7 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
 	/**
 	 * Get delimiter
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getDelimiter() {
 		return $this->_delimiter;
@@ -165,7 +165,7 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
 	/**
 	 * Get enclosure
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getEnclosure() {
 		return $this->_enclosure;
@@ -188,7 +188,7 @@ class PHPExcel_Writer_CSV extends PHPExcel_Writer_Abstract implements PHPExcel_W
 	/**
 	 * Get line ending
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getLineEnding() {
 		return $this->_lineEnding;

@@ -36,6 +36,8 @@ class AddresslistController extends \GO\Base\Controller\AbstractModelController 
 			$multiSel->formatCheckedColumn();
 		}
 		
+		
+		
 		$storeParams->getCriteria()->addCondition('level', $params['permissionLevel'],'>=','go_acl');
 	}
 
@@ -64,7 +66,9 @@ class AddresslistController extends \GO\Base\Controller\AbstractModelController 
 
 		$store = \GO\Base\Data\Store::newInstance(\GO\Addressbook\Model\Contact::model());
 
-		$store->getColumnModel()->formatColumn('name', '$model->name', array(), array('first_name', 'last_name'));
+		$sortAlias = \GO::user()->sort_name=="first_name" ? array('first_name','last_name') : array('last_name','first_name');
+		$store->getColumnModel()->formatColumn('name','$model->getName(\GO::user()->sort_name)', array(),$sortAlias, \GO::t('strName'));
+		//$store->getColumnModel()->formatColumn('name', '$model->name', array(), array('first_name', 'last_name'));
 		$store->getColumnModel()->formatColumn('company_name', '$model->company->name', array(), 'company_id');
 		$store->getColumnModel()->formatColumn('addressbook_name', '$model->addressbook->name', array(), 'addressbook_id');
 
@@ -86,6 +90,7 @@ class AddresslistController extends \GO\Base\Controller\AbstractModelController 
 				$model->addManyMany('contacts', $add_key);
 		}elseif(!empty($params['add_search_result'])){
 			$findParams = \GO::session()->values["contact"]['findParams'];
+			$findParams->getCriteria()->recreateTemporaryTables();
 			$findParams->limit(0)->select('t.id');
 			
 			$model = \GO\Addressbook\Model\Addresslist::model()->findByPk($params['addresslist_id']);
@@ -128,6 +133,7 @@ class AddresslistController extends \GO\Base\Controller\AbstractModelController 
 				$model->addManyMany('companies', $add_key);
 		}elseif(!empty($params['add_search_result'])){
 			$findParams = \GO::session()->values["company"]['findParams'];
+			$findParams->getCriteria()->recreateTemporaryTables();
 			$findParams->limit(0)->select('t.id');
 			
 			$model = \GO\Addressbook\Model\Addresslist::model()->findByPk($params['addresslist_id']);
@@ -213,7 +219,7 @@ class AddresslistController extends \GO\Base\Controller\AbstractModelController 
 			}
 
 			foreach($senders as $senderEmail => $senderNameArr){
-				$contactNameArr = \GO\Base\Util\String::split_name($senderNameArr);
+				$contactNameArr = \GO\Base\Util\StringHelper::split_name($senderNameArr);
 				$contactStmt = \GO\Addressbook\Model\Contact::model()
 					->find(
 						\GO\Base\Db\FindParams::newInstance()

@@ -6,12 +6,15 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: CategoryDialog.js 15954 2013-10-17 12:04:36Z mschering $
+ * @version $Id: CategoryDialog.js 17533 2014-05-23 11:31:24Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
  
 GO.notes.CategoryDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
+	
+	jsonPost: true,
+	
 	initComponent : function(){
 		
 		Ext.apply(this, {
@@ -26,7 +29,6 @@ GO.notes.CategoryDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 	buildForm : function () {
 
 		this.propertiesPanel = new Ext.Panel({
-			url: GO.settings.modules.notes.url+'action.php',
 			border: false,
 			baseParams: {task: 'category'},			
 			title:GO.lang['strProperties'],			
@@ -35,11 +37,12 @@ GO.notes.CategoryDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 			autoScroll:true,
 			items:[{
 				xtype: 'textfield',
-			  name: 'name',
+			  name: 'category.name',
 				anchor: '100%',
 			  allowBlank:false,
 			  fieldLabel: GO.lang.strName
 			},this.selectUser = new GO.form.SelectUser({
+				hiddenName:'category.user_id',
 				fieldLabel: GO.lang['strUser'],
 				disabled : !GO.settings.has_admin_permission,
 				value: GO.settings.user_id,
@@ -50,6 +53,6 @@ GO.notes.CategoryDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 
 		this.addPanel(this.propertiesPanel);	
  
-    this.addPermissionsPanel(new GO.grid.PermissionsPanel());    
+    this.addPermissionsPanel(new GO.grid.PermissionsPanel({fieldName:"category.acl_id"}));    
 	}
 });

@@ -81,8 +81,8 @@ class Category extends \GO\Base\Db\ActiveRecord{
 	/**
 	 * Find or create a category
 	 * 
-	 * @param string $extendsModel
-	 * @param string $categoryName
+	 * @param StringHelper $extendsModel
+	 * @param StringHelper $categoryName
 	 * @return \Category 
 	 */
 	public function createIfNotExists($extendsModel, $categoryName){

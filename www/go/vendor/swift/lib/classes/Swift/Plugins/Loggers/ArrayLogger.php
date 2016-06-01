@@ -44,7 +44,7 @@ class Swift_Plugins_Loggers_ArrayLogger implements Swift_Plugins_Logger
     /**
      * Add a log entry.
      *
-     * @param string $entry
+     * @param StringHelper $entry
      */
     public function add($entry)
     {
@@ -65,7 +65,7 @@ class Swift_Plugins_Loggers_ArrayLogger implements Swift_Plugins_Logger
     /**
      * Get this log as a string.
      *
-     * @return string
+     * @return StringHelper
      */
     public function dump()
     {

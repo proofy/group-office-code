@@ -20,35 +20,35 @@ class Swift_Signers_DomainKeySigner implements Swift_Signers_HeaderSigner
     /**
      * PrivateKey
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_privateKey;
 
     /**
      * DomainName
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_domainName;
 
     /**
      * Selector
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_selector;
 
     /**
      * Hash algorithm used
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_hashAlgorithm = 'rsa-sha1';
 
     /**
      * Canonisation method
      *
-     * @var string
+     * @var StringHelper
      */
     protected $_canon = 'simple';
 
@@ -84,7 +84,7 @@ class Swift_Signers_DomainKeySigner implements Swift_Signers_HeaderSigner
     /**
      * If debugHeaders is set store debugDatas here
      *
-     * @var string
+     * @var StringHelper
      */
     private $_debugHeadersData = '';
 
@@ -121,9 +121,9 @@ class Swift_Signers_DomainKeySigner implements Swift_Signers_HeaderSigner
     /**
      * Constructor
      *
-     * @param string $privateKey
-     * @param string $domainName
-     * @param string $selector
+     * @param StringHelper $privateKey
+     * @param StringHelper $domainName
+     * @param StringHelper $selector
      */
     public function __construct($privateKey, $domainName, $selector)
     {
@@ -160,7 +160,7 @@ class Swift_Signers_DomainKeySigner implements Swift_Signers_HeaderSigner
      * This method returns the sequence ID of the write (i.e. 1 for first, 2 for
      * second, etc etc).
      *
-     * @param string $bytes
+     * @param StringHelper $bytes
      * @return int
      * @throws Swift_IoException
      * @return Swift_Signers_DomainKeysSigner
@@ -244,7 +244,7 @@ class Swift_Signers_DomainKeySigner implements Swift_Signers_HeaderSigner
     /**
      * Set hash_algorithm, must be one of rsa-sha256 | rsa-sha1 defaults to rsa-sha256
      *
-     * @param string $hash
+     * @param StringHelper $hash
      * @return Swift_Signers_DomainKeysSigner
      */
     public function setHashAlgorithm($hash)
@@ -257,7 +257,7 @@ class Swift_Signers_DomainKeySigner implements Swift_Signers_HeaderSigner
     /**
      * Set the canonicalization algorithm
      *
-     * @param string $canon simple | nofws defaults to simple
+     * @param StringHelper $canon simple | nofws defaults to simple
      * @return Swift_Signers_DomainKeysSigner
      */
     public function setCanon($canon)
@@ -274,7 +274,7 @@ class Swift_Signers_DomainKeySigner implements Swift_Signers_HeaderSigner
     /**
      * Set the signer identity
      *
-     * @param string $identity
+     * @param StringHelper $identity
      * @return Swift_Signers_DomainKeySigner
      */
     public function setSignerIdentity($identity)
@@ -331,7 +331,7 @@ class Swift_Signers_DomainKeySigner implements Swift_Signers_HeaderSigner
     /**
      * Adds an ignored Header
      *
-     * @param string $header_name
+     * @param StringHelper $header_name
      * @return Swift_Signers_DomainKeySigner
      */
     public function ignoreHeader($header_name)

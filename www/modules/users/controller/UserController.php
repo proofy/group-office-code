@@ -4,6 +4,7 @@
 namespace GO\Users\Controller;
 
 use GO\Base\Model\User;
+use GO\Users\Model\Transporter;
 
 
 class UserController extends \GO\Base\Controller\AbstractModelController {
@@ -14,6 +15,17 @@ class UserController extends \GO\Base\Controller\AbstractModelController {
 		//ignore acl on submit so normal users can use the users module. 
 		//otherwise they are not allowed to save users.
 		return array('store','load','submit');
+	}
+	
+	/**
+	 * Transfer data from 1 user account to antoher
+	 * @param $tranfer has two item: 'id_from', 'id_to'
+	 */
+	protected function actionTransfer($transfer) {
+		
+		$transporter = new Transporter($transfer['id_from'], $transfer['id_to']);
+		
+		return array('success' => $transporter->sync());
 	}
 	
 	protected function afterDisplay(&$response, &$model, &$params) {
@@ -36,7 +48,7 @@ class UserController extends \GO\Base\Controller\AbstractModelController {
 	}
 
 	protected function formatColumns(\GO\Base\Data\ColumnModel $columnModel) {
-		$columnModel->formatColumn('name', '$model->name', array(), 'first_name');
+		$columnModel->formatColumn('name', '$model->getName()', array(), \GO::user()->sort_name);
 		$columnModel->formatColumn('enabled', "!empty(\$model->enabled) ? \GO::t('yes') : \GO::t('no')");
 		return parent::formatColumns($columnModel);
 	}
@@ -61,7 +73,12 @@ class UserController extends \GO\Base\Controller\AbstractModelController {
 
 				// Set the default addressbook ID to the "Users" addressbook when it is a new User
 				if($model->isNew){
-					$addressbook = \GO\Addressbook\Model\Addressbook::model()->getUsersAddressbook();
+					if(!empty($params['addressbook_id'])) {
+						$addressbook = \GO\Addressbook\Model\Addressbook::model()->findByPk($params['addressbook_id']);
+					} else {
+						$addressbook = \GO\Addressbook\Model\Addressbook::model()->getUsersAddressbook();
+					}
+					
 					if($addressbook){
 						$attr['addressbook_id'] = $addressbook->id;
 						if(empty($response['remoteComboTexts']))
@@ -72,8 +89,12 @@ class UserController extends \GO\Base\Controller\AbstractModelController {
 				
 				$response['data'] = array_merge($attr, $response['data']);
 				
-				if(empty($response['data']['company_id']))
+				if(empty($response['data']['company_id'])){
 					$response['data']['company_id']="";
+				} else {
+					// Set the correct remote combo text for the company
+					$response['remoteComboTexts']['company_id'] = $contact->company->name;
+				}
 			}
 			
 			if(!empty($response['data']['date_separator'])&& !empty($response['data']['date_format'])){
@@ -226,6 +247,7 @@ class UserController extends \GO\Base\Controller\AbstractModelController {
 			));
 		
 		$storeParams->group('t.id');
+		$storeParams->export('users');
 		
 		$groupsMultiSel = new \GO\Base\Component\MultiSelectGrid(
 			'users-groups-panel', 
@@ -311,8 +333,8 @@ class UserController extends \GO\Base\Controller\AbstractModelController {
 		
 		\GO::setMaxExecutionTime(0);
 		
-		if($params['controller']=='GO\Users\Controller\User')
-			$controller = new User();
+		if($params['controller']=='GO\Users\Controller\UserController')
+			$controller = new UserController();
 		else
 			throw new \Exception("No or wrong controller given");
 

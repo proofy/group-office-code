@@ -64,7 +64,7 @@ class auth_groupoffice extends auth_basic {
   /**
    * Get the user data to display in Dokuwiki
    * 
-   * @param string $user The username of the user
+   * @param StringHelper $user The username of the user
    * @return array Array with user data 
    */
   function getUserData($user)
@@ -84,8 +84,8 @@ class auth_groupoffice extends auth_basic {
    * Check for Group-Office login and auto login to Dokuwiki when inside Group-Office.
    * 
    * @global array $USERINFO
-   * @param string $user
-   * @param string $pass
+   * @param StringHelper $user
+   * @param StringHelper $pass
    * @param boolean $sticky
    * @return boolean Logged-in 
    */

@@ -30,7 +30,7 @@ interface Swift_Mime_ContentEncoder extends Swift_Encoder
     /**
      * Get the MIME name of this content encoding scheme.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getName();
 }

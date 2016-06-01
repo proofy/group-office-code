@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: PluginAccountDialog.js 14816 2013-05-21 08:31:20Z mschering $
+ * @version $Id: PluginAccountDialog.js 17553 2014-05-27 13:03:02Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -81,11 +81,17 @@ GO.moduleManager.onModuleReady('email',function(){
 								
 			this.on('show', function(){
 				this.smimePanel.setDisabled(true);
-			}, this)
+			}, this);
 								
 			this.propertiesPanel.form.on("actioncomplete", function(form, action){													
 				if(action.type=='submit'){
 					this.uploadFile.clearQueue();
+					
+					// Ticket: 	#201408797
+					// Need to create the upload inputfield again. 
+					// Because otherwise the upload button doesn't work anymore when opening the dialog the 2nd time.
+					this.uploadFile.createUploadInput(); 
+					
 					this.deleteCert.setDisabled(!action.result.cert);
 					this.downloadButton.setDisabled(!action.result.cert);
 				}else

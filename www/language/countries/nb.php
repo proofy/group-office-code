@@ -160,6 +160,7 @@ $l['NF'] = 'Norfolkøya';
 $l['MP'] = 'Nord-Marianene';
 $l['NO'] = 'Norge';
 $l['OM'] = 'Oman';
+$l['PK'] = 'Pakistan';
 $l['PW'] = 'Palau';
 $l['PA'] = 'Panama';
 $l['PG'] = 'Papua Ny-Guinea';

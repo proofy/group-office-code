@@ -79,7 +79,7 @@ class PHPExcel_Shared_Escher_DgContainer_SpgrContainer_SpContainer
 	/**
 	 * Cell coordinates of upper-left corner of shape, e.g. 'A1'
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_startCoordinates;
 
@@ -100,7 +100,7 @@ class PHPExcel_Shared_Escher_DgContainer_SpgrContainer_SpContainer
 	/**
 	 * Cell coordinates of bottom-right corner of shape, e.g. 'B2'
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_endCoordinates;
 
@@ -256,7 +256,7 @@ class PHPExcel_Shared_Escher_DgContainer_SpgrContainer_SpContainer
 	/**
 	 * Set cell coordinates of upper-left corner of shape
 	 *
-	 * @param string $value
+	 * @param StringHelper $value
 	 */
 	public function setStartCoordinates($value = 'A1')
 	{
@@ -266,7 +266,7 @@ class PHPExcel_Shared_Escher_DgContainer_SpgrContainer_SpContainer
 	/**
 	 * Get cell coordinates of upper-left corner of shape
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getStartCoordinates()
 	{
@@ -316,7 +316,7 @@ class PHPExcel_Shared_Escher_DgContainer_SpgrContainer_SpContainer
 	/**
 	 * Set cell coordinates of bottom-right corner of shape
 	 *
-	 * @param string $value
+	 * @param StringHelper $value
 	 */
 	public function setEndCoordinates($value = 'A1')
 	{
@@ -326,7 +326,7 @@ class PHPExcel_Shared_Escher_DgContainer_SpgrContainer_SpContainer
 	/**
 	 * Get cell coordinates of bottom-right corner of shape
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getEndCoordinates()
 	{

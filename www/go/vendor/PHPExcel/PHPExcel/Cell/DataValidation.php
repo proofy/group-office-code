@@ -63,35 +63,35 @@ class PHPExcel_Cell_DataValidation
     /**
      * Formula 1
      *
-     * @var string
+     * @var StringHelper
      */
     private $_formula1;
 
     /**
      * Formula 2
      *
-     * @var string
+     * @var StringHelper
      */
     private $_formula2;
 
     /**
      * Type
      *
-     * @var string
+     * @var StringHelper
      */
     private $_type = PHPExcel_Cell_DataValidation::TYPE_NONE;
 
     /**
      * Error style
      *
-     * @var string
+     * @var StringHelper
      */
     private $_errorStyle = PHPExcel_Cell_DataValidation::STYLE_STOP;
 
     /**
      * Operator
      *
-     * @var string
+     * @var StringHelper
      */
     private $_operator;
 
@@ -126,28 +126,28 @@ class PHPExcel_Cell_DataValidation
     /**
      * Error title
      *
-     * @var string
+     * @var StringHelper
      */
     private $_errorTitle;
 
     /**
      * Error
      *
-     * @var string
+     * @var StringHelper
      */
     private $_error;
 
     /**
      * Prompt title
      *
-     * @var string
+     * @var StringHelper
      */
     private $_promptTitle;
 
     /**
      * Prompt
      *
-     * @var string
+     * @var StringHelper
      */
     private $_prompt;
 
@@ -175,7 +175,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Get Formula 1
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFormula1() {
         return $this->_formula1;
@@ -184,7 +184,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Set Formula 1
      *
-     * @param  string    $value
+     * @param  StringHelper    $value
      * @return PHPExcel_Cell_DataValidation
      */
     public function setFormula1($value = '') {
@@ -195,7 +195,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Get Formula 2
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFormula2() {
         return $this->_formula2;
@@ -204,7 +204,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Set Formula 2
      *
-     * @param  string    $value
+     * @param  StringHelper    $value
      * @return PHPExcel_Cell_DataValidation
      */
     public function setFormula2($value = '') {
@@ -215,7 +215,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Get Type
      *
-     * @return string
+     * @return StringHelper
      */
     public function getType() {
         return $this->_type;
@@ -224,7 +224,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Set Type
      *
-     * @param  string    $value
+     * @param  StringHelper    $value
      * @return PHPExcel_Cell_DataValidation
      */
     public function setType($value = PHPExcel_Cell_DataValidation::TYPE_NONE) {
@@ -235,7 +235,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Get Error style
      *
-     * @return string
+     * @return StringHelper
      */
     public function getErrorStyle() {
         return $this->_errorStyle;
@@ -244,7 +244,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Set Error style
      *
-     * @param  string    $value
+     * @param  StringHelper    $value
      * @return PHPExcel_Cell_DataValidation
      */
     public function setErrorStyle($value = PHPExcel_Cell_DataValidation::STYLE_STOP) {
@@ -255,7 +255,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Get Operator
      *
-     * @return string
+     * @return StringHelper
      */
     public function getOperator() {
         return $this->_operator;
@@ -264,7 +264,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Set Operator
      *
-     * @param  string    $value
+     * @param  StringHelper    $value
      * @return PHPExcel_Cell_DataValidation
      */
     public function setOperator($value = '') {
@@ -355,7 +355,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Get Error title
      *
-     * @return string
+     * @return StringHelper
      */
     public function getErrorTitle() {
         return $this->_errorTitle;
@@ -364,7 +364,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Set Error title
      *
-     * @param  string    $value
+     * @param  StringHelper    $value
      * @return PHPExcel_Cell_DataValidation
      */
     public function setErrorTitle($value = '') {
@@ -375,7 +375,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Get Error
      *
-     * @return string
+     * @return StringHelper
      */
     public function getError() {
         return $this->_error;
@@ -384,7 +384,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Set Error
      *
-     * @param  string    $value
+     * @param  StringHelper    $value
      * @return PHPExcel_Cell_DataValidation
      */
     public function setError($value = '') {
@@ -395,7 +395,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Get Prompt title
      *
-     * @return string
+     * @return StringHelper
      */
     public function getPromptTitle() {
         return $this->_promptTitle;
@@ -404,7 +404,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Set Prompt title
      *
-     * @param  string    $value
+     * @param  StringHelper    $value
      * @return PHPExcel_Cell_DataValidation
      */
     public function setPromptTitle($value = '') {
@@ -415,7 +415,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Get Prompt
      *
-     * @return string
+     * @return StringHelper
      */
     public function getPrompt() {
         return $this->_prompt;
@@ -424,7 +424,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Set Prompt
      *
-     * @param  string    $value
+     * @param  StringHelper    $value
      * @return PHPExcel_Cell_DataValidation
      */
     public function setPrompt($value = '') {
@@ -435,7 +435,7 @@ class PHPExcel_Cell_DataValidation
     /**
      * Get hash code
      *
-     * @return string    Hash code
+     * @return StringHelper    Hash code
      */
     public function getHashCode() {
         return md5(

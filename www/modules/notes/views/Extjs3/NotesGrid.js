@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: NotesGrid.js 17133 2014-03-20 08:25:24Z mschering $
+ * @version $Id: NotesGrid.js 17573 2014-05-28 13:57:03Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -30,7 +30,7 @@ GO.notes.NotesGrid = function(config){
 		root: 'results',
 		id: 'id',
 		totalProperty:'total',
-		fields: ['id','category_id','user_name','ctime','mtime','name','content'],
+		fields: ['id','category_id','user_name',{name:'mtime', type:'date', dateFormat:'timestamp'},{name:'ctime', type:'date', dateFormat:'timestamp'},'name','content'],
 		remoteSort: true,
 		model:"GO\\Notes\\Model\\Note"
 	});
@@ -41,7 +41,7 @@ GO.notes.NotesGrid = function(config){
 		{
 			alert(config.store.reader.jsonData.feedback);
 		}
-	},this)
+	},this);
 
 	config.paging=true;
 
@@ -60,6 +60,8 @@ GO.notes.NotesGrid = function(config){
 		},		{
 			header: GO.lang.strCtime,
 			dataIndex: 'ctime',
+			xtype:'datecolumn',
+			format: GO.settings.date_format+" "+GO.settings.time_format,			
 			hidden:true,
 			sortable: true,
 			width:110
@@ -67,7 +69,10 @@ GO.notes.NotesGrid = function(config){
 			header: GO.lang.strMtime,
 			dataIndex: 'mtime',
 			sortable: true,
-			width:110
+			width:110,
+			xtype:'datecolumn',
+			format: GO.settings.date_format+" "+GO.settings.time_format,
+			dateFormat: 'timestamp'
 		}
 		];
 	

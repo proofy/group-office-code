@@ -38,7 +38,7 @@ class PHPExcel_CachedObjectStorage_Wincache extends PHPExcel_CachedObjectStorage
 	/**
 	 * Prefix used to uniquely identify cache data for this worksheet
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_cachePrefix = null;
 

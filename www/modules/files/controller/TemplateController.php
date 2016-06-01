@@ -48,6 +48,13 @@ class TemplateController extends \GO\Base\Controller\AbstractModelController {
 		return array('content');
 	}
 	
+	protected function afterLoad(&$response, &$model, &$params) {
+		
+		unset($response['data']['content']);
+		
+		return parent::afterLoad($response, $model, $params);
+	}
+	
 	protected function beforeStore(&$response, &$params, &$store) {
 		$store->setDefaultSortOrder('name','ASC');
 		return parent::beforeStore($response, $params, $store);

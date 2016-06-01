@@ -56,7 +56,7 @@ class PHPExcel_Reader_Excel5_Escher
 	/**
 	 * Escher stream data (binary)
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_data;
 
@@ -94,7 +94,7 @@ class PHPExcel_Reader_Excel5_Escher
 	/**
 	 * Load Escher stream data. May be a partial Escher stream.
 	 *
-	 * @param string $data
+	 * @param StringHelper $data
 	 */
 	public function load($data)
 	{
@@ -595,7 +595,7 @@ class PHPExcel_Reader_Excel5_Escher
 	/**
 	 * Read OfficeArtRGFOPTE table of property-value pairs
 	 *
-	 * @param string $data Binary data
+	 * @param StringHelper $data Binary data
 	 * @param int $n Number of properties
 	 */
 	private function _readOfficeArtRGFOPTE($data, $n) {

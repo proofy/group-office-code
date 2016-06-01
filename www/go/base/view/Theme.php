@@ -8,7 +8,7 @@ class Theme{
 	/**
 	 * Get the name of the theme that is selected by the user.
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getName(){
 		$theme = \GO::config()->allow_themes && \GO::user() ? \GO::user()->theme : \GO::config()->theme;
@@ -23,7 +23,7 @@ class Theme{
 	/**
 	 * Get the full path to the main theme folder with trailing slash.
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getPath(){
 		return \GO::view()->getPath().'themes/'.$this->getName().'/';
@@ -32,7 +32,7 @@ class Theme{
 	/**
 	 * Get the full path to the main theme folder with trailing slash.
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getUrl(){
 		return \GO::view()->getUrl().'themes/'.$this->getName().'/';

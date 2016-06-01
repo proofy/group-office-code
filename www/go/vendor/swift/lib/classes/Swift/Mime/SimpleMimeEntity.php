@@ -117,7 +117,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     /**
      * Generate a new Content-ID or Message-ID for this MIME entity.
      *
-     * @return string
+     * @return StringHelper
      */
     public function generateId()
     {
@@ -151,7 +151,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     /**
      * Get the Content-type of this entity.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getContentType()
     {
@@ -161,7 +161,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     /**
      * Set the Content-type of this entity.
      *
-     * @param string $type
+     * @param StringHelper $type
      *
      * @return Swift_Mime_SimpleMimeEntity
      */
@@ -180,7 +180,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
      *
      * The CID will only be present in headers if a Content-ID header is present.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getId()
     {
@@ -190,7 +190,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     /**
      * Set the CID of this entity.
      *
-     * @param string $id
+     * @param StringHelper $id
      *
      * @return Swift_Mime_SimpleMimeEntity
      */
@@ -209,7 +209,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
      *
      * This value comes from the Content-Description header if set.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getDescription()
     {
@@ -221,7 +221,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
      *
      * This method sets a value in the Content-ID header.
      *
-     * @param string $description
+     * @param StringHelper $description
      *
      * @return Swift_Mime_SimpleMimeEntity
      */
@@ -345,7 +345,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     /**
      * Get the body of this entity as a string.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getBody()
     {
@@ -359,7 +359,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
      * {@link Swift_OutputByteStream}.
      *
      * @param mixed  $body
-     * @param string $contentType optional
+     * @param StringHelper $contentType optional
      *
      * @return Swift_Mime_SimpleMimeEntity
      */
@@ -410,7 +410,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     /**
      * Get the boundary used to separate children in this entity.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getBoundary()
     {
@@ -424,7 +424,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     /**
      * Set the boundary used to separate children in this entity.
      *
-     * @param string $boundary
+     * @param StringHelper $boundary
      *
      * @return Swift_Mime_SimpleMimeEntity
      *
@@ -442,7 +442,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
      * Receive notification that the charset of this entity, or a parent entity
      * has changed.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      */
     public function charsetChanged($charset)
     {
@@ -463,7 +463,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     /**
      * Get this entire entity as a string.
      *
-     * @return string
+     * @return StringHelper
      */
     public function toString()
     {
@@ -476,7 +476,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     /**
      * Get this entire entity as a string.
      *
-     * @return string
+     * @return StringHelper
      */
     protected function _bodyToString()
     {
@@ -512,7 +512,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
      *
      * @see toString()
      *
-     * @return string
+     * @return StringHelper
      */
     public function __toString()
     {
@@ -680,7 +680,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     /**
      * Returns a random Content-ID or Message-ID.
      *
-     * @return string
+     * @return StringHelper
      */
     protected function getRandomId()
     {
@@ -837,7 +837,7 @@ class Swift_Mime_SimpleMimeEntity implements Swift_Mime_MimeEntity
     /**
      * Throws an Exception if the id passed does not comply with RFC 2822.
      *
-     * @param string $id
+     * @param StringHelper $id
      *
      * @throws Swift_RfcComplianceException
      */

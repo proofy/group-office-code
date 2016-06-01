@@ -93,7 +93,7 @@ class NewTrial extends \GO\Base\Db\ActiveRecord {
 	
 	protected function beforeSave() {
 		
-		$this->password = \GO\Base\Util\String::randomPassword(6);
+		$this->password = \GO\Base\Util\StringHelper::randomPassword(6);
 		$this->key = md5($this->password.$this->name);
 		
 		return parent::beforeSave();

@@ -18,7 +18,7 @@ class Actions{
 	/**
 	 * Check if the current session is authorized to process an controller action.
 	 * 
-	 * @param string $name
+	 * @param StringHelper $name
 	 * @return boolean is authorisation granted or not.
 	 */
 	public static function isAuthorized($name){
@@ -34,7 +34,7 @@ class Actions{
 	 * Set an authorization for an action so the current session is authorized to 
 	 * process the action.
 	 * 
-	 * @param string $name 
+	 * @param StringHelper $name 
 	 */
 	public static function setAuthorized($name){
 		if(empty(\GO::session()->values['Authorized']))

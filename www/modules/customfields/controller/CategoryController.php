@@ -24,7 +24,8 @@ class CategoryController extends \GO\Base\Controller\AbstractModelController{
 	protected function getStoreParams($params) {
 		
 		$findParams = \GO\Base\Db\FindParams::newInstance()
-						->order('sort_index');
+				->order('sort_index')
+				->limit(0);
 		
 		$findParams->getCriteria()->addCondition('extends_model', $params['extends_model']);						
 		
@@ -88,7 +89,7 @@ class CategoryController extends \GO\Base\Controller\AbstractModelController{
 	 * Get the data for model edit forms. It should be added to $response['customfields'] in a model controller when loading the edit dialog.
 	 * It's also usefull to put into calendar or addressbook select combo's so you can update the tabs on change of the combo.
 	 * 
-	 * @param string $modelName Model of the customfields
+	 * @param StringHelper $modelName Model of the customfields
 	 * @param int $modelId Model of the controlling model a calendar id for the event custom fields for example.
 	 * @return array array("disable_categories"=>true,"enabled_categories"=>array(1,2)) 
 	 */

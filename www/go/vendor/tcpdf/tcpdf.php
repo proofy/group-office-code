@@ -3827,7 +3827,7 @@ class TCPDF {
 	 * The method can be called before the first page is created and the value is retained from page to page.
 	 * @param $color (array) Array of colors (1, 3 or 4 values).
 	 * @param $ret (boolean) If true do not send the PDF command.
-	 * @return string the PDF command
+	 * @return StringHelper the PDF command
 	 * @public
 	 * @since 3.1.000 (2008-06-11)
 	 * @see SetDrawColor()
@@ -3961,7 +3961,7 @@ class TCPDF {
 	 * @param $col4 (float) KEY (BLACK) color for CMYK (0-100).
 	 * @param $ret (boolean) If true do not send the command.
 	 * @param $name (string) spot color name (if any)
-	 * @return string the PDF command
+	 * @return StringHelper the PDF command
 	 * @public
 	 * @since 1.3
 	 * @see SetDrawColorArray(), SetFillColor(), SetTextColor(), Line(), Rect(), Cell(), MultiCell()
@@ -5062,7 +5062,7 @@ class TCPDF {
 	 * @param $ignore_min_height (boolean) if true ignore automatic minimum height value.
 	 * @param $calign (string) cell vertical alignment relative to the specified Y value. Possible values are:<ul><li>T : cell top</li><li>C : center</li><li>B : cell bottom</li><li>A : font top</li><li>L : font baseline</li><li>D : font bottom</li></ul>
 	 * @param $valign (string) text vertical alignment inside the cell. Possible values are:<ul><li>T : top</li><li>M : middle</li><li>B : bottom</li></ul>
-	 * @return string containing cell code
+	 * @return StringHelper containing cell code
 	 * @protected
 	 * @since 1.0
 	 * @see Cell()
@@ -5553,7 +5553,7 @@ class TCPDF {
 	 * @param $w (float) Cell width.
 	 * @param $h (float) Cell height.
 	 * @param $brd (mixed) Indicates if borders must be drawn around the cell. The value can be a number:<ul><li>0: no border (default)</li><li>1: frame</li></ul> or a string containing some or all of the following characters (in any order):<ul><li>L: left</li><li>T: top</li><li>R: right</li><li>B: bottom</li></ul> or an array of line styles for each border group - for example: array('LTRB' => array('width' => 2, 'cap' => 'butt', 'join' => 'miter', 'dash' => 0, 'color' => array(0, 0, 0)))
-	 * @return string containing cell border code
+	 * @return StringHelper containing cell border code
 	 * @protected
 	 * @see SetLineStyle()
 	 * @since 5.7.000 (2010-08-02)
@@ -8049,7 +8049,7 @@ class TCPDF {
 	/**
 	 * Get references to page annotations.
 	 * @param $n (int) page number
-	 * @return string
+	 * @return StringHelper
 	 * @protected
 	 * @author Nicola Asuni
 	 * @since 5.0.010 (2010-05-17)
@@ -9313,7 +9313,7 @@ class TCPDF {
 
 	/**
 	 * Return XObjects Dictionary.
-	 * @return string XObjects dictionary
+	 * @return StringHelper XObjects dictionary
 	 * @protected
 	 * @since 5.8.014 (2010-08-23)
 	 */
@@ -9793,7 +9793,7 @@ class TCPDF {
 
 	/**
 	 * Output viewer preferences.
-	 * @return string for viewer preferences
+	 * @return StringHelper for viewer preferences
 	 * @author Nicola asuni
 	 * @since 3.1.000 (2008-06-09)
 	 * @protected
@@ -10042,7 +10042,7 @@ class TCPDF {
 	/**
 	 * Return the starting object string for the selected object ID.
 	 * @param $objid (int) Object ID (leave empty to get a new ID).
-	 * @return string the starting object string
+	 * @return StringHelper the starting object string
 	 * @protected
 	 * @since 5.8.009 (2010-08-20)
 	 */
@@ -10137,7 +10137,7 @@ class TCPDF {
 	 * Format a data string for meta information
 	 * @param $s (string) data string to escape.
 	 * @param $n (int) object ID
-	 * @return string escaped string.
+	 * @return StringHelper escaped string.
 	 * @protected
 	 */
 	protected function _datastring($s, $n=0) {
@@ -10198,7 +10198,7 @@ class TCPDF {
 	 * Returns a formatted date for meta information
 	 * @param $n (int) Object ID.
 	 * @param $timestamp (int) Timestamp to convert.
-	 * @return string escaped date string.
+	 * @return StringHelper escaped date string.
 	 * @protected
 	 * @since 4.6.028 (2009-08-25)
 	 */
@@ -10213,7 +10213,7 @@ class TCPDF {
 	 * Format a text string for meta information
 	 * @param $s (string) string to escape.
 	 * @param $n (int) object ID
-	 * @return string escaped string.
+	 * @return StringHelper escaped string.
 	 * @protected
 	 */
 	protected function _textstring($s, $n=0) {
@@ -10228,7 +10228,7 @@ class TCPDF {
 	 * THIS METHOD IS DEPRECATED
 	 * Format a text string
 	 * @param $s (string) string to escape.
-	 * @return string escaped string.
+	 * @return StringHelper escaped string.
 	 * @protected
 	 * @deprecated
 	 */
@@ -10441,7 +10441,7 @@ class TCPDF {
 	 * Reverse function for htmlentities.
 	 * Convert entities in UTF-8.
 	 * @param $text_to_convert (string) Text to convert.
-	 * @return string converted text string
+	 * @return StringHelper converted text string
 	 * @public
 	 */
 	public function unhtmlentities($text_to_convert) {
@@ -10622,7 +10622,7 @@ class TCPDF {
 
 	/**
 	 * Compute U value (used for encryption)
-	 * @return string U value
+	 * @return StringHelper U value
 	 * @protected
 	 * @since 2.0.000 (2008-01-02)
 	 * @author Nicola Asuni
@@ -10655,7 +10655,7 @@ class TCPDF {
 
 	/**
 	 * Compute UE value (used for encryption)
-	 * @return string UE value
+	 * @return StringHelper UE value
 	 * @protected
 	 * @since 5.9.006 (2010-10-19)
 	 * @author Nicola Asuni
@@ -10668,7 +10668,7 @@ class TCPDF {
 
 	/**
 	 * Compute O value (used for encryption)
-	 * @return string O value
+	 * @return StringHelper O value
 	 * @protected
 	 * @since 2.0.000 (2008-01-02)
 	 * @author Nicola Asuni
@@ -10706,7 +10706,7 @@ class TCPDF {
 
 	/**
 	 * Compute OE value (used for encryption)
-	 * @return string OE value
+	 * @return StringHelper OE value
 	 * @protected
 	 * @since 5.9.006 (2010-10-19)
 	 * @author Nicola Asuni
@@ -10720,7 +10720,7 @@ class TCPDF {
 	/**
 	 * Convert password for AES-256 encryption mode
 	 * @param $password (string) password
-	 * @return string password
+	 * @return StringHelper password
 	 * @protected
 	 * @since 5.9.006 (2010-10-19)
 	 * @author Nicola Asuni
@@ -11337,7 +11337,7 @@ class TCPDF {
 	 *	 <li>color (array): Draw color. Format: array(GREY) or array(R,G,B) or array(C,M,Y,K) or array(C,M,Y,K,SpotColorName).</li>
 	 * </ul>
 	 * @param $ret (boolean) if true do not send the command.
-	 * @return string the PDF command
+	 * @return StringHelper the PDF command
 	 * @public
 	 * @since 2.1.000 (2008-01-08)
 	 */
@@ -13535,7 +13535,7 @@ class TCPDF {
 	/**
 	 * Returns the string alias used right align page numbers.
 	 * If the current font is unicode type, the returned string wil contain an additional open curly brace.
-	 * @return string
+	 * @return StringHelper
 	 * @since 5.9.099 (2011-06-27)
 	 * @public
 	 */
@@ -13561,7 +13561,7 @@ class TCPDF {
 	 * Returns the string alias used for the total number of pages.
 	 * If the current font is unicode type, the returned string is surrounded by additional curly braces.
 	 * This alias will be replaced by the total number of pages in the document.
-	 * @return string
+	 * @return StringHelper
 	 * @since 4.0.018 (2008-08-08)
 	 * @public
 	 */
@@ -13576,7 +13576,7 @@ class TCPDF {
 	 * Returns the string alias used for the page number.
 	 * If the current font is unicode type, the returned string is surrounded by additional curly braces.
 	 * This alias will be replaced by the page number.
-	 * @return string
+	 * @return StringHelper
 	 * @since 4.5.000 (2009-01-02)
 	 * @public
 	 */
@@ -15113,7 +15113,7 @@ class TCPDF {
 
 	/**
 	 * Get current barcode.
-	 * @return string
+	 * @return StringHelper
 	 * @public
 	 * @since 4.0.012 (2008-07-24)
 	 */
@@ -15756,7 +15756,7 @@ class TCPDF {
 
 	/**
 	 * Returns the current font family name.
-	 * @return string current font family name
+	 * @return StringHelper current font family name
 	 * @public
 	 * @since 4.3.008 (2008-12-05)
 	 */
@@ -15766,7 +15766,7 @@ class TCPDF {
 
 	/**
 	 * Returns the current font style.
-	 * @return string current font style
+	 * @return StringHelper current font style
 	 * @public
 	 * @since 4.3.008 (2008-12-05)
 	 */
@@ -15780,7 +15780,7 @@ class TCPDF {
 	 * @param $default_css (string) CSS commands to add
 	 * @param $tagvs (array) parameters for setHtmlVSpace method
 	 * @param $tidy_options (array) options for tidy_parse_string function
-	 * @return string XHTML code cleaned up
+	 * @return StringHelper XHTML code cleaned up
 	 * @author Nicola Asuni
 	 * @public
 	 * @since 5.9.017 (2010-11-16)
@@ -16982,7 +16982,7 @@ class TCPDF {
 
 	/**
 	 * Returns the string used to find spaces
-	 * @return string
+	 * @return StringHelper
 	 * @protected
 	 * @author Nicola Asuni
 	 * @since 4.8.024 (2010-01-15)
@@ -20635,7 +20635,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 
 	/**
 	 * Get buffer content.
-	 * @return string buffer content
+	 * @return StringHelper buffer content
 	 * @protected
 	 * @since 4.5.000 (2009-01-02)
 	 */
@@ -20678,7 +20678,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 	/**
 	 * Get page buffer content.
 	 * @param $page (int) page number
-	 * @return string page buffer content or false in case of error
+	 * @return StringHelper page buffer content or false in case of error
 	 * @protected
 	 * @since 4.5.000 (2008-12-31)
 	 */
@@ -20740,7 +20740,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 	/**
 	 * Get image buffer content.
 	 * @param $image (string) image key
-	 * @return string image buffer content or false in case of error
+	 * @return StringHelper image buffer content or false in case of error
 	 * @protected
 	 * @since 4.5.000 (2008-12-31)
 	 */
@@ -20802,7 +20802,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 	/**
 	 * Get font buffer content.
 	 * @param $font (string) font key
-	 * @return string font buffer content or false in case of error
+	 * @return StringHelper font buffer content or false in case of error
 	 * @protected
 	 * @since 4.5.000 (2009-01-02)
 	 */
@@ -22137,7 +22137,7 @@ Putting 1 is equivalent to putting 0 and calling Ln() just after. Default value:
 	/**
 	 * Return normalized font name
 	 * @param $fontfamily (string) property string containing font family names
-	 * @return string normalized font name
+	 * @return StringHelper normalized font name
 	 * @author Nicola Asuni
 	 * @public
 	 * @since 5.8.004 (2010-08-17)

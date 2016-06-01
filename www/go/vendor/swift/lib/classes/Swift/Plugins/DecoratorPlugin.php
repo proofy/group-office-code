@@ -151,7 +151,7 @@ class Swift_Plugins_DecoratorPlugin implements Swift_Events_SendListener, Swift_
      *
      * If no replacements can be found, an empty value (NULL) is returned.
      *
-     * @param string $address
+     * @param StringHelper $address
      *
      * @return array
      */

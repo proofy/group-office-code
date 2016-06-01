@@ -29,8 +29,8 @@ class Segment implements IteratorAggregate, Countable
     /**
      * Constructor
      *
-     * @param string $name name of the segment to construct
-     * @param string $xml XML tree of the segment
+     * @param StringHelper $name name of the segment to construct
+     * @param StringHelper $xml XML tree of the segment
      */
     public function __construct($name, $xml, $odf)
     {
@@ -44,7 +44,7 @@ class Segment implements IteratorAggregate, Countable
     /**
      * Returns the name of the segment
      *
-     * @return string
+     * @return StringHelper
      */
     public function getName()
     {
@@ -81,7 +81,7 @@ class Segment implements IteratorAggregate, Countable
      * Replace variables of the template in the XML code
      * All the children are also called
      *
-     * @return string
+     * @return StringHelper
      */
     public function merge()
     {
@@ -89,7 +89,8 @@ class Segment implements IteratorAggregate, Countable
 				return '';
 			}
         //$this->xmlParsed .= str_replace(array_keys($this->vars), array_values($this->vars), $this->xml);
-			$this->xmlParsed.=preg_replace('/{([^}]*)}/Ue', "odf::replacetag('$1', \$this->vars)", $this->xml);
+		$this->xmlParsed.=preg_replace_callback('/{([^}]*)}/U', array($this, "replacetag"), $this->xml);
+		
         if ($this->hasChildren()) {
             foreach ($this->children as $child) {
                 $this->xmlParsed = str_replace($child->xml, ($child->xmlParsed=="")?$child->merge():$child->xmlParsed, $this->xmlParsed);
@@ -111,10 +112,67 @@ class Segment implements IteratorAggregate, Countable
 				$this->vars=array();
 		    return $this->xmlParsed;
     }
+	
+	public function replacetag($tag) {
+		
+		$tag = stripslashes($tag[1]);
+		$orig_tag = $tag;
+
+		//Sometimes people change styles within a {autodata} tag.
+		//Then there are XML tags inside the GO template tag.
+		//We place them outside the tag.
+		//go_debug($tag);
+		preg_match_all('/<[^>]*>/', $tag, $matches);
+		$garbage_tags = implode('', $matches[0]);
+
+		$tag = strip_tags($tag);
+		$arr = explode('|', $tag);
+
+		$math = false;
+		$ops = array('/', '*', '+', '-');
+		foreach ($ops as $op) {
+			if (strpos($arr[0], $op)) {
+				$math = true;
+				break;
+			}
+		}
+
+		if (!$math) {
+			if (!isset($this->vars[$arr[0]])) {
+				return '{' . $orig_tag . '}';
+			} else {
+				$v = $this->vars[$arr[0]];
+			}
+		} else {
+			$v = $arr[0];
+			foreach ($this->vars as $key => $value) {
+				$v = str_replace($key, $value, $v);
+			}
+
+			\GO::config()->debug_display_errors = false;
+			@eval("\$result_string=" . $v . ";");
+			\GO::config()->debug_display_errors = true;
+
+			$v = isset($result_string) ? $result_string : 'invalid math expression!';
+		}
+
+//		if (isset($arr[1])) {
+//			$args = explode(':', $arr[1]);
+//
+//			//first value = function name
+//			$func = array_shift($args);
+//
+//			//add value as first argument
+//			array_unshift($args, $v);
+//
+//			$v = call_user_func_array(array('odf_renderers', $func), $args);
+//		}
+		return $garbage_tags . $v;
+	}
     /**
      * Analyse the XML code in order to find children
      *
-     * @param string $xml
+     * @param StringHelper $xml
      * @return Segment
      */
     protected function _analyseChildren($xml)
@@ -134,8 +192,8 @@ class Segment implements IteratorAggregate, Countable
     /**
      * Assign a template variable to replace
      *
-     * @param string $key
-     * @param string $value
+     * @param StringHelper $key
+     * @param StringHelper $value
      * @throws SegmentException
      * @return Segment
      */
@@ -153,8 +211,8 @@ class Segment implements IteratorAggregate, Countable
     /**
      * Assign a template variable as a picture
      *
-     * @param string $key name of the variable within the template
-     * @param string $value path to the picture
+     * @param StringHelper $key name of the variable within the template
+     * @param StringHelper $value path to the picture
      * @throws OdfException
      * @return Segment
      */
@@ -179,7 +237,7 @@ IMG;
     /**
      * Shortcut to retrieve a child
      *
-     * @param string $prop
+     * @param StringHelper $prop
      * @return Segment
      * @throws SegmentException
      */
@@ -194,7 +252,7 @@ IMG;
     /**
      * Proxy for setVars
      *
-     * @param string $meth
+     * @param StringHelper $meth
      * @param array $args
      * @return Segment
      */
@@ -209,7 +267,7 @@ IMG;
     /**
      * Returns the parsed XML
      *
-     * @return string
+     * @return StringHelper
      */
     public function getXmlParsed()
     {

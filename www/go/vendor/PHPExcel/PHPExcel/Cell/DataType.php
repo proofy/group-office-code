@@ -74,7 +74,7 @@ class PHPExcel_Cell_DataType
      *
      * @deprecated  Replaced by PHPExcel_Cell_IValueBinder infrastructure, will be removed in version 1.8.0
      * @param       mixed  $pValue
-     * @return      string
+     * @return      StringHelper
      */
     public static function dataTypeForValue($pValue = null) {
         return PHPExcel_Cell_DefaultValueBinder::dataTypeForValue($pValue);
@@ -106,7 +106,7 @@ class PHPExcel_Cell_DataType
      * Check a value that it is a valid error code
      *
      * @param  mixed   Value to sanitize to an Excel error code
-     * @return string  Sanitized value
+     * @return StringHelper  Sanitized value
      */
     public static function checkErrorCode($pValue = null)
     {

@@ -438,6 +438,29 @@ $updates['201402211238'][]="ALTER TABLE  `ab_contacts` CHANGE  `photo`  `photo` 
 
 $updates['201402271100'][]="ALTER TABLE `ab_companies` CHANGE `photo` `photo` VARCHAR( 255 ) NOT NULL DEFAULT '';";
 
-$updates['201402271100'][]="ALTER TABLE  `ab_contacts` CHANGE  `photo`  `photo` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  '';";
+$updates['201405061600'][]="CREATE TABLE IF NOT EXISTS `ab_portlet_birthdays` (
+  `user_id` int(11) NOT NULL,
+  `addressbook_id` int(11) NOT NULL,
+  PRIMARY KEY (`user_id`,`addressbook_id`)
+) ENGINE=InnoDB;";
 
-$updates['201402271100'][]="update `go_model_types` set model_name=replace(model_name, '_','\\');";
+$updates['201407151015'][]="ALTER TABLE `ab_sent_mailings` CHANGE `subject` `subject` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL;";
+
+$updates['201407241350'][]="ALTER TABLE `ab_contacts` CHANGE `email` `email` varchar(100) NOT NULL DEFAULT '';";
+		
+$updates['201407241350'][]="ALTER TABLE  `ab_contacts` CHANGE  `photo`  `photo` VARCHAR( 255 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT  '';";
+
+$updates['201408211030'][]="ALTER TABLE `ab_contacts` ADD `color` CHAR( 6 ) NOT NULL DEFAULT '';";
+$updates['201408211030'][]="ALTER TABLE `ab_companies` ADD `color` CHAR( 6 ) NOT NULL DEFAULT '';";
+
+$updates['201411101445'][]="UPDATE ab_contacts SET color='000000' WHERE color IS NULL OR color='';";
+$updates['201411101500'][]="ALTER TABLE `ab_contacts` CHANGE `color` `color` CHAR( 6 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '000000';";
+
+$updates['201411191645'][]="UPDATE ab_companies SET color='000000' WHERE color IS NULL OR color='';";
+$updates['201411191645'][]="ALTER TABLE `ab_companies` CHANGE `color` `color` CHAR( 6 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '000000';";
+
+$updates['201501221443'][]="ALTER TABLE `ab_contacts` CHANGE `uuid` `uuid` VARCHAR(255) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '';";
+$updates['201508171030'][]="ALTER TABLE `ab_sent_mailings` ADD `temp_pass` VARCHAR(255) NULL ;";
+
+
+$updates['201508271428'][]="ALTER TABLE `ab_contacts` CHANGE `department` `department` VARCHAR(100) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL DEFAULT '';";

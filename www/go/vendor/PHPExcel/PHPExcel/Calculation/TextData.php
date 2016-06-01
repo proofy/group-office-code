@@ -90,7 +90,7 @@ class PHPExcel_Calculation_TextData {
 	 * TRIMNONPRINTABLE
 	 *
 	 * @param	mixed	$stringValue	Value to check
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function TRIMNONPRINTABLE($stringValue = '') {
 		$stringValue	= PHPExcel_Calculation_Functions::flattenSingleValue($stringValue);
@@ -114,7 +114,7 @@ class PHPExcel_Calculation_TextData {
 	 * TRIMSPACES
 	 *
 	 * @param	mixed	$stringValue	Value to check
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function TRIMSPACES($stringValue = '') {
 		$stringValue	= PHPExcel_Calculation_Functions::flattenSingleValue($stringValue);
@@ -162,7 +162,7 @@ class PHPExcel_Calculation_TextData {
 	/**
 	 * CONCATENATE
 	 *
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function CONCATENATE() {
 		// Return value
@@ -196,7 +196,7 @@ class PHPExcel_Calculation_TextData {
 	 * @param	int		$decimals		The number of digits to display to the right of the decimal point.
 	 *									If decimals is negative, number is rounded to the left of the decimal point.
 	 *									If you omit decimals, it is assumed to be 2
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function DOLLAR($value = 0, $decimals = 2) {
 		$value		= PHPExcel_Calculation_Functions::flattenSingleValue($value);
@@ -227,7 +227,7 @@ class PHPExcel_Calculation_TextData {
 	 * @param	string	$needle		The string to look for
 	 * @param	string	$haystack	The string in which to look
 	 * @param	int		$offset		Offset within $haystack
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function SEARCHSENSITIVE($needle,$haystack,$offset=1) {
 		$needle		= PHPExcel_Calculation_Functions::flattenSingleValue($needle);
@@ -263,7 +263,7 @@ class PHPExcel_Calculation_TextData {
 	 * @param	string	$needle		The string to look for
 	 * @param	string	$haystack	The string in which to look
 	 * @param	int		$offset		Offset within $haystack
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function SEARCHINSENSITIVE($needle,$haystack,$offset=1) {
 		$needle		= PHPExcel_Calculation_Functions::flattenSingleValue($needle);
@@ -327,7 +327,7 @@ class PHPExcel_Calculation_TextData {
 	 *
 	 * @param	string	$value	Value
 	 * @param	int		$chars	Number of characters
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function LEFT($value = '', $chars = 1) {
 		$value		= PHPExcel_Calculation_Functions::flattenSingleValue($value);
@@ -355,7 +355,7 @@ class PHPExcel_Calculation_TextData {
 	 * @param	string	$value	Value
 	 * @param	int		$start	Start character
 	 * @param	int		$chars	Number of characters
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function MID($value = '', $start = 1, $chars = null) {
 		$value		= PHPExcel_Calculation_Functions::flattenSingleValue($value);
@@ -383,7 +383,7 @@ class PHPExcel_Calculation_TextData {
 	 *
 	 * @param	string	$value	Value
 	 * @param	int		$chars	Number of characters
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function RIGHT($value = '', $chars = 1) {
 		$value		= PHPExcel_Calculation_Functions::flattenSingleValue($value);
@@ -409,7 +409,7 @@ class PHPExcel_Calculation_TextData {
 	 * STRINGLENGTH
 	 *
 	 * @param	string	$value	Value
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function STRINGLENGTH($value = '') {
 		$value		= PHPExcel_Calculation_Functions::flattenSingleValue($value);
@@ -432,7 +432,7 @@ class PHPExcel_Calculation_TextData {
 	 * Converts a string value to upper case.
 	 *
 	 * @param	string		$mixedCaseString
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function LOWERCASE($mixedCaseString) {
 		$mixedCaseString	= PHPExcel_Calculation_Functions::flattenSingleValue($mixedCaseString);
@@ -451,7 +451,7 @@ class PHPExcel_Calculation_TextData {
 	 * Converts a string value to upper case.
 	 *
 	 * @param	string		$mixedCaseString
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function UPPERCASE($mixedCaseString) {
 		$mixedCaseString	= PHPExcel_Calculation_Functions::flattenSingleValue($mixedCaseString);
@@ -470,7 +470,7 @@ class PHPExcel_Calculation_TextData {
 	 * Converts a string value to upper case.
 	 *
 	 * @param	string		$mixedCaseString
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function PROPERCASE($mixedCaseString) {
 		$mixedCaseString	= PHPExcel_Calculation_Functions::flattenSingleValue($mixedCaseString);
@@ -490,7 +490,7 @@ class PHPExcel_Calculation_TextData {
 	 * @param	int		$start		Start character
 	 * @param	int		$chars		Number of characters
 	 * @param	string	$newText	String to replace in defined position 
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function REPLACE($oldText = '', $start = 1, $chars = null, $newText) {
 		$oldText	= PHPExcel_Calculation_Functions::flattenSingleValue($oldText);
@@ -512,7 +512,7 @@ class PHPExcel_Calculation_TextData {
 	 * @param	string	$fromText	From Value
 	 * @param	string	$toText		To Value
 	 * @param	integer	$instance	Instance Number
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public static function SUBSTITUTE($text = '', $fromText = '', $toText = '', $instance = 0) {
 		$text		= PHPExcel_Calculation_Functions::flattenSingleValue($text);

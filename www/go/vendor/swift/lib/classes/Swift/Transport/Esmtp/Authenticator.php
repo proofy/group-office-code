@@ -20,7 +20,7 @@ interface Swift_Transport_Esmtp_Authenticator
     /**
      * Get the name of the AUTH mechanism this Authenticator handles.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getAuthKeyword();
 
@@ -28,8 +28,8 @@ interface Swift_Transport_Esmtp_Authenticator
      * Try to authenticate the user with $username and $password.
      *
      * @param Swift_Transport_SmtpAgent $agent
-     * @param string                    $username
-     * @param string                    $password
+     * @param StringHelper                    $username
+     * @param StringHelper                    $password
      *
      * @return boolean
      */

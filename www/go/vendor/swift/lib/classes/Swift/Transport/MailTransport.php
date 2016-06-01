@@ -73,7 +73,7 @@ class Swift_Transport_MailTransport implements Swift_Transport
      *
      * This string is formatted for sprintf() where %s is the sender address.
      *
-     * @param string $params
+     * @param StringHelper $params
      *
      * @return Swift_Transport_MailTransport
      */
@@ -89,7 +89,7 @@ class Swift_Transport_MailTransport implements Swift_Transport
      *
      * This string is formatted for sprintf() where %s is the sender address.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getExtraParams()
     {
@@ -103,7 +103,7 @@ class Swift_Transport_MailTransport implements Swift_Transport
      * The return value is the number of recipients who were accepted for delivery.
      *
      * @param Swift_Mime_Message $message
-     * @param string[]           $failedRecipients An array of failures by-reference
+     * @param StringHelper[]           $failedRecipients An array of failures by-reference
      *
      * @return int
      */

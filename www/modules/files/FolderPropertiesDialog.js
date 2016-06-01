@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: FolderPropertiesDialog.js 16919 2014-02-26 14:12:07Z mschering $
+ * @version $Id: FolderPropertiesDialog.js 19949 2016-04-07 13:50:22Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -123,6 +123,32 @@ GO.files.FolderPropertiesDialog = function(config){
 	
 	if(GO.customfields){
 		this.disableCategoriesPanel = new GO.customfields.DisableCategoriesPanel();
+		
+		this.recursivePanel = new Ext.Panel({
+			region:'south',
+			items: [
+				{
+					xtype: 'button',
+					name: 'recursiveApplyCustomFieldCategories',
+					text: 'Apply',
+					listeners: {
+						click: function() {
+							this.formPanel.baseParams.recursiveApplyCustomFieldCategories = true;
+							this.save();
+							//this.formPanel.baseParams.recursiveApplyCustomFieldCategories = false;
+						},
+						scope:this
+					}
+				},{
+					type:'displayfield',
+					html: 'Apply these custom field settings to current folder and it\'s sub folders recursively'
+				}
+			]
+		});
+
+		this.disableCategoriesPanel.add(this.recursivePanel);
+		
+		
 		this.tabPanel.add(this.disableCategoriesPanel);
 		
 		
@@ -201,7 +227,7 @@ Ext.extend(GO.files.FolderPropertiesDialog, GO.Window, {
 		this.notifyCheckBox.removeListener('check',this.onNotifyChecked,this);
 		
 		this.formPanel.baseParams.notifyRecursive=false;
-		
+		this.formPanel.baseParams.recursiveApplyCustomFieldCategories=false;
 		if(!this.rendered)
 			this.render(Ext.getBody());
 		

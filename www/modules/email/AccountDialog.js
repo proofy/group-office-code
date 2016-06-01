@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: AccountDialog.js 16967 2014-03-06 13:29:35Z mschering $
+ * @version $Id: AccountDialog.js 19354 2015-08-28 13:04:26Z wsmits $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -251,6 +251,16 @@ GO.email.AccountDialog = function(config) {
 		name: 'do_not_mark_as_read',
 		allowBlank: true
 	});
+	
+	this.placeSignatureBelowReplyCbx = new Ext.ux.form.XCheckbox({
+		boxLabel: GO.email.lang.placeSignatureBelowReply,
+		fieldLabel: '',
+		checked:false,
+		name: 'signature_below_reply',
+		allowBlank: true
+	});
+	
+	properties_items.push(this.placeSignatureBelowReplyCbx);
 	properties_items.push(this.doNotMarkAsReadCbx);
 
 	if (GO.addressbook)
@@ -453,6 +463,10 @@ GO.email.AccountDialog = function(config) {
 
 	this.foldersTab, this.permissionsTab,this.filterGrid];
 
+	this.labelsTab = new GO.email.LabelsGrid();
+
+	items.push(this.labelsTab);
+
 	if (GO.settings.modules.email.write_permission) {
 		items.splice(1, 0, incomingTab, outgoingTab);
 	}
@@ -574,7 +588,11 @@ Ext.extend(GO.email.AccountDialog, GO.Window, {
 					// this.foldersTab.setDisabled(false);
 					this.loadAccount(action.result.id);
 				}
-
+				
+				//This will reload the signature when it is changed
+				if(GO.email.composers && GO.email.composers[0]) {
+					GO.email.composers[0].fromCombo.store.reload();
+				}
 				this.refreshNeeded = false;
 				this.fireEvent('save', this, action.result);
 
@@ -660,6 +678,8 @@ Ext.extend(GO.email.AccountDialog, GO.Window, {
 
 				this.foldersTab.setDisabled(false);
 
+				this.labelsTab.setDisabled(!action.result.data.email_enable_labels);
+
 				this.permissionsTab.setAcl(action.result.data.acl_id);
 				
 				if (this.templatesCombo) {
@@ -674,5 +694,6 @@ Ext.extend(GO.email.AccountDialog, GO.Window, {
 	setAccountId : function(account_id){
 		this.account_id = account_id;
 		this.filterGrid.setAccountId(account_id);
+		this.labelsTab.setAccountId(account_id);
 	}
 });

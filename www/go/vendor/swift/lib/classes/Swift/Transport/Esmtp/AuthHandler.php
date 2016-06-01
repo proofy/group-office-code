@@ -27,28 +27,28 @@ class Swift_Transport_Esmtp_AuthHandler implements Swift_Transport_EsmtpHandler
     /**
      * The username for authentication.
      *
-     * @var string
+     * @var StringHelper
      */
     private $_username;
 
     /**
      * The password for authentication.
      *
-     * @var string
+     * @var StringHelper
      */
     private $_password;
 
     /**
      * The auth mode for authentication.
      *
-     * @var string
+     * @var StringHelper
      */
     private $_auth_mode;
 
     /**
      * The ESMTP AUTH parameters available.
      *
-     * @var string[]
+     * @var StringHelper[]
      */
     private $_esmtpParams = array();
 
@@ -85,7 +85,7 @@ class Swift_Transport_Esmtp_AuthHandler implements Swift_Transport_EsmtpHandler
     /**
      * Set the username to authenticate with.
      *
-     * @param string $username
+     * @param StringHelper $username
      */
     public function setUsername($username)
     {
@@ -95,7 +95,7 @@ class Swift_Transport_Esmtp_AuthHandler implements Swift_Transport_EsmtpHandler
     /**
      * Get the username to authenticate with.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getUsername()
     {
@@ -105,7 +105,7 @@ class Swift_Transport_Esmtp_AuthHandler implements Swift_Transport_EsmtpHandler
     /**
      * Set the password to authenticate with.
      *
-     * @param string $password
+     * @param StringHelper $password
      */
     public function setPassword($password)
     {
@@ -115,7 +115,7 @@ class Swift_Transport_Esmtp_AuthHandler implements Swift_Transport_EsmtpHandler
     /**
      * Get the password to authenticate with.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getPassword()
     {
@@ -125,7 +125,7 @@ class Swift_Transport_Esmtp_AuthHandler implements Swift_Transport_EsmtpHandler
     /**
      * Set the auth mode to use to authenticate.
      *
-     * @param string $mode
+     * @param StringHelper $mode
      */
     public function setAuthMode($mode)
     {
@@ -135,7 +135,7 @@ class Swift_Transport_Esmtp_AuthHandler implements Swift_Transport_EsmtpHandler
     /**
      * Get the auth mode to use to authenticate.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getAuthMode()
     {
@@ -155,7 +155,7 @@ class Swift_Transport_Esmtp_AuthHandler implements Swift_Transport_EsmtpHandler
     /**
      * Set the parameters which the EHLO greeting indicated.
      *
-     * @param string[] $parameters
+     * @param StringHelper[] $parameters
      */
     public function setKeywordParams(array $parameters)
     {
@@ -216,7 +216,7 @@ class Swift_Transport_Esmtp_AuthHandler implements Swift_Transport_EsmtpHandler
      *
      * This method is called to ensure extensions can be execute in an appropriate order.
      *
-     * @param string $esmtpKeyword to compare with
+     * @param StringHelper $esmtpKeyword to compare with
      *
      * @return int
      */
@@ -228,7 +228,7 @@ class Swift_Transport_Esmtp_AuthHandler implements Swift_Transport_EsmtpHandler
     /**
      * Returns an array of method names which are exposed to the Esmtp class.
      *
-     * @return string[]
+     * @return StringHelper[]
      */
     public function exposeMixinMethods()
     {

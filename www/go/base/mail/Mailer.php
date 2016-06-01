@@ -44,8 +44,23 @@ class Mailer extends \Swift_Mailer{
 	
 	public function send(\Swift_Mime_Message $message, &$failedRecipients = null) {
 		
-		if(\GO::config()->debug)
-			\GO::debug("Sending e-mail to ".implode(",",array_keys($message->getTo())));
+		
+		if(!empty(\GO::config()->disable_mail)){
+			throw new \Exception("E-mail sending is disabled!");
+		}
+		
+		
+		if(\GO::config()->debug){
+			$getTo = $message->getTo();
+
+			if(!empty($getTo)){
+				$getTo = implode(",",array_keys($getTo));
+			} else {
+				$getTo = '';
+			}
+			
+			\GO::debug("Sending e-mail to ".$getTo);
+		}
 		
 		if(\GO::modules()->isInstalled("log")){
 			
@@ -77,7 +92,25 @@ class Mailer extends \Swift_Mailer{
 //		debug_print_backtrace();
 //		exit("NO MAIL");
 		
-		return parent::send($message, $failedRecipients);
+		//workaround https://github.com/swiftmailer/swiftmailer/issues/335
+		$messageId = $message->getId();
+		
+		$count = parent::send($message, $failedRecipients);
+		
+		$message->setId($messageId);
+		
+		// Check if a tmp dir is created to store attachments.
+		// If so, then remove the tmp dir if the mail is send successfully.
+		$tmpDir = $message->getTmpDir();
+		if(!empty($tmpDir)){
+			$folder = new \GO\Base\Fs\Folder($tmpDir);
+			// Check if folder is deleted successfully
+			if($folder->delete())
+				\GO::debug('Clear attachments tmp directory: '.$tmpDir);
+			else
+				\GO::debug('Failed to clear attachments tmp directory: '.$tmpDir);
+		}
+		
+		return $count;
 	}
-	
 }

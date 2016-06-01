@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: MessagesGrid.js 17032 2014-03-12 09:41:25Z mschering $
+ * @version $Id: MessagesGrid.js 20071 2016-05-25 09:38:11Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -55,6 +55,13 @@ GO.email.MessagesGrid = function(config){
 				id:'from',
 				width:200
 			},{
+				header: GO.email.lang.to,
+				dataIndex: 'to',
+				renderer:this.renderNorthMessageRow,
+				id:'to',
+				width:200,
+				hidden: true
+			},{
 				header: GO.email.lang.subject,
 				dataIndex: 'subject',
 				renderer:this.renderNorthMessageRow,
@@ -64,14 +71,14 @@ GO.email.MessagesGrid = function(config){
 				dataIndex: 'arrival',
 				width:120,
 				renderer:this.renderNorthArrival,
-				align:'right'
+				align:'right',
+				hidden:true
 			},{
 				header: GO.email.lang.dateSent,
 				dataIndex: 'date',
 				width:120,
 				renderer:this.renderNorthDate,
-				align:'right',
-				hidden:true
+				align:'right'
 			},{
 				header: GO.lang.strSize,
 				dataIndex: 'size',
@@ -130,15 +137,15 @@ GO.email.MessagesGrid = function(config){
 			dataIndex:'arrival',
 			renderer: this.renderArrival,
 			width:80,
-			align:'right'
+			align:'right',
+			hidden:true
 		},{
 			id:'date',
 			header: GO.email.lang.dateSent,
 			dataIndex:'date',
 			renderer: this.renderDate,
 			width:80,
-			align:'right',
-			hidden:true
+			align:'right'
 		},{
 			id:'size',
 			header: GO.lang.strSize,
@@ -157,7 +164,7 @@ GO.email.MessagesGrid = function(config){
 			displayMsg: GO.lang.displayingItemsShort,
 			emptyMsg: GO.lang['strNoItems']
 		});
-
+		
 		config.autoExpandColumn='message';
 
 //		config.view=new Ext.grid.GridView({
@@ -166,6 +173,7 @@ GO.email.MessagesGrid = function(config){
 	}
 
 	config.view=new Ext.grid.GridView({
+			holdPosition: true,
 			emptyText: GO.lang['strNoItems'],
 			getRowClass:function(row, index) {
 				if (row.data.seen == '0') {
@@ -173,7 +181,14 @@ GO.email.MessagesGrid = function(config){
 				} else {
 					return 'ml-seen-row';
 				}
+			},
+			onLoad : function(){
+					if (!this.holdPosition) { 
+						this.scrollToTop();
+					}
+					this.holdPosition = false;
 			}
+			
 		});
 
 	config.sm=new Ext.grid.RowSelectionModel();
@@ -192,6 +207,7 @@ GO.email.MessagesGrid = function(config){
 			fields: ['value', 'text'],
 			data : [
 			['any', GO.email.lang.anyField],
+			['fts', GO.email.lang.fts],
 			['from', GO.email.lang.searchFrom],
 			['subject', GO.email.lang.subject],
 			['to', GO.email.lang.searchTo],
@@ -240,15 +256,21 @@ GO.email.MessagesGrid = function(config){
 
 	//stop/start drag and drop when store loads when account is readOnly
 	this.store.on('load', function(store, records, options) {
-	  if(store.reader.jsonData.permission_level <= GO.permissionLevels.read)
-		this.getView().dragZone.lock();
-	  else
-		this.getView().dragZone.unlock();
+		if(this.getView().dragZone){
+			if(store.reader.jsonData.permission_level <= GO.permissionLevels.read)
+			this.getView().dragZone.lock();
+			else
+			this.getView().dragZone.unlock();
+		}
 	}, this);
 
 	this.searchType.on('select', function(combo, record)
 	{
 		GO.email.search_type = record.data.value;
+		
+		if(localStorage){
+			localStorage.email_search_type = GO.email.search_type;
+		}
 
 		if(this.searchField.getValue())
 		{
@@ -263,7 +285,7 @@ GO.email.MessagesGrid = function(config){
 };
 
 Ext.extend(GO.email.MessagesGrid, GO.grid.GridPanel,{
-
+	
 	show : function()
 	{
 		if(GO.email.messagesGrid.store.baseParams['unread'] === 1 || GO.email.messagesGrid.store.baseParams['unread'] === true){
@@ -327,12 +349,15 @@ Ext.extend(GO.email.MessagesGrid, GO.grid.GridPanel,{
 	},
 
 	renderMessage : function(value, p, record){
+		
+		var deletedCls = record.data.deleted ? 'ml-deleted' : '';
+		
 		if(record.data['seen']=='0')
 		{
-			return String.format('<div id="sbj_'+record.data['uid']+'" class="ml-unseen-from">{0}</div><div class="ml-unseen-subject">{1}</div>', value, record.data['subject']);
+			return String.format('<div id="sbj_'+record.data['uid']+'" class="ml-unseen-from '+deletedCls+'">{0}</div><div class="ml-unseen-subject '+deletedCls+'">{1}</div>', value, record.data['subject']);
 		}else
 		{
-			return String.format('<div id="sbj_'+record.data['uid']+'" class="ml-seen-from">{0}</div><div class="ml-seen-subject">{1}</div>', value, record.data['subject']);
+			return String.format('<div id="sbj_'+record.data['uid']+'" class="ml-seen-from '+deletedCls+'">{0}</div><div class="ml-seen-subject '+deletedCls+'">{1}</div>', value, record.data['subject']);
 		}
 	},
 

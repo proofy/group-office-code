@@ -20,7 +20,7 @@ interface Swift_CharacterReaderFactory
     /**
      * Returns a CharacterReader suitable for the charset applied.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      *
      * @return Swift_CharacterReader
      */

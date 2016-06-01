@@ -30,7 +30,7 @@ class Swift_FileSpool extends Swift_ConfigurableSpool
     /**
      * Create a new FileSpool.
      *
-     * @param string $path
+     * @param StringHelper $path
      *
      * @throws Swift_IoException
      */
@@ -135,7 +135,7 @@ class Swift_FileSpool extends Swift_ConfigurableSpool
      * Sends messages using the given transport instance.
      *
      * @param Swift_Transport $transport        A transport instance
-     * @param string[]        $failedRecipients An array of failures by-reference
+     * @param StringHelper[]        $failedRecipients An array of failures by-reference
      *
      * @return integer The number of sent e-mail's
      */
@@ -192,7 +192,7 @@ class Swift_FileSpool extends Swift_ConfigurableSpool
      *
      * @param integer $count
      *
-     * @return string
+     * @return StringHelper
      */
     protected function getRandomString($count)
     {

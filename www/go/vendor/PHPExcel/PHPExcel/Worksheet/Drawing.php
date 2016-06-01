@@ -38,7 +38,7 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
 	/**
 	 * Path
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_path;
 
@@ -57,7 +57,7 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
     /**
      * Get Filename
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFilename() {
     	return basename($this->_path);
@@ -66,7 +66,7 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
     /**
      * Get indexed filename (using image index)
      *
-     * @return string
+     * @return StringHelper
      */
     public function getIndexedFilename() {
     	$fileName = $this->getFilename();
@@ -77,7 +77,7 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
     /**
      * Get Extension
      *
-     * @return string
+     * @return StringHelper
      */
     public function getExtension() {
     	$exploded = explode(".", basename($this->_path));
@@ -87,7 +87,7 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
     /**
      * Get Path
      *
-     * @return string
+     * @return StringHelper
      */
     public function getPath() {
     	return $this->_path;
@@ -96,7 +96,7 @@ class PHPExcel_Worksheet_Drawing extends PHPExcel_Worksheet_BaseDrawing implemen
     /**
      * Set Path
      *
-     * @param 	string 		$pValue			File path
+     * @param 	StringHelper 		$pValue			File path
      * @param 	boolean		$pVerifyFile	Verify file
      * @throws 	PHPExcel_Exception
      * @return PHPExcel_Worksheet_Drawing

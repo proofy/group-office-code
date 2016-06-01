@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: modules.js 17293 2014-04-08 11:35:20Z mschering $
+ * @version $Id: modules.js 18445 2014-11-11 09:58:34Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -59,21 +59,35 @@ GO.modules.MainPanel = function(config) {
 					this.store.load();
 				},
 				scope: this
-			},{
+			},
+//			{
+//				iconCls: 'btn-settings',
+//				text: "Install license file",
+//				cls: 'x-btn-text-icon',
+//				hidden: GO.settings.config.product_name!=='Group-Office',
+//				handler: function() {
+//					if(!this.installLicenseDialog){
+//						this.installLicenseDialog = new GO.modules.InstallLicenseDialog({
+//							
+//						});						
+//					}					
+//					this.installLicenseDialog.show();
+//				},
+//				scope: this
+//			},
+			{
 				iconCls: 'btn-settings',
-				text: "Install license file",
+				text: GO.modules.lang.buyLicenses,
 				cls: 'x-btn-text-icon',
-				hidden: GO.settings.config.product_name!=='Group-Office',
-				handler: function() {
-					if(!this.installLicenseDialog){
-						this.installLicenseDialog = new GO.modules.InstallLicenseDialog({
-							
-						});						
-					}					
-					this.installLicenseDialog.show();
+				hidden: GO.settings.config.product_name != 'Group-Office',
+				handler: function() {				
+					window.open('https://www.group-office.com/shop/');					
 				},
 				scope: this
-			},this.trialButton = new Ext.Button({
+			},
+
+
+			this.trialButton = new Ext.Button({
 				iconCls: 'btn-settings',
 				text: GO.modules.lang.trialLicense,
 				cls: 'x-btn-text-icon',
@@ -127,20 +141,32 @@ GO.modules.MainPanel = function(config) {
 		}
 	});
 
-	config.cm = new Ext.grid.ColumnModel([{
+	config.cm = new Ext.grid.ColumnModel([
+		{
 			header: GO.lang['strName'],
 			dataIndex: 'name',
 			id: 'name',
 			renderer: this.iconRenderer
 		}, 
-		checkColumn,{
+		checkColumn,
+		{
+			header: GO.modules.lang.sort_order,
+			dataIndex: 'sort_order',
+			sortable:true,
+			id: 'sort_order',
+			editor: new GO.form.NumberField({
+				allowBlank: false,
+				decimals:0
+			})
+		},
+		{
 			header: "Package",
 			dataIndex: 'package',
 			id: 'package'
 			
 		}
 	]);
-	
+	config.clicksToEdit = 1;
 	config.loadMask=true;
 	
 	var store = this.store;
@@ -153,48 +179,48 @@ GO.modules.MainPanel = function(config) {
 //		autoFill: true,
 		startCollapsed:true,
 		emptyText: GO.lang.strNoItems,
-		groupTextTpl: '{text}<tpl if="values.rs[0].data.buyEnabled"><div class="mo-buy">Buy licenses</div></tpl>',
-		processEvent: function(name, e){
-			
-			
-        Ext.grid.GroupingView.superclass.processEvent.call(this, name, e);
-				
-				var buyLink = Ext.get(e.getTarget('.mo-buy', this.mainBody));
-        if(buyLink){
-					
-					if(name == 'mousedown' && e.button == 0){
-						var group = buyLink.parent('.x-grid-group');
-						var row = group.query('.x-grid3-row');					
-						var rowIndex = this.findRowIndex(row[0]);
-						var record = store.getAt(rowIndex);
-
-						GO.modules.showBuyDialog(record);
-					}
-				}else
-				{
-				
-					var hd = e.getTarget('.x-grid-group-hd', this.mainBody);
-					if(hd){
-							// group value is at the end of the string
-							var field = this.getGroupField(),
-									prefix = this.getPrefix(field),
-									groupValue = hd.id.substring(prefix.length),
-									emptyRe = new RegExp('gp-' + Ext.escapeRe(field) + '--hd');
-
-							// remove trailing '-hd'
-							groupValue = groupValue.substr(0, groupValue.length - 3);
-
-							// also need to check for empty groups
-							if(groupValue || emptyRe.test(hd.id)){
-									this.grid.fireEvent('group' + name, this.grid, field, groupValue, e);
-							}
-							if(name == 'mousedown' && e.button == 0){
-									this.toggleGroup(hd.parentNode);
-							}
-					}
-				}
-
-    },
+//		groupTextTpl: '{text}<tpl if="values.rs[0].data.buyEnabled"><div class="mo-buy">Buy licenses</div></tpl>',
+//		processEvent: function(name, e){
+//			
+//			
+//        Ext.grid.GroupingView.superclass.processEvent.call(this, name, e);
+//				
+//				var buyLink = Ext.get(e.getTarget('.mo-buy', this.mainBody));
+//				if(buyLink){
+//					
+//					if(name == 'mousedown' && e.button == 0){
+//						var group = buyLink.parent('.x-grid-group');
+//						var row = group.query('.x-grid3-row');					
+//						var rowIndex = this.findRowIndex(row[0]);
+//						var record = store.getAt(rowIndex);
+//
+//						GO.modules.showBuyDialog(record);
+//					}
+//				}else
+//				{
+//				
+//					var hd = e.getTarget('.x-grid-group-hd', this.mainBody);
+//					if(hd){
+//							// group value is at the end of the string
+//							var field = this.getGroupField(),
+//									prefix = this.getPrefix(field),
+//									groupValue = hd.id.substring(prefix.length),
+//									emptyRe = new RegExp('gp-' + Ext.escapeRe(field) + '--hd');
+//
+//							// remove trailing '-hd'
+//							groupValue = groupValue.substr(0, groupValue.length - 3);
+//
+//							// also need to check for empty groups
+//							if(groupValue || emptyRe.test(hd.id)){
+//									this.grid.fireEvent('group' + name, this.grid, field, groupValue, e);
+//							}
+//							if(name == 'mousedown' && e.button == 0){
+//									this.toggleGroup(hd.parentNode);
+//							}
+//					}
+//				}
+//
+//    },
 		getRowClass: function(record, rowIndex, p, store) {
 			if (this.showPreview && record.data.description.length) {
 				p.body = '<div class="mo-description">' + record.data.description + '</div>';
@@ -218,6 +244,15 @@ GO.modules.MainPanel = function(config) {
 
 	GO.modules.MainPanel.superclass.constructor.call(this, config);
 
+	this.on('afteredit', function(e){
+		this.submitRecord(e.record);
+	}, this);
+	
+	this.on('beforeedit', function(e){
+		return e.record.data.enabled;
+	}, this);
+	
+
 	this.on("rowdblclick", function(grid, rowIndex, event) {
 		var moduleRecord = grid.store.getAt(rowIndex);
 
@@ -228,7 +263,7 @@ GO.modules.MainPanel = function(config) {
 
 };
 
-Ext.extend(GO.modules.MainPanel, GO.grid.GridPanel, {
+Ext.extend(GO.modules.MainPanel,Ext.grid.EditorGridPanel, {
 	
 
 	afterRender: function() {
@@ -360,21 +395,80 @@ Ext.extend(GO.modules.MainPanel, GO.grid.GridPanel, {
 	},
 	buyRenderer: function(name, cell, record) {
 		return record.data.buyEnabled ? '<a href="#" class="normal-link" onclick="GO.modules.showBuyDialog(\'' + record.data.id + '\');">'+GO.modules.lang.buyLicenses+'</a>' : '';
+	},
+
+	/**
+	 * Submit the record
+	 * 
+	 * @param array record
+	 * @returns {undefined}
+	 */
+	submitRecord : function(record){
+		var url = GO.url('modules/module/updateModuleModel');
+
+		Ext.Ajax.request({
+			method:'POST',
+			url: url,
+			params : {
+				id:record.data.id
+			},
+			jsonData: {module:this.createJSON(record.data)},
+			scope : this,
+			callback : function (options, success,response) {
+				var responseParams = Ext.decode(response.responseText);
+
+				if (!responseParams.success) {
+					GO.errorDialog.show(responseParams.feedback);
+				}else{
+					if(responseParams.id){
+						record.set('id', responseParams.id);
+					}
+					record.commit();
+				}
+			}
+		});
+	},
+/**
+ * Create Json string for posting to the controller
+ * 
+ * @param array params
+ * @returns JSON String
+ */
+	createJSON : function(params){
+
+		var keys, JSON={}, currentJSONlevel;
+		
+		for(var key in params){
+			
+			keys = key.split('.');
+			
+			currentJSONlevel = JSON;
+			
+			for(var i=0;i<keys.length;i++){
+				if(i===(keys.length-1)){
+					
+					// Change true to 1 for customfields checkboxes
+					if(params[key] == true){
+						params[key] = '1';
+					}
+					
+					currentJSONlevel[keys[i]]= params[key];
+				}else
+				{
+					currentJSONlevel[keys[i]]=currentJSONlevel[keys[i]] || {};
+					currentJSONlevel=currentJSONlevel[keys[i]];
+				}				
+			}
+			
+			currentJSONlevel = JSON;
+			
+		}
+
+		return JSON;
 	}
-
-
 
 });
 
-
-GO.modules.clickBuy = function(e){
-	
-	e.preventDefault();
-	
-	var el = Ext.get(this);
-	
-	console.log(el);
-}
 
 GO.moduleManager.addModule('modules', GO.modules.MainPanel, {
 	title: GO.modules.lang.modules,

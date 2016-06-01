@@ -22,9 +22,9 @@ class Swift_Attachment extends Swift_Mime_Attachment
      *
      * Details may be optionally provided to the constructor.
      *
-     * @param string|Swift_OutputByteStream $data
-     * @param string                        $filename
-     * @param string                        $contentType
+     * @param StringHelper|Swift_OutputByteStream $data
+     * @param StringHelper                        $filename
+     * @param StringHelper                        $contentType
      */
     public function __construct($data = null, $filename = null, $contentType = null)
     {
@@ -44,9 +44,9 @@ class Swift_Attachment extends Swift_Mime_Attachment
     /**
      * Create a new Attachment.
      *
-     * @param string|Swift_OutputByteStream $data
-     * @param string                        $filename
-     * @param string                        $contentType
+     * @param StringHelper|Swift_OutputByteStream $data
+     * @param StringHelper                        $filename
+     * @param StringHelper                        $contentType
      *
      * @return Swift_Mime_Attachment
      */
@@ -58,8 +58,8 @@ class Swift_Attachment extends Swift_Mime_Attachment
     /**
      * Create a new Attachment from a filesystem path.
      *
-     * @param string $path
-     * @param string $contentType optional
+     * @param StringHelper $path
+     * @param StringHelper $contentType optional
      *
      * @return Swift_Mime_Attachment
      */

@@ -1,31 +1,1240 @@
+- Caldav and carddav return etag headers now on update and create.
 
+04-05-2016 6.2.3
+- Merged 6.1.85 fixes
+- Sabredav updated to 3.1
+- Fixed caldav and carddav bugs
+
+21-04-2016 6.2.2
+- Merged 6.1.84 fixes
+- Fixed caldav and carddav problems
+
+01-03-2016 6.2.1
+- Merged changed in 6.1
+- Refactor GO\Base\Util\String to GO\Base\Util\StringHelper for PHP7
+
+30-10-2015 6.2.0
+- SabreDAV updated from 1.8 to 3.0.5
+- Addressbook: Contacts remove photo from GO when the PHOTO attribute is not set in the imported VObject.
+- Added an exception for when creation of searchcache record fails.
+
+== 6.2 ==
+
+25-05-2016 6.1.86
+- Prevent removal of admin from admins group
+- Addressbook/User: Create a user from an addressbook contact now sets the correct remote combo text for the company field.
+- Fixed the addressbook selection in the favorites module.
+- Fix holdPosition by reload email messages grid
+- Show only the active custom fields by file batch edit
+- Fixed go checker
+- Tickets: added message content search to tickets search function
+- Tickets: added extra parameter for searching in the ticketno. only.
+- Core: Fixed sound for new emails.
+- In projects 2 add parent project search
+- Z-Push: Companies added to a contact on the client device are now also synced to GO.
+- Core: GridPanel.js - Added check for store.reader
+- PHP7 compatibility
+
+03-05-2016 6.1.85
+- Access denied on exporting private events
+- Projects2 partlet filter is now editable
+- Fix imap get response
+- Added setting to enabled and disable popup for email and reminders separately for desktop notifications
+- Fixed sound for new emails
+- Wrong links didn't show up in sent items
+- Projects2: Don't use the "Status" filter in the projects search results.
+- Projects2: Don't use the "Show mine only" checkbox in the projects search results.
+- Updated Czech translation
+- Fix agent name by new tickets
+- Add merge data and data check to batch edit
+- Users: set thousands and decimal separator to VARCHAR(1) instead of CHAR(), this makes a space character possible.
+
+19-04-2016 6.1.84
+- Fixed billing bug with invalid column
+- Updated Norwegian and German translation
+
+18-04-2016 6.1.83
+- Disabled spell checker by default. You can enable it by setting $config['spell_check_enabled']= true;
+- Prevented that notes would loss there decryption hash when a file folder was added without providing a password.
+- Workflow: Use of Config()->noreply_email for outgoing emails
+- Z-Push: Fixed saving of tasks from mobile to server on the same day as today
+- Fix importing data from vCard with type=PREF specification
+- Fix function create rrule for 5.4 and lower
+- Email: Strip strange chars from the link tag when sending the email
+- Leavedays: By leavedays edit the remove of year credits. it is now not possible to remove them if thar already leavedays booked
+- Addressbook: Fix address book by Contact to user
+
+07-04-2016 6.1.82
+- Calendar month print will calculate daylight saving time
+- Subscribe function was broken
+- Updated Russian translation
+- Fix mail folder subscribe
+- Calendar: Attendance window: 0 needed to be a possible value for the reminder. So I removed the minValue for the field.
+- Add Project: Ticket types expansion
+- Calendar: Added config option to disable autolinking contacts to the event that were not the organizer
+
+04-04-2016 6.1.81
+- Add by Email in 'Subscribe' dialog select all and deselect all
+- Fix custom work for DG after edit leavedays module
+- Language of an OrderStatus will be displayed in the same language the User views GroupOffice. If this is not available pick the first language added by the administrator.
+- Added Delete button en replaced add button to begin of the blue toolbar in the projects module
+- Tickets/Addressbook: Added fix for loading ticketGroup acl.
+- Email: Add by Email in 'Subscribe' dialog select all and deselect all
+- Leavedays: Fix custom work for DG after edit leavedays module
+- Billing: Language of an OrderStatus will be displayed in the same language the User views GroupOffice. If this is not available pick the first language added by the administrator.
+- Projects: Added Delete button en replaced add button to begin of the blue toolbar in the projects module
+- Billing: Removed purchase order creation from the PDF button in the Order dialog.
+- Fix holidays:
+		type sort in gui
+		year summary with 0 credit
+		sum credit main grid
+		add admin as manager
+- Files: Disabled a . at the end of a folder name. (Webdav on Windows OS cannot handle this.)
+- Email/Sieve: Added more information to sieve error messages
+- Added company variable the view when running actionRegister in the site module
+- Fix empty checker messages and email notification trigger only on new e-mails and more then 0 unseen
+- Projects2: Fixed permission problem on contact and company when adding new project
+- Tickets: Fixed problem with determining ticket agents when a user is removed.
+- Fix Time tracking week number selection for slower environment
+- Files: Changed up-icon in the "Default" theme and changed German translation.
+- Calendar: Fixed creation of RRULE. Changed: "RRULE:FREQ=MONTHLY;BYSETPOS=1;BYDAY=MO,TU" To: "RRULE:FREQ=MONTHLY;BYDAY=1MO,1TU"
+- Calendar: Added separate reminders for participants which can be set in the participation dialog.
+- Fix email multi select labeling
+- Holidays/Calendar: Fixed display of time and day data in the calendar list, also fixed time minutes 0 prefix.
+
+04-03-2016 6.1.80
+- Build error
+
+03-03-2016 6.1.79
+- Mail in gmail app marked as read bug fixed when using Exchange
+- Fix mail selection in billing 
+- Fixed calendar freeze when displaying a Leave day that had a start time and a duration with a decimal and a dot a decimal separator.
+- Fixed remote combo field for holidays credit type
+- Fix export "Contacts with companies" for companies in address book
+- Added Pakistan to the list of countries
+- Add hold position in email messages grid by reload after move
+- Projects2: Fixed manager filter store so it will display all users of GO.
+- Projects2: Show the projects of type "container" always in the tree when filtering on project manager.
+- Removed sort and hideable option from the SelectOptionsGrid in select customfield
+- Fix leavedays bugs !!!
+- Fix CORE deleteFeedback for GO.grid.GridPanel
+- Fix by project the reload of the subgrid after set statuses
+- Fix invoices update customer information 
+- Holidays: Repositioned the starttime field in the leaveday dialog.
+- MT940 Parser for German DATEV standard 
+- Removed libwbxml binaries for windows as they were detected (wrongly) as a virus.
+
+22-02-2016 6.1.78
+- Updated German translation
+- Allow deletion of files and folders in folders that belong to a writable contact,company,project etc.
+- invalid grouping in reminder window was possible
+- deleting a user could cause a temporary error in the calendar.
+- In file module, reset the file list (Download links) that will be add in to the mail to
+
+16-02-2016 6.1.77
+- Fixed billing upgrade script for GO 6.1
+- Fix leavedays csv export
+- Billing: Fixed problem that when searching orders, some orders weren't displayed in the search results. (This where orders without items)
+- Remove text check for stop item. it is not compete bale wife adder languages
+- Email: Fixed problem with "save mail as" functions that use plain text email.
+- Fix the contacts where the company is not set by the interface bug
+
+12-02-2016 6.1.76
+- Fixed upgrade bug in leavedays
+
+12-02-2016 6.1.75
+- Updated French and German Translation
+- Upgrade z-push to 2.2.8
+- Calendar synced number of years back in time instead of months when no client date was sent
+- Create alias on each new mailbox in postfix
+- Leavedays: Always add a 0 in front of the hour when it is only one digit long.
+- Projects2/Timeregistration2: Fixed timeentry default project loading
+- Email: Removed autolink div and replaced it with a "normal" links div to show all links for emails at once.
+- Export: Fixed the problem that a string "false" is handled as a bool "true" when selecting the checkboxes on the export dialog.
+- Fixed bug with repeat header on every page in billing PDF
+- Email: Only do TNEF extraction for winmail.dat files
+- Files/Filesearch: Fixed context menu
+- Billing: Costcode combobox: Changed list order to "code" instead of "name".
+- Email: Make email-addresses in emailreciepients object case insensitive.
+- Add disapprove msg dialog to hoursapproval
+- Encrypt functions moved to the Util class so it can be reused
+- When dragging a recurring event and then cancel the action the event will return to the original place.
+- Fix multi select even by one click in calendar
+- Projects2: Added a manager filter combobox to the projects tab.
+- Batch edit: Fixed a problem in the batchedit grid with displaying combobox data
+- Fix sorting the users in a group in the correct order
+- Billing: Fixed availability of some tabs in the book dialog when a new book is created.
+- Fix config check mail template
+
+21-01-2016 6.1.74
+- Fix pagination in project combox by time entry dialog
+- Fix double dtstamp in ics event
+- Caldav: Added check for event RRULES if they are valid, it can happen that an RRULE has an exception event for every instance (So no event is displayed at all)
+- Fix the status and premises of a event in resource calendar
+- Configure Spam folder with $config['spam_folder']
+- Fix refresh email grid by add label
+- Shared home folders were not visible
+
+15-01-2016 6.1.73
+- Fixed error that happened in php < 5.5
+
+14-01-2016 6.1.72
+- Show yourself in the holidays module if you manage other users
+- Tickets export column headers improved
+- Remove X-Priority header when set to normal
+- Fixed needs-action status in calendar
+- Remove the no german national holiday 'Rosenmontag', 'Fastnacht', 'Aschermittwoch'
+- Fix email template by link mail
+- Fix 'save as' mail by link
+- Filesearch index will cache more characters
+- Fix the link mail to a task by save as
+- Calendar module change that will make it possible to filter on categories with custom module
+- Fix current week selection
+
+05-01-2016 6.1.71
+- Fixed pdf renderer income selection by id
+- Fix mail to by leavdays
+
+- Settings can still be saved when the Addressbook module is disabled
+- Document templates: Fixed display of Male and Female (Changed from M and F to Male and Female)
+- Fixed "notice error" problem when the 'customfield' property does not exist in the cfcol.
+
+22-12-2015 6.1.70
+- Ioncube encoding error in previous package
+
+21-12-2015 6.1.69
+- Email: Fixed "total" count of emails in the email list if you use old filters.
+- Fix new event resource status
+- Billing: Fixed costcode grid display problem. (Global vs book specific)
+- Documenttemplates: added contact:photo support
+- Documenttemplates: When printing multiselect fields in a template, then replace the | with a ,
+- Fix remove of mail folders and e-mail in it. 
+- Calendar: Fixed display of tasks in the calendar list when using "calendar_tasklist_show=1" in the config.php file.
+
+15-12-2015 6.1.68
+- E-mail messages and attachments could be saved to read only folder
+- Default and limit sync period to 6 months old on caldav and z-push for the calendar.
+- Added support for ' inside email addresses. Like o'reilly@intermesh.nl etc.
+- Fix upgrade workflow from GO5 to GO6
+- Addressbook: Added ID column to the addressbooks grid.
+- Billing: Added payment method field to the order dialog
+- Tickets: Fixed problem when sending email to ticket agent and the email addresses are separated by a line break.
+- Core: Added util function to replace line breaks for a given char.
+- Fix find inactive tickets
+- Calendar/Tasks: Fixed the display of tasks in the calendar.
+- Fix permission in leavedays
+- Fix install mediawiki iframe
+
+07-12-2015 6.1.67
+- Tickets upgrade query fix
+
+07-12-2015 6.1.66
+- Add new media wiki auth plugin
+- Tickets: Fixed ticket system upgrade for tickets that don't haupdve a type set.
+- Fix cronjob relation
+
+04-12-2015 6.1.65
+- Problem with dates defaulting to 01-01-1970
+- ImapAuth: When the user does not have access to the email module, then don't create the mailbox for this user.
+- Fix tasks ics export
+
+03-12-2015 6.1.64
+- Formatting Unix timestamps will work with dates before 1-1-1970
+- Fix default addressbook is not set
+- Import address lists
+- Automatic project ID's in project templates
+- Subject is configurable in e-mail templates
+- Calendar: Fixed "delete" button in the event contextmenu after editing the event.
+- Fix the isLate functionality from ticket system
+- Fix linking of E-mail
+- Updated Spanish translation
+
+26-11-2015 6.1.63
+- Adding event to participant calendar didn't work with web link and free busy permissions enabled
+- Copy and rename to existing name resulted in deletion of the copy
+- Added error message if files that users try to import can not be read
+- Email/Addressbook: Fixed "Create email from selection" button
+- Calendar: Fixed amount of days on calendar buttons in german language
+- Fix new ticket with note msg “late status”
+
+20-11-2015 6.1.62
+- Email: Disable Skype browser plugin code injection on telephone numbers in the email composer. (Done with meta tag)
+- Wrong check for manager in leavedays module
+- Calendar: Fixed problem with showing resource customfields when enabling a resource in the event dialog.
+- Core: Added "getValueAsBoolean" function to Xcheckbox
+- Timeregistration2: Use "getValueAsBoolean" function of Xcheckbox to fix the problem that break cannot be entered anymore.
+
+12-11-2015 6.1.61
+- Fixed error in filesearch module
+
+11-11-2015 6.1.60
+- Quota user was missing in some cases
+- When a download link is created for a file that was already shared the random code will stay the same
+
+10-11-2015 6.1.59
+- Installation fatal error fixed.
+- Filesearch module has a right click menu on file just like in the Files module
+- Tasks: Fixed problem with automatically getting reminder options from the global settings, (When using quickadd)
+- Added ID field/column to the users grid
+- Fix the created by of a ticket
+- Fix for 0 hours by add holiday request
+
+05-11-2015 6.1.58
+- Tickets/Billing: Copy "vat info", "crn" and "state" of ticket->"company" to the billing order when using the "tickets->bill" functionality.
+- Smime: Fixed problem when viewing "Public certificate"
+- Change ACL owner if owner of model changes
+- Fixed display problem of hotmail messages with inline images
+- Projects import fixed
+- Projects2: Only enable duplicate button when you have write permission on the parent project.
+- Groups: allowed to create Group when a user (other the admin) has manage permission on the groups module
+- Calendar: Users with manage permission on the calendar module can manage resource groups as well
+- Calendar: Enable the delete button for events you are invited for.
+- Fixed wrong display of special holidays that are defined in the holiday file.
+
+22-10-2015 6.1.57
+- Z-Push 2.1.5 update
+- Projects2: Added parent project path to the project edit dialog.
+- Added missing params column in go_cron table.
+
+20-10-2015 6.1.56
+- Cron Class not found error fixed
+
+20-10-2015 6.1.55
+- Export button in in File search module is working
+- File Search will search recursive when a folder is selected.
+- Get the correct quota in the quota bar when another user's folder is selected
+- Right click in the search result of Files module will give more option in the context menu
+- System files will not try to added quota to a user for older Versioning files
+- Option in billing to auto set the status of an order to Payed when enough payment is added
+- Option to hide the public calendar URL
+- Cron jobs can have parameters via the GUI.
+- Create event via web link for GO users
+- Z-Push 2.2.4
+- Email: Fixed problem when emailing with only BCC address and debug mode is set to True.
+- Projects2: Enable and disable the correct items in the context menu based on the user's permissions.
+- Status of an order will automatically be set to the paid status when enough payment is added
+- Project will not set values from its parent if the field are not available in the select template for the new project
+- Fix error message that is showing when installation is disabled in the config.php file
+- Projects2: Disable the "Add project" button when the user wants to add a new project to the root node and doesn't have manage permissions on the projects2 module
+
+09-10-2015 6.1.54
+- Invalid contact color fixed
+- Projects2: Added parent permissions check when adding new project.
+- Projects2: Use the parent permissions to disable/enable the "Add project" button
+- Won't reset the Project display panel when added a new project anymore.
+- Deleted user groups left some garbage in the database
+- Email: Added functionality to decode uuencoded attachment in emails
+- Ticket import, increased the cc_addresses field to fit more email addresses
+
+06-10-2015 6.1.53
+- Added Cron task for Correcting the quota user (will execute ones after this update)
+- Quota will be added the the user that owns the home folder the file is placed into
+- Filesize of older versions will also be added to the quota of the owner.
+- Recalculation will recalculated based on above changes.
+- Added prefix for contact and company images.
+- Use date sent instead of date received as default column in mail
+- Use Base64 encoding for mail body to improve performance and memory usage
+- Inviting a participant to an exception of a recurring series didn't work
+
+02-10-2015 6.1.52
+- Fix for password hash in older php versions < 5.5.
+- No infolog message when logout is called for a user that's not logged in.
+- Projects2: Fixed automatic entry of project manager (current user) when creating a new project.
+
+24-09-2015 6.1.51
+- Projects2: Fixed template events bug cased by change in SelectEmployee combo
+- Projects2: Changed the taskspanel collapse button to the GO default. This solves the problem of not being able to hide the panel when the panel itself is disabled.
+- Holidays month report grid will show correct weekend and week numbers for each month
+- Holidays that are booked over 2 months will show correctly in month report grid
+- Email: Fixed problem with UUencoded attachments in some emails.
+- Billing: total amount paid will be set to 0 when duplicating an order
+
+18-09-2015 6.1.50
+- Updated Spanish translation
+- Files: file quota will be added to the owner of the home folder the file a placed into
+- Holidays: Year credit column is back, Editing year credit with double click works, total hours are calculated from start + end time
+
+14-09-2015 6.1.49
+- BETA: Outlook 2013 support for ActiveSync. For testing only!
+- Duplicate links option for billing
+- Addressbook: fixed display of telephone number in the company employees tab.
+- Last ID field of an order book no longer uses thousand separator
+- Empty error when entering weak password
+- warning about closure and callable
+- use password_hash function if available (PHP 5.5+)
+- Email: Disable moving the INBOX folder itself to a subfolder For MS mailservers that allow this
+- Fixed sieve date operator combobox loading for existing criteria
+- Enhancements in holidays module.
+- Calendar context menu removed for items that are not calendar events
+
+02-09-2015 6.1.48
+- IMPORTANT: Fixed security problem with LDAP authentication. If you use this you must upgrade immediately.
+- Calendar: Changed permissions for calendar categories.
+		Global calendar categories now still have permissions.
+		Calendar specific categories now have the same permissions as the calendar itself instead of own permissions.
+- Files the quota bar will show the quote of the owner of the folder that is viewed
+- Remove PHP customfield type from Group-Office core and change to database to use Phpcustomfieldtype module
+    NOTE: if PHP customfield was used install the "Phpcustomfieldtype" module to continue using it
+- When deleting a user his calendar and calendar views will be removed as well.
+- Email: Added a checkbox to the account settings to manage if the signature is printed above or underneath the reply message block.
+- Sieve: Added currentdate sieve functions
+
+27-08-2015 6.1.47
+- Log entry of projects2/template-icons on each login removed
+- Add button in tickets and notes disabled if no category / type was selected.
+- Raised department field of contact to 100 chars
+- Core: Added error message for when a linkhandler cannot be found
+- Calendar: Fixed cases for enabling the Delete menuitem in the calendar event context menu.
+- User::sudo() will work without being logged in.
+- Saved exports: make label sortable in the column chooser
+
+25-08-2015 6.1.46
+- Change user in time registration fixed
+- Caldav: added missing table "dav_calendar_changes"
+- Fixed problem with posting multiselect customfield in the notes module
+
+20-08-2015 6.1.45
+- LDAP disk_quota support by running it as admin
+- Select project manager bug
+- Create new acl lists when copying folders
+- Tasks/Schedule call: Fixed several issues with the schedulecall dialog
+- Set always_populate_raw_post_data to "-1" for z-push resyncing problem in PHP 5.6
+- Common: Fixed reminder sound for Default and Extjs theme
+- CalDAV will look at the calendar version and uses this is a sync token instead of mtime + count
+- The manager field is searchable in the project dialog
+- Addressbook/Email: Fixed sending of newsletters when imapauth module is used and the config for saving passwords in the DB is set to False.
+- Search within billing items
+- Calendar: Fixed calendar selection in event "move" dialog when an event is edited before.
+- Customfields: Added a read only text field as datatype
+- Disapproved time entry can be edited and will be set to closed afterwards
+- Fixed compatibility with php 5.3 code in smime module.
+- Don't ignore application/applefile
+- Unnecessary sync of template items folder removed
+- Fixed export in activity log
+- Include init_script if set in $config['init_script']
+
+10-08-2015 6.1.44
+- Select all users as project manager
+- Autocomplete in custom select field
+- Delete reminders with their parent object
+- reminder sorting fixed
+- Use search query in total value for invoicable projects
+- Year Credit can be created if you have manage permissions on the leavedays module
+- Sieve: Removed auto adding of "Stop" for rules other than "Spam".
+- Sieve: Make sure "Spam" rules are always the first.
+- Creating invoice from time entries (post calculation) can insert comments in invoice item using {comments} tag
+- Change Z-Push install script to download the latest 2.2.2 version
+- Added "Show Mine Only" button to Projects V2
+
+03-08-2015 6.1.43
+- Comment option removed from link dialog
+- Updated norwegian language
+- Removed x-ua-compatible meta tag from all themes
+- Drag multiday event in month grid for second day will create correct exception
+- Fixed Softaculous issue with installing
+
+27-07-2015 6.1.42
+- Select the first visible item in a multi select list when none selected (Tasklists, Notebooks)
+- GOTA Login dialog did not appear anymore when logged out in Group-Office
+- WebDAV locks stored in database for better performance.
+- Fixed issue where the VALARM of a VEVENT was missing the hours in the local timezone difference on full day events
+- Fixed bug in billing items autocomplete
+- Brought back new sub item in projects2
+- Added start date to sub projects grid
+- Fixed full view of profile image
+- Added URL to vcard export
+- Double substraction of a minute on all day event bug fixed
+- Support for multiple EXDATE values comma separated in ICS files
+- Theme selection: Fix for when Group-Office is branded that the Group-Office theme is not found anymore.
+- Billing: Itemsgrid - Height of items description editor in the items grid is automatically changed to the height of the cell.
+- Added workflow information to the event display dialog
+- Removed PHP5.4 short array declaration method from smime CertificatControlller
+- Fixed bug in calendar week print when an event would run from before 19:00 till after 07:00 the next day
+- Fixed bug where event duplicated on recurring events with exceptions
+- Improved etag values for caldav everywhere
+- Replaced Flash notification sound player with a HTML5 version.
+- Files: Added a download button to the files grid.
+- Sieve: Fixed problem with saving of Out of office tab when sieve file was empty initially.
+- Added relational data to Group.php and UserGroup.php
+- Sieve: Fixed problem with the Out of office tab "Aliasses" field when putting in multiple addresses on multiple lines.
+- Bookmarks: Make local urls also available to add as a bookmark.
+
+17-06-2015 6.1.41
+- Improved etag values for caldav
+- Removed funambol all day flag as it causes problems with thunderbird all day event changes
+- Set project field when creating linked invoice from project
+- Applied new task colors to links and start page as well
+- Sieve: Fixed index problem with sieve rules
+
+15-06-2015 6.1.40
+- Updated Czech and German translations
+- Billing: Added tax_code display to the tax column in the items grid
+- namespace problem in ttf fonts for tcpdf
+- Sieve: Fixed sieve out of office problem with multiple aliases.
+- Sieve: Move the "Out of office" rule always to the end of the sieve file.
+
+10-06-2015 6.1.39
+- Email: fixed importing VCards in Email attachment
+- Calendar: Undo the recurrence not correct exception because it causes the calendar for not being loaded at all.
+- Tasks: Fixed loading problem of the tasks grid. (Sometimes the loadingmask kept hanging)
+- Email: Composer will reload signature without full reload
+- Email: Labels context menu will change when Labels are changed without full reload
+- Sieve: Removed "Stop" from default "Out of office" rule
+- Billing Order item description field autocompletes the description of a product as well
+
+05-06-2015 6.1.38
+- text attachments displayed inline only when no disposition=attachment is present
+- Sieve: Updated German language
+- Billing: Items Grid: Disabled "getEditorParent" because of problem with Chrome browsers for not being able to open the texeditor anymore
+- Duplicating a project saved to soon, causing validation errors with unique custom fields
+- Projects2 analyzer: ACL permissions would cause total time entry duration values to multiply
+- Fixed isImage detection for uppercase extensions
+- Projects2: Added invoiceable option for project income. With exclamation mark in grid
+- Set combobox text in contact field on the Schedule call dialog
+- Projects2: Added Duplicate button to Project Panel, added Edit button to Tree ContextMenu
+- Groups: Fixed error message "Failed to run delete from model" problem with deleting users from groups.
+- Sieve: Added default alias always to the sieve alias(:addresses) line
+- Sieve: Added reply time to the out of office panel.
+- Sieve: Restyled  out of office panel with an advanced properties section
+- Fixed missing 'incomplete' column when sorting tasks on 'completed at'
+- Added "length" parameter to the debug action so a longer log can be requested if needed
+- Fixed namespace problem with Exception class in Store.php file.
+
+26-05-2015 6.1.35
+- Projects2: Expense Budget will save the contact and supplier
+- Email: Labels can be added when the email account is selected
+- Searching recursive in email folders will show correct total number of mails.
+- Reminders: order the list on the vtime property
+- Files: Fixed copy and paste functionality over different file browser dialogs/windows
+- Invalid utf8 when creating short usernames in the calendar
+
+20-05-2015 6.1.34
+- Updated VObject lib to 3.4.3
+- Fixed DTSTART value in VTIMEZONE object when exporting to ICS
+- IMAP communication bug with empty body
+- Fixed display of status Open in ticket never close status settings
+- Display html and text attachments in view
+
+13-05-2015 6.1.33
+- Added config option for max thumbnail-able image file size (set default to 10MB)
+- Calendar: Fixed display of tasks without start_date in the calendar
+- Email em_labels table engine was changed to InnoDB
+- Projects2 Expense budget has more field and dialog is updated
+- Projects2: unset invoice_number when contract is duplicated
+- Process SMIME handlers on reply too but hide encrypted body.
+- Updated German translation
+- Set language and timezone when user logs in with dav
+- Various caldav related fixes
+- Billing: Fixed problem with "Enter" in the billing items description field to start a new line.
+- Added "Download selected" option in the context menu of the file manager. (Creates a zip of the selected files and presents the download dialog.)
+- Added a "Limit"(Maximum size) option for the zipped files file size. ($config['zip_max_file_size']  = 256000000;)
+
+07-05-2015 6.1.32
+- Drag and drop projects from grid to tree
+- Added custom fields to projects portlet on start page
+- Added export of subprojects
+- Fixed short array syntax problem.
+
+07-05-2015 6.1.31
+- Added z-push config constant for modules/z-push/config.php define("BACKEND_GO_DEFAULT_BODY_PREFENCE", SYNC_BODYPREFERENCE_PLAIN); to solve blackbertt password problem:
+	https://forums.zarafa.com/showthread.php?10884-BlackBerry-Passport-does-not-get-HTML-email
+- Check available storage client side in files upload dialog
+- Files tree will expend when a favorite folder item is selected to enersable Up button
+- Updated Czech and German translations
+- Use putenv to fix charset issues in documents module
+- Add config.php option "zpush_always_send_attachments" for testing: http://talk.sonymobile.com/t5/Xperia-Z1-Compact/Z1-Compact-Problem-With-EAS/m-p/866755#11220
+- Support multiple email aliases in SMIME verification
+- Sort on manager in leave days module
+- Added default color set to GO.form.ColorField, removed custom colors from calendar ColorPickerDialog
+- Email invites: events can always be updated from an email and a link was added to open the event
+- Sieve is working without SSL domain check in PHP 5.6
+- Add random $salt to user password for PHP 5.6
+- Leaveday: would give an error when trying to delete a Year Credit
+- Multiselect group will not select first item on reload when nothing was selected (see groups in user module)
+
+29-04-2015 6.1.30
+- Task start time is now optional
+- IMPORTANT: z-push 2.2.1 support. Upgrade z-push too after this upgrade!
+- Wrong custom field function result in rare cases
+- Permissions for calendar categories on upgrade are set to owner now
+- Changed the calendar import success message to an info dialog instead of warning.
+- Files: Added username, musername ans locked by to file properties dialog
+- Zpushadmin: Fixed notice error with defining version file multiple times
+- Removed row limit from visible groups in the User dialog's permissions tab
+- Tickets: Fixed display problem with  the status combo in the message dialog
+- Tickets: fixed problem with comments "browse" button in the display panel
+- Fix sort order by name in addresslist contacts
+- Email: Fixed problem with "label" column when changing account.
+- Tickets: Added total ticket count to ticket statusses
+
+13-04-2015 6.1.29
+- Billing generated invoice numbers can have the year prefixed with 2 digits as well using lowercase %y
+- Sending Newsletters will not remove spaces in encoded characters
+- Projects/Start page: Fixed status filter problem in the projects startpage widget.
+- Set session cookie to secure on SSL connections
+- Calendar: Exception on the first day of the recurrence didn't work
+- Link of second email reply not automatically linked
+- Tickets: Fixed html encoding problem for type combobox in the ticket dialog
+- Projects: Added contracts functionality for income.
+- Comments: added category column in grid
+- Tickets: fixed issue when creating invoices from tickets
+- Smarter reminder import for events and tasks
+- Don't stop importing on large vevent objects
+- Export error in tasks when custom fields module is not installed
+- private flag synced with caldav
+- Icalendar export ordered by start time to avoid recurring event problems.
+- Disable copy on calendar invites
+- delete exception on all day event not working for caldav
+- SaveMailAs: Added the plain email body to the tasks description field.
+- Email: Some email attachments would not show in exceptional cases
+- Tickets: Fixed store call to billing/costcodes for "administration->rates" costcode combo.
+- Customfields: its now possible to create more then 127 categories, field was tinyint(4)
+
+30-03-2015 6.1.28
+- Community with just billing license didn't work
+- Calendar: Disable the recurrence tab when editing a recurrence "child" event.
+- Projects2: Task will use default working week to calculate due date when user is not set
+- Tasks: sorting tasks by project works with Projects2 now
+- Leavedays: only users with write permission to the leavedays module can delete booked leave days
+- Added $config['calendar_disable_merge'] = true; to disable merge of events in calendar view
+- Bookmarks: Fixed problem with showing bookmarks without having a grid state set in the database.
+- Cron: Fixed namespace problem with GOFS Cronjobs
+- Tickets: Changed the ticketNumber to a static value for the email subject. So removed the ticket number prefix from the subject property of the ticket settings.
+- Tickets: Added a fix to check if a cc email address is set that is also used as a import mailbox for tickets
+
+18-03-2015 6.1.27
+- Fix missing manage permissions for calendar category owners
+- Creating a task from email in Thunderbird works
+- Task linking with projects is now compatible with Projects2
+- External fee of a time entry will be recalculated if the activity type changes
+- Calendar portlet: Don't display the events in the appointments widget that are not shared anymore to the user.
+- Notes: Fixed reset of dialog when getting an encryption password error message.
+- Documenttemplates: Added button "Email from template" to the "New" menu in the displaypanels for items.
+- Summary(Start page): Fixed problem with removing group "Everyone" from announcements.
+
+13-03-2015 6.1.26
+- Projects2: Controller action that takes over closed weeks from Projects v1, also during Projects2 install.
+- Improved error message of cron when ioncube is not installed
+- Fixed duplicate key error when creating projects
+- Holidays: Added 5th of may as a holiday every 5 year (2015, 2020 etc. ) (Only in Dutch holidays)
+- Bookmarks: Added extra column view to bookmarks
+- Addressbook: Fixed measurements of contact Photo thumb
+- Billing: Removed faulty costcode controller file
+- Mail/Sieve: Added check if the mailbox extension for sieve is available on the mailserver
+- Files: Removed acl check for diskquota when deleting a file
+- Files: Added check for file already exist in addFileSystemFile
+
+06-03-2015 6.1.25
+- Email: Fixed namespace problem with sending email.
+- Files: Fixed problem with deletion of files when deleting them one at a time. (Sometimes the file was not deleted from disk after that.)
+
+05-03-2015 6.1.24
+- fixed unlink permission denied error on windows when sending email
+- New config option $config['disable_mail'] = true; to disable all mail sending
+- Calendar: Added pager to categories selection in the event dialog
+- Email/Sieve: Added possibility to check for sieve capabilities on the server.
+- Billing: Fixed problem with duedate calculation if the bTime field is empty
+
+02-03-2015 6.1.23
+- Fixed GOTA on windows servers
+- JsonPost validation and fixes for the TabbedFormDialogs
+- Event store will not try to search for events when calendar is not found
+- Use OPENSSL_CIPHER_3DES for smime encryption
+- Billing: Fixed problem that the trackingcodes or costcodes are not saved when only editing one of those fields in the items grid.
+- Billing: Fixed display of 0 in the pdf_template and odf_template fields of the order status when they are not set
+- Tickets: Fixed enters in email templates for mails that are send to the ticketagent.
+
+26-02-2015 6.1.22
+- Billing: sales agent names optional in order grid.
+- Address book: pagination for addresslist select when setting up a new newsletter.
+- Calendar & Tasks: fixed displaying task details in calendar list view.
+- Email: Fixed bug in emailcomposer that didn't apply the changes made in the "Source editor" when saving/sending while the composer is in source edit mode.
+- Strip non ascii chars from message-id in mail to workaround Incredimail bug
+- Billing: optimized autocomplete in trackingcode combobox of the itemsgrid  
+- Email/Sieve: Out of office saving dates conversion bug fixed.
+- Tickets: Email to agent is now of content-type "text/html"
+
+20-02-2015 6.1.21
+- Updated French translation
+- Tasks: Fixed loading of displaypanel after closing the "Continue task" dialog.
+- Sieve: Fixed form validation of "Out of office" tab when creating a new account.
+- Namespace bug in sieve module
+- Restrict deletion of project templates that are in use.
+- Tickets: Fixed wrong ticketcount
+- Tickets: Sort agents for "change responsible agents" on their names
+- Leavedays: fixed display of estimated leave hours (sometimes it was not shown).
+- Leavedays: display used holiday hours in the leave days in the calendar module.
+- Leave days / holidays: Year credit export button for admins and holiday managers.
+- Fixed linked items when using document templates.
+- Better font display in email client.
+- Tickets billing bug fixed
+- Better filename when saving mail to PC
+
+18-02-2015 6.1.20
+- Billing: Fixed and optimized the trackingcode and costcode selects in the items grid. Added autocomplete to the select fields
+- Fixed updating calendar event from external email client
+- To utf8 bug in active directory
+- Email: Added $config['email_autolink_companies'] so email will also be linked to 
+         the company when a contact has a company relation.
+         ($config['email_autolink_contacts'] also need to be set to true)
+- Sieve: Added :create after the fileinto action. This will autocreate the folder if it doesnt exist.
+- Sieve: Fixed "Mark as read" sieve rule.
+- Sieve: Added new out of office tab in the email settings dialog.
+- Projects: don't focus project field on editing
+- Cron job doesn't send mail but logs warnings
+
+09-02-2015 6.1.19
+- Brazilian language Saturday is UTF-8 encoded
+- Comments: Changed order column of comments from ID to Ctime
+- Email: Added properties button to the email client which will give the user direct access to the account settings window.
+- Files folders were always created for projects
+- project template create error
+- Login bug on windows servers
+- UTF-8 conversion is done for ActiveDirectory LDAP servers
+- LDAP_OPT_REFERRALS is set to 0 by default for LDAP connections
+- Leaveday module manager may change the YearCredit and approve registered leave days
+- Active Directory auth fix: LDAP_OPT_REFERRALS is default set to 0
+
+26-01-2015 6.1.18
+- Autocomplete failing after moving email composer fixed
+- Search with utf8 characters in address book was broken
+- Fixed font-style display in some emails
+
+23-01-2015 6.1.17
+- Export timeregistration error fixed
+- Include ID's in columns for export
+- Fixed SMIME decryption of outlook messages
+- Fixed IE bug with colorfield in company dialog
+- Support repeat on workdays of thunderbird in caldav
+- Fixed caldav bug related to case sensitity in the UID database fields
+- Document templates failed with special characters in the name on some servers.
+- Merge events in calendar was broken
+- Ignore unsupported reminder values in icalendar
+- Delete task bug in community version
+- Uninstall of module did not work completely. Some installed checks still returned true.
+- Wrong parent ID in z-push mail folders which prevented sub/sub/sub folders from syncing 
+
+19-01-2015 6.1.16
+- Resources not showing
+
+19-01-2015 6.1.15
+- $config['calendar_tasklist_show'] option is merge from 6.0
+- $config['debug_usernames'] for turning on debug mode for specific users.
+- Replace recurring series completely with caldav to avoid problems of buggy clients
+- Repeating event with caldav that started on 0:00 hours repeated on wrong weekday
+- Replace contact with user in calendar event adds appointment to calendar now.
+- Fixed open task from context menu in calendar
+- Projects2: button to duplicate incomes and expenses.
+
+12-01-2015 6.1.14
+- Billing license check error
+
+07-01-2015 6.1.13
+- License check failed in 6.1.12
+
+07-01-2015 6.1.12
+- Removed project time entry overlapping check
+- Replace namespace delimiter with dash in listeners cache
+- Fixed to field in email sent folder in wide view.
+- Restored windows binaries for zip and libwbxml
+- Automatically delete file when download link expires is available again
+- Projects2: added column 'customer' for sub projects.
+- Timeregistration: If time is next day was checked the field will be checked when editing the time entry
+- Billing: fixed due date for new created recurring events
+- Cut attribute lengths when importing tickets
+- Deleting task category deleted tasks too.
+- Permission error when creating a project in the root and template inherits type from parent
+- Notes: Fixed problem with creating notes from the "New" menu in other modules
+- Correct week number in disapproval email of time entry
+- Custom fields: fix to display custom fields of type Heading.
+- Custom fields: fixed on-click event of Contact/Company custom fields.
+
+15-12-2014 6.1.11
+- Fixed mail send error that occurred with php < 5.4
+
+13-12-2014 6.1.10
+- Invalid build 6.1.9
+
+12-12-2014 6.1.9
+- Shared files tree regenerated cache when item on ACL is delete
+- Fixed when Editing a time entry dialog or added a time entry from the project's task list the task-field was empty
+- Active not category was not selected on new note
+- Save email as note was broken
+- Copy links when task recurs
+- Disabled acl overwrite checkbox if you don't have manage permission
+- Fixed disappearing event from month grid after second edit
+- Billing: Added tracking codes also to the order book cost codes
+- Filesearch has a limit of 3 minutes to read a file for indexing.
+- permissions panel not set after save of note book
+- Move event via context menu back in time failed
+- Copy customer and contact from parent project if set.
+- Only save to email to sent folder when at least one recipient succeeded.
+- Select project was rendered to small in some cases
+- Overtime hours columns in projects2 will be added with default value 0. if you already have the columns the values will not be changed
+- Canceled calendar items will be semi-transparent in IE7 and IE8 as well
+- Projects2: Added option to attach a new project to items in GO from the  "new" button. In case of creating a project from an order, the customer and company will automatically be filled.
+- Billing: Changed template for the Contact select field, contacts are grouped by addressbook and the company is displayed behind the contact.
+- Tickets: Changed button url for external ticket page to "newTicket" instead of "ticketList"
+- Projects2: Project names cannot contain slashes.
+- Core: fixed timezone setting for Z-Push sync.
+- Workflow: namespace fix.
+- Addressbook: Added vcard export option to the addressbook export menu. The contacts of the current contacts grid are exported.
+- Hour approval: if an entry get disapproved the user will receive an email about this.
+- Hour approval: Week list will remember the week you are working in when approving entries
+- Timeregistration: Weeks/Months will show a red cross if it contains disapproved time entries.
+
+
+03-12-2014 6.1.8
+- Disable paste upload as it doesn't work with current chrome anymore
+- Change note password fixed
+- Ignore class not found in database check when custom field categories of old modules exist.
+- Added task ID to grid
+- Groups were limited to user pref in user dialog
+- Time Tracking: No overwriting travel distance with default distance.
+- Hour approval: Managers do not need to be member of the projects to approve entries. When they are manager of Hour Approval
+- Hour approval: When hour approval is installed. Closed entries may be change by mangers of the Hour approval module as well
+
+28-11-2014 6.1.7
+- Billing: Improved Costcode and trackingcode selection in the order items grid
+- Dropbox: Implemented new api for dropbox 
+
+26-11-2014 6.1.6
+- Projects2 - Fixed wrong check for internal and external rates with project resources
+- TimeEntry Dialog used the http POST method for submitting tasks 
+- Calendar: When adding participants, check if participant already can be found, if so then update the existing one, otherwise create a new one.
+- CalDAV tasks have support for "% complete" and "Priority"
+- CalDAV calanders will resync when tasks linked to the calendar are updated
+
+21-11-2014 6.1.5
+- Hide financial data in projects
+- Calendar: Fixed double deletion of events when removing a calendar.
+
+20-11-2014 6.1.4
+- A project container has status "None" on new installations that is created when Projects is installed.
+- Possible to add Human Resources to the Project Templates
+- Files in the Display panel will open in click and show properties when clicking on the info icon.
+- Separated the "filterable" and "show in tree" checkboxes in the project status
+- Added overtime rates with ability the enable them for each resource to Projects.
+- Incorrect message-id in sent folder of email
+- Fixed error when moving projects
+- Fixed template limit of 30 in select for new template action
+- Projects2: Added finance permissions tab to the settings dialog so that the users who can see the financial data of projects can be managed.
+- Address Book Advanced Search: now possible to search by ID.
+
+13-11-2014 6.1.3
+- New licenses failed
+- Updated German
+
+12-11-2014 6.1.2
+- Set max_execution_time to 0 in download action
+
+11-11-2014 6.1.1
+- Initial 6.1 release
+- Changed back to the old licensing system because the new system was confusing people.
+
+11-11-2014 6.0.35
+- Filesearch: Fixed namespace issue in the filesearch cronjob
+- Address Book: Fix for IE11 color picker bug in Contact Dialog.
+- File Search: Fixed searching for file types.
+- Email: Fixed problem with enable/disable templates button when the user has no permissions to use the addressbook module
+- Billing: When duplicationg orders from one book to another, check if one of the two books is a purchase order book. When one of the 2 is a purchase order book then swap the unit_price with the unit_cost parameter for every order item.
+- Billing: Added contextmenu to order grid that adds the functionality to change the order status of the selected orders.
+- Calendar: When importing an ICS file with an appointment that has a recurrence pattern 'last X of month', an error message is given but the import continues.
+- Documenttemplates - Fixed Exception that was throwed when no customfieldrecord could be found
+- CalDAV will except slashed in imported events
+
+06-11-2014 6.0.34
+- Fixed broken email viewer in files module
+- Fixed ODF generation in billing
+- Trim leading backslashes in autoloader
+- Script compression sent wrong headers which broke script loading in some rare cases
+- Email: added new config property to the emailcomposer to disable the template button (config.disableTemplates)
+- Tasks: Added pagination to the category select combobox
+- Fixed AbstractController::getRoute() function with namespaces.
+- Accept YYYYMMDD format when importing vCard with birthdays
+- If fs/Folder fails to copy (because destination might be inside source folder) the already created folder record will be deleted 
+- Added clarification for CalDAV tasklist sync to the settings->synchronization panel
+- Calendar: fixed warning message for the event accept external page
+- Site module: Fixed some namespace problems that broke the site treepanel
+- Saving ProjectV2 TaskGrid will submit all grid data else the grouping functionality will break
+
+
+28-10-2014 6.0.33
+- Sorting users respects sort of name order
+- Billing, added functionality for multiple payments per order. This update will also convert existing payed orders to the new method.
+- Billing: Fixed display problem of costcode combos: Changed displaying "code" instead of "name" in the combo
+- Fixed problem with attachments in the \tmp\attachments\ folder that didn't get removed after sending an email from a mime source
+
+23-10-2014 6.0.32
+- Nexus sends no search folder. We default to inbox search now.
+- Sieve rules parser updated
+- Address Book & Custom Fields: fixed advanced searching Treeselect custom fields in Address Book.
+- The tasks shown in the calendar will use the start time of the task
+- permissions of key.txt invalid after fresh install
+- Added full text search option to quick search
+- Billing: Fixed menu item New > Invoice/Quote.
+- Projects2: Template Events of type "job", "task" and "project".
+- Brought back amavis anti spam and anti virus solution for mailserver.
+
+20-10-2014 6.0.31
+- Fixed quota calculcation for mailserver
+- Fix for self referencing constant
+- Projects2 : Return of the Action (a.k.a. Task Template, a.k.a. Template Event) of type Project.
+- Fix for Excel HEAD request "Microsoft Office Existence Discovery": respond with 501 Not Implemented.
+- Improved ProjectsV2 tasks grid load and save speed when there are many tasks
+- Billing: Added due date for orders. Also added 2 template variables that can be used in the templates: {due_date} {due_days}
+- Renamed Mwst to Ust. in German language file.
+- Install bug in servermanager due to namespaces
+- Remove quotes from SINCE and BEFORE queries to IMAP server as in RFC1730
+- Company does not have to be in the same address book when creating user from contact. (company will move to selected address book instead)
+- System test: fixed checking of max upload size
+- Calendar: Name the exception event if calendar import is from Outlook.
+- Calendar & Email: Fixed bug for creating emails from calendar events.
+- Z-Push 2.1: Fixed timezone bug in iPhone task sync.
+- Tickets: Fixed report: count also tickets in status Open.
+- Calendar: Fixed calendar name positioning in month view Print.
+
+08-10-2014 6.0.30
+- save attachment bug
+- Calendar month print will now show events between before 08:00 and after 17:59
+- Fixed summer- / wintertime issue in the calendar's month print
+- Calendar: Event context menu, disabled copy of private events
+
+07-10-2014 6.0.29
+- Signed GOTA jar file unit 2016.
+
+06-10-2014 6.0.28
+- Email: Fixed problem with saving attachments of linked emails.
+- Fixed syncml namespacing bugs
+- Fixed problem with file uploader when no user quota was set.
+- Dropbox: Fixed problem with finding dropbox api files (namespaces)
+- Google drive: Fixed problem with finding Googledrive_service class file
+- Fixed problem with timeentry status that was automatically appoved even when the hoursapproval2 module was installed.
+- Project display bug
+
+01-10-2014 6.0.27
+- Quota fixed
+- User import broken due to namespaces
+- Fixed problem with &$this variable that is passed to the listener functions (Changed to &$self) (Only breaks in Ioncube encoded files)
+- Modules: Make sort order field sortable in the grid
+- Added comments panel in the dialogs of the following items: company, contact, event, note, task
+
+22-09-2014 6.0.26
+- Small fixes
+
+22-09-2014 6.0.25
+- Public release
+- Removed config.php to prevent upgrade issue
+- Fixed problem with creating new sieve filterset.
+
+19-09-2014 6.0.24
+- Forgot to commit one fix
+
+19-09-2014 6.0.23
+- Billing template logo bug fixed
+- Merged v5 fixes.
+- added selectRecord function in the multiSelectGrid component.
+
+17-09-2014 6.0.22
+- Fixed table cal_events "files_folder_id"
+- Added sort order field in the modules grid
+- customcss: Make public uploaded files accessible without logging in to GO.
+- Improved invoicing in projects2 module.
+- Prefix and Suffix in custom field.
+
+04-09-2014 6.0.21
+- Bug in invoicing from projects
+
+03-09-2014 6.0.20
+- Bug in invoicing from projects
+
+29-08-2014 6.0.19
+- Invoicing for projects2.
+
+21-08-2014 6.0.18
+- Added icons for male and female
+- Added colorpicker to contacts and companies. With this colorpicker you can set the text color of the contacts and companies in the Grid.
+
+18-08-2014 6.0.17
+- Integrated WebODF editor for online odt documents.
+
+14-08-2014 6.0.16
+- Fixes for customer module.
+- Default theme fixed.
+
+12-08-2014 6.0.15
+- Fixed public symlink
+- Fixed dovecot auth for postfix
+
+12-08-2014 6.0.14
+- Fixed install bug
+- Removed spamassassin, amavis and clamav integration. Manual installation works better.
+
+12-08-2014 6.0.13
+- Namespace bugs
+- Fixes of 5.0.77
+
+12-08-2014 6.0.12
+- Lists: Increased timeout for importing lists so the javascript doesn't throw an error after 30 seconds.
+- Lists: Make deleting of records more efficient by setting cascade on the database table.
+- Lists: Added maximize option to lists browser window.
+- Timeregistration2: Fixed editing of existing time entries (showEditDialog call)
+- Lists: Saving dialog state of listrecord dialog and added scroll option to this dialog
+- Lists: Added pagination to listrecord grid
+- Lists: Fixed ordering of listrecord items in list
+- Lists: Added dutch translation
+- Lists: Fixed bug with the browse button and namespaces
+- Summary: Automatically open the Summary module if the logged in user has an unread announcement.
+
+
+06-08-2014 6.0.10
+- Projects2: Tags like {project:name} and {project:path} now available for the Name field of Project Template Jobs.
+- Timeregistration 2: Cannot add/edit time entries in closed week.
+- Billing: PDF: if entire summary block at the end does not fit on one page, it is put at the beginning of the next page.
+
+01-08-2014 6.0.9
+- Holidays: National holiday hours displayed in holiday manager's main grid.
+- Holidays: Warn holiday manager if a month's credit becomes negative.
+- Holidays: Improved way of displaying available credits.
+- Projects 2: Import Projects CSV window is now able to create an example CSV file.
+- Projects 2: able to turn off Project Income using Project Template settings.
+- Projects 2: able to filter Invoice:Income Grid on Project Type & "Already Invoiced".
+- Files: Fixed namespace problem in Jupload controller (uploading folders)
+- Added {link} property to email templates. This will display the text of the linkfield in the email content.
+- Calendar: Added direct_url property for calendar views
+- Core: Distinction between holidays that are free days and holidays that are not.
+- E-mail: link to easily move emails to and from spam folder.
+
+6.0.0
 - Paste images in chrome
 - Support for pasting images and drag and drop nodes in site module
 - Use XCache for caching values
 - Workflow: email and reminder for file uploader when file is disapproved.
+- Using namespaces in PHP code
 
 
+17-06-2014 5.1.8
+- ActivityLog to file function
+- 5.0 fixes
 
+16-05-2014 5.1.7
+- PHP custom field
+- 5.0.57 fixes
+
+13-05-2014 5.1.6
 - Billing: PDF Templates can have stationery paper
 - Ticket messages styled like conversation and notes display yellow.
 - Files: Users without disk quota can still upload files.
 - Calendar: Able to import very large ICalendar objects.
 - Calendar: Notification to user when attempting to import an ICalendar with a recurrence containing 'Last X of month' pattern.
 
+11-02-2014 5.1.2
+- Included LDAP setting saving feature
+
+29-01-2014 5.1.1
+- Merged fixes of 5.0.34-39
+
+22-01-2014 5.1.0
+- Calendar: Overview of participant and resource availability per day.
+- Tasks & Reminders: get reminder when another user puts a task in your task list
+- Added user quota support
+- Show ticket template per message
+- Custom IMAP flag support (Message labels)
+
+- Workflow: Fixed: When disapproved: email and reminder for workflow starter and for workflow owner.
+- Ajax timeout increased to 3 minutes for all of Group-Office.
+- Calendar: Now possible to copy events from a read-only calendar to a writable calendar using right-click menu.
+- Fixed problem with opening document templates in the addressbook
+- Calendar: list view now also respects the read_only property of the event
+- the value in the go_settings table can save more data (LONGTEXT)
+- Proper "File not found" message when a temporary file can no longer be found.
+
+22-09-2014 5.0.81
+- Calendar & Tasks: Fixed updating of Tab "Visible tasklists" when loading, showing, creating CalendarDialog.
+- Remove focus from windows/dialogs that are closed (hide)
+- Special strings "GROUP_EVERYONE", "GROUP_ADMIN" and "GROUP_INTERNAL" for $config['register_user_groups'] and $config['register_visible_user_groups']
+- Document Templates: It is now possible to use custom field tags in Document Templates for Contacts. (e.g., {contact:col_25} and {contact:col_84})
+
+17-09-2014 5.0.80
+- Build error
+
+17-09-2014 5.0.79
+- Calendar: Disable context menu item "Create email for participants" when it's a private event and it's not yours.
+- Added a little bit more height to the password dialog.
+- Changed email toplevel domain name validation so new toplevel domains are also accepted
+- Calendar: Month view: no need to left-click an event before right-clicking it anymore.
+- Fixed max length problem in customfields.
+
+20-08-2014 5.0.78
+- Upgrade broken because of to strict permissions
+- Translation errors fixed
+- Bangladesh translation added.
+- GOTA: Changed moveuploadedfile flag in replace function
+- Billing: Fixed problem with linking orders that don't have a status yet.
+
+13-08-2014 5.0.77
+- Addressbook/Email templates: Fixed problem with template parsing and offset for "IF" statements.
+- Added config 2 options for the files module to remove the addressbooks/projects folders from the files tree:
+	$config['files_show_addressbooks'] = true;
+	$config['files_show_projects'] = true;
+
+08-08-2014 5.0.76
+- Add xss prevention headers
+- Secured maintenance tools
+- Removed deprecated sites module
+- Address book / Search : The "Name 2" field now used in the search cache for all future companies, or, if you recreate the search cache, for all companies with Name 2.
+- Email: Fixed copying of multiple messages. Also set the "SEEN" flag on the copied messages
+- Files will be sorted by filesize correctly
+- Reminders can be removed from a task
+- Calendar: Fixed problem with strtotime and the YYYY.MM.DD date format in the recurrence pattern calculation
+- When renaming a mailbox folder the current name will display in the dialog
+- Expunged email will be removed just before store load again
+- Users: Admin's Users Grid: sort order of name now according to current user's settings.
+- Bookmarks: URL validation in Bookmark URLs extended to also allow URLs like https://wiki:username@wiki.mydomain.org
+- Custom fields: Future encrypted Custom Fields become TEXT fields in database.
+- Projects: Tags like {project:name} and {project:path} now available for the Name and Description fields of Project Template Actions.
+
+31-07-2014 5.0.75
+- Fixed wrong language problem on the login page error messages.
+- Error when saving contact without a company
+
+30-07-2014 5.0.74
+- Fixed notice
+- Address book: Added sanity check: Contact's company must be in same address book as the contact.
+
+29-07-2014 5.0.73
+- Calendar: Fixed problem in IE10 when loading the 1day, 5days and 7days grid.
+- Added configuration variable to enable/disable encoding of the callto link.($config['encode_callto_link'] = false;)
+- Sieve & E-mail: More specific 'sieve not used' note in email account: filter tab.
+- Calendar: Fix for not displaying a multiday event on the last day when the endtime is set to 0:00
+- Addressbook: Fixed problem with using the import dialog for the 2nd time.
+
+18-07-2014 5.0.72
+- Project in billing selectable for v1 and v2.
+- Removed the ability to delete the items that are marked as default in the settings->synchronization tab.
+
+17-07-2014 5.0.71
+- Billing: Fixed sql problems with order when a project is attached and then projects2 isn't installed.
+- Prevent timeout on module permission window
+- Added new config option $config['files_disable_filesystem_sync']=true;
+  The automatic sync can cause timeouts on large installations and should not be
+  required if you don't modify the filesystem externally.
+
+16-07-2014 5.0.70
+- 5MB limit on thumbnailer
+- Addressbook: Changed maximum length of mailing subject from 100 chars to 255 chars.
+- CardDav: 'comments' field of newly imported contact also shown in CardDav VCard.
+- Brought back flash uploader runtime for older browsers because html4 was not working in IE8
+- Added cellular2 to the emailtemplate predefined list.
+- Billing: Changed projects support from projects to projects2
+- Billing: Added fields to costcode so you can add a name and a description to it.
+
+10-07-2014 5.0.69
+- Updated Portugese-Brazil translation
+- Fixed not working if conditions in e-mail templates
+- Invalid calendar state that did not select own calendar on load
+- Urlencode phone numbers in callto links
+
+03-07-2014 5.0.68
+- Size mismatch on debian repos
+
+03-07-2014 5.0.67
+- Broken message dialog in ticket system
+
+02-07-2014 5.0.66
+- Private events where shown in new calendar prints
+- Moved file search index to separate cron job
+- Ticket types will always sort by group name so groups wont show up double
+
+12-06-2014 5.0.65
+- Bug in checking user permission when sending mail
+
+12-06-2014 5.0.64
+- Forward messages that were attached fixed
+- Touch parent and current folder when moving files and folders so refreshing won't sync with the filesystem. This improves performance.
+- Updated Croatian translation
+- Funambol bug with multiple exceptions in a recurring event fixed
+- Event reminder set correctly for funambol sync
+- Show expunged mail with line-through
+- Skip deleted messages in ActiveSync
+- Only update modified properties  on recurring orders when saving
+- Don't ask to add unknown recipient if the recipient is a visible user
+- CalDAV did not handle resource conflicts correctly
+- Billing: three new optional invoice PDF columns.
+- Calendar: fixed bug where an exception event is created twice.
+
+04-06-2014 5.0.63
+- ExportXLS error fixed
+- Added div overlay to the print function so the links in the preview should not be clickable anymore
+- Updated German
 
 
+03-06-2014 5.0.62
+- Fixed missing ExportXLS error when exporting.
+- Fixed problem with address list changes. Only save them when the address list settings panel is enabled.
+- Updated German and Czech language
+- Added Brazilian Portugese holidays file
 
+28-05-2014 5.0.61
+- Limit file search index size to 10MB
+- Send an empty reminder object in sync so reminder will be cleared on clients
+- Removed the flash upload runtime from the plupload uploader because it was causing problems in older IE browsers.(Most browsers support HTML5 anyway)
+- Fixed error when unchecking the "link company" and "link contact" in the email message panel.
+- Fixed problem with smime certificate check when changing the "from" field in the email composer
+- Fixed upload button for smime PKS12 file in email account dialog
+- cleanup links and search cache on deletion of module
+
+21-05-2014 5.0.60
+- Template bug in site module.
+
+21-05-2014 5.0.59
+- Sorting and page size bugs in projects2
+- Reply all in e-mail was broken in previous release
+- Last time entry chopped off in browser.
+
+19-05-2014 5.0.58
+- Fixed access denied error in GOTA because java made an extra request to the
+  codebase url defined in the jnlp file
+- Removed mail headers that caused some spam filters to treat mail as spam.
+- BUG FIX: When using different templates for accounts a sender change needed
+  two attempts when replying
+- Formprocessor: Send the email message to the addressbook owner in his own language.
+- HTML editor: Fixed problem with syncing text in the html editor when changing between html and source mode.
+- Google Drive: fixed problem with authenticate and empty file_id
+- Billing: Enabled template tags in the closing text
+- Updated Norwegian
+- Fixed auto link message in mail for invoices
+- Publish template assets with copy instead of Symlink for windows support
+
+13-05-2014 5.0.57
+- IMAP authentication failed with store_password=false
+- Files and Documenttemplates: Added check for invalid characters in the filename
+- Updated Norwegian
+- Company address display at contact improved
+
+13-05-2014 5.0.56
+- Increased syncing of mail items with ActiveSync when using the "any period" option from 2 weeks to 1 month.
+- Fixed bug: Email messages on the Iphone where missing when the message contained an invalid email-address
+- SMIME: SMIME certificate only works for the owner of the email account, not when the email account is shared.
+- Billing: PDF generator, fixed bugs in the pagenumber display and fixed bug with full page images creating a blank page.
+- Tasks: Fixed problem with the reminder of tasks when the task is recurring. (The reminder of the recurring item wasn't changed.)
+- Don't close the upload dialog when the config parameter "upload_quickselect" is set to false.
+- Email: Composer -> The "from" combobox doesn't need to be editable.
+- Tickets: Added "ticket group" to display panel
+- Address book: user permissions check for custom fields in Advanced Search
+- Address book: show company info in contact display panel.
+- Form processor: name of address book is mentioned in the "new contact" notification email.
 - Calendar: Moving event with resources now checks if the resources are available.
 - SMIME: Also disable the "Encrypt with SMIME" option in the email composer when there is no certificate set for the account.
-- Addressbook/Billing: Fixed display of records in companySelect field. 
-	Fixes issue with addressbook name displayed in reciepient field of the order dialog in the billing module.
+- Addressbook/Billing: Fixed display of records in companySelect field.
+	Fixes issue with address book name displayed in recipient field of the order dialog in the billing module.
 - Added update query that sets the correct permissions for the installed modules. (Because some permissionlevels are removed.)
 
 16-04-2014 5.0.55
 - Updated German translation
 - BUGFIX: most smtp send errors were ignored in the mail module
 - Calendar: Improved notification flow for participants for when event has been updated.
-- In some cases old project folders could be left in the files module after 
+- In some cases old project folders could be left in the files module after
   renaming projects.
 - Sync filesystem ignores ACL and system folders because they don't exist anyway.
 - Tickets: Users can only edit their own messages and not the messages from others.
@@ -33,19 +1242,19 @@
 
 
 14-04-2014 5.0.54
-- Changed delete permissions for ticket messages. 
-	Messages can only be deleted when the user has manage permissions on the ticket module. 
+- Changed delete permissions for ticket messages.
+	Messages can only be deleted when the user has manage permissions on the ticket module.
 	(So now it is the same as  deleting tickets)
-- Bug in file custom field that could cause fatal error: Call to a member 
-  function getDefaultHandler() on a non-object in 
+- Bug in file custom field that could cause fatal error: Call to a member
+  function getDefaultHandler() on a non-object in
   /usr/share/groupoffice/modules/files/customfieldtype/File.php.
 - Fix for quickadd panel position after resize
 - CalDav: Fixed synchronization of event recurrence exceptions.
-- BUG: Adding a new participant to an existing event that is an exception for a 
+- BUG: Adding a new participant to an existing event that is an exception for a
   recurring series could find a complete random event and it will copy the name,
-  location etc to it. This happened recently when we fixed a bug where an event 
+  location etc to it. This happened recently when we fixed a bug where an event
   was not created for a new participant in a recurring exception.
-- The temp files of admin were cleared when the cron job runs. This caused 
+- The temp files of admin were cleared when the cron job runs. This caused
   missing e-mail attachments when you were composing as admin.
 - Font size display error in some e-mail messages fixed.
 
@@ -129,7 +1338,7 @@
 - Projects2: Default icon in the absence of an icon in the subprojects grid.
 - Projects2: Columns are sortable in sub projects grid.
 - Projects2: reports didn't include last day of period
-- Projects2: New project shows available tempaltes sorted by name 
+- Projects2: New project shows available tempaltes sorted by name
 
 18-02-2014 5.0.44
 - Fixed bug in custom fields copying from projects1 to projects2.
@@ -184,7 +1393,7 @@
 29-01-2014 5.0.38
 - Optimized ticket listing page
 - logout in activity log
-- Calendar: Fixed display of mini calendar in older themes 
+- Calendar: Fixed display of mini calendar in older themes
 
 27-01-2014 5.0.37
 - Fixed bug that mail is not saved in the sent items folder when the addressbook module is not installed.
@@ -257,7 +1466,7 @@
 - Holidays: Show leave days / holidays in the owner's calendar.
 
 16-12-2013 5.0.29
-- Made mailserver interact with Group-Office with unique token. Which is easier 
+- Made mailserver interact with Group-Office with unique token. Which is easier
   to manage and more secure because the password is not stored on disk.
 - Removed old unneeded file with small security problem.
 
@@ -269,28 +1478,28 @@
 - Removed sum from billing for performance reasons
 
 11-12-2013 5.0.27
-- Prevent new task list on ios from crashing activesync. All tasks will be 
-  synced to all lists. Not elegant but it seems to be the only way to prevent 
+- Prevent new task list on ios from crashing activesync. All tasks will be
+  synced to all lists. Not elegant but it seems to be the only way to prevent
   a crash.
-- Calendar printing: removed start time for the 2nd printed instance of events 
+- Calendar printing: removed start time for the 2nd printed instance of events
   that take longer than 1 day
 - Calendar module: Added print option for event count per category per calendar.
 - Fixed exception dates import from CalDAV
 - Added new create link dialog for the HTML editor in the site module
-- Autolink a contact will check if the same contact is not already selected in 
+- Autolink a contact will check if the same contact is not already selected in
   the link field
 - Hard-deleting a user works again in the Users module
 - Removed some calendar event data from response when event is private.
 - Copy resources with event too
 
 29-11-2013 5.0.26
-- Check if meeting request has relevant updates before reimporting it when 
+- Check if meeting request has relevant updates before reimporting it when
   accepting in the mail
 - Delete folder bug
 - User group filter showed wrong total count
 - User delete impossible.
 - Changing project type didn't work on projects v2
-- Fixed problem with exception events that are not removed when the main event 
+- Fixed problem with exception events that are not removed when the main event
   is removed.
 - Fixed bug with recurring events that are moved after creating an exception in
   it. Sometimes it happened that the recurrence was not correct after that.
@@ -299,7 +1508,7 @@
 27-11-2013 5.0.25
 - Change ACL level always allowed for admins
 - User add error when max_users was set in config.php
-- Tickets: CC input field for ticket notifications: sanity check when submitting 
+- Tickets: CC input field for ticket notifications: sanity check when submitting
   CC addresses.
 - Files: Prohibited: compress folder that is inside a read-only folder.
 - Address book: Extra check if uploaded photo exceeds the server's limit.
@@ -312,13 +1521,13 @@
 
 24-11-2013 5.0.23
 - Fixed iphone WBXML error when inviting appointment participants in z-push 2.1
-- Tab notification for new emails and tickets will expand when there is a large 
+- Tab notification for new emails and tickets will expand when there is a large
   number inside
 - German translation for birthday portlet added
 - Fixed setting company image and edit dialog link of company image
-- Company Display panel has proper Rowspan sp picture doesn't overlap the 
+- Company Display panel has proper Rowspan sp picture doesn't overlap the
   details pane
-- Ticket reports will only be available to users with manage permission to the 
+- Ticket reports will only be available to users with manage permission to the
   ticket module.
 - Billing: Able to print invoices for costs.
 - Lists: Search bar in Lists Panel.
@@ -418,10 +1627,10 @@
 - Calendar module: icons for private, recurring and events with reminder(s).
 - Modules tabstrip will always be in the order of the modules module.
 - Address Book module: social media links for contacts.
-- Custom field text field length can be set. Max row length error is handled 
+- Custom field text field length can be set. Max row length error is handled
   when maximum is reached.
 - Small layout tweaks
-- Contacts is extended with an Action date that can be filtered on. It can be 
+- Contacts is extended with an Action date that can be filtered on. It can be
   set when you add a comment too.
 - load reject message in sieve dialog
 - Fixed context menu when searching in e-mail
@@ -539,7 +1748,7 @@
 - CRLF Bug in calendar export
 
 11-09-2013 4.2.19
-- Z-Push 2 performance issue. There was a wrong check on changes on the calendar. 
+- Z-Push 2 performance issue. There was a wrong check on changes on the calendar.
   This query was slow and caused all devices to sync when anybody made a change in the calendar.
 - Upgraded PEAR net_sieve page to 1.3.2
 - LDAP Auth module blocked login when not configured.
@@ -612,7 +1821,7 @@
 - Moved address list filter from accordion to separate panel underneath the accordion panel.
 - Fixed imap import for tickets when no subject is given in the email.
 - Address Book module: It is now possible to export all hidden fields into CSV, HTML and PDF.
-- Check if base64 encoded strings can be divided by 4 if decoded line by line to 
+- Check if base64 encoded strings can be divided by 4 if decoded line by line to
   avoid corrupted mails.
 - 3rd contact e-mail showed up with email nr 2.
 - Removing contact photo error
@@ -664,7 +1873,7 @@
 - Z-Push Admin: Added searchbar to devicesGrid
 - Calendar/Tasks: Added checkbox in calendar settings to choose if you want to display completed tasks in the calendar or not.
 - Zpush-admin: Show used AS version also in the Grid
-- to work around office login prompt: http://support.microsoft.com/kb/2019105/en-us 
+- to work around office login prompt: http://support.microsoft.com/kb/2019105/en-us
   never use inline on IE with office documents because it will prompt for authentication.
 - Timeregistration: Added toggle button so the grid can be displayed next to the form instead of underneath it.
 - ZPush: Fixed Grey appointments on iphone
@@ -694,9 +1903,9 @@
 
 18-06-2013 4.2.2
 - Improved WebDAV performance
-- Calendar module: Notification about files of a private event, once the 
+- Calendar module: Notification about files of a private event, once the
   checkbox 'Private' has been clicked.
-- Better memory management in z-push 2 backend. Raised default max attachment 
+- Better memory management in z-push 2 backend. Raised default max attachment
   size to 100MB.
 - Optimized Z-Push 2 ping process with ChangesSink
 
@@ -740,8 +1949,8 @@
 
 13-06-2013 4.1.77
 - If it's only a single all day occurrence then the end day should be the same
-	as the start day for the iOS devices. If it lasts more than one day we should 
-  add one day.	
+	as the start day for the iOS devices. If it lasts more than one day we should
+  add one day.
 - Log rotation broken
 - Create installation broken in servermanager
 
@@ -755,8 +1964,8 @@
 - Removal of billing orders possible even if it has a number.
 
 07-06-2013 4.1.74
-- Added config option "zpush2_max_attachmentsize". Maximum syncable attachment 
-  size in bytes (default 10MB). If you set this too high you'll get a 
+- Added config option "zpush2_max_attachmentsize". Maximum syncable attachment
+  size in bytes (default 10MB). If you set this too high you'll get a
   memory_limit exhausted error and sync will fail completely.
 - Updated Thai translations
 - Unable to upload attachments to e-mail templates
@@ -767,7 +1976,7 @@
 - Orders can be deleted again except if read only flag is set for status
 
 04-06-2013 4.1.73
-- Apache alias defaults to z-push2 now. Be careful with upgrading 
+- Apache alias defaults to z-push2 now. Be careful with upgrading
   /etc/apache2/conf.d/groupoffice.conf if you still use z-push 1.5!
 - Able to select out of more than 50 address books to add to address list.
 - Updated Croatian
@@ -801,7 +2010,7 @@
 - Show maximum upload size.
 - Reverted file thumbnail view by default
 - Sales per month report for billing products
-- Required custom fields are not validated server side to prevent errors when 
+- Required custom fields are not validated server side to prevent errors when
   hiding custom fields in the interface
 - Don't use store reload but load to prevent delete to repeat after editing a rule
 - Disappearing file panel bug
@@ -823,7 +2032,7 @@
 - Remember state of several grids in the Email Composer's Address Book dialog.
 - Added SortableDataView object so a dataview can be sorted
 - Fix for IMAP servers that dont support utf8
-- Changed default event organizer. The default is the calendar owner except if 
+- Changed default event organizer. The default is the calendar owner except if
   the owner is admin. In that case it will default to the logged in user.
 
 14-05-2013 4.1.66
@@ -853,7 +2062,7 @@
 07-05-2013 4.1.64
 - Fixed conflict checking on resources when an event itself is in a conflict.
 - AbstractSettingsCollection loads more efficiently
-- File browser refresh button syncs database with filesystem for the active 
+- File browser refresh button syncs database with filesystem for the active
   folder and it's direct subfolders.
 - Event with non existing user caused error.
 - Locale set to "en us" UTF-8 to make functions consistent. This fixes a problem
@@ -932,7 +2141,7 @@
 15-04-2013 4.1.55
 - Added encoding check to email body to convert mail encoding to UTF-8.
 - ActiveRecord->findByAttributes() and ActiveRecord->findSingleByAttributes() will create an IN query when the value is an array
-- Fixed print button for SMIME signed emails 
+- Fixed print button for SMIME signed emails
 - GO_Mail_Message will not replace {variables} in the head of the HTML email template because CSS <style> might use { } characters
 - Address book will load companies and contacts even when the eastpanel is collapsed
 - New action to purge old events from the calendars
@@ -971,7 +2180,7 @@
 - Fixed multiple bugs in the Z-Push 2 beta implementation
 - Calendar group view print fixed
 - Added "Show all" link to 15 latest links displayed for all items.
-- Added pagination toolbar to search results that doesn't know the total of 
+- Added pagination toolbar to search results that doesn't know the total of
   results to keep performance optimal.
 - Holidays could be generated on the wrong day
 - Appointment invitations could have a confusing "Update event" link.
@@ -1025,7 +2234,7 @@
 - Fixed category selection in Note synchronization when using Z-Push2
 - Type combo will be loaded correctly when opening ticket dialog for the first time.
 - Now recurring events are also shown in the pdf of the daily task/event mailer.
-- Fixed filename of pdf in the daily task/event mailer (No commas) 
+- Fixed filename of pdf in the daily task/event mailer (No commas)
 - Fixed sorting the email folder tree and folder names that only have digits
 - Drag&Drop in billing catalog was fixed
 - Double click on an item in the Select Product Dialog will submit the form (add item to order)
@@ -1071,7 +2280,7 @@
 - ExtJS base translations were missing
 - Updated French
 - Updating copy sieve rules could delete rule
-- Editing an event in the month grid for the second time without refreshing 
+- Editing an event in the month grid for the second time without refreshing
   loaded an empty dialog.
 - Description missing in caldav.
 
@@ -1116,13 +2325,13 @@
 01-03-2013 4.1.39
 - Improved calendar view grid
 - Create temp dirs with 777 permissions to avoid permission issues after upgrade
-- Clicking a day number on the month grid goes to the day view. Clicking on 
+- Clicking a day number on the month grid goes to the day view. Clicking on
   empty space in the cell adds an event.
 - Everybody may create calendar views
-- When freebusy permissions module is not installed users will always save 
+- When freebusy permissions module is not installed users will always save
   meeting requests directly in to other user's calendars.
 - Changed style of unread messages in e-mail client.
-- Added date received column next to date sent column and made date received the 
+- Added date received column next to date sent column and made date received the
   default sort column because it is faster on old IMAP servers.
 - Don't validate passwords on user import and fixed error reporting bug.
 - Only last attachment was forwarded if there were duplicate names
@@ -1166,7 +2375,7 @@
 - File module errors fixed.
 
 14-02-2013 4.1.33
-- Filesearch does not index new files on the fly when opening them because it 
+- Filesearch does not index new files on the fly when opening them because it
   can use too many server resources.
 - Filesearch didn't index files with () in the filename.
 - Filesearch supports PDF with scanned image too now.
@@ -1326,7 +2535,7 @@
 
 09-01-2013 4.1.14
 - Events will create a UUID on databaseCheck()
-- Event store will display the tasklists of all selected calendars 
+- Event store will display the tasklists of all selected calendars
 - In the email template dialog the button to add the company name to a template is fixed
 - Added support for contact template tags in the email template from the ticket system
 - Removed text from read/unread button in ticket panel to save space on the toolbar
@@ -1424,7 +2633,7 @@
 11-01-2013 4.0.147
 - Merging 2 records will unset fields with type 'date' and value '0000-00-00'
 - Some invalid UTF8 strings could cause an empty mail display
-- Custom fields contain empty strings instead of null values by default now. 
+- Custom fields contain empty strings instead of null values by default now.
   A database check must be performed to correct old columns.
 - Fields were not sorted in advanced search dropdown
 
@@ -1507,7 +2716,7 @@
 - Bookmarks icon in start menu
 - Bookmark context menu respects permissions
 - Added large public folder icon
-- When opening a draft it always used the first alias and not the original one 
+- When opening a draft it always used the first alias and not the original one
   if you have multiple.
 - Formatting booleans as yes/no broke some functions like calendar views
 
@@ -1610,7 +2819,7 @@
 - Updated Norwegian translation
 - Fixed UTF8 problem in IE with downloads
 
-06-11-2012 4.0.123 
+06-11-2012 4.0.123
 - Addresslist filters in the Addressbook module will only apply to the grid next to it.
 - Fixed status message problem in ticket panel
 - Sort the files in the projects displaypanel on mtime DESC
@@ -1754,11 +2963,11 @@
 - Attach files button in ticket dialog didn't work the second time.
 - Database check could delete recurrence end time in very rare cases
 - Changed: Open composer for sent items when you double click
-- Added a special Swift preference to escape dots. For some buggy SMTP servers 
+- Added a special Swift preference to escape dots. For some buggy SMTP servers
   this is necessary.
 - Import category color for appointments
-- Create read only custom field categories. So you can make sure people 
-  can view them but not alter them. 
+- Create read only custom field categories. So you can make sure people
+  can view them but not alter them.
 - Save event time in Time Registration fixed.
 - Opening advanced search dialog from SelectContactDialog / SelectCompanyDialog.
 - More elegant error message for empty winmail.dat files
@@ -1778,7 +2987,7 @@
 - Old custom field tags didn't always work on the billing PDF
 - Upgraded plupload to version 1.5.4
 - invalid subject on event invitations
-- Also popup and play alarm when email panel is open. 
+- Also popup and play alarm when email panel is open.
 - Improved calendar invitation messages in the e-mail client
 - Saving company in user dialog was broken
 - Calendar category import and export support
@@ -1796,7 +3005,7 @@
 
 25-09-2012 4.0.105
 - Remove old line in italian language file of billing module that gave errors
-- Calendar resources can now be deleted 
+- Calendar resources can now be deleted
 - project selectType and templateSelect dropdown is disabled when permission_level < writeAndDelete
 - modified attributes of ActiveRecord will work with types other then string
 - Drag and drop a task on a different tasklist now is in MVC style
@@ -1865,7 +3074,7 @@
 - Will not set default values for ActiveRecord set in the code when importing
 - Will not convert a date field when no date is set when importing
 - PDF for Invoice/Order wouldn't print total prices when piece price or product price where not printed
-- PDF for Invoice/Order will now accept the page format from the template 
+- PDF for Invoice/Order will now accept the page format from the template
 - Upgraded SabreDAV library to 1.6.4
 - Allow underscores in custom ICS tags for importing.
 - Error with undefined variable in calendar invitation
@@ -1926,7 +3135,7 @@
 - Added new portlet that shows files uploaded in the last 7 days.
 - Fixed: file does not exist: /themes errors in apache log
 - Subfolders of the sent, drafts and trash folders in the e-mail were not treated as such.
-- Serverclient did not update the mailbox in the servermanager	
+- Serverclient did not update the mailbox in the servermanager
 - Error on logging e-mail
 - {date} tag didn't work in document templates.
 - Document templates can work for other files like PDF as well. No tags will be replaced.
@@ -1961,7 +3170,7 @@
 - Updated Italian translation
 - Fixed: Digest authentication for WebDAV, CalDAV and CardDAV failed after changing password. Logging into Group-Office again re-enabled the login.
 - Improved: Advanced search improved with visual indication and it's translatable.
-- Fixed: Printing calendar, events have a black background 
+- Fixed: Printing calendar, events have a black background
 
 28-08-2012 4.0.90
 - Fixed: GOTA crashed after java update 1.7.06
@@ -1997,7 +3206,7 @@
  -- select resource when only write permissions
  -- send mail when deleting event to participants
 - Fixed label Agent when exporting tickets
-- Fixed hr translation in Links module. 
+- Fixed hr translation in Links module.
 - Fixed task bug in Caldav backend
 - User can enter IMAP password on IMAP connection failed.
 
@@ -2144,7 +3353,7 @@ E-mail
 - Links in messages become relative links when cut & pasted. We make them absolute again on when the message is sent.
 - Automatic linking of e-mail replies when sent from a projects, contact, company etc.
 
-WARNINGS: 
+WARNINGS:
 - Projects: batch report queries will not work anymore. They need to be reconfigured.
 - Billing: Custom fields in templates used to be %Name of customfield% This should be replaced by {col_1}
 
@@ -2222,7 +3431,7 @@ WARNINGS:
 26-07-2011 3.7.25
 - SMIME info on print
 - Disable beeps for e-mail separately
-- Context menu on event to Send mail to all participants	
+- Context menu on event to Send mail to all participants
 - Context menu on contacts to send mail to multiple
 - Simple smiley support in texts
 - Caldav iphone status bug. Imported status defaults to accepted now. iphone doesn't like the status needs-action.
@@ -2237,7 +3446,7 @@ WARNINGS:
 23-06-2011 3.7.24
 - New config variable to set subject for sieve vacation messages.
 - Worked around php smime header bug.
-- Made a checkbox to enable the login screen text at the settings module. 
+- Made a checkbox to enable the login screen text at the settings module.
   Don't forget to check this when you already have a text setup.
 - User groups list was showing less rows then it should.
 - User groups are searchable
@@ -2290,18 +3499,18 @@ WARNINGS:
 - Minified script of smime was missing.
 
 13/05/2011 3.7.14
-- When using the timer in the timeregistration it now adds the time to existing 
+- When using the timer in the timeregistration it now adds the time to existing
   entries.
 - New module for SMIME signing and encryption
 - Template and permission type can only be changed if you have manage permission.
 - Projects couldn't be dragged to the top level
-- Created new config option nav_page_size to set the number of displayed 
+- Created new config option nav_page_size to set the number of displayed
   calendars, notebooks, tasklists etc. per page.
 - Added report parameters to PDF export at Projects report
 - Invitations for occurences of a recurring event didn't work right.
 - Problems with CalDAV and recurring events fixed.
 - Upgrade SabreDAV vendor software to version 1.4.3
-- New log/info.log in home directory that currently logs logouts, successful- 
+- New log/info.log in home directory that currently logs logouts, successful-
   and failed logins.
 
 29/04/2011 3.7.13
@@ -2975,7 +4184,7 @@ Projects
 - Changed ACL system to impove overall performance on large installations
 - Birthday calendar
 - Systemusers module to automatically create Linux system users with
-  Group-Office accounts and generate .forward files for vacation replies in the 
+  Group-Office accounts and generate .forward files for vacation replies in the
   e-mail module
 - Automatically perform system update when new sources are replaced.
 - E-mail reminders

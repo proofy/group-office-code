@@ -44,7 +44,7 @@ class ModelCache{
 			return;
 		
 		if(!$cacheKey)
-			$cacheKey=$model->pk;
+			$cacheKey=$model->getPk();
 		
 		$cacheKey = $this->_formatCacheKey($cacheKey);		
 		
@@ -69,7 +69,7 @@ class ModelCache{
 	/**
 	 * Remove an item from the cache. 
 	 * 
-	 * @param string $modelClassName
+	 * @param StringHelper $modelClassName
 	 */
 	public function remove($modelClassName){		
 		unset($this->_models[$modelClassName]);

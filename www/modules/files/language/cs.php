@@ -26,7 +26,6 @@ $l['deleted']='Smazáno';
 $l['file']='Soubor';
 $l['folder']='Složka';
 $l['files']='Soubory';
-$l['emptyFile']='Prázdný soubor';
 $l['downloadLink'] = 'Odkaz pro stažení';
 $l['deletedDownloadLink']='Smazat tento odkaz pro stažení';
 $l['deleteDownloadLink']='Opravdu chcete smazat tento odkaz pro stažení?';
@@ -48,7 +47,7 @@ $l["notifyChanges"]= 'Informuj mě o změnách v této složce';
 $l["comments"]= 'Komentář';
 $l["downloadGOTA"]= 'Stáhnout pomocí GOTA';
 $l["fileBrowser"]= 'Prohlížení souborů';
-$l["thumbnails"]= 'Náhledy';
+$l["thumbnails"]= 'Zobrazení';
 $l["saveFile"]='Uložit soubor';
 $l["confirmOverwrite"]='{filename} již existuje, chcete přepsat tento soubor?';
 $l["file"]='Soubor';
@@ -132,4 +131,14 @@ $l['rememberFileHandler']="Zapamatovat nastavení pro tento typ souboru";
 $l['alwaysAsk']="Vždy se zeptat";
 $l['openWith']='Otevřít pomocí...';
 
+$l['dontDeleteSystemFolder']="Nelze smazat systémovou složku";
 $l['open']='Otevřít';
+
+$l['rightClickToCopy']='Klikněte pravým tlačítkem pro zkopírování';
+
+$l['deleteExpiredLabel']='Vymazat vyexpirované odkazy pro stažení souborů';
+$l['deleteExpiredDescription']='Smazat odkazy pro stažení souborů, které již nejsou aktivní';
+
+$l['deleteWhenExpired'] = 'Automaticky smazat soubor po expiraci odkazu pro stažení';
+$l['automaticallyDeleted'] = 'Soubor bude automaticky smazán po expiraci odkazu pro stažení';
+$l['emptyFile'] = 'Prázdný soubor';

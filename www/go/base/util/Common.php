@@ -13,6 +13,10 @@
  * @package GO.base.util 
  */
 
+namespace GO\Base\Util;
+
+use GO;
+	
 /**
  * Common utilities
  * 
@@ -21,8 +25,6 @@
  * @copyright Copyright Intermesh BV.
  * @package GO.base.util 
  */
-
-namespace GO\Base\Util;
 
 
 class Common {
@@ -38,11 +40,11 @@ class Common {
 	/**
 	 * Get a link to Google maps for a given address
 	 * 
-	 * @param String $address
-	 * @param String $address_no
-	 * @param String $city
-	 * @param String $country
-	 * @return String 
+	 * @param StringHelper $address
+	 * @param StringHelper $address_no
+	 * @param StringHelper $city
+	 * @param StringHelper $country
+	 * @return StringHelper 
 	 */
 	public static function googleMapsLink($address, $address_no, $city, $country) {
 		$l = '';
@@ -61,23 +63,29 @@ class Common {
 
 			return 'http://maps.google.com/maps?q=' . urlencode($l);
 		} else {
-			return false;
+			return '';
 		}
 	}
 
 	/**
 	 * Format an address in the format that belongs to the give country ISO code.
 	 * 
-	 * @param String $isoCountry
-	 * @param String $address
-	 * @param String $address_no
-	 * @param String $zip
-	 * @param String $city
-	 * @param String $state
-	 * @return String 
+	 * @param StringHelper $isoCountry
+	 * @param StringHelper $address
+	 * @param StringHelper $address_no
+	 * @param StringHelper $zip
+	 * @param StringHelper $city
+	 * @param StringHelper $state
+	 * @return StringHelper 
 	 */
 	public static function formatAddress($isoCountry, $address, $address_no,$zip,$city, $state) {
-		require(\GO::config()->root_path . 'language/addressformats.php');
+		
+		if(empty($address) && empty($city) && empty($state)){
+			return "";
+		}
+		
+		require(GO::config()->root_path . 'language/addressformats.php');
+
 		$format = isset($af[$isoCountry]) ? $af[$isoCountry] : $af['default'];
 
 		$format= str_replace('{address}', $address, $format);

@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: AccountsTree.js 16718 2014-01-27 13:16:37Z mschering $
+ * @version $Id: AccountsTree.js 19873 2016-03-01 10:55:30Z michaelhart86 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -44,7 +44,7 @@ GO.email.AccountsTree = function(config){
 			node.setText(node.text+' ('+GO.lang.strError+')');
 			node.setTooltip(result.feedback, GO.lang.strError);
 			
-			if(result.exceptionClass && result.exceptionClass=='GO_Base_Mail_ImapAuthenticationFailedException'){
+			if(result.exceptionClass && result.exceptionClass=='GO\\Base\\Mail\\ImapAuthenticationFailedException'){
 				this._errorNodes.push(node.attributes);
 			}
 		}
@@ -232,8 +232,8 @@ GO.email.AccountsTree = function(config){
 				if(e.rawEvent.ctrlKey){
 					return this.copyDroppedNodes(e);
 				}
-					
-					
+				
+				
 				
 
 				if(firstDraggedMessage["account_id"] != e.target.attributes['account_id'])
@@ -272,6 +272,7 @@ GO.email.AccountsTree = function(config){
 									moveRequest.call(this, result.messages);
 								}else
 								{
+									this.mainPanel.messagesGrid.getView().holdPosition = true;
 									this.mainPanel.messagesGrid.store.reload({
 										callback:function(){
 
@@ -303,7 +304,8 @@ GO.email.AccountsTree = function(config){
 //					this.messagesGrid.store.baseParams['from_mailbox']=this.mailbox;
 					this.mainPanel.messagesGrid.store.baseParams['to_mailbox']=e.target.attributes['mailbox'];
 					this.mainPanel.messagesGrid.store.baseParams['messages']=Ext.encode(messages);
-
+					
+					this.mainPanel.messagesGrid.getView().holdPosition = true;
 					this.mainPanel.messagesGrid.store.reload({
 						callback:function(){
 							if(this.mainPanel.messagePanel.uid && !this.mainPanel.messagesGrid.store.getById(this.mainPanel.messagePanel.uid))
@@ -462,7 +464,11 @@ Ext.extend(GO.email.AccountsTree, Ext.tree.TreePanel, {
 	
 	moveFolder : function(account_id, targetNode, node)
 	{
-	
+		if(node.attributes['mailbox'] === 'INBOX') { // Disable moveing the inbox folder.
+			this.refresh();
+			return false;
+		}
+		
 		GO.request({
 			url:"email/folder/move",
 			params:{				
@@ -598,7 +604,8 @@ Ext.extend(GO.email.AccountsTree, Ext.tree.TreePanel, {
 			srcMessages.push({
 				accountId :e.data.selections[i].data.account_id,
 				mailboxPath : e.data.selections[i].data.mailbox,
-				mailUid : e.data.selections[i].data.uid
+				mailUid : e.data.selections[i].data.uid,
+				seen : e.data.selections[i].data.seen
 			});
 		}
 		

@@ -27,7 +27,7 @@ class Swift_Transport_EsmtpTransport extends Swift_Transport_AbstractSmtpTranspo
     /**
      * ESMTP capabilities.
      *
-     * @var string[]
+     * @var StringHelper[]
      */
     private $_capabilities = array();
 
@@ -62,7 +62,7 @@ class Swift_Transport_EsmtpTransport extends Swift_Transport_AbstractSmtpTranspo
     /**
      * Set the host to connect to.
      *
-     * @param string $host
+     * @param StringHelper $host
      *
      * @return Swift_Transport_EsmtpTransport
      */
@@ -76,7 +76,7 @@ class Swift_Transport_EsmtpTransport extends Swift_Transport_AbstractSmtpTranspo
     /**
      * Get the host to connect to.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getHost()
     {
@@ -135,7 +135,7 @@ class Swift_Transport_EsmtpTransport extends Swift_Transport_AbstractSmtpTranspo
     /**
      * Set the encryption type (tls or ssl)
      *
-     * @param string $encryption
+     * @param StringHelper $encryption
      *
      * @return Swift_Transport_EsmtpTransport
      */
@@ -155,7 +155,7 @@ class Swift_Transport_EsmtpTransport extends Swift_Transport_AbstractSmtpTranspo
     /**
      * Get the encryption type.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getEncryption()
     {
@@ -165,7 +165,7 @@ class Swift_Transport_EsmtpTransport extends Swift_Transport_AbstractSmtpTranspo
     /**
      * Sets the source IP.
      *
-     * @param string $source
+     * @param StringHelper $source
      *
      * @return Swift_Transport_EsmtpTransport
      */
@@ -179,7 +179,7 @@ class Swift_Transport_EsmtpTransport extends Swift_Transport_AbstractSmtpTranspo
     /**
      * Returns the IP used to connect to the destination.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getSourceIp()
     {
@@ -222,11 +222,11 @@ class Swift_Transport_EsmtpTransport extends Swift_Transport_AbstractSmtpTranspo
      * If no response codes are given, the response will not be validated.
      * If codes are given, an exception will be thrown on an invalid response.
      *
-     * @param string   $command
+     * @param StringHelper   $command
      * @param int[]    $codes
-     * @param string[] $failures An array of failures by-reference
+     * @param StringHelper[] $failures An array of failures by-reference
      *
-     * @return string
+     * @return StringHelper
      */
     public function executeCommand($command, $codes = array(), &$failures = null)
     {

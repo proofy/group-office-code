@@ -56,7 +56,7 @@ class Directory extends \Sabre\DAV\FS\Directory{
 	 *
 	 * data is a readable stream resource
 	 *
-	 * @param string $name Name of the file
+	 * @param StringHelper $name Name of the file
 	 * @param resource $data Initial payload
 	 * @return void
 	 */
@@ -73,10 +73,19 @@ class Directory extends \Sabre\DAV\FS\Directory{
 		if($newFile->exists())
 			throw new \Exception("File already exists!");
 		
-		if(!\GO\Files\Model\File::checkQuota(strlen($data)))
-			throw new Sabre\DAV\Exception\InsufficientStorage();
+
 		
-		$newFile->putContents($data);
+		$tmpFile = \GO\Base\Fs\File::tempFile();
+		$tmpFile->putContents($data);
+		
+		if(!\GO\Files\Model\File::checkQuota($tmpFile->size())){
+			$tmpFile->delete();
+			throw new Sabre\DAV\Exception\InsufficientStorage();
+		}
+		
+//		$newFile->putContents($data);
+		
+		$tmpFile->move($folder->fsFolder, $name);
 		
 
 		$folder->addFile($name);
@@ -85,7 +94,7 @@ class Directory extends \Sabre\DAV\FS\Directory{
 	/**
 	 * Renames the node
 	 *
-	 * @param string $name The new name
+	 * @param StringHelper $name The new name
 	 * @return void
 	 */
 	public function setName($name) {
@@ -109,7 +118,7 @@ class Directory extends \Sabre\DAV\FS\Directory{
 	/**
 	 * Moves the node
 	 *
-	 * @param string $name The new name
+	 * @param StringHelper $name The new name
 	 * @return void
 	 */
 	public function move($newPath) {
@@ -142,7 +151,7 @@ class Directory extends \Sabre\DAV\FS\Directory{
 	/**
 	 * Creates a new subdirectory
 	 *
-	 * @param string $name
+	 * @param StringHelper $name
 	 * @return void
 	 */
 	public function createDirectory($name) {
@@ -160,7 +169,7 @@ class Directory extends \Sabre\DAV\FS\Directory{
 	/**
 	 * Returns a specific child node, referenced by its name
 	 *
-	 * @param string $name
+	 * @param StringHelper $name
 	 * @throws Sabre\DAV\Exception\NotFound
 	 * @return Sabre\DAV\INode
 	 */
@@ -184,7 +193,7 @@ class Directory extends \Sabre\DAV\FS\Directory{
 	 *
 	 * It is generally a good idea to try and override this. Usually it can be optimized.
 	 *
-	 * @param string $name
+	 * @param StringHelper $name
 	 * @return bool
 	 */
 	public function childExists($name) {

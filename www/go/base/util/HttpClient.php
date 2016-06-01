@@ -84,9 +84,9 @@ class HttpClient{
 	/**
 	 * Make a POST request to any URL
 	 * 
-	 * @param string $url
-	 * @param string $params POST parameters
-	 * @return string Response of the server.
+	 * @param StringHelper $url
+	 * @param StringHelper $params POST parameters
+	 * @return StringHelper Response of the server.
 	 * @throws Exception 
 	 */
 	public function request($url, $params=array()){
@@ -142,7 +142,7 @@ class HttpClient{
 	/**
 	 * Download a file
 	 * 
-	 * @param string $url
+	 * @param StringHelper $url
 	 * @param \GO\Base\Fs\File $outputFile
 	 * @param array $params
 	 * @return boolean
@@ -186,9 +186,9 @@ class HttpClient{
 	/**
 	 * Login to a Group-Office installation
 	 * 
-	 * @param string $baseUrl eg. http://customer.group-office.com/
-	 * @param string $username
-	 * @param string $password
+	 * @param StringHelper $baseUrl eg. http://customer.group-office.com/
+	 * @param StringHelper $username
+	 * @param StringHelper $password
 	 * @return boolean
 	 * @throws Exception 
 	 */

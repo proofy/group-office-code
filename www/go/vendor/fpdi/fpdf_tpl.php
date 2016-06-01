@@ -40,7 +40,7 @@ class FPDF_TPL extends FPDF {
     
     /**
      * Nameprefix of Templates used in Resources-Dictonary
-     * @var string A String defining the Prefix used as Template-Object-Names. Have to beginn with an /
+     * @var StringHelper A String defining the Prefix used as Template-Object-Names. Have to beginn with an /
      */
     var $tplprefix = "/TPL";
 

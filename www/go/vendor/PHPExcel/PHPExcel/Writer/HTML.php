@@ -51,7 +51,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	/**
 	 * Images root
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_imagesRoot	= '.';
 
@@ -191,7 +191,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	 * Map VAlign
 	 *
 	 * @param	string		$vAlign		Vertical alignment
-	 * @return string
+	 * @return StringHelper
 	 */
 	private function _mapVAlign($vAlign) {
 		switch ($vAlign) {
@@ -207,7 +207,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	 * Map HAlign
 	 *
 	 * @param	string		$hAlign		Horizontal alignment
-	 * @return string|false
+	 * @return StringHelper|false
 	 */
 	private function _mapHAlign($hAlign) {
 		switch ($hAlign) {
@@ -225,7 +225,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	 * Map border style
 	 *
 	 * @param	int		$borderStyle		Sheet index
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	private function _mapBorderStyle($borderStyle) {
 		switch ($borderStyle) {
@@ -299,7 +299,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	 * Generate HTML header
 	 *
 	 * @param	boolean		$pIncludeStyles		Include styles?
-	 * @return	string
+	 * @return	StringHelper
 	 * @throws PHPExcel_Writer_Exception
 	 */
 	public function generateHTMLHeader($pIncludeStyles = false) {
@@ -350,7 +350,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	/**
 	 * Generate sheet data
 	 *
-	 * @return	string
+	 * @return	StringHelper
 	 * @throws PHPExcel_Writer_Exception
 	 */
 	public function generateSheetData() {
@@ -467,7 +467,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	/**
 	 * Generate sheet tabs
 	 *
-	 * @return	string
+	 * @return	StringHelper
 	 * @throws PHPExcel_Writer_Exception
 	 */
 	public function generateNavigation()
@@ -561,7 +561,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	 *
 	 * @param	PHPExcel_Worksheet	$pSheet			PHPExcel_Worksheet
 	 * @param	string				$coordinates	Cell coordinates
-	 * @return	string
+	 * @return	StringHelper
 	 * @throws	PHPExcel_Writer_Exception
 	 */
 	private function _writeImageInCell(PHPExcel_Worksheet $pSheet, $coordinates) {
@@ -623,7 +623,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	 *
 	 * @param	PHPExcel_Worksheet	$pSheet			PHPExcel_Worksheet
 	 * @param	string				$coordinates	Cell coordinates
-	 * @return	string
+	 * @return	StringHelper
 	 * @throws	PHPExcel_Writer_Exception
 	 */
 	private function _writeChartInCell(PHPExcel_Worksheet $pSheet, $coordinates) {
@@ -668,7 +668,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	 * Generate CSS styles
 	 *
 	 * @param	boolean	$generateSurroundingHTML	Generate surrounding HTML tags? (<style> and </style>)
-	 * @return	string
+	 * @return	StringHelper
 	 * @throws	PHPExcel_Writer_Exception
 	 */
 	public function generateStyles($generateSurroundingHTML = true) {
@@ -959,7 +959,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	 * Create CSS style (PHPExcel_Style_Border)
 	 *
 	 * @param	PHPExcel_Style_Border		$pStyle			PHPExcel_Style_Border
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	private function _createCSSStyleBorder(PHPExcel_Style_Border $pStyle) {
 		// Create CSS
@@ -1008,7 +1008,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	 * Generate table header
 	 *
 	 * @param	PHPExcel_Worksheet	$pSheet		The worksheet for the table we are writing
-	 * @return	string
+	 * @return	StringHelper
 	 * @throws	PHPExcel_Writer_Exception
 	 */
 	private function _generateTableHeader($pSheet) {
@@ -1071,7 +1071,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	 * @param	PHPExcel_Worksheet	$pSheet			PHPExcel_Worksheet
 	 * @param	array				$pValues		Array containing cells in a row
 	 * @param	int					$pRow			Row number (0-based)
-	 * @return	string
+	 * @return	StringHelper
 	 * @throws	PHPExcel_Writer_Exception
 	 */
 	private function _generateRow(PHPExcel_Worksheet $pSheet, $pValues = null, $pRow = 0) {
@@ -1307,7 +1307,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	 * Takes array where of CSS properties / values and converts to CSS string
 	 *
 	 * @param array
-	 * @return string
+	 * @return StringHelper
 	 */
 	private function _assembleCSS($pValue = array())
 	{
@@ -1323,7 +1323,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	/**
 	 * Get images root
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getImagesRoot() {
 		return $this->_imagesRoot;
@@ -1332,7 +1332,7 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	/**
 	 * Set images root
 	 *
-	 * @param string $pValue
+	 * @param StringHelper $pValue
 	 * @return PHPExcel_Writer_HTML
 	 */
 	public function setImagesRoot($pValue = '.') {
@@ -1383,9 +1383,9 @@ class PHPExcel_Writer_HTML extends PHPExcel_Writer_Abstract implements PHPExcel_
 	/**
 	 * Add color to formatted string as inline style
 	 *
-	 * @param string $pValue Plain formatted value without color
-	 * @param string $pFormat Format code
-	 * @return string
+	 * @param StringHelper $pValue Plain formatted value without color
+	 * @param StringHelper $pFormat Format code
+	 * @return StringHelper
 	 */
 	public function formatColor($pValue, $pFormat)
 	{

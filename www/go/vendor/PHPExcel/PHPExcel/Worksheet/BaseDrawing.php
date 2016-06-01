@@ -52,14 +52,14 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
 	/**
 	 * Name
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_name;
 
 	/**
 	 * Description
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_description;
 
@@ -73,7 +73,7 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
 	/**
 	 * Coordinates
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_coordinates;
 
@@ -161,7 +161,7 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
     /**
      * Get Name
      *
-     * @return string
+     * @return StringHelper
      */
     public function getName() {
     	return $this->_name;
@@ -170,7 +170,7 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
     /**
      * Set Name
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Worksheet_BaseDrawing
      */
     public function setName($pValue = '') {
@@ -181,7 +181,7 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
     /**
      * Get Description
      *
-     * @return string
+     * @return StringHelper
      */
     public function getDescription() {
     	return $this->_description;
@@ -190,7 +190,7 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
     /**
      * Set Description
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Worksheet_BaseDrawing
      */
     public function setDescription($pValue = '') {
@@ -246,7 +246,7 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
     /**
      * Get Coordinates
      *
-     * @return string
+     * @return StringHelper
      */
     public function getCoordinates() {
     	return $this->_coordinates;
@@ -255,7 +255,7 @@ class PHPExcel_Worksheet_BaseDrawing implements PHPExcel_IComparable
     /**
      * Set Coordinates
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Worksheet_BaseDrawing
      */
     public function setCoordinates($pValue = 'A1') {

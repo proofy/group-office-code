@@ -81,9 +81,7 @@ class CronController extends \GO\Base\Controller\AbstractJsonController{
 	 */
 	public function actionStore($params){
 		
-		if(!\GO::cronIsRunning()){
-			throw new \GO\Base\Exception\NoCron();
-		}
+		
 		
 		$colModel = new \GO\Base\Data\ColumnModel(\GO\Base\Cron\CronJob::model());
 					
@@ -93,7 +91,11 @@ class CronController extends \GO\Base\Controller\AbstractJsonController{
 		$store->defaultSort = 'name';
 		
 		$response =  $this->renderStore($store);	
-		
+		if(!\GO::cronIsRunning()){
+			$message = "The main cron job doesn't appear to be running. Please add a cron job: \n\n* * * * * www-data php ".\GO::config()->root_path."groupofficecli.php -c=".\GO::config()->get_config_file()." -r=core/cron/run -q > /dev/null";
+			$response['feedback']=$message;
+			//throw new \GO\Base\Exception\NoCron(); <-- will not load grid
+		}
 		
 		
 		echo $response;

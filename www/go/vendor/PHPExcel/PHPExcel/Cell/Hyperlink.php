@@ -38,22 +38,22 @@ class PHPExcel_Cell_Hyperlink
     /**
      * URL to link the cell to
      *
-     * @var string
+     * @var StringHelper
      */
     private $_url;
 
     /**
      * Tooltip to display on the hyperlink
      *
-     * @var string
+     * @var StringHelper
      */
     private $_tooltip;
 
     /**
      * Create a new PHPExcel_Cell_Hyperlink
      *
-     * @param  string  $pUrl      Url to link the cell to
-     * @param  string  $pTooltip  Tooltip to display on the hyperlink
+     * @param  StringHelper  $pUrl      Url to link the cell to
+     * @param  StringHelper  $pTooltip  Tooltip to display on the hyperlink
      */
     public function __construct($pUrl = '', $pTooltip = '')
     {
@@ -65,7 +65,7 @@ class PHPExcel_Cell_Hyperlink
     /**
      * Get URL
      *
-     * @return string
+     * @return StringHelper
      */
     public function getUrl() {
         return $this->_url;
@@ -74,7 +74,7 @@ class PHPExcel_Cell_Hyperlink
     /**
      * Set URL
      *
-     * @param  string    $value
+     * @param  StringHelper    $value
      * @return PHPExcel_Cell_Hyperlink
      */
     public function setUrl($value = '') {
@@ -85,7 +85,7 @@ class PHPExcel_Cell_Hyperlink
     /**
      * Get tooltip
      *
-     * @return string
+     * @return StringHelper
      */
     public function getTooltip() {
         return $this->_tooltip;
@@ -94,7 +94,7 @@ class PHPExcel_Cell_Hyperlink
     /**
      * Set tooltip
      *
-     * @param  string    $value
+     * @param  StringHelper    $value
      * @return PHPExcel_Cell_Hyperlink
      */
     public function setTooltip($value = '') {
@@ -114,7 +114,7 @@ class PHPExcel_Cell_Hyperlink
     /**
      * Get hash code
      *
-     * @return string    Hash code
+     * @return StringHelper    Hash code
      */
     public function getHashCode() {
         return md5(

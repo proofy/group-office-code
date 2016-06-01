@@ -64,9 +64,9 @@ class Reminder extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Create a new reminder
 	 *
-	 * @param string $name The text that will appear in the reminder
+	 * @param StringHelper $name The text that will appear in the reminder
 	 * @param int $time Unix timestamp
-	 * @param string $model_name Optional model name and model id so that the reminder links to the dialog.
+	 * @param StringHelper $model_name Optional model name and model id so that the reminder links to the dialog.
 	 * @param int $model_id
 	 * @param int $vtime The time that will be displayed in the reminder
 	 * 
@@ -74,7 +74,7 @@ class Reminder extends \GO\Base\Db\ActiveRecord {
 	 */
 	public static function newInstance($name, $time, $model_name='', $model_id=0, $vtime=null){
 		$r = new Reminder();
-		$r->name=	\GO\Base\Util\String::cut_string($name, 100);
+		$r->name=	\GO\Base\Util\StringHelper::cut_string($name, 100);
 		$r->time=$time;
 		$r->vtime=$vtime;
 		$r->model_type_id=\GO::getModel($model_name)->modelTypeId();

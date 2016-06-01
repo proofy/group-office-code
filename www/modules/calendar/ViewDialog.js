@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: ViewDialog.js 15954 2013-10-17 12:04:36Z mschering $
+ * @version $Id: ViewDialog.js 17814 2014-07-22 13:15:18Z wsmits $
  * @copyright Copyright Intermesh
  * @author Wesley Smits <wsmits@intermesh.nl>
  */
@@ -80,7 +80,12 @@ GO.calendar.ViewDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
 						hideLabel : true,
 						disabled : true,
 						checked : true
-					})
+					}),{
+						xtype:'plainfield',
+						fieldLabel:GO.calendar.lang.directUrl,
+						name:'url',
+						anchor:'100%'
+					}
 					]
 				}),
 				this.calendarsGrid

@@ -87,21 +87,21 @@ class PHPExcel_Calculation_FormulaToken {
 	/**
 	 * Value
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_value;
 
 	/**
 	 * Token Type (represented by TOKEN_TYPE_*)
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_tokenType;
 
 	/**
 	 * Token SubType (represented by TOKEN_SUBTYPE_*)
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_tokenSubType;
 
@@ -123,7 +123,7 @@ class PHPExcel_Calculation_FormulaToken {
     /**
      * Get Value
      *
-     * @return string
+     * @return StringHelper
      */
     public function getValue() {
     	return $this->_value;
@@ -141,7 +141,7 @@ class PHPExcel_Calculation_FormulaToken {
     /**
      * Get Token Type (represented by TOKEN_TYPE_*)
      *
-     * @return string
+     * @return StringHelper
      */
     public function getTokenType() {
     	return $this->_tokenType;
@@ -159,7 +159,7 @@ class PHPExcel_Calculation_FormulaToken {
     /**
      * Get Token SubType (represented by TOKEN_SUBTYPE_*)
      *
-     * @return string
+     * @return StringHelper
      */
     public function getTokenSubType() {
     	return $this->_tokenSubType;

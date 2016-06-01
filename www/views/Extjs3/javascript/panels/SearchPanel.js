@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: SearchPanel.js 17275 2014-04-07 14:57:29Z mschering $
+ * @version $Id: SearchPanel.js 19274 2015-07-28 08:39:08Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -35,8 +35,13 @@ GO.grid.SearchPanel = function(config){
 
 	if(!config.filesupport) // Load only the models that can handle files then set to true else false
 		config.filesupport = false;
+	
+	if(!config.for_links) // Load only the models that can handle files then set to true else false
+		config.for_links = false;
+
 
 	this.filterPanel = new GO.LinkTypeFilterPanel({
+		for_links: config.for_links,
 		filesupport:config.filesupport,
 		region:'west',		
 		split:true,

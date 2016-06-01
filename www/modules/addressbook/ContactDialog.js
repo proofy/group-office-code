@@ -7,7 +7,7 @@
  * If you have questions write an e-mail to info@intermesh.nl
  * 
  * @copyright Copyright Intermesh
- * @version $Id: ContactDialog.js 16919 2014-02-26 14:12:07Z mschering $
+ * @version $Id: ContactDialog.js 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @author Merijn Schering <mschering@intermesh.nl>
  */
 
@@ -190,6 +190,11 @@ GO.addressbook.ContactDialog = function(config)
 		}
 	}
 
+	if(GO.comments){
+		this.commentsGrid = new GO.comments.CommentsGrid({title:GO.comments.lang.comments});
+		items.push(this.commentsGrid);
+	}
+
 	this.formPanel = new Ext.FormPanel({
 		waitMsgTarget:true,
 		baseParams: {},
@@ -216,7 +221,7 @@ GO.addressbook.ContactDialog = function(config)
 	this.modal=false;
 	this.shadow= false;
 	this.border= false;
-	this.height= 630;
+	this.height= 640;
 	
 	//autoHeight= true;
 	this.width= 820;
@@ -321,10 +326,8 @@ Ext.extend(GO.addressbook.ContactDialog, GO.Window, {
 			});
 		}else
 		{
-			var tempAddressbookID = this.personalPanel.formAddressBooks.getValue();
 			this.formPanel.form.reset();
 
-			this.personalPanel.formAddressBooks.setValue(tempAddressbookID);
 	
 			if(contact_id)
 			{
@@ -332,27 +335,6 @@ Ext.extend(GO.addressbook.ContactDialog, GO.Window, {
 			} else {
 				this.contact_id = 0;
 			}
-
-			if(GO.addressbook.defaultAddressbook){
-
-				var store = this.personalPanel.formAddressBooks.store;
-				//add record to store if not loaded
-				var r = store.getById(GO.addressbook.defaultAddressbook.id);
-				if(!r)
-				{					
-					store.add(GO.addressbook.defaultAddressbook);
-				}
-
-				this.personalPanel.setAddressbookID(GO.addressbook.defaultAddressbook.id);
-			}else if(tempAddressbookID>0 && this.personalPanel.formAddressBooks.store.getById(tempAddressbookID))
-			{
-				this.personalPanel.setAddressbookID(tempAddressbookID);
-			}else
-			{
-				this.personalPanel.formAddressBooks.selectFirst();
-				this.personalPanel.setAddressbookID(this.personalPanel.formAddressBooks.getValue());
-			}
-			
 			
 			if(!GO.util.empty(config.addresslistIds))
 				this.setAddresslistCheckBoxes(config.addresslistIds);
@@ -386,12 +368,12 @@ Ext.extend(GO.addressbook.ContactDialog, GO.Window, {
 	{
 		this.beforeLoad();
 		
+		var params = config.values || {};
+		params.id = id;
+		
 		this.formPanel.form.load({
 			url:GO.url('addressbook/contact/load'),
-			params:{
-				id:id,
-				addressbook_id:this.formPanel.form.findField('addressbook_id').getValue()
-			},
+			params:params,
 			success: function(form, action) {
 				
 //				if(!action.result.data.write_permission)
@@ -441,6 +423,21 @@ Ext.extend(GO.addressbook.ContactDialog, GO.Window, {
 //						this.personalPanel.formCompany.setValue(config.contactData['company_id']);
 						this.personalPanel.formDepartment.setValue(config.contactData['department']);
 						this.personalPanel.formFunction.setValue(config.contactData['function']);
+					}
+					
+					if(GO.comments){
+						if(action.result.data['id'] > 0){
+							if (!GO.util.empty(action.result.data['action_date'])) {
+								this.commentsGrid.actionDate = action.result.data['action_date'];
+							} else {
+								this.commentsGrid.actionDate = false;
+							}
+							this.commentsGrid.setLinkId(action.result.data['id'], 'GO\\Addressbook\\Model\\Contact');
+							this.commentsGrid.store.load();
+							this.commentsGrid.setDisabled(false);
+						} else {
+							this.commentsGrid.setDisabled(true);
+						}
 					}
 					
 					this.afterLoad(action);

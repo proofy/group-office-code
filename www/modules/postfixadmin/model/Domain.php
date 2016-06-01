@@ -131,5 +131,66 @@ class Domain extends \GO\Base\Db\ActiveRecord {
 		);
 		return $record->count;
 	}
+	
+	public function export() {
+		$data = $this->getAttributes('raw');
+		unset($data['id'], $data['acl_id']);
+		
+		$data['mailboxes'] = array();
+		foreach($this->mailboxes as $mailbox) {
+			$attr = $mailbox->getAttributes('raw');
+			unset($attr['id'], $attr['domain_id']);
+			$data['mailboxes'][] = $attr;
+		}
+		
+		$data['aliases'] = array();
+		foreach($this->aliases as $alias) {
+			$attr = $alias->getAttributes('raw');
+			unset($attr['id']);
+			$data['aliases'][] = $attr;
+		}
+		
+		return $data;
+	}
+	
+	public function import($data) {
+		$mailboxes = $data['mailboxes'];
+		$aliases = $data['aliases'];
+		
+		unset($data['mailboxes']);
+		unset($data['aliases']);
+		
+		$data['total_quota']=$data['max_mailboxes']=$data['max_aliases']=0;
+		
+		$this->setAttributes($data, false);
+		
+		if(!$this->save()){
+			throw new \Exception("couldnt save domain");
+		}
+		
+		foreach($mailboxes as $mailboxAttr){
+			$mailbox = new Mailbox();			
+			$mailbox->setAttributes($mailboxAttr, false);
+			$mailbox->domain_id = $this->id;
+			$mailbox->skipPasswordEncryption = true;
+			if(!$mailbox->save()) {
+				echo "Failed to save mailbox: ".var_export($mailbox->getValidationErrors(), true)."\n\n";				
+			}
+		}
+		
+		
+		foreach($aliases as $aliasAttr){
+			$alias = new Alias();
+			$alias->setAttributes($aliasAttr, false);
+			$alias->domain_id = $this->id;
+			
+			
+			if(!$alias->save()) {
+				echo "Failed to save alias: ".var_export($alias->getValidationErrors(), true)."\n\n";				
+			}
+		}
+		
+		return true;
+	}
 
 }

@@ -69,7 +69,7 @@ class ReflectionClass extends \ReflectionClass {
 	/**
 	 * Check if a method is overriding a parent method
 	 * 
-	 * @param string $method
+	 * @param StringHelper $method
 	 * @return boolean
 	 */
 	public function methodIsOverridden($method){

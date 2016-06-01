@@ -36,7 +36,7 @@ class Swift_Encoder_QpEncoder implements Swift_Encoder
     /**
      * Pre-computed QP for HUGE optimization.
      *
-     * @var string[]
+     * @var StringHelper[]
      */
     protected static $_qpMap = array(
         0   => '=00', 1   => '=01', 2   => '=02', 3   => '=03', 4   => '=04',
@@ -98,7 +98,7 @@ class Swift_Encoder_QpEncoder implements Swift_Encoder
     /**
      * A map of non-encoded ascii characters.
      *
-     * @var string[]
+     * @var StringHelper[]
      */
     protected $_safeMap = array();
 
@@ -156,11 +156,11 @@ class Swift_Encoder_QpEncoder implements Swift_Encoder
      * If the first line needs to be shorter, indicate the difference with
      * $firstLineOffset.
      *
-     * @param string  $string to encode
+     * @param StringHelper  $string to encode
      * @param integer $firstLineOffset, optional
      * @param integer $maxLineLength,   optional 0 indicates the default of 76 chars
      *
-     * @return string
+     * @return StringHelper
      */
     public function encodeString($string, $firstLineOffset = 0, $maxLineLength = 0)
     {
@@ -217,7 +217,7 @@ class Swift_Encoder_QpEncoder implements Swift_Encoder
     /**
      * Updates the charset used.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      */
     public function charsetChanged($charset)
     {
@@ -232,7 +232,7 @@ class Swift_Encoder_QpEncoder implements Swift_Encoder
      * @param integer[] $bytes
      * @param integer   $size
      *
-     * @return string
+     * @return StringHelper
      */
     protected function _encodeByteSequence(array $bytes, &$size)
     {
@@ -266,9 +266,9 @@ class Swift_Encoder_QpEncoder implements Swift_Encoder
     /**
      * Make sure CRLF is correct and HT/SPACE are in valid places.
      *
-     * @param string $string
+     * @param StringHelper $string
      *
-     * @return string
+     * @return StringHelper
      */
     protected function _standardize($string)
     {

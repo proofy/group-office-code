@@ -41,6 +41,11 @@ class CoreController extends \GO\Base\Controller\AbstractController {
 		
 		GO::session()->values['debugSql']=!empty($params['debugSql']);
 		
+		// The default length of the tail command, when passing the "length" parameter this can be increased or decreased
+		$length = 300;
+		if(isset($params['length'])){
+			$length = $params['length'];
+		}
 		
 		$debugFile = new \GO\Base\Fs\File(GO::config()->file_storage_path.'log/debug.log');
 		if(!$debugFile->exists())
@@ -50,13 +55,13 @@ class CoreController extends \GO\Base\Controller\AbstractController {
 		if(!$errorFile->exists())
 			$errorFile->touch(true);
 		
-		$debugLog = nl2br(str_replace('['.GO::user()->username.'] ','',  htmlspecialchars($debugFile->tail(300))));
+		$debugLog = nl2br(str_replace('['.GO::user()->username.'] ','',  htmlspecialchars($debugFile->tail($length))));
 		$debugLog = str_replace('--------------------','<hr />', $debugLog);
 		
 		return array(
 				'success'=>true, 
 				'debugLog'=>$debugLog,
-				'errorLog'=>str_replace('----------------','<hr />', nl2br(htmlspecialchars($errorFile->tail(300))))
+				'errorLog'=>str_replace('----------------','<hr />', nl2br(htmlspecialchars($errorFile->tail($length))))
 				);
 	}
 	
@@ -95,7 +100,7 @@ class CoreController extends \GO\Base\Controller\AbstractController {
 		$phpinfo = ob_get_contents();
 		ob_get_clean();
 		
-		$response['info'].= \GO\Base\Util\String::sanitizeHtml($phpinfo);
+		$response['info'].= \GO\Base\Util\StringHelper::sanitizeHtml($phpinfo);
 		return $response;
 		
 	}
@@ -176,8 +181,12 @@ class CoreController extends \GO\Base\Controller\AbstractController {
 		
 		$store = \GO\Base\Data\Store::newInstance(\GO\Base\Model\User::model());
 		$store->setDefaultSortOrder('name', 'ASC');
+		
+		
+		$sortAlias = GO::user()->sort_name=="first_name" ? array('first_name','last_name') : array('last_name','first_name');
+		
 
-		$store->getColumnModel()->formatColumn('name', '$model->name', array(), array('first_name', 'last_name'));
+		$store->getColumnModel()->formatColumn('name', '$model->name', array(), $sortAlias);
 		$store->getColumnModel()->formatColumn('cf', '$model->id.":".$model->name'); //special field used by custom fields. They need an id an value in one.
 		
 		//only get users that are enabled
@@ -225,6 +234,10 @@ class CoreController extends \GO\Base\Controller\AbstractController {
 		
 		
 		$store->setStatement (\GO\Base\Model\Group::model()->find($findParams));
+		
+		$store->getColumnModel()->formatColumn('cf', '$model->id.":".$model->name');//special field used by custom fields. They need an id an value in one.)
+
+				
 		return $store->getData();
 	}
 	
@@ -252,9 +265,13 @@ class CoreController extends \GO\Base\Controller\AbstractController {
 
 //		$file = new \GO\Base\Fs\File(GO::config()->file_storage_path.'cache/'.basename($params['file']));
 
+		if(!$file){
+			throw new \GO\Base\Exception\NotFound();
+		}
+		
 		$ext = $file->extension();
 
-		$type = $ext =='js' ? 'text/javascript' : 'text/css';
+		$type = $ext =='js' ? 'application/javascript' : 'text/css';
 
 		$use_compression = GO::config()->use_zlib_compression();
 
@@ -263,7 +280,7 @@ class CoreController extends \GO\Base\Controller\AbstractController {
 			ob_start('ob_gzhandler');
 		}
 		$offset = 30*24*60*60;
-		header ("Content-Type: $type; charset: UTF-8");
+		header ("Content-Type: $type");
 		header("Expires: " . date("D, j M Y G:i:s ", time()+$offset) . 'GMT');
 		header('Cache-Control: cache');
 		header('Pragma: cache');
@@ -354,6 +371,10 @@ class CoreController extends \GO\Base\Controller\AbstractController {
 		}
 
 		$file = new \GO\Base\Fs\File($src);
+		
+		if($file->size() > \GO::config()->max_thumbnail_size*1024*1024){
+			throw new \Exception("Image may not be larger than 5MB.");
+		}
 		
 
 		$w = isset($params['w']) ? intval($params['w']) : 0;
@@ -958,4 +979,20 @@ class CoreController extends \GO\Base\Controller\AbstractController {
 		
 		
 	}
+	
+	/**
+	 * Create an url to the given model with the given id.
+	 * The format of the parameter needs to be: "ModelType:ModelId" ("GO\Projects2\Model\Project:2")
+	 * 
+	 * @param StringHelper $modelTypeAndKey Example: "GO\Projects2\Model\Project:2"
+	 */
+	public function actionCreateModelUrl($modelTypeAndKey){
+		$response = new \GO\Base\Data\JsonResponse(array(
+			'success'=>true,
+			'url'=>GO::createExternalUrl('links', 'openModelLink', $modelTypeAndKey)
+		));
+		
+		echo $response;
+	}
+	
 }

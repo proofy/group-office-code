@@ -20,7 +20,7 @@ class Swift_Plugins_RedirectingPlugin implements Swift_Events_SendListener
     /**
      * The recipient who will receive all messages.
      *
-     * @var string
+     * @var StringHelper
      */
     private $_recipient;
 
@@ -34,7 +34,7 @@ class Swift_Plugins_RedirectingPlugin implements Swift_Events_SendListener
     /**
      * Create a new RedirectingPlugin.
      *
-     * @param string $recipient
+     * @param StringHelper $recipient
      * @param array  $whitelist
      */
     public function __construct($recipient, array $whitelist = array())
@@ -46,7 +46,7 @@ class Swift_Plugins_RedirectingPlugin implements Swift_Events_SendListener
     /**
      * Set the recipient of all messages.
      *
-     * @param string $recipient
+     * @param StringHelper $recipient
      */
     public function setRecipient($recipient)
     {
@@ -120,7 +120,7 @@ class Swift_Plugins_RedirectingPlugin implements Swift_Events_SendListener
      * Filter header set against a whitelist of regular expressions
      *
      * @param Swift_Mime_HeaderSet $headerSet
-     * @param string $type
+     * @param StringHelper $type
      */
     private function _filterHeaderSet(Swift_Mime_HeaderSet $headerSet, $type)
     {

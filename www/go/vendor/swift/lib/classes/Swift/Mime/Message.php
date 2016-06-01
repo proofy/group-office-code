@@ -20,21 +20,21 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
     /**
      * Generates a valid Message-ID and switches to it.
      *
-     * @return string
+     * @return StringHelper
      */
     public function generateId();
 
     /**
      * Set the subject of the message.
      *
-     * @param string $subject
+     * @param StringHelper $subject
      */
     public function setSubject($subject);
 
     /**
      * Get the subject of the message.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getSubject();
 
@@ -55,14 +55,14 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
     /**
      * Set the return-path (bounce-detect) address.
      *
-     * @param string $address
+     * @param StringHelper $address
      */
     public function setReturnPath($address);
 
     /**
      * Get the return-path (bounce-detect) address.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getReturnPath();
 
@@ -81,7 +81,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
      * is associated with the address.
      *
      * @param mixed  $address
-     * @param string $name    optional
+     * @param StringHelper $name    optional
      */
     public function setSender($address, $name = null);
 
@@ -90,7 +90,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
      *
      * This has a higher significance than the From address.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getSender();
 
@@ -109,7 +109,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
      * is associated with the address.
      *
      * @param mixed  $addresses
-     * @param string $name      optional
+     * @param StringHelper $name      optional
      */
     public function setFrom($addresses, $name = null);
 
@@ -119,7 +119,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
      * This method always returns an associative array where the keys are the
      * addresses.
      *
-     * @return string[]
+     * @return StringHelper[]
      */
     public function getFrom();
 
@@ -136,7 +136,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
      * is associated with the address.
      *
      * @param mixed  $addresses
-     * @param string $name      optional
+     * @param StringHelper $name      optional
      */
     public function setReplyTo($addresses, $name = null);
 
@@ -146,7 +146,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
      * This method always returns an associative array where the keys provide the
      * email addresses.
      *
-     * @return string[]
+     * @return StringHelper[]
      */
     public function getReplyTo();
 
@@ -161,7 +161,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
      * is associated with the address.
      *
      * @param mixed  $addresses
-     * @param string $name      optional
+     * @param StringHelper $name      optional
      */
     public function setTo($addresses, $name = null);
 
@@ -171,7 +171,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
      * This method always returns an associative array, whereby the keys provide
      * the actual email addresses.
      *
-     * @return string[]
+     * @return StringHelper[]
      */
     public function getTo();
 
@@ -183,7 +183,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
      * This method has the same synopsis as {@link setFrom()} and {@link setTo()}.
      *
      * @param mixed  $addresses
-     * @param string $name      optional
+     * @param StringHelper $name      optional
      */
     public function setCc($addresses, $name = null);
 
@@ -193,7 +193,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
      * This method always returns an associative array, whereby the keys provide
      * the actual email addresses.
      *
-     * @return string[]
+     * @return StringHelper[]
      */
     public function getCc();
 
@@ -209,7 +209,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
      * This method has the same synopsis as {@link setFrom()} and {@link setTo()}.
      *
      * @param mixed  $addresses
-     * @param string $name      optional
+     * @param StringHelper $name      optional
      */
     public function setBcc($addresses, $name = null);
 
@@ -219,7 +219,7 @@ interface Swift_Mime_Message extends Swift_Mime_MimeEntity
      * This method always returns an associative array, whereby the keys provide
      * the actual email addresses.
      *
-     * @return string[]
+     * @return StringHelper[]
      */
     public function getBcc();
 }

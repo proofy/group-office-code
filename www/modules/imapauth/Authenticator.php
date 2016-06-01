@@ -125,8 +125,12 @@ class Authenticator {
 	
 	public function createEmailAccount($user, $config, $username, $password) {
 		
+		if(isset($config['create_email_account']) && $config['create_email_account']==false){
+			\GO::debug('IMAPAUTH: E-mail account creation disabled for '.$username);
+			return false;
+		}
 		
-		if (\GO::modules()->isInstalled('email')) {
+		if (\GO::modules()->isInstalled('email') && \GO\Base\Model\Acl::getUserPermissionLevel(\GO::modules()->email->acl_id, $user->id)) {
 			
 			\GO::debug('IMAPAUTH: Creating IMAP account for user');
 			$account['user_id'] = $user->id;

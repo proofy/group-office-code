@@ -54,7 +54,7 @@ class Swift_Mime_Attachment extends Swift_Mime_SimpleMimeEntity
      *
      * By default attachments have a disposition of "attachment".
      *
-     * @return string
+     * @return StringHelper
      */
     public function getDisposition()
     {
@@ -64,7 +64,7 @@ class Swift_Mime_Attachment extends Swift_Mime_SimpleMimeEntity
     /**
      * Set the Content-Disposition of this attachment.
      *
-     * @param string $disposition
+     * @param StringHelper $disposition
      *
      * @return Swift_Mime_Attachment
      */
@@ -82,7 +82,7 @@ class Swift_Mime_Attachment extends Swift_Mime_SimpleMimeEntity
     /**
      * Get the filename of this attachment when downloaded.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFilename()
     {
@@ -92,7 +92,7 @@ class Swift_Mime_Attachment extends Swift_Mime_SimpleMimeEntity
     /**
      * Set the filename of this attachment.
      *
-     * @param string $filename
+     * @param StringHelper $filename
      *
      * @return Swift_Mime_Attachment
      */
@@ -132,7 +132,7 @@ class Swift_Mime_Attachment extends Swift_Mime_SimpleMimeEntity
      * Set the file that this attachment is for.
      *
      * @param Swift_FileStream $file
-     * @param string           $contentType optional
+     * @param StringHelper           $contentType optional
      *
      * @return Swift_Mime_Attachment
      */

@@ -51,7 +51,7 @@ class RootDirectory extends Sabre\DAV\FS\Directory{
 	/**
      * Returns a specific child node, referenced by its name 
      * 
-     * @param string $name 
+     * @param StringHelper $name 
      * @throws Sabre\DAV\Exception\NotFound
      * @return Sabre\DAV\INode 
      */
@@ -89,7 +89,7 @@ class RootDirectory extends Sabre\DAV\FS\Directory{
 	 *
 	 * data is a readable stream resource
 	 *
-	 * @param string $name Name of the file
+	 * @param StringHelper $name Name of the file
 	 * @param resource $data Initial payload
 	 * @return void
 	 */
@@ -101,7 +101,7 @@ class RootDirectory extends Sabre\DAV\FS\Directory{
 	/**
 	 * Creates a new subdirectory
 	 *
-	 * @param string $name
+	 * @param StringHelper $name
 	 * @return void
 	 */
 	public function createDirectory($name) {

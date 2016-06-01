@@ -21,14 +21,14 @@ class Swift_Mime_Grammar
     /**
      * Special characters used in the syntax which need to be escaped.
      *
-     * @var string[]
+     * @var StringHelper[]
      */
     private static $_specials = array();
 
     /**
      * Tokens defined in RFC 2822 (and some related RFCs).
      *
-     * @var string[]
+     * @var StringHelper[]
      */
     private static $_grammar = array();
 
@@ -123,9 +123,9 @@ class Swift_Mime_Grammar
     /**
      * Get the grammar defined for $name token.
      *
-     * @param string $name exactly as written in the RFC
+     * @param StringHelper $name exactly as written in the RFC
      *
-     * @return string
+     * @return StringHelper
      */
     public function getDefinition($name)
     {
@@ -161,11 +161,11 @@ class Swift_Mime_Grammar
     /**
      * Escape special characters in a string (convert to quoted-pairs).
      *
-     * @param string   $token
-     * @param string[] $include additional chars to escape
-     * @param string[] $exclude chars from escaping
+     * @param StringHelper   $token
+     * @param StringHelper[] $include additional chars to escape
+     * @param StringHelper[] $exclude chars from escaping
      *
-     * @return string
+     * @return StringHelper
      */
     public function escapeSpecials($token, $include = array(), $exclude = array())
     {

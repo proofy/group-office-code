@@ -17,7 +17,7 @@
  * This is necessary in the corresponding controller:
  * 	protected function beforeSubmit(&$response, &$model, &$params) {
 		
-		$message = new GO_Base_Mail_Message();
+		$message = new \GO\Base\Mail\Message();
 		$message->handleEmailFormInput($params);
 		
 		$model->content = $message->toString();
@@ -62,6 +62,16 @@ GO.base.email.EmailEditorPanel = function(config){
 				this.afterLoad(action);
 			}
 		}, this);		
+		
+		formPanel.form.on('beforeaction', function(form, action){
+			if(action.type=='submit'){
+				// When the editor is in sourceEditMode then the value needs to be pushed to the HTML editor before it is saved.
+				if(this.htmlEditor.sourceEditMode){
+//					this.emailEditor.htmlEditor.syncValue(); // From HTML to SOURCE
+					this.htmlEditor.pushValue(); // From SOURCE to HTML
+				}
+			}
+		},this);
 		
 // EXT ALREADY DOES THIS IN BasicForm.js
 //		formPanel.form.on('beforeaction', function(form, action){
@@ -188,44 +198,39 @@ Ext.extend(GO.base.email.EmailEditorPanel, Ext.Panel, {
 							this);
 					}
 					
-					this.setOriginalValue();
+					this.setOriginalValue();					
 					
 					
-					
-					
-					
-					var pasteEl = this.htmlEditor.getDoc();
+					var pasteEl = doc;
 
-					if(Ext.isChrome){
-						var paster = new GO.base.upload.Paster({
-							pasteEl: pasteEl,
-							temporaryFile:true,
-							callback:function(paster, result, xhr){
-//								this.attachmentsView.addTempFile(result.data);
-
-									var token = GO.base.util.MD5(result.data.tmp_file);
-
-									var url = GO.url("core/downloadTempFile", {path:result.data.tmp_file, token: token});
-
-									var html = '<img src="'+url+'" border="0" />';
-									
-									this.htmlEditor.focus();
-									this.htmlEditor.insertAtCursor(html);	
-									
-									
-									this.inlineAttachments.push({
-										tmp_file : result.data.tmp_file,
-										from_file_storage : false,
-										token:token
-									});				
-									this.setInlineAttachments(this.inlineAttachments);	
-							},
-							scope:this
-						});
-						
-						console.log('ja2');
-
-					}					
+//					if(Ext.isChrome){
+//						var paster = new GO.base.upload.Paster({
+//							pasteEl: pasteEl,
+//							temporaryFile:true,
+//							callback:function(paster, result, xhr){
+////								this.attachmentsView.addTempFile(result.data);
+//
+//									var token = GO.base.util.MD5(result.data.tmp_file);
+//
+//									var url = GO.url("core/downloadTempFile", {path:result.data.tmp_file, token: token});
+//
+//									var html = '<img src="'+url+'" border="0" />';
+//									
+//									this.htmlEditor.focus();
+//									this.htmlEditor.insertAtCursor(html);	
+//									
+//									
+//									this.inlineAttachments.push({
+//										tmp_file : result.data.tmp_file,
+//										from_file_storage : false,
+//										token:token
+//									});				
+//									this.setInlineAttachments(this.inlineAttachments);	
+//							},
+//							scope:this
+//						});
+//
+//					}					
 				},
 				scope:this
 			}
@@ -442,7 +447,9 @@ Ext.extend(GO.base.email.EmailEditorPanel, Ext.Panel, {
 									this.attachmentsView.afterUpload();
 									if(!failures.length){
 										uploadpanel.onDeleteAll();
-										uploadpanel.ownerCt.hide();
+										
+										if(GO.settings.upload_quickselect !== false)
+											uploadpanel.ownerCt.hide();
 									}
 								}
 							}

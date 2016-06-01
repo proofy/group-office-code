@@ -16,3 +16,5 @@ $l['readMore']="Mehr lesen";
 $l['enableReadMore']="Aktiviere \"Mehr lesen\"-Links";
 
 $l['actionDate']='Handlungsdatum';
+
+$l['parent']='Übergeordnet';

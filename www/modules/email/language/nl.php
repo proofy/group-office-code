@@ -181,6 +181,7 @@ $l["skipUnknownRecipientsAction"]='Dit scherm in het vervolg niet tonen';
 $l["skipUnknownRecipients"]='Toon onbekende ontvanger dialoog niet';
 $l["alwaysRequestNotification"]='Altijd om een leesbevestiging vragen';
 $l["icalendarUpdateEvent"]='Afspraak bijwerken';
+$l["icalendarOpenEvent"]='Afspraak openen';
 $l["icalendarDeleteEvent"]='Afspraak verwijderen';
 $l["icalendarAcceptInvitation"]='Accepteren';
 $l["icalendarDeclineInvitation"]='Weigeren';
@@ -225,7 +226,7 @@ $l['useAccount']='Account gebruiken';
 $l['mailbox']='Mailbox';
 $l['checkUnseen']='Controleer deze map automatisch op nieuwe berichten';
 
-$l['sieveNote']='Niet alle functies worden ondersteund. Raadpleeg de handleiding.';
+$l['sieveNote']='Niet alle functies worden ondersteund. Sieve niet in gebruik. Raadpleeg de handleiding.';
 
 $l["forwardTo"]='Mail doorsturen aan';
 $l["markFolderReadConfirm"]='Weet u zeker dat u alle berichten in map \'{name}\' als gelezen wilt markeren?';
@@ -236,7 +237,7 @@ $l["nMovedMailsTxt"]= 'Het aantal verplaatste berichten: ';
 $l['autolinked']='Dit bericht is automatisch gekoppeld aan %s';
 $l['defaultProgramInstructions']='<p>Om {product_name} als uw standaard e-mail programma in te stellen voor Windows kunt u dit <a class="normal-link" href="{url}">registerbestand</a> uitvoeren.</p>';
 $l['xssDetected']="Dit bericht bevat mogelijk schadelijke inhoud. Klik hier om dit bericht toch weer te geven.";
-$l['xssMessageHidden']='Berciht verborgen om veiligheidsredenen';
+$l['xssMessageHidden']='Bericht verborgen om veiligheidsredenen';
 $l['ignoreSentFolder']='Store replies in the same folder as the original message';
 $l['sourceAndTargetSame']="De bron en doelmap mogen niet dezelfde zijn";
 $l['noEmailFolders']= 'Er zijn geen mappen toegevoegd.';
@@ -287,3 +288,25 @@ $l['linkMustHavePermissionToWrite'] = 'U heeft niet de vereiste schrijfrechten o
 $l['sortAddressesByMailTime'] = 'Sorteer ontvanger emailadressen op tijd van laatst verzonden email (module Adresboek benodigd)';
 
 $l['permissionDelegated'] = 'Alleen lezen en gedelegeerd';
+
+$l['saveToItem'] = 'Opslaan bij item';
+$l['saveToPersonal'] = 'Opslaan in persoonlijke map';
+
+$l['thisIsSpam1'] = 'Dit bericht is gemarkeerd als spam. Klik';
+$l['thisIsSpam2'] = 'hier';
+$l['thisIsSpam3'] = 'als u gelooft dat dit bericht GEEN spam is.';
+
+$l['thisIsNotSpam1'] = 'Klik';
+$l['thisIsNotSpam2'] = 'hier';
+$l['thisIsNotSpam3'] = 'als u denkt dat dit bericht spam is.';
+
+$l['moveToSpamTitle'] = 'Verplaatsen naar spamfolder?';
+$l['moveToSpamMsg'] = 'Weet u zeker dat u dit bericht wilt markeren als spam?';
+$l['moveToInboxTitle'] = 'Uit spamfolder verplaatsen?';
+$l['moveToInboxMsg'] = 'Weet u zeker dat u de spammarkering van dit bericht wilt verwijderen en het bericht wilt verplaatsen naar uw inbox?';
+
+$l['fts'] = 'Volledig bericht';
+
+$l['placeSignatureBelowReply'] = 'Bij beantwoorden/forwarden: Plaats handtekening altijd aan het einde van de mail.';
+
+$l['linkeditems'] = 'Deze e-mail is gekoppeld aan %s item(s): %s';

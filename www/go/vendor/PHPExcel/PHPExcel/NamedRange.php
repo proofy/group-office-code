@@ -38,7 +38,7 @@ class PHPExcel_NamedRange
 	/**
 	 * Range name
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_name;
 
@@ -52,7 +52,7 @@ class PHPExcel_NamedRange
 	/**
 	 * Range of the referenced cells
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_range;
 
@@ -73,9 +73,9 @@ class PHPExcel_NamedRange
     /**
      * Create a new NamedRange
      *
-     * @param string $pName
+     * @param StringHelper $pName
      * @param PHPExcel_Worksheet $pWorksheet
-     * @param string $pRange
+     * @param StringHelper $pRange
      * @param bool $pLocalOnly
      * @param PHPExcel_Worksheet|null $pScope	Scope. Only applies when $pLocalOnly = true. Null for global scope.
      * @throws PHPExcel_Exception
@@ -99,7 +99,7 @@ class PHPExcel_NamedRange
     /**
      * Get name
      *
-     * @return string
+     * @return StringHelper
      */
     public function getName() {
     	return $this->_name;
@@ -108,7 +108,7 @@ class PHPExcel_NamedRange
     /**
      * Set name
      *
-     * @param string $value
+     * @param StringHelper $value
      * @return PHPExcel_NamedRange
      */
     public function setName($value = null) {
@@ -158,7 +158,7 @@ class PHPExcel_NamedRange
     /**
      * Get range
      *
-     * @return string
+     * @return StringHelper
      */
     public function getRange() {
     	return $this->_range;
@@ -167,7 +167,7 @@ class PHPExcel_NamedRange
     /**
      * Set range
      *
-     * @param string $value
+     * @param StringHelper $value
      * @return PHPExcel_NamedRange
      */
     public function setRange($value = null) {
@@ -222,7 +222,7 @@ class PHPExcel_NamedRange
     /**
      * Resolve a named range to a regular cell range
      *
-     * @param string $pNamedRange Named range
+     * @param StringHelper $pNamedRange Named range
      * @param PHPExcel_Worksheet|null $pSheet Scope. Use null for global scope
      * @return PHPExcel_NamedRange
      */

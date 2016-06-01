@@ -29,7 +29,8 @@ class Widget extends \GO\Site\Components\Widget {
 	public function render()
 	{
 		$result = '';
-		if(isset($_POST['ContactForm']) ) {
+		//URL field is for anti spam. bots fill in all the fields. It must be a hidden field in the view.
+		if(isset($_POST['ContactForm']) && empty($_POST['ContactForm']['url']) ) {
 			$this->formModel->email=$_POST['ContactForm']['email'];
 			$this->formModel->message=$_POST['ContactForm']['message'];
 			if($this->formModel->send()) {
@@ -45,6 +46,12 @@ class Widget extends \GO\Site\Components\Widget {
 		$result .= $this->form->textField($this->formModel, 'email', $this->emailFieldOptions);
 		$result .= $this->form->error($this->formModel, 'email');
 		$result .= $this->fieldSeparator;
+		
+		$result .= '<div class="contact-form-url">This field must be empty';
+		$result .= $this->form->textField($this->formModel, 'url', array());		
+		$result .= '</div>';
+		
+		
 
 		$result .= $this->form->textArea($this->formModel, 'message', $this->messageFieldOptions);
 		$result .= $this->form->error($this->formModel, 'message');

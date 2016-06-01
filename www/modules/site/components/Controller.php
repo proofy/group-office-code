@@ -43,7 +43,7 @@ abstract class Controller extends \GO\Base\Controller\AbstractController {
 //	}
 	
 	/**
-	 * @var string the name of the layout to be applied to this controller's views.
+	 * @var StringHelper the name of the layout to be applied to this controller's views.
 	 * Defaults to main, meaning no layout will be applied.
 	 * This file will be found in the layouts folder of yout theme
 	 */
@@ -52,20 +52,20 @@ abstract class Controller extends \GO\Base\Controller\AbstractController {
 
 	/**
 	 * The title of the page
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_pageTitle;
 	
 	/**
 	 * the name of the action that is running. Empty string if none
-	 * @var string name of runned action 
+	 * @var StringHelper name of runned action 
 	 */
 	private $_action ='';
 	
 	/**
 	 * Set the meta description
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	protected $description="";
 	
@@ -95,10 +95,10 @@ abstract class Controller extends \GO\Base\Controller\AbstractController {
 	/**
 	 * Render a view file with layout wrapped
 	 * 
-	 * @param string $view name of the view to be rendered
+	 * @param StringHelper $view name of the view to be rendered
 	 * @param array $data data tp be extracted om PHP variables
 	 * @param boolean $return return rendering result if true
-	 * @return string the redering result if $return is true 
+	 * @return StringHelper the redering result if $return is true 
 	 */
 	public function render($view, $data = null) {
 		$output = $this->renderPartial($view, $data);
@@ -112,7 +112,7 @@ abstract class Controller extends \GO\Base\Controller\AbstractController {
 
 	/**
 	 * Renders a view file.
-	 * @param string $view name of the view to be rendered
+	 * @param StringHelper $view name of the view to be rendered
 	 * @param array $data data to be extracted info PHP variables and made available to the view
 	 * @return type
 	 * @throws CException 
@@ -129,10 +129,10 @@ abstract class Controller extends \GO\Base\Controller\AbstractController {
 	/**
 	 * This extracts the content of $_data_ the be used into the view file
 	 * 
-	 * @param string $_viewFile_ the path to the viewfile to be rendered
+	 * @param StringHelper $_viewFile_ the path to the viewfile to be rendered
 	 * @param array $_data_ contains the data to be used into the view
 	 * @param boolean $_return_ true if the rendered contect should be returned
-	 * @return string the rendered page 
+	 * @return StringHelper the rendered page 
 	 */
 	public function renderFile($_viewFile_, $_data_ = null, $_return_ = false)
 	{
@@ -156,8 +156,8 @@ abstract class Controller extends \GO\Base\Controller\AbstractController {
 	 * Returns the path to the viewfile based on the used template and module
 	 * It will search for a template first if not found look in the views/site/ folder
 	 * the default viewfile provided by the module
-	 * @param string $viewName name to the viewfile
-	 * @return string path of the viewfile
+	 * @param StringHelper $viewName name to the viewfile
+	 * @return StringHelper path of the viewfile
 	 */
 	public function getViewFile($viewName)
 	{	
@@ -178,8 +178,8 @@ abstract class Controller extends \GO\Base\Controller\AbstractController {
 
 	/**
 	 * Returns the path to the layoutfile based on the used template and module
-	 * @param string $layoutName name to the layoutfile
-	 * @return string path of the layoutName
+	 * @param StringHelper $layoutName name to the layoutfile
+	 * @return StringHelper path of the layoutName
 	 */
 	public function getLayoutFile($layoutName)
 	{
@@ -222,7 +222,7 @@ abstract class Controller extends \GO\Base\Controller\AbstractController {
 
 	/**
 	 * Get the url to return to from session when login failed. This is usually called after login in
-	 * @return string the url
+	 * @return StringHelper the url
 	 */
 	public function getReturnUrl()
 	{
@@ -250,7 +250,7 @@ abstract class Controller extends \GO\Base\Controller\AbstractController {
 	/**
 	 * Checks if a user is logged in, if the user has permission to the module and if the user has access to a specific action.
 	 * 
-	 * @param string $action
+	 * @param StringHelper $action
 	 * @return boolean boolean
 	 */
 	protected function _checkPermission($action){

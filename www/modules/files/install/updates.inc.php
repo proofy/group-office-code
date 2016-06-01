@@ -168,3 +168,8 @@ $updates["201402221215"][]='script:3_install_cron.php';
 
 
 $updates['201403071043'][]="update `fs_filehandlers` set `cls` = replace(`cls`,'_','\\\\');";
+
+$updates['201509211504'][] = "ALTER TABLE `fs_versions` ADD `size_bytes` BIGINT NOT NULL DEFAULT '0' ;";
+$updates['201509211706'][] = "ALTER TABLE `fs_folders` ADD `quota_user_id` INT NOT NULL DEFAULT '0' AFTER `muser_id`;";
+$updates['201509221527'][] = 'update fs_folders set quota_user_id=user_id';
+$updates['201509221527'][] = 'script:4_install_quota_cron.php';

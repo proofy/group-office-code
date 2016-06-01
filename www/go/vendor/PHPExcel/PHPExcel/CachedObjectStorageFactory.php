@@ -52,14 +52,14 @@ class PHPExcel_CachedObjectStorageFactory
     /**
      * Name of the method used for cell cacheing
      *
-     * @var string
+     * @var StringHelper
      */
     private static $_cacheStorageMethod = NULL;
 
     /**
      * Name of the class used for cell cacheing
      *
-     * @var string
+     * @var StringHelper
      */
     private static $_cacheStorageClass = NULL;
 
@@ -67,7 +67,7 @@ class PHPExcel_CachedObjectStorageFactory
     /**
      * List of all possible cache storage methods
      *
-     * @var string[]
+     * @var StringHelper[]
      */
     private static $_storageMethods = array(
         self::cache_in_memory,
@@ -128,7 +128,7 @@ class PHPExcel_CachedObjectStorageFactory
     /**
      * Return the current cache storage method
      *
-     * @return string|NULL
+     * @return StringHelper|NULL
      **/
     public static function getCacheStorageMethod()
     {
@@ -150,7 +150,7 @@ class PHPExcel_CachedObjectStorageFactory
     /**
      * Return the list of all possible cache storage methods
      *
-     * @return string[]
+     * @return StringHelper[]
      **/
     public static function getAllCacheStorageMethods()
     {
@@ -161,7 +161,7 @@ class PHPExcel_CachedObjectStorageFactory
     /**
      * Return the list of all available cache storage methods
      *
-     * @return string[]
+     * @return StringHelper[]
      **/
     public static function getCacheStorageMethods()
     {
@@ -179,7 +179,7 @@ class PHPExcel_CachedObjectStorageFactory
     /**
      * Identify the cache storage method to use
      *
-     * @param    string            $method        Name of the method to use for cell cacheing
+     * @param    StringHelper            $method        Name of the method to use for cell cacheing
      * @param    array of mixed    $arguments    Additional arguments to pass to the cell caching class
      *                                        when instantiating
      * @return boolean

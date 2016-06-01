@@ -17,7 +17,7 @@
  * @author Monte Ohrt <monte at ohrt dot com>
  * @param array
  * @param Smarty
- * @return string|null if the assign parameter is passed, Smarty assigns the
+ * @return StringHelper|null if the assign parameter is passed, Smarty assigns the
  *                     result to a template variable
  */
 function smarty_function_fetch($params, &$smarty)

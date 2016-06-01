@@ -44,7 +44,7 @@
  *          (Smarty online manual)
  * @param array
  * @param Smarty
- * @return string
+ * @return StringHelper
  */
 function smarty_function_html_table($params, &$smarty)
 {

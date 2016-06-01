@@ -41,7 +41,7 @@ class Swift_ByteStream_FileByteStream extends Swift_ByteStream_AbstractFilterabl
     /**
      * Create a new FileByteStream for $path.
      *
-     * @param string  $path
+     * @param StringHelper  $path
      * @param boolean $writable if true
      */
     public function __construct($path, $writable = false)
@@ -60,7 +60,7 @@ class Swift_ByteStream_FileByteStream extends Swift_ByteStream_AbstractFilterabl
     /**
      * Get the complete path to the file.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getPath()
     {
@@ -77,7 +77,7 @@ class Swift_ByteStream_FileByteStream extends Swift_ByteStream_AbstractFilterabl
      *
      * @param integer $length
      *
-     * @return string
+     * @return StringHelper
      *
      * @throws Swift_IoException
      */

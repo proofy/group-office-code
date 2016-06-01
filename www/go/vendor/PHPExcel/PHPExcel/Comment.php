@@ -38,7 +38,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Author
      *
-     * @var string
+     * @var StringHelper
      */
     private $_author;
 
@@ -52,21 +52,21 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Comment width (CSS style, i.e. XXpx or YYpt)
      *
-     * @var string
+     * @var StringHelper
      */
     private $_width = '96pt';
 
     /**
      * Left margin (CSS style, i.e. XXpx or YYpt)
      *
-     * @var string
+     * @var StringHelper
      */
     private $_marginLeft = '59.25pt';
 
     /**
      * Top margin (CSS style, i.e. XXpx or YYpt)
      *
-     * @var string
+     * @var StringHelper
      */
     private $_marginTop = '1.5pt';
 
@@ -80,7 +80,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Comment height (CSS style, i.e. XXpx or YYpt)
      *
-     * @var string
+     * @var StringHelper
      */
     private $_height = '55.5pt';
 
@@ -94,7 +94,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Alignment
      *
-     * @var string
+     * @var StringHelper
      */
     private $_alignment;
 
@@ -115,7 +115,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Get Author
      *
-     * @return string
+     * @return StringHelper
      */
     public function getAuthor() {
         return $this->_author;
@@ -124,7 +124,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Set Author
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Comment
      */
     public function setAuthor($pValue = '') {
@@ -155,7 +155,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Get comment width (CSS style, i.e. XXpx or YYpt)
      *
-     * @return string
+     * @return StringHelper
      */
     public function getWidth() {
         return $this->_width;
@@ -164,7 +164,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Set comment width (CSS style, i.e. XXpx or YYpt)
      *
-     * @param string $value
+     * @param StringHelper $value
      * @return PHPExcel_Comment
      */
     public function setWidth($value = '96pt') {
@@ -175,7 +175,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Get comment height (CSS style, i.e. XXpx or YYpt)
      *
-     * @return string
+     * @return StringHelper
      */
     public function getHeight() {
         return $this->_height;
@@ -184,7 +184,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Set comment height (CSS style, i.e. XXpx or YYpt)
      *
-     * @param string $value
+     * @param StringHelper $value
      * @return PHPExcel_Comment
      */
     public function setHeight($value = '55.5pt') {
@@ -195,7 +195,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Get left margin (CSS style, i.e. XXpx or YYpt)
      *
-     * @return string
+     * @return StringHelper
      */
     public function getMarginLeft() {
         return $this->_marginLeft;
@@ -204,7 +204,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Set left margin (CSS style, i.e. XXpx or YYpt)
      *
-     * @param string $value
+     * @param StringHelper $value
      * @return PHPExcel_Comment
      */
     public function setMarginLeft($value = '59.25pt') {
@@ -215,7 +215,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Get top margin (CSS style, i.e. XXpx or YYpt)
      *
-     * @return string
+     * @return StringHelper
      */
     public function getMarginTop() {
         return $this->_marginTop;
@@ -224,7 +224,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Set top margin (CSS style, i.e. XXpx or YYpt)
      *
-     * @param string $value
+     * @param StringHelper $value
      * @return PHPExcel_Comment
      */
     public function setMarginTop($value = '1.5pt') {
@@ -264,7 +264,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Set Alignment
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Comment
      */
     public function setAlignment($pValue = PHPExcel_Style_Alignment::HORIZONTAL_GENERAL) {
@@ -275,7 +275,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Get Alignment
      *
-     * @return string
+     * @return StringHelper
      */
     public function getAlignment() {
         return $this->_alignment;
@@ -284,7 +284,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Get hash code
      *
-     * @return string    Hash code
+     * @return StringHelper    Hash code
      */
     public function getHashCode() {
         return md5(
@@ -318,7 +318,7 @@ class PHPExcel_Comment implements PHPExcel_IComparable
     /**
      * Convert to string
      *
-     * @return string
+     * @return StringHelper
      */
     public function __toString() {
         return $this->_text->getPlainText();

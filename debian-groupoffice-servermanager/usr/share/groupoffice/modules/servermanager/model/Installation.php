@@ -47,6 +47,8 @@
 
 namespace GO\ServerManager\Model;
 use Exception;
+use GO;
+use ReflectionClass;
 
 class Installation extends \GO\Base\Db\ActiveRecord {
 
@@ -259,7 +261,7 @@ class Installation extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Get the path to the config file of an installation
 	 * 
-	 * @return string path to config file
+	 * @return StringHelper path to config file
 	 */
 	protected function getConfigPath(){		
 		return !empty($this->name) ? '/etc/groupoffice/'.$this->name.'/config.php' : false;
@@ -267,7 +269,7 @@ class Installation extends \GO\Base\Db\ActiveRecord {
 	
 	/**
 	 * The url of the installation
-	 * @return string URL
+	 * @return StringHelper URL
 	 */
 	protected function getUrl(){
 		$protocol = empty(\GO::config()->servermanager_ssl) ? 'http' : 'https';
@@ -286,7 +288,7 @@ class Installation extends \GO\Base\Db\ActiveRecord {
 		{
 //			var_dump($this->configPath);
 			if(!$this->configPath || !file_exists($this->configPath)){
-				return false;
+				return array();
 			} else {
 				$config=array();
 				require($this->configPath);
@@ -301,7 +303,7 @@ class Installation extends \GO\Base\Db\ActiveRecord {
 	 * 
 	 * @return array
 	 */
-	public function getConfigWithGlobals(){
+	public function getConfigWithGlobals(){		
 		$c = $this->config;
 		if(file_exists('/etc/groupoffice/globalconfig.inc.php')){
 			require('/etc/groupoffice/globalconfig.inc.php');
@@ -309,14 +311,17 @@ class Installation extends \GO\Base\Db\ActiveRecord {
 				$c = $c ? array_merge($config, $c) : $config;
 		}
 		
-		return $c;
+		$configReflection = new ReflectionClass(GO::config());	
+		$defaults = $configReflection->getDefaultProperties();
+		
+		return array_merge($defaults, $c);
 	}
 	
 	/**
 	 * Create a mysql dump of the installation database.
 	 * 
-	 * @param string $outputDir
-	 * @param string $filename Optional filename. If omitted then $config['db_name'] will be used.
+	 * @param StringHelper $outputDir
+	 * @param StringHelper $filename Optional filename. If omitted then $config['db_name'] will be used.
 	 * @return boolean
 	 * @throws Exception
 	 */
@@ -344,7 +349,7 @@ class Installation extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Set a config.php variable for this installation
 	 * 
-	 * @param string $name
+	 * @param StringHelper $name
 	 * @param mixed $value
 	 * @return booleam
 	 */
@@ -648,7 +653,7 @@ class Installation extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Run raw SQL query on installation database.
 	 * 
-	 * @param string $query
+	 * @param StringHelper $query
 	 * @return boolean
 	 * @throws Exception
 	 */
@@ -812,7 +817,7 @@ class Installation extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Puts the prefix $tagPrefix before each key in the $array.
 	 * @param array $array
-	 * @param string $tagPrefix
+	 * @param StringHelper $tagPrefix
 	 * @return array
 	 */
 	private function _addPrefixToKeys(array $array,$tagPrefix) {

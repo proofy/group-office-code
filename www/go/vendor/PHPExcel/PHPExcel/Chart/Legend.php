@@ -60,7 +60,7 @@ class PHPExcel_Chart_Legend
 	/**
 	 * Legend position
 	 *
-	 * @var	string
+	 * @var	StringHelper
 	 */
 	private $_position = self::POSITION_RIGHT;
 
@@ -92,7 +92,7 @@ class PHPExcel_Chart_Legend
 	/**
 	 * Get legend position as an excel string value
 	 *
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public function getPosition() {
 		return $this->_position;

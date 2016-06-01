@@ -20,7 +20,7 @@ class Swift_Plugins_Pop_Pop3Exception extends Swift_IoException
     /**
      * Create a new Pop3Exception with $message.
      *
-     * @param string $message
+     * @param StringHelper $message
      */
     public function __construct($message)
     {

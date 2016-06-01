@@ -28,9 +28,9 @@ interface Swift_KeyCache
      *
      * @see MODE_WRITE, MODE_APPEND
      *
-     * @param string  $nsKey
-     * @param string  $itemKey
-     * @param string  $string
+     * @param StringHelper  $nsKey
+     * @param StringHelper  $itemKey
+     * @param StringHelper  $string
      * @param integer $mode
      */
     public function setString($nsKey, $itemKey, $string, $mode);
@@ -40,8 +40,8 @@ interface Swift_KeyCache
      *
      * @see MODE_WRITE, MODE_APPEND
      *
-     * @param string                 $nsKey
-     * @param string                 $itemKey
+     * @param StringHelper                 $nsKey
+     * @param StringHelper                 $itemKey
      * @param Swift_OutputByteStream $os
      * @param integer                $mode
      */
@@ -53,8 +53,8 @@ interface Swift_KeyCache
      * NOTE: The stream will always write in append mode.
      * If the optional third parameter is passed all writes will go through $is.
      *
-     * @param string                $nsKey
-     * @param string                $itemKey
+     * @param StringHelper                $nsKey
+     * @param StringHelper                $itemKey
      * @param Swift_InputByteStream $is      optional input stream
      *
      * @return Swift_InputByteStream
@@ -64,18 +64,18 @@ interface Swift_KeyCache
     /**
      * Get data back out of the cache as a string.
      *
-     * @param string $nsKey
-     * @param string $itemKey
+     * @param StringHelper $nsKey
+     * @param StringHelper $itemKey
      *
-     * @return string
+     * @return StringHelper
      */
     public function getString($nsKey, $itemKey);
 
     /**
      * Get data back out of the cache as a ByteStream.
      *
-     * @param string                $nsKey
-     * @param string                $itemKey
+     * @param StringHelper                $nsKey
+     * @param StringHelper                $itemKey
      * @param Swift_InputByteStream $is      stream to write the data to
      */
     public function exportToByteStream($nsKey, $itemKey, Swift_InputByteStream $is);
@@ -83,8 +83,8 @@ interface Swift_KeyCache
     /**
      * Check if the given $itemKey exists in the namespace $nsKey.
      *
-     * @param string $nsKey
-     * @param string $itemKey
+     * @param StringHelper $nsKey
+     * @param StringHelper $itemKey
      *
      * @return boolean
      */
@@ -93,15 +93,15 @@ interface Swift_KeyCache
     /**
      * Clear data for $itemKey in the namespace $nsKey if it exists.
      *
-     * @param string $nsKey
-     * @param string $itemKey
+     * @param StringHelper $nsKey
+     * @param StringHelper $itemKey
      */
     public function clearKey($nsKey, $itemKey);
 
     /**
      * Clear all data in the namespace $nsKey if it exists.
      *
-     * @param string $nsKey
+     * @param StringHelper $nsKey
      */
     public function clearAll($nsKey);
 }

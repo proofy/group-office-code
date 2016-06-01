@@ -126,8 +126,8 @@ class Codebird
     /**
      * Sets the OAuth consumer key and secret (App key)
      *
-     * @param string $key    OAuth consumer key
-     * @param string $secret OAuth consumer secret
+     * @param StringHelper $key    OAuth consumer key
+     * @param StringHelper $secret OAuth consumer secret
      *
      * @return void
      */
@@ -140,7 +140,7 @@ class Codebird
     /**
      * Sets the OAuth2 app-only auth bearer token
      *
-     * @param string $token OAuth2 bearer token
+     * @param StringHelper $token OAuth2 bearer token
      *
      * @return void
      */
@@ -152,7 +152,7 @@ class Codebird
     /**
      * Gets the current Codebird version
      *
-     * @return string The version number
+     * @return StringHelper The version number
      */
     public function getVersion()
     {
@@ -162,8 +162,8 @@ class Codebird
     /**
      * Sets the OAuth request or access token and secret (User key)
      *
-     * @param string $token  OAuth request or access token
-     * @param string $secret OAuth request or access token secret
+     * @param StringHelper $token  OAuth request or access token
+     * @param StringHelper $secret OAuth request or access token secret
      *
      * @return void
      */
@@ -190,7 +190,7 @@ class Codebird
     /**
      * Main API handler working on any requests you issue
      *
-     * @param string $fn    The member function you called
+     * @param StringHelper $fn    The member function you called
      * @param array $params The parameters you sent along
      *
      * @return mixed The API reply encoded in the set return_format
@@ -301,7 +301,7 @@ class Codebird
     /**
      * Gets the OAuth authenticate URL for the current request token
      *
-     * @return string The OAuth authenticate URL
+     * @return StringHelper The OAuth authenticate URL
      */
     public function oauth_authenticate($force_login = NULL, $screen_name = NULL)
     {
@@ -321,7 +321,7 @@ class Codebird
     /**
      * Gets the OAuth authorize URL for the current request token
      *
-     * @return string The OAuth authorize URL
+     * @return StringHelper The OAuth authorize URL
      */
     public function oauth_authorize($force_login = NULL, $screen_name = NULL)
     {
@@ -341,7 +341,7 @@ class Codebird
     /**
      * Gets the OAuth bearer token
      *
-     * @return string The OAuth bearer token
+     * @return StringHelper The OAuth bearer token
      */
 
     public function oauth2_token()
@@ -456,9 +456,9 @@ class Codebird
     /**
      * Gets the base64-encoded SHA1 hash for the given data
      *
-     * @param string $data The data to calculate the hash from
+     * @param StringHelper $data The data to calculate the hash from
      *
-     * @return string The hash
+     * @return StringHelper The hash
      */
     private function _sha1($data)
     {
@@ -477,7 +477,7 @@ class Codebird
      *
      * @param int optional $length The length of the string to generate
      *
-     * @return string The random string
+     * @return StringHelper The random string
      */
     protected function _nonce($length = 8)
     {
@@ -490,11 +490,11 @@ class Codebird
     /**
      * Generates an OAuth signature
      *
-     * @param string          $httpmethod Usually either 'GET' or 'POST' or 'DELETE'
-     * @param string          $method     The API method to call
+     * @param StringHelper          $httpmethod Usually either 'GET' or 'POST' or 'DELETE'
+     * @param StringHelper          $method     The API method to call
      * @param array  optional $params     The API call parameters, associative
      *
-     * @return string Authorization HTTP header
+     * @return StringHelper Authorization HTTP header
      */
     protected function _sign($httpmethod, $method, $params = array())
     {
@@ -541,10 +541,10 @@ class Codebird
     /**
      * Detects HTTP method to use for API call
      *
-     * @param string $method The API method to call
+     * @param StringHelper $method The API method to call
      * @param array  $params The parameters to send along
      *
-     * @return string The HTTP method that should be used
+     * @return StringHelper The HTTP method that should be used
      */
     protected function _detectMethod($method, $params)
     {
@@ -714,7 +714,7 @@ class Codebird
     /**
      * Detects if API call should use multipart/form-data
      *
-     * @param string $method The API method to call
+     * @param StringHelper $method The API method to call
      *
      * @return bool Whether the method should be sent as multipart
      */
@@ -736,7 +736,7 @@ class Codebird
      * Detect filenames in upload parameters,
      * build multipart request from upload params
      *
-     * @param string $method  The API method to call
+     * @param StringHelper $method  The API method to call
      * @param array  $params  The parameters to send along
      *
      * @return void
@@ -820,10 +820,10 @@ class Codebird
     /**
      * Builds the complete API endpoint url
      *
-     * @param string $method           The API method to call
-     * @param string $method_template  The API method template to call
+     * @param StringHelper $method           The API method to call
+     * @param StringHelper $method_template  The API method template to call
      *
-     * @return string The URL to send the request to
+     * @return StringHelper The URL to send the request to
      */
     protected function _getEndpoint($method, $method_template)
     {
@@ -838,9 +838,9 @@ class Codebird
     /**
      * Calls the API using cURL
      *
-     * @param string          $httpmethod      The HTTP method to use for making the request
-     * @param string          $method          The API method to call
-     * @param string          $method_template The templated API method to call
+     * @param StringHelper          $httpmethod      The HTTP method to use for making the request
+     * @param StringHelper          $method          The API method to call
+     * @param StringHelper          $method_template The templated API method to call
      * @param array  optional $params          The parameters to send along
      * @param bool   optional $multipart       Whether to use multipart/form-data
      * @param bool   optional $app_only_auth   Whether to use app-only bearer authentication
@@ -936,8 +936,8 @@ class Codebird
     /**
      * Parses the API reply to encode it in the set return_format
      *
-     * @param string $method The method that has been called
-     * @param string $reply  The actual reply, JSON-encoded or URL-encoded
+     * @param StringHelper $method The method that has been called
+     * @param StringHelper $reply  The actual reply, JSON-encoded or URL-encoded
      *
      * @return array|object The parsed reply
      */

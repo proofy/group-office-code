@@ -78,7 +78,7 @@ class PHPExcel_Calculation_FormulaParser {
 	/**
 	 * Formula
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_formula;
 
@@ -111,7 +111,7 @@ class PHPExcel_Calculation_FormulaParser {
     /**
      * Get Formula
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFormula() {
     	return $this->_formula;
@@ -121,7 +121,7 @@ class PHPExcel_Calculation_FormulaParser {
      * Get Token
      *
      * @param 	int		$pId	Token id
-     * @return	string
+     * @return	StringHelper
      * @throws  PHPExcel_Calculation_Exception
      */
     public function getToken($pId = 0) {
@@ -135,7 +135,7 @@ class PHPExcel_Calculation_FormulaParser {
     /**
      * Get Token count
      *
-     * @return string
+     * @return StringHelper
      */
     public function getTokenCount() {
     	return count($this->_tokens);

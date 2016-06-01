@@ -1,5 +1,7 @@
 <?php
 
+namespace GO\Email\Model;
+
 /**
  * A message from the imap server
  * 
@@ -10,20 +12,20 @@
  * @property \GO\Base\Mail\EmailRecipients $bcc
  * @property \GO\Base\Mail\EmailRecipients $from
  * @property \GO\Base\Mail\EmailRecipients $reply_to
- * @property string $subject
+ * @property StringHelper $subject
  * @property int $uid
  * @property int $size
- * @property string $internal_date Date received
- * @property string $date Date sent
+ * @property StringHelper $internal_date Date received
+ * @property StringHelper $date Date sent
  * @property int $udate Unix time stamp sent
  * @property int $internal_udate Unix time stamp received
- * @property string $x_priority 
- * @property string $message_id
- * @property string $content_type
+ * @property StringHelper $x_priority 
+ * @property StringHelper $message_id
+ * @property StringHelper $content_type
  * @property array $content_type_attributes
- * @property string $disposition_notification_to
- * @property string $content_transfer_encoding
- * @property string $charset
+ * @property StringHelper $disposition_notification_to
+ * @property StringHelper $content_transfer_encoding
+ * @property StringHelper $charset
  * @property bool $seen
  * @property bool $flagged
  * @property bool $answered
@@ -31,11 +33,13 @@
  * @property Account $account
  * @property String $mailbox
  */
-
-namespace GO\Email\Model;
-
-
 class ImapMessage extends ComposerMessage {
+	
+	/**
+	 *
+	 * @var \GO\Base\Mail\Imap 
+	 */
+	public $account;
 	
 	/**
 	 * By default the message will be marked as read when fetched.
@@ -93,16 +97,22 @@ class ImapMessage extends ComposerMessage {
 	 * Find's messages in a given mailbox
 	 * 
 	 * @param Account $account
-	 * @param string $mailbox
+	 * @param StringHelper $mailbox
 	 * @param int $start
 	 * @param int $limit
 	 * @param sring $sortField See constants in \GO\Base\Mail\Imap::SORT_*
 	 * @param boolean $descending Sort descending
-	 * @param string $query
-	 * @param string $searchIn In what folder(s) are we searching ('current', 'all', 'recursive')
+	 * @param StringHelper $query
+	 * @param StringHelper $searchIn In what folder(s) are we searching ('current', 'all', 'recursive')
 	 * @return array
 	 */
 	public function find(Account $account, $mailbox="INBOX", $start=0, $limit=50, $sortField=\GO\Base\Mail\Imap::SORT_DATE , $descending=true, $query='ALL', $searchIn='current'){
+		
+		$mailbox = trim($mailbox);
+		
+		if(empty($mailbox)) {
+			$mailbox="INBOX";
+		}
 		
 		$results=array();
 		if($searchIn=="all") {
@@ -150,7 +160,7 @@ class ImapMessage extends ComposerMessage {
 	/**
 	 * Get an unique messageID
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getUniqueID(){
 		if(empty($this->message_id)){
@@ -185,6 +195,8 @@ class ImapMessage extends ComposerMessage {
 		{
 		
 			$imapMessage = new ImapMessage();
+			$imapMessage->account=$account;
+			
 			$imap = $account->openImapConnection($mailbox);
 
 			$attributes = $imap->get_message_header($uid, true);
@@ -193,7 +205,6 @@ class ImapMessage extends ComposerMessage {
 				return false;
 
 			$attributes['uid']=$uid;
-			$attributes['account'] = $account;
 			$attributes['mailbox'] = $mailbox;
 
 			$imapMessage->setAttributes($attributes);
@@ -222,7 +233,7 @@ class ImapMessage extends ComposerMessage {
 	public function createFromHeaders($account, $mailbox, $headers){
 		$imapMessage = new ImapMessage();
 		
-		$headers['account'] = $account;
+		$imapMessage->account = $account;
 		$headers['mailbox'] = $mailbox;
 
 		$imapMessage->setAttributes($headers);
@@ -240,11 +251,13 @@ class ImapMessage extends ComposerMessage {
 		$attributes['from']=$from["personal"];
 		$attributes['sender']=$from["email"];
 		
-		foreach($this->to->getAddresses() as $email=>$personal)
-			$attributes['to']=$personal.", ";
+		$attributes['to']=(string) $this->to;
+		$attributes['cc']=(string) $this->cc;
+		$attributes['bcc']=(string) $this->bcc;
+		$attributes['reply_to']=(string) $this->reply_to;
+
 		
-		
-		$dayStart = mktime(0,0,0);
+//		$dayStart = mktime(0,0,0);
 		//$dayEnd = mktime(0,0,0,date('m'),date('d')+1);
 		
 //		if($this->udate<$dayStart)
@@ -265,7 +278,7 @@ class ImapMessage extends ComposerMessage {
 	/**
 	 * Save the message source to a file.
 	 * 
-	 * @param string $path
+	 * @param StringHelper $path
 	 * @return boolean 
 	 */
 	public function saveToFile($path) {
@@ -430,8 +443,8 @@ class ImapMessage extends ComposerMessage {
 						$maxBodySize = $noMaxBodySize ? false : $this->maxBodySize;
 						
 						$htmlPartStr = $imap->get_message_part_decoded($this->uid, $htmlPart['number'],$htmlPart['encoding'], $htmlPart['charset'],$this->peek,false);
-						$htmlPartStr = \GO\Base\Util\String::convertLinks($htmlPartStr);
-						$htmlPartStr = \GO\Base\Util\String::sanitizeHtml($htmlPartStr);
+						$htmlPartStr = \GO\Base\Util\StringHelper::convertLinks($htmlPartStr);
+						$htmlPartStr = \GO\Base\Util\StringHelper::sanitizeHtml($htmlPartStr);
 						
 						$this->_bodyTruncated = $imap->max_read;
 						
@@ -449,7 +462,7 @@ class ImapMessage extends ComposerMessage {
 //						\GO::debug("Missing from attachments: ".$htmlPart['number']);	
 //					}
 				}
-				//$this->_htmlBody = \GO\Base\Util\String::sanitizeHtml($this->_htmlBody);			
+				//$this->_htmlBody = \GO\Base\Util\StringHelper::sanitizeHtml($this->_htmlBody);			
 			}
 
 			if(empty($this->_htmlBody) && !$asText){
@@ -458,7 +471,7 @@ class ImapMessage extends ComposerMessage {
 		}else
 		{
 //			$this->_setSeen();
-		}
+		}		
 		
 		if($asText){
 			$htmlToText = new  \GO\Base\Util\Html2Text($this->_htmlBody);
@@ -502,7 +515,7 @@ class ImapMessage extends ComposerMessage {
 							}
 						}
 					}
-				}			
+				}
 			}
 		}else
 		{
@@ -519,13 +532,13 @@ class ImapMessage extends ComposerMessage {
 			}
 		}
 		
-		$this->_plainBody = \GO\Base\Util\String::normalizeCrlf($this->_plainBody);
+		$this->_plainBody = \GO\Base\Util\StringHelper::normalizeCrlf($this->_plainBody);
 		
 		$this->extractUuencodedAttachments($this->_plainBody);
 				
 		if($asHtml){
 			$body = $this->_plainBody;			
-			$body = \GO\Base\Util\String::text_to_html($body);
+			$body = \GO\Base\Util\StringHelper::text_to_html($body);
 			
 			for($i=0,$max=count($inlineImages);$i<$max;$i++){
 				$body=str_replace('{inline_'.$i.'}', $inlineImages[$i], $body);
@@ -558,7 +571,7 @@ class ImapMessage extends ComposerMessage {
 	
 	/**
 	 *
-	 * @return \ImapMessageAttachment [] 
+	 * @return ImapMessageAttachment [] 
 	 */
 	public function &getAttachments() {
 		if(!$this->_imapAttachmentsLoaded){			
@@ -574,8 +587,9 @@ class ImapMessage extends ComposerMessage {
 			
 			foreach ($parts as $part) {
 				//ignore applefile's
-				if($part['subtype']=='applefile')
-					continue;
+				//	Don't ignore it as it seems to be a valid attachment in some mails.
+//				if($part['subtype']=='applefile')
+//					continue;
 					
 				$a = new ImapMessageAttachment();
 				$a->setImapParams($this->account, $this->mailbox, $this->uid);
@@ -605,16 +619,16 @@ class ImapMessage extends ComposerMessage {
 				
 				$i=1;
 				
-				$fileName = !empty($a->name) ? $a->name : \GO::t('noname','email');
+				$a->name = !empty($a->name) ? $a->name : \GO::t('noname','email');
 				
-				$file = new \GO\Base\Fs\File($fileName);
+				$file = new \GO\Base\Fs\File($a->name);
 				while(in_array($a->name, $uniqueNames)){
 					$a->name = $file->nameWithoutExtension().' ('.$i.').'.$file->extension();
 					$i++;
 				}
 				$uniqueNames[]=$a->name;
 				
-				$a->disposition = isset($part['disposition']) ? $part['disposition'] : '';
+				$a->disposition = isset($part['disposition']) ? strtolower($part['disposition']) : '';
 				$a->number = $part['number'];
 				$a->content_id='';
 				if (!empty($part["id"])) {
@@ -634,6 +648,7 @@ class ImapMessage extends ComposerMessage {
 				$a->index=count($this->attachments);
 				$a->size=intval($part['size']);
 				$a->encoding = $part['encoding'];
+				$a->charset = !empty($part['charset']) ? $part['charset'] : $this->charset;
 				
 				$this->addAttachment($a);
 			}			
@@ -733,4 +748,25 @@ class ImapMessage extends ComposerMessage {
 		return $this->getImapConnection()->delete(array($this->uid));
 						
 	}
+	
+	/**
+	 * Returns an array with linked item objects.
+	 */
+	public function getLinks(){
+		
+		$foundLinks = array();
+		
+		if(\GO::modules()->savemailas){
+			$linkedEmailModels = \GO\Savemailas\Model\LinkedEmail::model()->findByAttributes(array('uid'=>$this->getUniqueID()));
+			foreach($linkedEmailModels as $linkedEmailModel){
+				$stmt = \GO\Base\Model\SearchCacheRecord::model()->findLinks($linkedEmailModel);
+				foreach($stmt as $rec){
+					$foundLinks[] = $rec;
+				}
+			}
+		}
+		
+		return $foundLinks;
+	}
+	
 }

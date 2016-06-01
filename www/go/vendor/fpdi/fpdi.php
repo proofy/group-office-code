@@ -31,7 +31,7 @@ require_once('fpdi_pdf_parser.php');
 class FPDI extends FPDF_TPL {
     /**
      * Actual filename
-     * @var string
+     * @var StringHelper
      */
     var $current_filename;
 
@@ -67,7 +67,7 @@ class FPDI extends FPDF_TPL {
     
     /**
      * The name of the last imported page box
-     * @var string
+     * @var StringHelper
      */
     var $lastUsedPageBox;
     
@@ -80,7 +80,7 @@ class FPDI extends FPDF_TPL {
     /**
      * Set a source-file
      *
-     * @param string $filename a valid filename
+     * @param StringHelper $filename a valid filename
      * @return int number of available pages
      */
     function setSourceFile($filename) {
@@ -96,7 +96,7 @@ class FPDI extends FPDF_TPL {
     /**
      * Returns a PDF parser object
      *
-     * @param string $filename
+     * @param StringHelper $filename
      * @return fpdi_pdf_parser
      */
     function _getPdfParser($filename) {
@@ -106,7 +106,7 @@ class FPDI extends FPDF_TPL {
     /**
      * Get the current PDF version
      *
-     * @return string
+     * @return StringHelper
      */
     function getPDFVersion() {
 		return $this->PDFVersion;
@@ -115,7 +115,7 @@ class FPDI extends FPDF_TPL {
 	/**
      * Set the PDF version
      *
-     * @return string
+     * @return StringHelper
      */
 	function setPDFVersion($version = '1.3') {
 		$this->PDFVersion = $version;
@@ -206,7 +206,7 @@ class FPDI extends FPDF_TPL {
     /**
      * Returns the last used page box
      *
-     * @return string
+     * @return StringHelper
      */
     function getLastUsedPageBox() {
         return $this->lastUsedPageBox;

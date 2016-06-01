@@ -61,7 +61,7 @@ class PHPExcel_Calculation_Database {
 	 *										"Age" or "Yield," or a number (without quotation marks) that
 	 *										represents the position of the column within the list: 1 for
 	 *										the first column, 2 for the second column, and so on.
-	 * @return	string|NULL
+	 * @return	StringHelper|NULL
 	 *
 	 */
 	private static function __fieldExtract($database,$field) {
@@ -164,7 +164,7 @@ class PHPExcel_Calculation_Database {
 	 *										A database is a list of related data in which rows of related
 	 *										information are records, and columns of data are fields. The
 	 *										first row of the list contains labels for each column.
-	 * @param	string|integer	$field		Indicates which column is used in the function. Enter the
+	 * @param	StringHelper|integer	$field		Indicates which column is used in the function. Enter the
 	 *										column label enclosed between double quotation marks, such as
 	 *										"Age" or "Yield," or a number (without quotation marks) that
 	 *										represents the position of the column within the list: 1 for
@@ -213,7 +213,7 @@ class PHPExcel_Calculation_Database {
 	 *										A database is a list of related data in which rows of related
 	 *										information are records, and columns of data are fields. The
 	 *										first row of the list contains labels for each column.
-	 * @param	string|integer	$field		Indicates which column is used in the function. Enter the
+	 * @param	StringHelper|integer	$field		Indicates which column is used in the function. Enter the
 	 *										column label enclosed between double quotation marks, such as
 	 *										"Age" or "Yield," or a number (without quotation marks) that
 	 *										represents the position of the column within the list: 1 for
@@ -262,7 +262,7 @@ class PHPExcel_Calculation_Database {
 	 *										A database is a list of related data in which rows of related
 	 *										information are records, and columns of data are fields. The
 	 *										first row of the list contains labels for each column.
-	 * @param	string|integer	$field		Indicates which column is used in the function. Enter the
+	 * @param	StringHelper|integer	$field		Indicates which column is used in the function. Enter the
 	 *										column label enclosed between double quotation marks, such as
 	 *										"Age" or "Yield," or a number (without quotation marks) that
 	 *										represents the position of the column within the list: 1 for
@@ -312,7 +312,7 @@ class PHPExcel_Calculation_Database {
 	 *										A database is a list of related data in which rows of related
 	 *										information are records, and columns of data are fields. The
 	 *										first row of the list contains labels for each column.
-	 * @param	string|integer	$field		Indicates which column is used in the function. Enter the
+	 * @param	StringHelper|integer	$field		Indicates which column is used in the function. Enter the
 	 *										column label enclosed between double quotation marks, such as
 	 *										"Age" or "Yield," or a number (without quotation marks) that
 	 *										represents the position of the column within the list: 1 for
@@ -363,7 +363,7 @@ class PHPExcel_Calculation_Database {
 	 *										A database is a list of related data in which rows of related
 	 *										information are records, and columns of data are fields. The
 	 *										first row of the list contains labels for each column.
-	 * @param	string|integer	$field		Indicates which column is used in the function. Enter the
+	 * @param	StringHelper|integer	$field		Indicates which column is used in the function. Enter the
 	 *										column label enclosed between double quotation marks, such as
 	 *										"Age" or "Yield," or a number (without quotation marks) that
 	 *										represents the position of the column within the list: 1 for
@@ -410,7 +410,7 @@ class PHPExcel_Calculation_Database {
 	 *										A database is a list of related data in which rows of related
 	 *										information are records, and columns of data are fields. The
 	 *										first row of the list contains labels for each column.
-	 * @param	string|integer	$field		Indicates which column is used in the function. Enter the
+	 * @param	StringHelper|integer	$field		Indicates which column is used in the function. Enter the
 	 *										column label enclosed between double quotation marks, such as
 	 *										"Age" or "Yield," or a number (without quotation marks) that
 	 *										represents the position of the column within the list: 1 for
@@ -456,7 +456,7 @@ class PHPExcel_Calculation_Database {
 	 *										A database is a list of related data in which rows of related
 	 *										information are records, and columns of data are fields. The
 	 *										first row of the list contains labels for each column.
-	 * @param	string|integer	$field		Indicates which column is used in the function. Enter the
+	 * @param	StringHelper|integer	$field		Indicates which column is used in the function. Enter the
 	 *										column label enclosed between double quotation marks, such as
 	 *										"Age" or "Yield," or a number (without quotation marks) that
 	 *										represents the position of the column within the list: 1 for
@@ -503,7 +503,7 @@ class PHPExcel_Calculation_Database {
 	 *										A database is a list of related data in which rows of related
 	 *										information are records, and columns of data are fields. The
 	 *										first row of the list contains labels for each column.
-	 * @param	string|integer	$field		Indicates which column is used in the function. Enter the
+	 * @param	StringHelper|integer	$field		Indicates which column is used in the function. Enter the
 	 *										column label enclosed between double quotation marks, such as
 	 *										"Age" or "Yield," or a number (without quotation marks) that
 	 *										represents the position of the column within the list: 1 for
@@ -550,7 +550,7 @@ class PHPExcel_Calculation_Database {
 	 *										A database is a list of related data in which rows of related
 	 *										information are records, and columns of data are fields. The
 	 *										first row of the list contains labels for each column.
-	 * @param	string|integer	$field		Indicates which column is used in the function. Enter the
+	 * @param	StringHelper|integer	$field		Indicates which column is used in the function. Enter the
 	 *										column label enclosed between double quotation marks, such as
 	 *										"Age" or "Yield," or a number (without quotation marks) that
 	 *										represents the position of the column within the list: 1 for
@@ -596,7 +596,7 @@ class PHPExcel_Calculation_Database {
 	 *										A database is a list of related data in which rows of related
 	 *										information are records, and columns of data are fields. The
 	 *										first row of the list contains labels for each column.
-	 * @param	string|integer	$field		Indicates which column is used in the function. Enter the
+	 * @param	StringHelper|integer	$field		Indicates which column is used in the function. Enter the
 	 *										column label enclosed between double quotation marks, such as
 	 *										"Age" or "Yield," or a number (without quotation marks) that
 	 *										represents the position of the column within the list: 1 for
@@ -643,7 +643,7 @@ class PHPExcel_Calculation_Database {
 	 *										A database is a list of related data in which rows of related
 	 *										information are records, and columns of data are fields. The
 	 *										first row of the list contains labels for each column.
-	 * @param	string|integer	$field		Indicates which column is used in the function. Enter the
+	 * @param	StringHelper|integer	$field		Indicates which column is used in the function. Enter the
 	 *										column label enclosed between double quotation marks, such as
 	 *										"Age" or "Yield," or a number (without quotation marks) that
 	 *										represents the position of the column within the list: 1 for
@@ -690,7 +690,7 @@ class PHPExcel_Calculation_Database {
 	 *										A database is a list of related data in which rows of related
 	 *										information are records, and columns of data are fields. The
 	 *										first row of the list contains labels for each column.
-	 * @param	string|integer	$field		Indicates which column is used in the function. Enter the
+	 * @param	StringHelper|integer	$field		Indicates which column is used in the function. Enter the
 	 *										column label enclosed between double quotation marks, such as
 	 *										"Age" or "Yield," or a number (without quotation marks) that
 	 *										represents the position of the column within the list: 1 for

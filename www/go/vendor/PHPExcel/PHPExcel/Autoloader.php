@@ -62,7 +62,7 @@ class PHPExcel_Autoloader
     /**
      * Autoload a class identified by name
      *
-     * @param    string    $pClassName        Name of the object to load
+     * @param    StringHelper    $pClassName        Name of the object to load
      */
     public static function Load($pClassName){
         if ((class_exists($pClassName,FALSE)) || (strpos($pClassName, 'PHPExcel') !== 0)) {

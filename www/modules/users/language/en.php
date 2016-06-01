@@ -83,7 +83,9 @@ $l["lastName"]= 'Last name';
 $l["firstName"]= 'First name';
 $l["sendInvitation"]='Send invitation';
 $l["contactInfo"]='Contact info';
-$l["popupNotification"]='Show a popup window when a reminder becomes active or an e-mail arrives';
+$l["popupNotification"] = 'Show a popup window when a reminder becomes active or an e-mail arrives';
+$l["popupReminderNotification"] = 'Show a popup window when a reminder becomes active';
+$l["popupEmailNotification"] = 'Show a popup window when an e-mail arrives';
 $l["muteNewMailSound"]='Mute new mail sounds';
 $l["muteReminderSound"]='Mute reminder sounds';
 $l["showSmilies"]='Show smilies';
@@ -129,13 +131,19 @@ $l['registrationEmail']='Registration Email';
 $l['enabledSettingtabs']='Enabled Setting tabs';
 
 
-$l['explanation_cf_settingspanels']='To show the customfield tabs in the settingspanel you need to be sure that the user has at least "Read" access to the customfields module.';
-$l['addresslist_panel'] = 'Addresslist panel';
+$l['explanation_cf_settingspanels']='To show the custom field tabs in the settings panel you need to be sure that the user has at least "Read" access to the custom fields module.';
+$l['addresslist_panel'] = 'Address list panel';
 $l['show_addresslists_panel'] = 'Show the addresslist panel';
 $l['enabled_cf_tabs'] = 'Enabled custom field tabs';
-$l['addresslist_panel'] = 'Addresslist panel';
+$l['addresslist_panel'] = 'Address list panel';
 
 $l['cmdFormLabelHolidaySet'] = 'Bank holidays';
 $l['diskSpace'] = 'Disk Space';
 $l['diskQuota'] = 'Disk Quota';
 $l['spaceUsed'] = 'Space used';
+
+$l['noReminders'] = 'Do not create reminders for me';
+$l['transferData'] = 'Transfer data';
+$l['desktopNotificationsActive'] = 'Desktop notifications active';
+
+$l["id"]= 'ID';

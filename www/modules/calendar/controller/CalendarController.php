@@ -63,10 +63,10 @@ class CalendarController extends \GO\Base\Controller\AbstractModelController {
 	
 	protected function afterLoad(&$response, &$model, &$params) {
 		
-		$url = \GO::createExternalUrl('calendar', 'openCalendar', array(array(
+		$url = \GO::createExternalUrl('calendar', 'openCalendar', array(
 			'calendars'=>array($response['data']['id']),
 			'group_id'=>$response['data']['group_id'])
-				));
+		);
 
 		// Show "None" in the Caldav Tasklist selection when tasklist_id is 0
 		if(empty($response['data']['tasklist_id']))
@@ -161,7 +161,7 @@ class CalendarController extends \GO\Base\Controller\AbstractModelController {
 		$response = array( 'success' => true );
 		$count = 0;
 		$failed=array();
-		if (!file_exists($_FILES['ical_file']['tmp_name'][0])) {
+		if (!isset($_FILES['ical_file']) || !file_exists($_FILES['ical_file']['tmp_name'][0])) {
 			throw new \Exception(\GO::t('noFileUploaded'));
 		}else {
 			$file = new File($_FILES['ical_file']['tmp_name'][0]);
@@ -211,7 +211,7 @@ class CalendarController extends \GO\Base\Controller\AbstractModelController {
 					
 					$data = (string) $obj->Data;
 					
-//					GO::debug($data);
+//					\GO::debug($data);
 					
 					$vObject = \GO\Base\VObject\Reader::read($data);
 					
@@ -320,21 +320,21 @@ class CalendarController extends \GO\Base\Controller\AbstractModelController {
 		if(!$calendar->public && !$calendar->checkPermissionLevel(\GO\Base\Model\Acl::READ_PERMISSION))
 			throw new \GO\Base\Exception\AccessDenied();
 		
-		$c = new \GO\Base\VObject\VCalendar();				
-		$c->add(new \GO\Base\VObject\VTimezone());
+//		$c = new \GO\Base\VObject\VCalendar();				
+//		$c->add(new \GO\Base\VObject\VTimezone());
 		
 		$months_in_past = isset($params['months_in_past']) ? intval($params['months_in_past']) : 0;
 		
-		$findParams = \GO\Base\Db\FindParams::newInstance()->select("t.*");
+		$findParams = \GO\Base\Db\FindParams::newInstance()->select("t.*")->order('start_time','ASC');
 		$findParams->getCriteria()->addCondition("calendar_id", $params["calendar_id"]);
 		
 		if(!empty($params['months_in_past']))		
 			$stmt = Event::model()->findForPeriod($findParams, \GO\Base\Util\Date::date_add(time(), 0, -$months_in_past));
 		else
 			$stmt = Event::model()->find($findParams);		
-		
-		\GO\Base\Util\Http::outputDownloadHeaders(new \GO\Base\FS\File($calendar->name.'.ics'));
-
+		if(empty($params['no_download'])) {
+			\GO\Base\Util\Http::outputDownloadHeaders(new \GO\Base\FS\File($calendar->name.'.ics'));
+		}
 		echo "BEGIN:VCALENDAR\r\nVERSION:2.0\r\nPRODID:-//Intermesh//NONSGML ".\GO::config()->product_name." ".\GO::config()->version."//EN\r\n";
 
 		$t = new \GO\Base\VObject\VTimezone();
@@ -487,7 +487,7 @@ class CalendarController extends \GO\Base\Controller\AbstractModelController {
 	public function actionPrintCategoryCount($params){
 		
 		
-		GO::session()->closeWriting();
+		\GO::session()->closeWriting();
 		
 		// If a year is posted then determine the correct start and end date and set them here
 		if(isset($params['fullYear'])){

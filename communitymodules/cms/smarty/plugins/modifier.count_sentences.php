@@ -15,7 +15,7 @@
  * @link http://smarty.php.net/manual/en/language.modifier.count.paragraphs.php
  *          count_sentences (Smarty online manual)
  * @author   Monte Ohrt <monte at ohrt dot com>
- * @param string
+ * @param StringHelper
  * @return integer
  */
 function smarty_modifier_count_sentences($string)

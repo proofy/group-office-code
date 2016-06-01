@@ -229,7 +229,19 @@ $updates["201310141130"][]="script:3_install_cron.php";
 $updates["201402171130"][]="ALTER TABLE `cal_calendars` ADD `tooltip` varchar(127) NOT NULL DEFAULT '';";
 
 $updates["201404011700"][]="script:4_nl_koningsdag.php";
-
+$updates['201404011700'][]="ALTER TABLE `cal_categories` ADD `acl_id` int(11) NOT NULL DEFAULT '0';";
 $updates['201404011700'][]="ALTER TABLE `cal_categories` ADD `acl_id` int(11) NOT NULL DEFAULT '0';";
 $updates['201404011700'][]="script:3_preset_category_acls.php";
-				
+
+$updates['201409161300'][]="ALTER TABLE `cal_events` CHANGE `files_folder_id` `files_folder_id` INT( 11 ) NOT NULL DEFAULT '0';";
+
+$updates['201501221443'][]="ALTER TABLE `cal_events` CHANGE `uuid` `uuid` VARCHAR(255) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '';";
+
+$updates['201503181443'][]="insert ignore into go_acl (acl_id, user_id, level) select cat.acl_id, cal.user_id, '50' from cal_categories cat inner join cal_calendars cal on cat.calendar_id=cal.id";
+
+$updates['201504291209'][]="ALTER TABLE `cal_categories` ADD `user_id` INT NOT NULL ; ";
+$updates['201504291209'][]="update cal_categories set user_id = (select user_id from cal_calendars where id=cal_categories.calendar_id) where calendar_id>0;";
+
+$updates['201507161208'][]="update cal_events set end_time=end_time+60 where all_day_event=1 and date_format(from_unixtime(end_time), '%H:%i')='23:58';";
+
+$updates['201508111510'][]="ALTER TABLE `cal_calendars` ADD `version` INT UNSIGNED NOT NULL DEFAULT '1';";

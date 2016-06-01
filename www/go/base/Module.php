@@ -32,6 +32,8 @@ namespace GO\Base;
 
 class Module extends Observable {
 	
+	const PACKAGE_UNSUPPORTED = '3rd party (Not supported by Intermesh)';
+	
 	const PACKAGE_COMMUNITY = 'Community (AGPL)';
 	
 	const PACKAGE_CUSTOM = 'Custom made';
@@ -44,7 +46,7 @@ class Module extends Observable {
 	 * the folder name in the modules folder.
 	 * 
 	 * eg. notes, calendar  etc.
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function id() {
 		
@@ -64,7 +66,7 @@ class Module extends Observable {
 	/**
 	 * Get the absolute filesystem path to the module.
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function path(){
 		return \GO::config()->root_path . 'modules/' . $this->id() . '/';
@@ -85,7 +87,7 @@ class Module extends Observable {
 	/**
 	 * Get URL to module icon
 	 * 
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function icon(){
 		
@@ -100,7 +102,7 @@ class Module extends Observable {
 	}
 	
 	public function package(){
-		return 'Community (AGPL)';
+		return self::PACKAGE_COMMUNITY;
 	}
 	
 	private function _findIconByTheme($theme){
@@ -217,7 +219,7 @@ class Module extends Observable {
 	/**
 	 * Find the module manager class by id.
 	 * 
-	 * @param string $moduleId eg. "addressbook"
+	 * @param StringHelper $moduleId eg. "addressbook"
 	 * @return \Module|boolean 
 	 */
 	public static function findByModuleId($moduleId){
@@ -340,11 +342,36 @@ class Module extends Observable {
 		//delete all models from the Model\ModelType table.
 		//They are used for faster linking and search cache. Each linkable model is mapped to an id in this table.
 		$models = $this->getModels();
+		
+		$modelTypes = array();
 		foreach($models as $model){			
 			$modelType = Model\ModelType::model()->findSingleByAttribute('model_name', $model->getName());			
-			if($modelType)
+			if($modelType){
+				
+				$modelTypes[]=$modelType->id;
 				$modelType->delete();
+			}
 		}
+		
+		if(!empty($modelTypes)){			
+			
+			$sql = "DELETE FROM  `go_search_cache` WHERE model_type_id IN (".implode(',', $modelTypes).")";
+			\GO::getDbConnection()->query($sql);
+			
+			
+			$stmt = GO::getDbConnection()->query('SHOW TABLES');
+			while ($r = $stmt->fetch()) {
+				$tableName = $r[0];
+
+				if (substr($tableName, 0, 9) == 'go_links_' && !is_numeric(substr($tableName, 9, 1))) {			
+					$sql = "DELETE FROM  `$tableName` WHERE model_type_id IN (".implode(',', $modelTypes).")";
+					\GO::getDbConnection()->query($sql);
+				}
+			}
+		}
+		
+		
+		
 		
 		$sqlFile = $this->path().'install/uninstall.sql';
 		
@@ -464,7 +491,7 @@ class Module extends Observable {
 	/**
 	 * Find all classes in a folder.
 	 * 
-	 * @param string $subfolder
+	 * @param StringHelper $subfolder
 	 * @return \ReflectionClass array
 	 */
 	public function findClasses($subfolder){

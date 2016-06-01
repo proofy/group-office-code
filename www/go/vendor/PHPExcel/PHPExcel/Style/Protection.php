@@ -43,14 +43,14 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
 	/**
 	 * Locked
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_locked;
 
 	/**
 	 * Hidden
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_hidden;
 
@@ -135,7 +135,7 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
     /**
      * Get locked
      *
-     * @return string
+     * @return StringHelper
      */
     public function getLocked() {
 		if ($this->_isSupervisor) {
@@ -147,7 +147,7 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
     /**
      * Set locked
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Style_Protection
      */
     public function setLocked($pValue = self::PROTECTION_INHERIT) {
@@ -163,7 +163,7 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
     /**
      * Get hidden
      *
-     * @return string
+     * @return StringHelper
      */
     public function getHidden() {
 		if ($this->_isSupervisor) {
@@ -175,7 +175,7 @@ class PHPExcel_Style_Protection extends PHPExcel_Style_Supervisor implements PHP
     /**
      * Set hidden
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Style_Protection
      */
     public function setHidden($pValue = self::PROTECTION_INHERIT) {

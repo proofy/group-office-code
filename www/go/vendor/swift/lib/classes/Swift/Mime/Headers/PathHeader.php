@@ -20,14 +20,14 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
     /**
      * The address in this Header (if specified).
      *
-     * @var string
+     * @var StringHelper
      */
     private $_address;
 
     /**
      * Creates a new PathHeader with the given $name.
      *
-     * @param string             $name
+     * @param StringHelper             $name
      * @param Swift_Mime_Grammar $grammar
      */
     public function __construct($name, Swift_Mime_Grammar $grammar)
@@ -53,7 +53,7 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
      * Set the model for the field body.
      * This method takes a string for an address.
      *
-     * @param string $model
+     * @param StringHelper $model
      *
      * @throws Swift_RfcComplianceException
      */
@@ -76,7 +76,7 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
     /**
      * Set the Address which should appear in this Header.
      *
-     * @param string $address
+     * @param StringHelper $address
      *
      * @throws Swift_RfcComplianceException
      */
@@ -98,7 +98,7 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
      *
      * Null is returned if no address is set.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getAddress()
     {
@@ -113,7 +113,7 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
      *
      * @see toString()
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFieldBody()
     {
@@ -129,7 +129,7 @@ class Swift_Mime_Headers_PathHeader extends Swift_Mime_Headers_AbstractHeader
     /**
      * Throws an Exception if the address passed does not comply with RFC 2822.
      *
-     * @param string $address
+     * @param StringHelper $address
      *
      * @throws Swift_RfcComplianceException If address is invalid
      */

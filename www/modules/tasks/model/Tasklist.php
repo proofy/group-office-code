@@ -40,6 +40,10 @@ class Tasklist extends \GO\Base\Model\AbstractUserDefaultModel {
 		return parent::model($className);
 	}
 	
+	static public function versionUp($id) {
+		return \GO::$db->exec('UPDATE ta_tasklists SET version = version + 1 WHERE id = '.(int)$id);
+	}
+	
 	public function settingsModelName() {
 		return "GO\Tasks\Model\Settings";
 	}

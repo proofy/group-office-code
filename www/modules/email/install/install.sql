@@ -45,6 +45,7 @@ CREATE TABLE IF NOT EXISTS `em_accounts` (
   `sieve_usetls` tinyint(1) NOT NULL DEFAULT '1',
   `check_mailboxes` text,
   `do_not_mark_as_read` tinyint(1) NOT NULL DEFAULT '0',
+	`signature_below_reply` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`)
 ) ENGINE=InnoDB  DEFAULT CHARSET=utf8;
@@ -252,7 +253,7 @@ CREATE TABLE IF NOT EXISTS `em_labels` (
   `name` varchar(100) NOT NULL,
   `flag` varchar(100) NOT NULL,
   `color` varchar(6) NOT NULL,
-  `user_id` int(11) NOT NULL,
+  `account_id` int(11) NOT NULL,
   `default` tinyint(1) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;

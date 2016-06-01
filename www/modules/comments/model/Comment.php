@@ -54,8 +54,20 @@ class Comment extends \GO\Base\Db\ActiveRecord{
 		
 		return parent::init();
 	}
-
-
+	
+	protected function getCacheAttributes() {
+		
+		if(!$this->getAttachedObject()){
+			return false;
+		}
+		
+		return array(
+				'name' => $this->comments,
+				'description'=>'',
+				'acl_id' => $this->getAttachedObject()->findAclId()
+		);
+	}
+	
 	public function tableName(){
 		return 'co_comments';
 	}

@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: UsersGrid.js 17094 2014-03-14 13:06:30Z mschering $
+ * @version $Id: UsersGrid.js 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  * @author Boy Wijnmaalen <bwijnmaalen@intermesh.nl>
@@ -24,6 +24,7 @@ GO.users.UsersGrid = function(config)
 		fields:['id', 'username', 'name','logins','lastlogin','disk_quota','disk_usage', 'ctime','address','address_no','zip','city','state','country','home_phone','email',
 	    	'waddress','waddress_no','wzip','wcity','wstate','wcountry','wphone','enabled'],
 		columns:[
+				{header: GO.users.lang.id, dataIndex: 'id', width: 40},
         {header: GO.lang['strUsername'], dataIndex: 'username', width: 200},
         {header: GO.lang['strName'], dataIndex: 'name', width: 250},
         {header: GO.users.lang.numberOfLogins, dataIndex: 'logins', width: 100, align:"right"},

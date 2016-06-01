@@ -20,7 +20,7 @@ interface Swift_Signers_HeaderSigner extends Swift_Signer, Swift_InputByteStream
     /**
      * Exclude an header from the signed headers
      *
-     * @param string $header_name
+     * @param StringHelper $header_name
      *
      * @return Swift_Signers_HeaderSigner
      */

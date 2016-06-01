@@ -992,7 +992,7 @@ class TCPDF_STATIC {
 	 * </ul>
 	 * @param $txt (string) input string
 	 * @param $unicode (boolean) True if we are in unicode mode, false otherwise.
-	 * @return string without SHY characters.
+	 * @return StringHelper without SHY characters.
 	 * @since (4.5.019) 2009-02-28
 	 * @public static
 	 */
@@ -1093,7 +1093,7 @@ class TCPDF_STATIC {
 	/**
 	 * Returns a temporary filename for caching object on filesystem.
 	 * @param $type (string) Type of file (name of the subdir on the tcpdf cache folder).
-	 * @return string filename.
+	 * @return StringHelper filename.
 	 * @since 4.5.000 (2008-12-31)
 	 * @public static
 	 */
@@ -1104,7 +1104,7 @@ class TCPDF_STATIC {
 	/**
 	 * Add "\" before "\", "(" and ")"
 	 * @param $s (string) string to escape.
-	 * @return string escaped string.
+	 * @return StringHelper escaped string.
 	 * @public static
 	 */
 	public static function _escape($s) {
@@ -1193,7 +1193,7 @@ class TCPDF_STATIC {
 	/**
 	 * Returns a formatted date-time.
 	 * @param $time (int) Time in seconds.
-	 * @return string escaped date string.
+	 * @return StringHelper escaped date string.
 	 * @since 5.9.152 (2012-03-23)
 	 * @public static
 	 */
@@ -1341,7 +1341,7 @@ class TCPDF_STATIC {
 	/**
 	 * Returns a string containing random data to be used as a seed for encryption methods.
 	 * @param $seed (string) starting seed value
-	 * @return string containing random data
+	 * @return StringHelper containing random data
 	 * @author Nicola Asuni
 	 * @since 5.9.006 (2010-10-19)
 	 * @public static
@@ -2068,7 +2068,7 @@ class TCPDF_STATIC {
 	 * @param $tagvs (array) parameters for setHtmlVSpace method
 	 * @param $tidy_options (array) options for tidy_parse_string function
 	 * @param $tagvspaces (array) Array of vertical spaces for tags.
-	 * @return string XHTML code cleaned up
+	 * @return StringHelper XHTML code cleaned up
 	 * @author Nicola Asuni
 	 * @since 5.9.017 (2010-11-16)
 	 * @see setHtmlVSpace()
@@ -2341,7 +2341,7 @@ class TCPDF_STATIC {
 	/**
 	 * Compact CSS data array into single string.
 	 * @param $css (array) array of CSS properties
-	 * @return string containing merged CSS properties
+	 * @return StringHelper containing merged CSS properties
 	 * @since 5.9.070 (2011-04-19)
 	 * @public static
 	 */
@@ -2372,7 +2372,7 @@ class TCPDF_STATIC {
 	/**
 	 * Returns the Roman representation of an integer number
 	 * @param $number (int) number to convert
-	 * @return string roman representation of the specified number
+	 * @return StringHelper roman representation of the specified number
 	 * @since 4.4.004 (2008-12-10)
 	 * @public static
 	 */

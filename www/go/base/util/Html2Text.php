@@ -115,7 +115,7 @@ class Html2Text
 	/**
 	 *  Contains the HTML content to convert.
 	 *
-	 *  @var string $html
+	 *  @var StringHelper $html
 	 *  @access public
 	 */
 	private $html;
@@ -123,7 +123,7 @@ class Html2Text
 	/**
 	 *  Contains the converted, formatted text.
 	 *
-	 *  @var string $text
+	 *  @var StringHelper $text
 	 *  @access public
 	 */
 	private $text;
@@ -251,7 +251,7 @@ class Html2Text
 	/**
 	 *  Contains a list of HTML tags to allow in the resulting text.
 	 *
-	 *  @var string $allowed_tags
+	 *  @var StringHelper $allowed_tags
 	 *  @access public
 	 *  @see set_allowed_tags()
 	 */
@@ -260,7 +260,7 @@ class Html2Text
 	/**
 	 *  Contains the base URL that relative links should resolve to.
 	 *
-	 *  @var string $url
+	 *  @var StringHelper $url
 	 *  @access public
 	 */
 	public $url;
@@ -277,7 +277,7 @@ class Html2Text
 	/**
 	 *  Contains URL addresses from links to be rendered in plain text.
 	 *
-	 *  @var string $_link_list
+	 *  @var StringHelper $_link_list
 	 *  @access private
 	 *  @see _build_link_list()
 	 */
@@ -308,7 +308,7 @@ class Html2Text
 	 *  will instantiate with that source propagated, all that has
 	 *  to be done it to call get_text().
 	 *
-	 *  @param string $source HTML content
+	 *  @param StringHelper $source HTML content
 	 *  @param boolean $from_file Indicates $source is a file to pull content from
 	 *  @access public
 	 *  @return void
@@ -324,7 +324,7 @@ class Html2Text
 	/**
 	 *  Loads source HTML into memory, either from $source string or a file.
 	 *
-	 *  @param string $source HTML content
+	 *  @param StringHelper $source HTML content
 	 *  @param boolean $from_file Indicates $source is a file to pull content from
 	 *  @access public
 	 *  @return void
@@ -346,7 +346,7 @@ class Html2Text
 	 *  Returns the text, converted from HTML.
 	 *
 	 *  @access public
-	 *  @return string
+	 *  @return StringHelper
 	 */
 	public function get_text($link_list=true)
 	{
@@ -484,10 +484,10 @@ class Html2Text
 	 *  appeared. Also makes an effort at identifying and handling absolute
 	 *  and relative links.
 	 *
-	 *  @param string $link URL of the link
-	 *  @param string $display Part of the text to associate number with
+	 *  @param StringHelper $link URL of the link
+	 *  @param StringHelper $display Part of the text to associate number with
 	 *  @access private
-	 *  @return string
+	 *  @return StringHelper
 	 */
 	private function _build_link_list( $matches )
 	{

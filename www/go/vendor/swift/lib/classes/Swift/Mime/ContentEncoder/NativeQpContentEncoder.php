@@ -18,12 +18,12 @@
 class Swift_Mime_ContentEncoder_NativeQpContentEncoder implements Swift_Mime_ContentEncoder
 {
     /**
-     * @var null|string
+     * @var null|StringHelper
      */
     private $charset;
 
     /**
-     * @param null|string $charset
+     * @param null|StringHelper $charset
      */
     public function __construct($charset = null)
     {
@@ -33,7 +33,7 @@ class Swift_Mime_ContentEncoder_NativeQpContentEncoder implements Swift_Mime_Con
     /**
      * Notify this observer that the entity's charset has changed.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      */
     public function charsetChanged($charset)
     {
@@ -69,7 +69,7 @@ class Swift_Mime_ContentEncoder_NativeQpContentEncoder implements Swift_Mime_Con
     /**
      * Get the MIME name of this content encoding scheme.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getName()
     {
@@ -79,11 +79,11 @@ class Swift_Mime_ContentEncoder_NativeQpContentEncoder implements Swift_Mime_Con
     /**
      * Encode a given string to produce an encoded string.
      *
-     * @param string  $string
+     * @param StringHelper  $string
      * @param integer $firstLineOffset if first line needs to be shorter
      * @param integer $maxLineLength   0 indicates the default length for this encoding
      *
-     * @return string
+     * @return StringHelper
      *
      * @throws RuntimeException
      */
@@ -100,9 +100,9 @@ class Swift_Mime_ContentEncoder_NativeQpContentEncoder implements Swift_Mime_Con
     /**
      * Make sure CRLF is correct and HT/SPACE are in valid places.
      *
-     * @param string $string
+     * @param StringHelper $string
      *
-     * @return string
+     * @return StringHelper
      */
     protected function _standardize($string)
     {

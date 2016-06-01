@@ -173,16 +173,19 @@ class FindCriteria {
 	 * @param Boolean $useAnd True for 'AND', false for 'OR'. Default: true. 
 	 * @return FindCriteria The complete FindCriteria object is given as a return value.
 	 */
-	public function addRawCondition($value1, $value2, $comparator='=', $useAnd=true) {
+	public function addRawCondition($value1, $value2=null, $comparator='=', $useAnd=true) {
 		$this->_appendOperator($useAnd);
-		$this->_appendRawConditionString($value1, $value2, $comparator);		
+		if($value2===null)
+			$this->_condition .= ' '.$value1;
+		else
+			$this->_appendRawConditionString($value1, $value2, $comparator);		
 		return $this;
 	}
 	
 	/**
 	 * Add a custom bind parameter. Only useful in combination with addRawCondition.
 	 * 
-	 * @param string $paramTag eg. ":paramName"
+	 * @param StringHelper $paramTag eg. ":paramName"
 	 * @param mixed $value
 	 * @param int $pdoType
  	 * @return FindCriteria The complete FindCriteria object is given as a return value.
@@ -311,11 +314,11 @@ class FindCriteria {
 	/**
 	 * Add a fulltext search query
 	 * 
-	 * @param string $field
-	 * @param string $matchQuery
-	 * @param string $tableAlias
+	 * @param StringHelper $field
+	 * @param StringHelper $matchQuery
+	 * @param StringHelper $tableAlias
 	 * @param boolean $useAnd
-	 * @param string $mode
+	 * @param StringHelper $mode
 	 * @return FindCriteria 
 	 */
 	public function addMatchCondition($field, $matchQuery, $tableAlias='t', $useAnd=true, $mode='BOOLEAN'){

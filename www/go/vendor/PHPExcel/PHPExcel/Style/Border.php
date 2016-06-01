@@ -54,7 +54,7 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 	/**
 	 * Border style
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_borderStyle	= PHPExcel_Style_Border::BORDER_NONE;
 
@@ -68,7 +68,7 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 	/**
 	 * Parent property name
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_parentPropertyName;
 
@@ -100,7 +100,7 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 	 * Bind parent. Only used for supervisor
 	 *
 	 * @param PHPExcel_Style_Borders $parent
-	 * @param string $parentPropertyName
+	 * @param StringHelper $parentPropertyName
 	 * @return PHPExcel_Style_Border
 	 */
 	public function bindParent($parent, $parentPropertyName=NULL)
@@ -213,7 +213,7 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 	/**
 	 * Get Border style
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getBorderStyle() {
 		if ($this->_isSupervisor) {
@@ -225,7 +225,7 @@ class PHPExcel_Style_Border extends PHPExcel_Style_Supervisor implements PHPExce
 	/**
 	 * Set Border style
 	 *
-	 * @param string|boolean	$pValue
+	 * @param StringHelper|boolean	$pValue
 	 *							When passing a boolean, FALSE equates PHPExcel_Style_Border::BORDER_NONE
 	 *								and TRUE to PHPExcel_Style_Border::BORDER_MEDIUM
 	 * @return PHPExcel_Style_Border

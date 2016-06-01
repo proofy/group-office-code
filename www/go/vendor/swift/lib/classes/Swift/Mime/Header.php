@@ -57,7 +57,7 @@ interface Swift_Mime_Header
     /**
      * Set the charset used when rendering the Header.
      *
-     * @param string $charset
+     * @param StringHelper $charset
      */
     public function setCharset($charset);
 
@@ -75,21 +75,21 @@ interface Swift_Mime_Header
      *
      * The name is an identifier and as such will be immutable.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFieldName();
 
     /**
      * Get the field body, prepared for folding into a final header value.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFieldBody();
 
     /**
      * Get this Header rendered as a compliant string.
      *
-     * @return string
+     * @return StringHelper
      */
     public function toString();
 }

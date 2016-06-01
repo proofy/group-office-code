@@ -72,7 +72,7 @@ class PHPExcel_Calculation_Functions {
 	 * Compatibility mode to use for error checking and responses
 	 *
 	 * @access	private
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected static $compatibilityMode	= self::COMPATIBILITY_EXCEL;
 
@@ -80,7 +80,7 @@ class PHPExcel_Calculation_Functions {
 	 * Data Type to use when returning date values
 	 *
 	 * @access	private
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected static $ReturnDateType	= self::RETURNDATE_EXCEL;
 

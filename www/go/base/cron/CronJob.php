@@ -47,6 +47,23 @@ class CronJob extends \GO\Base\Db\ActiveRecord {
 	public $paramsToSet = array();
 	
 	
+	public function setAttributes($attributes, $format = null) {
+		
+		$publicProperties = $this->_getAdditionalJobProperties();
+		
+		$propArray = array();
+		foreach($publicProperties as $property){			
+			if(key_exists($property['name'],$attributes)) {
+				$propArray[$property['name']] = $attributes[$property['name']];
+			}
+		}
+		
+		$this->params = json_encode($propArray);
+		
+		return parent::setAttributes($attributes, $format);
+	}
+	
+	
 	/**
 	 * Returns a static model of itself
 	 * 
@@ -159,8 +176,8 @@ class CronJob extends \GO\Base\Db\ActiveRecord {
 	 *		1-5
 	 * 
 	 * 
-	 * @var string $field
-	 * @return string The regular expression
+	 * @var StringHelper $field
+	 * @return StringHelper The regular expression
 	 */
 	private function _getValidationRegex($field){
 		$regex = '/';
@@ -223,7 +240,7 @@ class CronJob extends \GO\Base\Db\ActiveRecord {
    * +------------------------- min (0 - 59)
 	 *	
 	 * 
-	 * @return string The complete expression 
+	 * @return StringHelper The complete expression 
 	 */
 	private function _buildExpression(){
 		$expression = '';
@@ -276,7 +293,15 @@ class CronJob extends \GO\Base\Db\ActiveRecord {
 				}
 
 				if ($moduleId != 'base' && !GO::modules()->isAvailable($moduleId)) {
-					throw new Exception('Aborted because module ' . $moduleId . ' is not available');
+					$msg = 'Aborted because module ' . $moduleId . ' is not available';
+					
+					$ioncubeInstalled = extension_loaded('ionCube Loader');
+					
+					if(!$ioncubeInstalled) {
+						$msg .= 'Ioncube is NOT installed on the CLI interface. This might be a problem if this is a professional module.';
+					}
+					
+					throw new Exception($msg);
 				}
 
 				if (!class_exists($this->job)) {
@@ -285,27 +310,24 @@ class CronJob extends \GO\Base\Db\ActiveRecord {
 				
 				// Run the specified cron file code
 				$cronFile = new $this->job;
-
-				if ($cronFile->enableUserAndGroupSupport()){
-
-					$stmnt = $this->getAllUsers();
-					foreach($stmnt as $user){
-						GO::language()->setLanguage($user->language); // Set the users language
-
-						GO::debug('CRONJOB ('.$this->name.') START FOR '.$user->username.' : '.date('d-m-Y H:i:s'));
-						$cronFile->run($this,$user);
-						GO::debug('CRONJOB ('.$this->name.') FINSIHED FOR '.$user->username.' : '.date('d-m-Y H:i:s'));
-
-						GO::language()->setLanguage(); // Set the admin language
+				
+				
+				// set param on the job
+				if(count($this->paramsToSet)) {
+					foreach ($this->paramsToSet as $key => $value) {
+						$cronFile->{$key} = $value;
 					}
-				} else {
-					$cronFile->run($this);
 				}
+				
+				$cronFile->run($this);
+					
 			}catch(\Exception $e){
 				GO::debug("EXCEPTION: ".(string) $e);
 				$failed=true;
 				
-				GO\Base\Mail\AdminNotifier::sendMail("CronJob ".$this->name." is disabled because of a failure", "EXCEPTION: ".(string) $e);
+				//GO\Base\Mail\AdminNotifier::sendMail("CronJob ".$this->name." failed", "EXCEPTION: ".(string) $e);
+				
+				trigger_error("CronJob ".$this->name." failed. EXCEPTION: ".(string) $e, E_USER_WARNING);
 				
 				$this->error=(string)$e;
 			}
@@ -322,7 +344,7 @@ class CronJob extends \GO\Base\Db\ActiveRecord {
 	
 	protected function beforeSave() {
 		
-//		$this->params = $this->_paramsToJson();
+		//$this->params = $this->_paramsToJson();
 		
 		$this->nextrun = $this->_calculateNextRun();
 		
@@ -338,36 +360,23 @@ class CronJob extends \GO\Base\Db\ActiveRecord {
 	
 	
 	
-//	protected function afterLoad() {
-//		$this->paramsToSet = $this->_jsonToParams($this->params);
-//		return parent::afterLoad();
-//	}
+	protected function afterLoad() {
+		$this->paramsToSet = $this->_jsonToParams($this->params);
+		return parent::afterLoad();
+	}
 	
-//	/**
-//	 * Convert the PUBLIC parameters of this object to a Json string
-//	 * ($this->params)
-//	 * 
-//	 * @return string
-//	 */
-//	private function _paramsToJson(){
-//		$propArray = array();
-//
-//		$publicProperties = $this->_getAdditionalJobProperties();
-//		
-//		foreach($publicProperties as $property){
-//			
-//			if(isset($this->paramsToSet) && key_exists($property['name'],$this->paramsToSet))
-//				$propArray[$property['name']] = $this->paramsToSet[$property['name']];
-//		}
-//		
-//		return json_encode($propArray);
-//	}
+
 	
 	private function _getAdditionalJobProperties(){
 		
+		
+		if(empty($this->job) || !class_exists($this->job)) {
+			return array();
+		}
+		
 		$returnProperties = array();
 		
-		$jobReflection = new ReflectionClass($this->job);
+		$jobReflection = new \ReflectionClass($this->job);
 		$parentReflection = $jobReflection->getParentClass();
 
 		$jobProperties = $jobReflection->getProperties(\ReflectionProperty::IS_PUBLIC);
@@ -388,30 +397,30 @@ class CronJob extends \GO\Base\Db\ActiveRecord {
 		return $returnProperties;
 	}
 	
-//	/**
-//	 * Convert a Json string to PUBLIC parameters of this object
-//	 * ($this->params)
-//	 * 
-//	 * @param String $jsonString
-//	 */
-//	private function _jsonToParams($jsonString = ''){
-//		
-//		$propArray = array();
-//		$jsonProperties = json_decode($jsonString);
-//		$publicProperties = $this->_getAdditionalJobProperties();
-// 
-//		foreach($publicProperties as $property){
-//			$propArray[$property['name']] = '';
-//			if(!empty($jsonProperties[$property['name']])){
-//				$propArray[$property['name']] = $jsonProperties[$property['name']];
-//			} else {
-//				if(!empty($property['defaultValue']))
-//					$propArray[$property['name']] = $property['defaultValue'];
-//			}
-//		}
-//		
-//		return $propArray;
-//	}
+	/**
+	 * Convert a Json string to PUBLIC parameters of this object
+	 * ($this->params)
+	 * 
+	 * @param String $jsonString
+	 */
+	private function _jsonToParams($jsonString = ''){
+		
+		$propArray = array();
+		$jsonProperties = json_decode($jsonString, true);
+		$publicProperties = $this->_getAdditionalJobProperties();
+ 
+		foreach($publicProperties as $property){
+			$propArray[$property['name']] = '';
+			if(!empty($jsonProperties[$property['name']])){
+				$propArray[$property['name']] = $jsonProperties[$property['name']];
+			} else {
+				if(!empty($property['defaultValue']))
+					$propArray[$property['name']] = $property['defaultValue'];
+			}
+		}
+		
+		return $propArray;
+	}
 	
 	/**
 	 * This function needs to be called at the START of the run of this cronjob.
@@ -434,11 +443,9 @@ class CronJob extends \GO\Base\Db\ActiveRecord {
 		}
 		
 		if(!$this->runonce){
-			$this->active = !$failed;
+			$this->active = true; // !$failed;
 			if($failed){
-				GO::debug('CRONJOB ('.$this->name.') FAILED AND NOW DISABLED');
-			}else{
-				GO::debug('CRONJOB ('.$this->name.') IS REACTIVATED NOW');
+				GO::debug('CRONJOB ('.$this->name.') FAILED');
 			}
 		} else {
 			GO::debug('CRONJOB ('.$this->name.') HAS RUNONCE OPTION, DISABLING NOW');

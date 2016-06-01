@@ -67,9 +67,11 @@ $l["under"]= 'Kleiner dan';
 $l["over"]= 'Groter dan';
 $l["disabled"]= 'Uitgeschakeld';
 $l["subjectcontainsnot"]= 'Onderwerp bevat geen';
+$l["bodytcontainsnot"]= 'Bericht bevat geen';
 $l["fromcontainsnot"]= 'Afzender bevat geen';
 $l["tocontainsnot"]= 'Ontvanger bevat geen';
 $l["subjectcontains"]= 'Onderwerp bevat';
+$l["bodycontains"]= 'Bericht bevat';
 $l["fromcontains"]= 'Afzender bevat';
 $l["tocontains"]= 'Ontvanger bevat';
 $l["subjectexistsnot"]= 'Onderwerp bestaat niet';
@@ -116,3 +118,29 @@ $l['activateFilter']='Activeer deze filter';
 $l['active']='Actief';
 $l['setRead']='Markeer bericht als gelezen';
 $l['sieveWarning']="Als uw IMAP server sieve ondersteunt, dan word aanbevolen om de sieve filters te gebruiken. Probeer het tablad 'Sieve filters' eerst aub.";
+
+$l['stopEndError'] = 'Stop dient op de laatste positie te staan!';
+
+$l['body']='Body';
+$l['outOfOffice']='Out of office';
+$l['message']='Bericht';
+$l['aliasses']='Aliassen';
+$l['schedule']='Plannen';
+
+$l['activateAt']='Activeer op';
+$l['deactivateAt']='Tot en met';
+
+$l['scheduleText']='Hier kunt u instellen wanneer de "Out of office" melding geactiveerd moet worden.';
+$l['messageText']='Geef hieronder uw bericht in';
+$l['subjectText']='Geef het onderwerp voor de melding in het onderstaande veld op';
+$l['aliassesText']='Geef hieronder de aliassen in waarvoor u deze melding ook weer wilt geven. Als u meerdere aliassen heeft, scheid ze dan met een komma (,).';
+$l['activateText']='Activeer de melding door onderstaande checkbox aan te zetten.';
+
+$l['advancedOptions'] = 'Geavanceerde opties';
+$l['standardvacationsubject']='Ik ben niet aanwezig';
+
+
+$l['currentdate'] = 'Huidige datum';
+$l['before'] = 'voor';
+$l['is'] = 'op';
+$l['after'] = 'na';

@@ -56,6 +56,18 @@ class Authenticator {
 
 		return self::$_mapping;
 	}
+	
+	
+	public function getUserSearchQuery($username='*'){
+		$mapping = $this->getMapping();
+		
+		if (!empty(GO::config()->ldap_search_template))
+			$query = str_replace('{username}', $username, GO::config()->ldap_search_template);
+		else
+			$query = $mapping['username'] . '=' . $username;
+		
+		return $query;
+	}
 
 	public function authenticate($username, $password) {
 
@@ -75,13 +87,21 @@ class Authenticator {
 		
 		//$authenticated = $ldapConn->bind($record->getDn(), $password);
 		if (!$record->authenticate($password)) {
+			$str = "LOGIN FAILED for user: \"" . $username . "\" from IP: ";
+			if(isset($_SERVER['REMOTE_ADDR']))
+				$str .= $_SERVER['REMOTE_ADDR'];
+			else
+				$str .= 'unknown';
+			
+			\GO::infolog($str);
+			
 			return false;
 		}
 		
 		\GO::debug("LDAPAUTH: LDAP authentication SUCCESS for " . $username);
 
 
-		$oldIgnoreAcl = GO::setIgnoreAclPermissions(true);
+		
 
 
 		if(!empty(GO::config()->ldap_create_mailbox_domains)){
@@ -99,14 +119,9 @@ class Authenticator {
 
 
 		$user = $this->syncUserWithLdapRecord($record, $password);
-		if(!$user){
-			GO::setIgnoreAclPermissions($oldIgnoreAcl);
-
+		if(!$user){		
 			return false;
-
 		}
-
-
 
 		try{
 			$this->_checkEmailAccounts($user, $password);
@@ -116,7 +131,7 @@ class Authenticator {
 		}
 
 
-		\GO::setIgnoreAclPermissions($oldIgnoreAcl);
+
 
 	}
 	
@@ -309,7 +324,7 @@ class Authenticator {
 	 * Checks if an e-mail address is present in the LDAP directory
 	 * 	 
 	 * @param \GO\Base\Ldap\Record $record
-	 * @param string $email
+	 * @param StringHelper $email
 	 * @param array $validAddresses
 	 * @return type 
 	 */

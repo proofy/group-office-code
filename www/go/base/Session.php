@@ -60,11 +60,17 @@ class Session extends Observable{
 				
 				//Avoid session id in url's to prevent session hijacking.
 				ini_set('session.use_only_cookies',1);
+				
+				if(Util\Http::isHttps()) {
+					ini_set('session.cookie_secure',1);
+				}
+								
 								
 				if(isset($_REQUEST['GOSID'])){
 					session_id($_REQUEST['GOSID']);				
 				}
-								
+				
+			
 				session_name('groupoffice');
 				session_start();				
 			
@@ -84,7 +90,7 @@ class Session extends Observable{
 			
 			//this log here causes endless loop and segfaults
 			//$this->_log("security_token");
-			$this->values['security_token']=Util\String::randomPassword(20,'a-z,A-Z,1-9');				
+			$this->values['security_token']=Util\StringHelper::randomPassword(20,'a-z,A-Z,1-9');				
 		}
 	}
 	
@@ -93,7 +99,7 @@ class Session extends Observable{
 	 * 
 	 * eg. index.php?r=test&security_token=token
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function securityToken(){
 		return $this->values['security_token'];
@@ -102,7 +108,7 @@ class Session extends Observable{
 	/**
 	 * Return session ID
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function id(){
 		return session_id();
@@ -151,6 +157,8 @@ class Session extends Observable{
 		Util\Http::unsetCookie('GO_PW');		
 	}
 	
+	const USERNAME_NOTLOGGEDIN = 'notloggedin';
+	
 	/**
 	 * Log the current user out.
 	 *
@@ -160,7 +168,7 @@ class Session extends Observable{
 	public function logout() {
 		
 //		$username = isset(self::$username) ? self::$username : 'notloggedin';		
-		$username = \GO::user() ? \GO::user()->username : 'notloggedin';				
+		$username = \GO::user() ? \GO::user()->username : self::USERNAME_NOTLOGGEDIN;				
 		
 		\GO::debug("Logout called for ".$username);
 		
@@ -188,8 +196,9 @@ class Session extends Observable{
 
 		$this->fireEvent('logout', array($old_session));
 		
-		
-		\GO::infolog("LOGOUT for user: \"".$username."\" from IP: ".$_SERVER['REMOTE_ADDR']);
+		if($username != self::USERNAME_NOTLOGGEDIN) {
+			\GO::infolog("LOGOUT for user: \"".$username."\" from IP: ".$_SERVER['REMOTE_ADDR']);
+		}
 	}
 	
 	/**
@@ -225,13 +234,13 @@ class Session extends Observable{
 	/**
 	 * Logs a user in.
 	 * 
-	 * @param string $username
-	 * @param string $password
+	 * @param StringHelper $username
+	 * @param StringHelper $password
 	 * @return Model\User or false on failure.
 	 */
 	public function login($username, $password, $countLogin=true) {
 		
-		if(!$this->fireEvent('beforelogin', array($username, $password)))
+		if(!$this->fireEvent('beforelogin', array($username, $password, $countLogin)))
 			return false;			
 		
 		$user = Model\User::model()->findSingleByAttribute('username', $username);
@@ -266,7 +275,7 @@ class Session extends Observable{
 			$this->_user=$user;
 			$this->setCurrentUser($user->id);
 			
-			\GO::language()->setLanguage($user->language);
+			
 
 			if($countLogin){
 				$user->lastlogin=time();
@@ -276,7 +285,7 @@ class Session extends Observable{
 				$this->clearUserTempFiles();
 			}
 
-			$this->fireEvent('login', array($username, $password, $user));
+			$this->fireEvent('login', array($username, $password, $user, $countLogin));
 			
 			//A PHP variable named “session.use_only_cookies” controls the behaviour
 			//of session_start(). When this variable is enabled (true) then session_start() on-
@@ -300,7 +309,7 @@ class Session extends Observable{
 			
 			\GO::session()->values['countLogin']=$countLogin;
 			
-			
+
 			
 			return $user;
 		}		
@@ -373,6 +382,10 @@ class Session extends Observable{
 		
 		if(!\GO::user())
 			throw new \Exception("Could not set user with id ".$user_id." in Session::setCurrentUser()!");
+		
+		date_default_timezone_set(\GO::user()->timezone);
+		
+		\GO::language()->setLanguage(\GO::user()->language);
 		
 		//for logging
 		\GO::session()->values['username']=\GO::user()->username;

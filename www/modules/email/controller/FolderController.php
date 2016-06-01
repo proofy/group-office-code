@@ -5,6 +5,9 @@ namespace GO\Email\Controller;
 
 
 class FolderController extends \GO\Base\Controller\AbstractController {
+	
+//	protected $view = 'json';
+	
 	protected function actionCreate($params){
 		
 		$account = \GO\Email\Model\Account::model()->findByPk($params['account_id']);
@@ -36,20 +39,61 @@ class FolderController extends \GO\Base\Controller\AbstractController {
 	
 	protected function actionSubscribe($params){
 		$account = \GO\Email\Model\Account::model()->findByPk($params['account_id']);
-				
-		$mailbox = new \GO\Email\Model\ImapMailbox($account, array("name"=>$params["mailbox"]));
-		$response['success'] = $mailbox->subscribe();
+			$response = array();
+			
+			
+			$rawMail = json_decode($params["mailboxs"]);
+			if(is_array($rawMail)) {
+				$mailboxs = $rawMail;
+			} else {
+				$mailboxs = array($rawMail);
+			}
+	
+		foreach ($mailboxs as $mailboxName) {
+			
+			$mailbox = new \GO\Email\Model\ImapMailbox($account, array("name"=>$mailboxName));
+			$mailbox->subscribe();
+			
+//			$response['success'] = $mailbox->subscribe();
+			
+//			if(!$mailbox->subscribe()) {
+//				$response['success'] = false;
+//				
+//				break;
+//			}
+			$response['success'] = true;
+		}
 		
 		if(!$response['success'])
 			$response['feedback']="Failed to subscribe to ".$params['mailbox'];
-		return $response;
+//		return $response;
+		
+		echo $this->render('json', array('success' => true));
 	}
 	
 	protected function actionUnsubscribe($params){
 		$account = \GO\Email\Model\Account::model()->findByPk($params['account_id']);
 				
-		$mailbox = new \GO\Email\Model\ImapMailbox($account, array("name"=>$params["mailbox"]));
-		$response['success'] = $mailbox->unsubscribe();
+		$response = array();
+		$rawMail = json_decode($params["mailboxs"]);
+		
+			if(is_array($rawMail)) {
+				$mailboxs = $rawMail;
+			} else {
+				$mailboxs = array($rawMail);
+			}
+			
+		foreach ($mailboxs as $mailboxName) {
+			
+			$mailbox = new \GO\Email\Model\ImapMailbox($account, array("name"=>$mailboxName));
+			
+			
+			if(!$mailbox->unsubscribe()) {
+				$response['success'] = false;
+				break;
+			}
+			$response['success'] = true;
+		}
 		
 		if(!$response['success'])
 			$response['feedback']="Failed to unsubscribe from ".$params['mailbox'];
@@ -58,23 +102,61 @@ class FolderController extends \GO\Base\Controller\AbstractController {
 	}
 	
 	protected function actionDelete($params){
+		$response = array();
+		
 		$account = \GO\Email\Model\Account::model()->findByPk($params['account_id']);
 				
 		$mailbox = new \GO\Email\Model\ImapMailbox($account, array("name"=>$params["mailbox"]));
 		if($mailbox->isSpecial())
 			throw new \Exception(\GO::t("cantDeleteSpecialFolder","email"));
+			
 		
-		$success = $mailbox->delete();
+		if(strpos($params['mailbox'],$account->trash) !== 0 && !empty($account->trash)) {
+			$targetMailbox = new \GO\Email\Model\ImapMailbox($account, array("name"=>$account->trash));
+			
+			
+			if($targetMailbox->getHasChildren()) {
+				
+				if($counter = $this->getCounterMailboxName($targetMailbox, $mailbox->getBaseName())) {
+					
+					$mailbox->rename($mailbox->getBaseName() . $counter);
+					
+				}
+			
+			}
+			
+			$success = $mailbox->move($targetMailbox);
+		}else {
+			$success = $mailbox->delete();
+		}
 		
+		$success = true;
 		return array("success"=>$success);
 	}
 	
+	private function getCounterMailboxName ($mailbox, $name, $counter = 0) {
+		foreach ($mailbox->getChildren() as $childMailbox) {
+			if($counter) {
+				$chackName = $name.$counter;
+			} else {
+				$chackName = $name;
+			}
+			
+			if($childMailbox->getBaseName() == $chackName){
+				return $this->getCounterMailboxName ($mailbox, $name, $counter+1);
+			}
+			
+		}
+		return $counter;
+	}
+
+
 	protected function actionTruncate($params){
 		$account = \GO\Email\Model\Account::model()->findByPk($params['account_id']);
 				
 		$mailbox = new \GO\Email\Model\ImapMailbox($account, array("name"=>$params["mailbox"]));
                 
-                
+		
 		if(!empty($account->trash) && $params["mailbox"] != $account->trash) {
 				$imap = $account->openImapConnection($params["mailbox"]);
 				$uids = $imap->sort_mailbox();
@@ -132,7 +214,7 @@ class FolderController extends \GO\Base\Controller\AbstractController {
 		$account = \GO\Email\Model\Account::model()->findByPk($params['account_id']);
 		$mailboxes = $account->getAllMailboxes(false, false);
 		foreach($mailboxes as $mailbox){
-			$response['results'][]=array('name'=>$mailbox->name);
+			$response['results'][]=array('name'=>$mailbox->name, 'account_id'=>$params['account_id']);
 		}
 		
 		$response['trash'] = $account->trash;

@@ -57,6 +57,13 @@ abstract class AbstractCustomFieldsRecord extends \GO\Base\Db\ActiveRecord{
 		return call_user_func(array($this->extendsModel(),'model'));
 	}
 	
+	public function getModel() {
+		$model = $this->getExtendedModel()->findByPk($this->model_id,false,true);
+		if(!$model)
+			$model = $this->getExtendedModel();
+		return $model;
+	}
+	
 	/**
 	 * Override this to return the model this custom fields model extends with fields.
 	 * 
@@ -88,12 +95,14 @@ abstract class AbstractCustomFieldsRecord extends \GO\Base\Db\ActiveRecord{
 				self::$cacheColumns[$this->extendsModel()]=$cached['columns'];
 			}else
 			{			
-				$stmt = Field::model()->find(array(
-						'ignoreAcl'=>true,
-						'join'=>'INNER JOIN cf_categories c ON t.category_id=c.id',
-						'where'=>'c.extends_model=:extends_model',
-						'bindParams'=>array('extends_model'=>$this->extendsModel())
-				));
+				$findParams = \GO\Base\Db\FindParams::newInstance()
+								->select('t.*')
+								->ignoreAcl()
+								->joinRelation('category');
+				
+				$findParams->getCriteria()->addCondition('extends_model', $this->extendsModel(),'=','category');
+				
+				$stmt = \GO\Customfields\Model\Field::model()->find($findParams);
 				
 				self::$cacheColumns[$this->extendsModel()]=\GO\Base\Db\Columns::getColumns ($this);
 				self::$attributeLabels[$this->extendsModel()]=array();
@@ -125,8 +134,8 @@ abstract class AbstractCustomFieldsRecord extends \GO\Base\Db\ActiveRecord{
 	 * This function is used by find.
 	 * 
 	 * @param boolean $single
-	 * @param string $tableAlias
-	 * @return string 
+	 * @param StringHelper $tableAlias
+	 * @return StringHelper 
 	 */
 	public function getDefaultFindSelectFields($single=false, $tableAlias='t'){
 		
@@ -316,8 +325,8 @@ abstract class AbstractCustomFieldsRecord extends \GO\Base\Db\ActiveRecord{
 	/**
 	 * Get the value of a custom attribute by category and field name
 	 * 
-	 * @param string $categoryName
-	 * @param string $fieldName
+	 * @param StringHelper $categoryName
+	 * @param StringHelper $fieldName
 	 * @return mixed 
 	 */
 	public function getAttributeByName($categoryName, $fieldName, $outputType='raw'){
@@ -341,9 +350,9 @@ abstract class AbstractCustomFieldsRecord extends \GO\Base\Db\ActiveRecord{
 	 * Instead of having to look up the column number in order to get the custom
 	 * field's value, you can let this function look up a custom field value for
 	 * you by using the field name.
-	 * @param string $fieldNameString The name of the custom field you want the value of.
-	 * @param string $categoryNameString (Optional) The name of the custom field's category.
-	 * @return string 
+	 * @param StringHelper $fieldNameString The name of the custom field you want the value of.
+	 * @param StringHelper $categoryNameString (Optional) The name of the custom field's category.
+	 * @return StringHelper 
 	 */
 	public function getValueByName($fieldNameString,$categoryNameString='') {		
 
@@ -359,17 +368,20 @@ abstract class AbstractCustomFieldsRecord extends \GO\Base\Db\ActiveRecord{
 	/**
 	 * Function that lets you set a custom field that is selected by its name (and,
 	 * optionally, the category name), instead of the col id.
-	 * @param string $fieldNameString The name of the custom field you want the value of.
+	 * @param StringHelper $fieldNameString The name of the custom field you want the value of.
 	 * @param value $value The value to set this custom field to.
-	 * @param string $categoryNameString (Optional) The name of the custom field's category.
+	 * @param StringHelper $categoryNameString (Optional) The name of the custom field's category.
 	 */
 	public function setValueByName($fieldNameString,$value,$categoryNameString='', $save=true) {
 		$colId = $this->getColIdByName($fieldNameString, $categoryNameString);
 		if ($colId>0) {
 			$colName = 'col_'.$colId;
 			$this->$colName = $value;
-			if($save)
-				$this->save();
+			if($save && !$this->save()) {
+				\GO::debug('Save failed in '.$this->className().' when setting '.$fieldNameString.' in the category:'.$categoryNameString);
+			}	
+		} else {
+			\GO::debug('Customfield:'.$this->className().' - Could not find field: '.$fieldNameString.' in the category:'.$categoryNameString);
 		}
 	}
 	

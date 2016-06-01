@@ -38,7 +38,7 @@
 ////console.log(GO.customfields.folder_limits);";
 //}
 
-use GO\Base\Util\String;
+use GO\Base\Util\StringHelper;
 
 $GO_SCRIPTS_JS .= '
 GO.customfields.types={};
@@ -68,10 +68,10 @@ foreach($moduleObjects as $moduleObject)
 				$GO_SCRIPTS_JS .=  '
 
 
-				GO.customfields.columns["'.String::escape_javascript($model->extendsModel()).'"]=[];
+				GO.customfields.columns["'.StringHelper::escape_javascript($model->extendsModel()).'"]=[];
 
 
-				GO.customfields.types["'.String::escape_javascript($model->extendsModel()).'"]={
+				GO.customfields.types["'.StringHelper::escape_javascript($model->extendsModel()).'"]={
 					name: "'.\GO::getModel($model->extendsModel())->localizedName.'",
 					panels: []
 				};'."\n";
@@ -89,7 +89,7 @@ foreach($moduleObjects as $moduleObject)
 
 					// Makes global, client-side, editable form panels for every customfield category
 					if($category->checkPermissionLevel(\GO\Base\Model\Acl::WRITE_PERMISSION))
-						$GO_SCRIPTS_JS .= "\n\n".'GO.customfields.types["'.String::escape_javascript($model->extendsModel()).'"].panels.push({xtype : "customformpanel", itemId:"cf-panel-'.$category->id.'", category_id: '.$category->id.', title : "'.htmlspecialchars($category->name,ENT_QUOTES, 'UTF-8').'", customfields : '.json_encode($fields).'});'."\n";
+						$GO_SCRIPTS_JS .= "\n\n".'GO.customfields.types["'.StringHelper::escape_javascript($model->extendsModel()).'"].panels.push({xtype : "customformpanel", itemId:"cf-panel-'.$category->id.'", category_id: '.$category->id.', title : "'.htmlspecialchars($category->name,ENT_QUOTES, 'UTF-8').'", customfields : '.json_encode($fields).'});'."\n";
 
 					/**
 					 * Registers customfield column information in a global, client-side object, ordered by model.
@@ -100,18 +100,19 @@ foreach($moduleObjects as $moduleObject)
 						$align = $field['datatype']=='GO\Customfields\Customfieldtype\Number' || $field['datatype']=='GO\Customfields\Customfieldtype\Date' || $field['datatype']=='GO\Customfields\Customfieldtype\Datetime' ? 'right' : 'left';
             $exclude_from_grid = $field['exclude_from_grid'] || $field['datatype']=='GO\Customfields\Customfieldtype\Heading' ? 'true' : 'false';
 
-						$GO_SCRIPTS_JS .= 'GO.customfields.columns["'.String::escape_javascript($model->extendsModel()).'"].push({'.
-								'header: "'.\GO\Base\Util\String::escape_javascript($field['name']).'",'.
+						$GO_SCRIPTS_JS .= 'GO.customfields.columns["'.StringHelper::escape_javascript($model->extendsModel()).'"].push({'.
+								'header: "'.\GO\Base\Util\StringHelper::escape_javascript($field['name']).'",'.
 								'dataIndex: "'.$field['dataname'].'" ,'.
-								'datatype:"'.$field['datatype'].'", '.
+								'datatype:"'.\GO\Base\Util\StringHelper::escape_javascript($field['datatype']).'", '.
 								'align:"'.$align.'", '.
 								'sortable:true,'.
 								'id: "'.$field['dataname'].'",'.
 								'customfield_id: "'.$field['id'].'",'.
-								//'multiselect: "'.$field['multiselect'].'",'.
+								'nesting_level: "'.$field['nesting_level'].'",'.
+								'multiselect: "'.$field['multiselect'].'",'.
                 'exclude_from_grid: "'.$exclude_from_grid.'",'.
 								'hidden:true});'."\n".
-								'GO.customfields.columnMap["'.$field['dataname'].'"]=GO.customfields.columns["'.String::escape_javascript($model->extendsModel()).'"][GO.customfields.columns["'.String::escape_javascript($model->extendsModel()).'"].length-1];'."\n";
+								'GO.customfields.columnMap["'.$field['dataname'].'"]=GO.customfields.columns["'.StringHelper::escape_javascript($model->extendsModel()).'"][GO.customfields.columns["'.StringHelper::escape_javascript($model->extendsModel()).'"].length-1];'."\n";
 					}
 				}
 			}

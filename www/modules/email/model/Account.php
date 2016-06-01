@@ -1,5 +1,4 @@
 <?php
-
 /**
  * Copyright Intermesh
  *
@@ -13,42 +12,42 @@
  * @author <<FIRST_NAME>> <<LAST_NAME>> <<EMAIL>>@intermesh.nl
  */
 
+namespace GO\Email\Model;
+
+use GO;
+
 /**
  * The LinkedEmail model
  *
  * @property boolean $ignore_sent_folder
  * @property int $password_encrypted
- * @property string $smtp_password
- * @property string $smtp_username
- * @property string $smtp_encryption
+ * @property StringHelper $smtp_password
+ * @property StringHelper $smtp_username
+ * @property StringHelper $smtp_encryption
  * @property int $smtp_port
- * @property string $smtp_host
- * @property string $spam
- * @property string $trash
- * @property string $drafts
- * @property string $sent
- * @property string $mbroot
- * @property string $password
- * @property string $username
+ * @property StringHelper $smtp_host
+ * @property StringHelper $spam
+ * @property StringHelper $trash
+ * @property StringHelper $drafts
+ * @property StringHelper $sent
+ * @property StringHelper $mbroot
+ * @property StringHelper $password
+ * @property StringHelper $username
  * @property boolean $novalidate_cert
  * @property boolean $use_ssl
  * @property boolean $do_not_mark_as_read
  * @property int $port
- * @property string $host
- * @property string $type
+ * @property StringHelper $host
+ * @property StringHelper $type
  * @property int $acl_id
  * @property int $user_id
  * @property int $id
- * @property string $check_mailboxes
- * 
+ * @property StringHelper $check_mailboxes
+ * @property boolean $signature_below_reply
  * @property int $sieve_port
  * @property boolean $sieve_tls
  * @property boolean $sieve_usetls
  */
-
-namespace GO\Email\Model;
-
-
 class Account extends \GO\Base\Db\ActiveRecord {
 	
 	const ACL_DELEGATED_PERMISSION=15;
@@ -155,10 +154,12 @@ class Account extends \GO\Base\Db\ActiveRecord {
 					$this->password_encrypted=2;//deprecated. remove when email is mvc style.
 				}
 			}
+			
+			unset(GO::session()->values['emailModule']['accountPasswords'][$this->id]);
 		}
 
-		if (!empty($this->id) && !empty(\GO::session()->values['emailModule']['accountPasswords'][$this->id]))
-			unset(\GO::session()->values['emailModule']['accountPasswords'][$this->id]);
+//		if (!empty($this->id) && !empty(GO::session()->values['emailModule']['accountPasswords'][$this->id]))
+//			unset(GO::session()->values['emailModule']['accountPasswords'][$this->id]);
 		
 		if($this->isModified('smtp_password')){
 			$encrypted = \GO\Base\Util\Crypt::encrypt($this->smtp_password);		
@@ -214,7 +215,17 @@ class Account extends \GO\Base\Db\ActiveRecord {
 			}
 			\GO::session()->values['emailModule']['smtpPasswords'][$this->id] = $this->_session_smtp_password;
 		}
+
+		if ($wasNew) {
+			Label::model()->createDefaultLabels($this->id);
+		}
+
 		return parent::afterSave($wasNew);
+	}
+
+	protected function afterDelete() {
+		Label::model()->deleteAccountLabels($this->id);
+		return true;
 	}
 		
 	private $_mailboxes;
@@ -272,8 +283,9 @@ class Account extends \GO\Base\Db\ActiveRecord {
 	
 
 	public function decryptPassword(){
-		if (!empty(\GO::session()->values['emailModule']['accountPasswords'][$this->id])) {
-			$decrypted = \GO\Base\Util\Crypt::decrypt(\GO::session()->values['emailModule']['accountPasswords'][$this->id]);
+
+		if (!empty(GO::session()->values['emailModule']['accountPasswords'][$this->id])) {
+			$decrypted = \GO\Base\Util\Crypt::decrypt(GO::session()->values['emailModule']['accountPasswords'][$this->id]);
 		} else {
 			
 			//support for z-push without storing passwords
@@ -310,7 +322,7 @@ class Account extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Open a connection to the imap server.
 	 *
-	 * @param string $mailbox
+	 * @param StringHelper $mailbox
 	 * @return \GO\Base\Mail\Imap
 	 */
 	public function openImapConnection($mailbox='INBOX'){
@@ -400,7 +412,7 @@ class Account extends \GO\Base\Db\ActiveRecord {
 	/**
 	 * Find an account by e-mail address.
 	 *
-	 * @param string $email
+	 * @param StringHelper $email
 	 * @return Account
 	 */
 	public function findByEmail($email){

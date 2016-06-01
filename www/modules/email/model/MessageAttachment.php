@@ -71,7 +71,7 @@ class MessageAttachment extends \GO\Base\Model{
 	/**
 	 * Get the temporary file for this attachment
 	 * 
-	 * @return string Relative to \GO::config()->tmp_dir 
+	 * @return StringHelper Relative to \GO::config()->tmp_dir 
 	 */
 	public function getTempFile(){
 		return isset($this->_tmp_file) ? $this->_tmp_file : false;
@@ -103,10 +103,18 @@ class MessageAttachment extends \GO\Base\Model{
 		}
 	}
 	
+	public function getData() {		
+		if(empty($this->_tmp_file))
+			return null;
+		else {
+			return file_get_contents(\GO::config()->tmpdir.$this->_tmp_file);
+		}
+	}
+	
 	
 	/**
 	 * Get the download URL
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function getUrl(){
 		if($this->getExtension()=='dat'){			
@@ -171,7 +179,7 @@ class MessageAttachment extends \GO\Base\Model{
 	
 	/**
 	 * Get the size formatted. eg. 128 kb
-	 * @return string 
+	 * @return StringHelper 
 	 */
 	public function getHumanSize(){
 		return \GO\Base\Util\Number::formatSize($this->getEstimatedSize());
@@ -180,7 +188,7 @@ class MessageAttachment extends \GO\Base\Model{
 	/**
 	 * Get the file extension
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getExtension(){
 		$file = new \GO\Base\Fs\File($this->name);

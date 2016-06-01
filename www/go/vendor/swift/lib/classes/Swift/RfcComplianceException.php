@@ -19,7 +19,7 @@ class Swift_RfcComplianceException extends Swift_SwiftException
     /**
      * Create a new RfcComplianceException with $message.
      *
-     * @param string $message
+     * @param StringHelper $message
      */
     public function __construct($message)
     {

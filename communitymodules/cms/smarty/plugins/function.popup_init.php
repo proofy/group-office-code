@@ -17,7 +17,7 @@
  * @author   Monte Ohrt <monte at ohrt dot com>
  * @param array
  * @param Smarty
- * @return string
+ * @return StringHelper
  */
 function smarty_function_popup_init($params, &$smarty)
 {

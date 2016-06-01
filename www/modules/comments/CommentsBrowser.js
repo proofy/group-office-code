@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: CommentsBrowser.js 15954 2013-10-17 12:04:36Z mschering $
+ * @version $Id: CommentsBrowser.js 18546 2014-12-04 10:22:30Z wsmits $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -41,6 +41,10 @@ GO.comments.CommentsBrowser = function(config){
     });
     
    this.addEvents({'link' : true});
+	 
+	 this.on('hide', function(){
+		GO.dialog.TabbedFormDialog.prototype.refreshActiveDisplayPanels.call(this);
+	}, this);
 };
 
 Ext.extend(GO.comments.CommentsBrowser, GO.Window, {

@@ -186,29 +186,23 @@ GO.cron.CronDialog = Ext.extend(GO.dialog.TabbedFormDialog , {
       ]				
 		});
 
-	//	this.parameterPanel = new GO.cron.ParametersPanel();
+		this.parameterPanel = new GO.cron.ParametersPanel();
 	
     this.addPanel(this.propertiesPanel);
 		this.addPanel(this.usersPanel);
 		this.addPanel(this.groupsPanel);
-		//this.addPanel(this.parameterPanel);
+		this.addPanel(this.parameterPanel);
 	},
 	
 	afterLoad : function(remoteModelId, config, action){
 		this.usersPanel.setModelId(remoteModelId);
     this.groupsPanel.setModelId(remoteModelId);
 
-		if(action.result.data.select){
-			this.select = true;
-			this.usersPanel.setDisabled(false);
-			this.groupsPanel.setDisabled(false);
-		} else {
-			if(!this.select){
-				this.select = false;
-				this.usersPanel.setDisabled(true);
-				this.groupsPanel.setDisabled(true);
-			}
-		}
+		this.select = action.result.data.select || false;
+		this.usersPanel.setDisabled(!this.select);
+		this.groupsPanel.setDisabled(!this.select);
+
+		this.parameterPanel.buildForm(action.result.data.paramsToSet);
 	},
   afterSubmit: function(action){
     var noUserSelection = this.select; //this.usersPanel.disabled;

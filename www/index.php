@@ -18,6 +18,12 @@ $root = dirname(__FILE__).'/';
 require_once('GO.php');
 //\GO::init();
 
+
+if(!GO::isInstalled()){
+	header('Location: '.\GO::config()->host.'install/');				
+	exit();
+}
+
 if(empty($_REQUEST['r']) && PHP_SAPI!='cli'){	
 	if(\GO::config()->force_ssl && !\GO\Base\Util\Http::isHttps()){
 		 header("HTTP/1.1 301 Moved Permanently");
@@ -31,7 +37,10 @@ if(!\GO::user())
 
 //try with HTTP auth
 if(!\GO::user() && !empty($_SERVER['PHP_AUTH_USER']) && !empty($_SERVER['PHP_AUTH_PW'])){
-	\GO::session()->login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW']);
+	if(\GO::session()->login($_SERVER['PHP_AUTH_USER'], $_SERVER['PHP_AUTH_PW'])) {	
+		//security token not requireed when using basic auth.
+		$_REQUEST['security_token'] = \GO::session()->securityToken();
+	}
 }
 
 

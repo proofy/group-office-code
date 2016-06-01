@@ -42,7 +42,7 @@ class Swift_Mime_HeaderEncoder_QpHeaderEncoder extends Swift_Encoder_QpEncoder i
      *
      * Returns the string 'Q'.
      *
-     * @return string
+     * @return StringHelper
      */
     public function getName()
     {
@@ -52,11 +52,11 @@ class Swift_Mime_HeaderEncoder_QpHeaderEncoder extends Swift_Encoder_QpEncoder i
     /**
      * Takes an unencoded string and produces a QP encoded string from it.
      *
-     * @param string  $string          string to encode
+     * @param StringHelper  $string          string to encode
      * @param integer $firstLineOffset optional
      * @param integer $maxLineLength   optional, 0 indicates the default of 76 chars
      *
-     * @return string
+     * @return StringHelper
      */
     public function encodeString($string, $firstLineOffset = 0, $maxLineLength = 0)
     {

@@ -2,7 +2,7 @@
  * Ext.ux.form.XCheckbox - checkbox with configurable submit values
  *
  * @author  Ing. Jozef Sakalos
- * @version $Id: XCheckbox.js 16895 2014-02-21 15:05:23Z mschering $
+ * @version $Id: XCheckbox.js 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @date    10. February 2008
  *
  *
@@ -51,13 +51,34 @@ Ext.ux.form.XCheckbox = Ext.extend(Ext.form.Checkbox, {
 	setValue:function(val) {
 		Ext.ux.form.XCheckbox.superclass.setValue.apply(this, arguments);
 		this.updateHidden();
-	}
+	},
+	
+//	/**
+//		* Returns the checked state of the checkbox.
+//		* @return {String} '1' if checked, else '0'
+//		*/
+//	 getValue : function(){
+//		 if(this.rendered){
+//				 return this.el.dom.checked ? this.submitOnValue : this.submitOffValue;
+//		 }
+//		 return this.checked ? this.submitOnValue : this.submitOffValue;
+//	 },
+//
+//	 /**
+//		* Returns the checked state of the checkbox.
+//		* @returns {Boolean} true if checked, else false
+//		*/
+//	 getValueAsBoolean : function(){
+//		 if(this.rendered){
+//				 return this.el.dom.checked ? true : false;
+//		 }
+//		 return this.checked ? true : false;
+//	 },
 
 	/**
-     * Updates hiddenField
-     * @private
-     */
-	,
+	 * Updates hiddenField
+	 * @private
+	 */
 	updateHidden:function() {
 		if(this.hiddenField) {
 			this.hiddenField.dom.value = this.checked ? this.submitOnValue : this.submitOffValue;

@@ -41,10 +41,10 @@ class SmimeMessage extends Message
 	
 	 /**
    * Create a new Message.
-   * @param string $subject
-   * @param string $body
-   * @param string $contentType
-   * @param string $charset
+   * @param StringHelper $subject
+   * @param StringHelper $body
+   * @param StringHelper $contentType
+   * @param StringHelper $charset
    * @return \Swift_Mime_Message
    */
   public static function newInstance($subject = null, $body = null,
@@ -176,7 +176,7 @@ class SmimeMessage extends Message
 				unlink($this->tempout);
 			}
 
-			openssl_pkcs7_encrypt($this->tempin, $this->tempout,$this->recipcerts, $this->saved_headers);	
+			openssl_pkcs7_encrypt($this->tempin, $this->tempout,$this->recipcerts, $this->saved_headers, 0, OPENSSL_CIPHER_3DES);	
 			$this->encrypted=true;
 		}
 	}
@@ -199,7 +199,7 @@ class SmimeMessage extends Message
 			$this->_doEncrypt();
 		}
 
-		return \GO\Base\Util\String::normalizeCrlf(file_get_contents($this->tempout));
+		return \GO\Base\Util\StringHelper::normalizeCrlf(file_get_contents($this->tempout));
 	}
 	
   /**
@@ -230,7 +230,7 @@ class SmimeMessage extends Message
 			trigger_error('Could not read tempout file', E_USER_ERROR);
 			
 		while($line = fgets($fp)){			
-			$line = \GO\Base\Util\String::normalizeCrlf($line);
+			$line = \GO\Base\Util\StringHelper::normalizeCrlf($line);
 			
 			$is->write($line);
 		}

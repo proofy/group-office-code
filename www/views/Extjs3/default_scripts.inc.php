@@ -8,7 +8,7 @@
  * If you have questions write an e-mail to info@intermesh.nl
  *
  * @copyright Copyright Intermesh
- * @version $Id: default_scripts.inc.php 17275 2014-04-07 14:57:29Z mschering $
+ * @version $Id: default_scripts.inc.php 20049 2016-05-10 08:09:14Z mschering $
  * @author Merijn Schering <mschering@intermesh.nl>
  */
 
@@ -46,6 +46,7 @@ if(\GO::user()) {
 	$settings['mute_reminder_sound'] = \GO::user()->mute_reminder_sound;
 	$settings['mute_new_mail_sound'] = \GO::user()->mute_new_mail_sound;
 	$settings['popup_reminders'] = \GO::user()->popup_reminders;
+	$settings['popup_emails'] = \GO::user()->popup_emails;
 	$settings['show_smilies'] = \GO::user()->show_smilies;
 	$settings['auto_punctuation'] = \GO::user()->auto_punctuation;
 	$settings['first_weekday'] = \GO::user()->first_weekday;
@@ -55,7 +56,7 @@ if(\GO::user()) {
 	
 }
 
-$settings['pspellSupport']=function_exists('pspell_new');
+$settings['pspellSupport']=function_exists('pspell_new') && !empty(\GO::config()->spell_check_enabled);
 	
 //
 //require_once(\GO::config()->root_path.'classes/base/theme.class.inc.php');
@@ -89,12 +90,17 @@ $settings['config']['support_link']=\GO::config()->support_link;
 $settings['config']['nav_page_size']=intval(\GO::config()->nav_page_size);
 $settings['config']['session_inactivity_timeout']=intval(\GO::config()->session_inactivity_timeout);
 
+$settings['config']['tickets_no_email_required']=GO::config()->tickets_no_email_required;
+
 $settings['config']['default_country'] = \GO::config()->default_country;
 $settings['config']['checker_interval'] = (int)\GO::config()->checker_interval;
 
 $settings['show_contact_cf_tabs'] = array();
 
-if(\GO::modules()->addressbook){
+
+$settings['config']['encode_callto_link']=\GO::config()->encode_callto_link;
+
+if(GO::modules()->addressbook){
 	// Add the addresslist tab to the global settings panel
 	$settings['show_addresslist_tab'] = \GO::config()->get_setting('globalsettings_show_tab_addresslist');
 	
@@ -433,9 +439,10 @@ if(count($load_modules)) {
 	$filename = $user_id.'-scripts.js';
 	$path = $cacheFolder->path().'/'.$filename;
 
-	if($GO_SCRIPTS_JS!=@file_get_contents($path)){
+	if(!file_exists($path) || $GO_SCRIPTS_JS != file_get_contents($path)){
 		file_put_contents($path, $GO_SCRIPTS_JS);
 	}
+	
 	if(file_exists($path)){
 
 		$url=\GO::url("core/compress", array('file'=>$filename, 'mtime'=>filemtime($path)));		
@@ -450,7 +457,7 @@ Ext.state.Manager.setProvider(new GO.state.HttpProvider());
 if(isset(\GO::session()->values['security_token']))		
 	echo 'Ext.Ajax.extraParams={security_token:"'.\GO::session()->values['security_token'].'"};';
 
-$this->fireEvent('inlinescripts');
+GO::router()->getController()->fireEvent('inlinescripts');
 ?>
 </script>
 <?php

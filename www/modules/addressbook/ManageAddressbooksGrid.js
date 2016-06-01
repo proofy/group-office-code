@@ -18,6 +18,11 @@ GO.addressbook.ManageAddressbooksGrid = function(config){
 			sortable:true
 		},
 		columns:[
+		{
+	  	header: 'ID', 
+	  	dataIndex: 'id',
+			hidden:true
+	  },
 	  {
 	  	header: GO.lang['strName'], 
 	  	dataIndex: 'name'

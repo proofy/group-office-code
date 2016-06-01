@@ -46,7 +46,7 @@ class PHPExcel_Worksheet_AutoFilter
 	/**
 	 * Autofilter Range
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_range = '';
 
@@ -95,7 +95,7 @@ class PHPExcel_Worksheet_AutoFilter
 	/**
 	 * Get AutoFilter Range
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getRange() {
 		return $this->_range;
@@ -246,7 +246,7 @@ class PHPExcel_Worksheet_AutoFilter
 	/**
 	 * Clear a specified AutoFilter Column
 	 *
-	 * @param	string  $pColumn    Column name (e.g. A)
+	 * @param	StringHelper  $pColumn    Column name (e.g. A)
 	 * @throws	PHPExcel_Exception
 	 * @return PHPExcel_Worksheet_AutoFilter
 	 */

@@ -21,3 +21,5 @@ $l["showAll"]='Vis alle';
 $l["sharedCategory"]='Delt kategori';
 $l["behaveAsModule"]='Oppførsel som en modul (Krever oppdatering av siden (F5)';
 $l["confirmDelete"]='Er du sikker på at du vil slette dette bokmerket?';
+$l['showCategoryInStartMenu']= 'Lag en bokmerkegruppe i startmenyen (Last inn siden på nytt i nettleseren )';
+$l['toggle']='Bytt visning';

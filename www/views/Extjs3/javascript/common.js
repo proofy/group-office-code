@@ -6,12 +6,14 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: common.js 17303 2014-04-09 14:04:22Z mschering $
+ * @version $Id: common.js 19253 2015-07-27 08:25:41Z wsmits $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
  
 Ext.namespace('GO.util');
+
+Ext.Ajax.timeout = 180000; // 3 minutes
 
 /**
  * Strpos function for js 
@@ -56,7 +58,12 @@ GO.openHelp = function(page){
 
 
 GO.util.callToLink = function(phone){
-	return '<a onclick="GO.mainLayout.fireEvent(\'callto\', \''+phone+'\');" href="'+GO.calltoTemplate.replace('{phone}', phone.replace('(0)','').replace(/[^0-9+]/g,''))+'">'+phone+'</a>';
+
+	if(GO.util.empty(GO.settings.config.encode_callto_link)){
+		return '<a onclick="GO.mainLayout.fireEvent(\'callto\', \''+phone+'\');" href="'+GO.calltoTemplate.replace('{phone}', phone.replace('(0)','').replace(/[^0-9+]/g,''))+'">'+phone+'</a>';
+	} else {
+		return '<a onclick="GO.mainLayout.fireEvent(\'callto\', \''+phone+'\');" href="'+GO.calltoTemplate.replace('{phone}', encodeURIComponent(phone.replace('(0)','').replace(/[^0-9+]/g,'')))+'">'+phone+'</a>';		
+	}
 }
 
 GO.url = function(relativeUrl, params){
@@ -83,7 +90,7 @@ GO.url = function(relativeUrl, params){
  */
 GO.request = function(config){
 	
-//	Ext.Ajax.timeout=5000;
+//	Ext.Ajax.timeout=180000;
 
 	var url = GO.url(config.url);
 	delete config.url;
@@ -216,19 +223,21 @@ GO.util.getFileExtension = function(filename)
 	return extension.toLowerCase();
 }
 
-GO.playAlarm = function(){
+GO.playAlarm = function(filename){
+	
+	// Check if the user has not muted all GO sounds
 	if(GO.util.empty(GO.settings.mute_sound))
 	{
-		var flashMovie= GO.util.getFlashMovieObject("alarmSound");
-		if(flashMovie)
-		{
-			try{
-				flashMovie.Play();
-			}
-			catch(e){
-				//fails if flash is not loaded. Ignore that.
-			}
+		// The folder (From the GO root) in where the soundfiles are stored
+		var soundsfolder = 'sounds/';
+		
+		// Set the default sound when no filename is given
+		if(GO.util.empty(filename)){
+			filename = 'dialog-question';
 		}
+		
+		// Search for the div with the id "sound" and append the HTML5 sound code.
+		document.getElementById("sound").innerHTML='<audio autoplay="autoplay"><source src="' + soundsfolder + filename + '.mp3" type="audio/mpeg" /><source src="' + soundsfolder + filename + '.ogg" type="audio/ogg" /><embed hidden="true" autostart="true" loop="false" src="' + soundsfolder + filename +'.mp3" /></audio>';
 	}	
 }
 
@@ -916,5 +925,20 @@ if(GO.settings && GO.settings.time_format){
 					['40', '40'], ['45', '45'], ['50', '50'], ['55', '55']];
 }
 
+/**
+ * Log data to the console window.
+ * Only logs when using debug mode (CTRL+F7)
+ * 
+ * 
+ * @param string data
+ * @returns 
+ */
+GO.log = function(data) {
 
+	if(GO.debug){
+		if(console.log) {
+			console.log(data);
+		}
+	}
+}
 

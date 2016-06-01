@@ -1,3 +1,25 @@
+2016/03/23 6.2.1
+This release has support for PHP 7.0 and improved caldav and carddav support.
+Note that you must have at least PHP 5.5 now.
+
+2014/11/11 6.1.1
+This release has no new features but we changed back to the old license file
+method because the new way was confusing people.
+
+2014/09/22 6.0.1
+Group-Office 6.0 comes with a new module manager. In all downloads all modules
+are included by default. You can easily extend your system with new modules that
+you can get from our store.
+We've also added various new features like quota per user support in the files
+module and PDF stationary papers in the billing module. We've also included a
+beta webODF module that lets you edit ODF documents online.
+It's also possible to set Group-Office up with the prosody chat server!
+
+IMPORTANT: When upgrading please note that the projects module has been replaced by the new
+projectsv2. It has been changed a lot so you should migrate to v2 in version 5 first and test
+it.
+
+
 2013/09/10 5.0.5
 Group-Office 5.0 was completely redesigned. It was time to modernize the 
 interface. I think we succeeded in making it very pleasing to the eye and easy

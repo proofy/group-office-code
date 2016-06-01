@@ -12,6 +12,13 @@
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
+namespace GO\Notes\Model;
+
+use GO;
+use GO\Base\Db\ActiveRecord;
+use GO\Base\Fs\Base;
+use GO\Base\Util\Crypt;
+use GO\Notes\NotesModule;
 
 /**
  * The Note model
@@ -19,34 +26,37 @@
  * @property int $id
  * @property int $category_id
  * @property int $files_folder_id
- * @property string $content
- * @property string $name
+ * @property StringHelper $content
+ * @property StringHelper $name
  * @property int $mtime
  * @property int $muser_id
  * @property int $ctime
  * @property int $user_id
  * 
  * @property boolean $encrypted
- * @property string $password
+ * @property StringHelper $password
+ * 
+ * @method Note model Returns a static model of itself
  */
 
-namespace GO\Notes\Model;
-
-
-class Note extends \GO\Base\Db\ActiveRecord {
-	
-	private $_decrypted=false;
+class Note extends ActiveRecord {
 	
 	/**
-	 * Returns a static model of itself
+	 * For setting a new password
 	 * 
-	 * @param String $className
-	 * @return Note 
+	 * @var StringHelper 
 	 */
-	public static function model($className=__CLASS__)
-	{	
-		return parent::model($className);
-	}
+	public $userInputPassword1;
+	
+	/**
+	 * For setting a new password
+	 * 
+	 * @var StringHelper 
+	 */
+	public $userInputPassword2;
+	
+	
+	private $_decrypted=false;
 	
 	protected function init() {
 		
@@ -57,7 +67,7 @@ class Note extends \GO\Base\Db\ActiveRecord {
 	}
 	
 	public function getLocalizedName(){
-		return \GO::t('note','notes');
+		return GO::t('note','notes');
 	}
 	
 	public function aclField(){
@@ -80,7 +90,15 @@ class Note extends \GO\Base\Db\ActiveRecord {
 
 	public function relations(){
 		return array(	
-				'category' => array('type'=>self::BELONGS_TO, 'model'=>'GO\Notes\Model\Category', 'field'=>'category_id'),		);
+				'category' => array(
+						'type'=>self::BELONGS_TO, 
+						'model'=>'GO\Notes\Model\Category', 
+						'field'=>'category_id',
+						'labelAttribute'=>function($model){
+							return $model->category->name;							
+						}
+						),							
+				);
 	}
 
 
@@ -96,26 +114,25 @@ class Note extends \GO\Base\Db\ActiveRecord {
 	 */
 	public function buildFilesPath() {
 
-		return 'notes/' . \GO\Base\Fs\Base::stripInvalidChars($this->category->name) . '/' . date('Y', $this->ctime) . '/' . \GO\Base\Fs\Base::stripInvalidChars($this->name).' ('.$this->id.')';
+		return 'notes/' . Base::stripInvalidChars($this->category->name) . '/' . date('Y', $this->ctime) . '/' . Base::stripInvalidChars($this->name).' ('.$this->id.')';
 	}
 	
 	public function defaultAttributes() {
 		$attr = parent::defaultAttributes();
 		
-		$category = \GO\Notes\NotesModule::getDefaultNoteCategory(\GO::user()->id);
+		$category = NotesModule::getDefaultNoteCategory(GO::user()->id);
 		$attr['category_id']=$category->id;
 		
 		return $attr;
 	}
 	
-	public $userInputPassword1;
-	public $userInputPassword2;
+	
 	
 	public function validate() {
 		
 		if (!empty($this->userInputPassword1) || !empty($this->userInputPassword2)) {
 			if ($this->userInputPassword1 != $this->userInputPassword2){
-				$this->setValidationError('password', \GO::t('passwordMatchError'));
+				$this->setValidationError('userInputPassword1', GO::t('passwordMatchError'));
 			}				
 		}
 				
@@ -125,10 +142,17 @@ class Note extends \GO\Base\Db\ActiveRecord {
 	protected function beforeSave() {
 		
 		if(!empty($this->userInputPassword1)){
-			$this->password = crypt($this->userInputPassword1);
-			$this->content = \GO\Base\Util\Crypt::encrypt($this->content, $this->userInputPassword1);
-		}else
-		{
+			$this->password = \GO\Base\Util\Crypt::encryptPassword($this->userInputPassword1);
+			
+			$encrypted = Crypt::encrypt($this->content, $this->userInputPassword1);
+			
+			if($encrypted === false) {
+				throw new \Exception("Could not encrypt note. Is mcrypt for php installed?");
+			}
+			
+			
+			$this->content = $encrypted;
+		} elseif ($this->getIsNew()) {
 			$this->password="";
 		}		
 		
@@ -140,6 +164,25 @@ class Note extends \GO\Base\Db\ActiveRecord {
 	protected function getEncrypted(){
 		return !$this->_decrypted && !empty($this->password);
 	}
+	
+	public function getAttributes($outputType = null) {
+		$attr = parent::getAttributes($outputType);
+		
+		$attr['encrypted']=$this->getEncrypted();
+		
+		if($attr['encrypted']){
+			$attr['content']='';
+		}
+		
+		$attr['decrypted']=$this->_decrypted;
+		$attr['password']="";
+		
+		return $attr;
+	}
+	
+	public function getExcerpt($maxLength=100){
+		return $this->getEncrypted() ? GO::t('encryptedContent', 'notes') : GO\Base\Util\StringHelper::cut_string($this->content, $maxLength);
+	}
 
 	
 	public function decrypt($password) {
@@ -148,7 +191,7 @@ class Note extends \GO\Base\Db\ActiveRecord {
 			return false;		
 		}else{
 			$this->_decrypted=true;
-			$this->content = \GO\Base\Util\Crypt::decrypt($this->content, $password);
+			$this->content = Crypt::decrypt($this->content, $password);
 			return true;
 		}
 	}		

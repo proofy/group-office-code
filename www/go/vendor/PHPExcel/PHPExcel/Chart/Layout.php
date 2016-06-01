@@ -38,21 +38,21 @@ class PHPExcel_Chart_Layout
 	/**
 	 * layoutTarget
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_layoutTarget = NULL;
 
 	/**
 	 * X Mode
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_xMode		= NULL;
 
 	/**
 	 * Y Mode
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_yMode		= NULL;
 
@@ -157,7 +157,7 @@ class PHPExcel_Chart_Layout
 	/**
 	 * Get Layout Target
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getLayoutTarget() {
 		return $this->_layoutTarget;
@@ -175,7 +175,7 @@ class PHPExcel_Chart_Layout
 	/**
 	 * Get X-Mode
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getXMode() {
 		return $this->_xMode;
@@ -193,7 +193,7 @@ class PHPExcel_Chart_Layout
 	/**
 	 * Get Y-Mode
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getYMode() {
 		return $this->_xMode;

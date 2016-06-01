@@ -9,8 +9,8 @@
  * Retrieves PHP script resource
  *
  * sets $php_resource to the returned resource
- * @param string $resource
- * @param string $resource_type
+ * @param StringHelper $resource
+ * @param StringHelper $resource_type
  * @param  $php_resource
  * @return boolean
  */

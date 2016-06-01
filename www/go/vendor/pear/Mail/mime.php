@@ -97,7 +97,7 @@ class Mail_mime
     /**
      * Contains the plain text part of the email
      *
-     * @var string
+     * @var StringHelper
      * @access private
      */
     var $_txtbody;
@@ -105,7 +105,7 @@ class Mail_mime
     /**
      * Contains the html part of the email
      *
-     * @var string
+     * @var StringHelper
      * @access private
      */
     var $_htmlbody;
@@ -192,8 +192,8 @@ class Mail_mime
     /**
      * Set build parameter value
      *
-     * @param string $name  Parameter name
-     * @param string $value Parameter value
+     * @param StringHelper $name  Parameter name
+     * @param StringHelper $value Parameter value
      *
      * @return void
      * @access public
@@ -207,7 +207,7 @@ class Mail_mime
     /**
      * Get build parameter value
      *
-     * @param string $name Parameter name
+     * @param StringHelper $name Parameter name
      *
      * @return mixed Parameter value
      * @access public
@@ -224,7 +224,7 @@ class Mail_mime
      * text/plain part that emails clients who don't support
      * html should show.
      *
-     * @param string $data   Either a string or
+     * @param StringHelper $data   Either a string or
      *                       the file name with the contents
      * @param bool   $isfile If true the first param should be treated
      *                       as a file name, else as a string (default)
@@ -260,7 +260,7 @@ class Mail_mime
     /**
      * Get message text body
      *
-     * @return string Text body
+     * @return StringHelper Text body
      * @access public
      * @since 1.6.0
      */
@@ -272,7 +272,7 @@ class Mail_mime
     /**
      * Adds a html part to the mail.
      *
-     * @param string $data   Either a string or the file name with the
+     * @param StringHelper $data   Either a string or the file name with the
      *                       contents
      * @param bool   $isfile A flag that determines whether $data is a
      *                       filename, or a string(false, default)
@@ -298,7 +298,7 @@ class Mail_mime
     /**
      * Get message HTML body
      *
-     * @return string HTML body
+     * @return StringHelper HTML body
      * @access public
      * @since 1.6.0
      */
@@ -310,13 +310,13 @@ class Mail_mime
     /**
      * Adds an image to the list of embedded images.
      *
-     * @param string $file       The image file name OR image data itself
-     * @param string $c_type     The content type
-     * @param string $name       The filename of the image.
+     * @param StringHelper $file       The image file name OR image data itself
+     * @param StringHelper $c_type     The content type
+     * @param StringHelper $name       The filename of the image.
      *                           Only used if $file is the image data.
      * @param bool   $isfile     Whether $file is a filename or not.
      *                           Defaults to true
-     * @param string $content_id Desired Content-ID of MIME part
+     * @param StringHelper $content_id Desired Content-ID of MIME part
      *                           Defaults to generated unique ID
      *
      * @return bool          True on success
@@ -364,31 +364,31 @@ class Mail_mime
     /**
      * Adds a file to the list of attachments.
      *
-     * @param string $file        The file name of the file to attach
+     * @param StringHelper $file        The file name of the file to attach
      *                            OR the file contents itself
-     * @param string $c_type      The content type
-     * @param string $name        The filename of the attachment
+     * @param StringHelper $c_type      The content type
+     * @param StringHelper $name        The filename of the attachment
      *                            Only use if $file is the contents
      * @param bool   $isfile      Whether $file is a filename or not
      *                            Defaults to true
-     * @param string $encoding    The type of encoding to use.
+     * @param StringHelper $encoding    The type of encoding to use.
      *                            Defaults to base64.
      *                            Possible values: 7bit, 8bit, base64, 
      *                            or quoted-printable.
-     * @param string $disposition The content-disposition of this file
+     * @param StringHelper $disposition The content-disposition of this file
      *                            Defaults to attachment.
      *                            Possible values: attachment, inline.
-     * @param string $charset     The character set used in the filename
+     * @param StringHelper $charset     The character set used in the filename
      *                            of this attachment.
-     * @param string $language    The language of the attachment
-     * @param string $location    The RFC 2557.4 location of the attachment
-     * @param string $n_encoding  Encoding for attachment name (Content-Type)
+     * @param StringHelper $language    The language of the attachment
+     * @param StringHelper $location    The RFC 2557.4 location of the attachment
+     * @param StringHelper $n_encoding  Encoding for attachment name (Content-Type)
      *                            By default filenames are encoded using RFC2231 method
      *                            Here you can set RFC2047 encoding (quoted-printable
      *                            or base64) instead
-     * @param string $f_encoding  Encoding for attachment filename (Content-Disposition)
+     * @param StringHelper $f_encoding  Encoding for attachment filename (Content-Disposition)
      *                            See $n_encoding description
-     * @param string $description Content-Description header
+     * @param StringHelper $description Content-Description header
      *
      * @return mixed              True on success or PEAR_Error object
      * @access public
@@ -453,9 +453,9 @@ class Mail_mime
     /**
      * Get the contents of the given file name as string
      *
-     * @param string $file_name Path of file to process
+     * @param StringHelper $file_name Path of file to process
      *
-     * @return string           Contents of $file_name
+     * @return StringHelper           Contents of $file_name
      * @access private
      */
     function &_file2str($file_name)
@@ -492,7 +492,7 @@ class Mail_mime
      *
      * @param mixed  &$obj The object to add the part to, or
      *                     null if a new object is to be created.
-     * @param string $text The text to add.
+     * @param StringHelper $text The text to add.
      *
      * @return object      The text mimePart object
      * @access private
@@ -686,7 +686,7 @@ class Mail_mime
      * YOU WILL HAVE NO TO: HEADERS UNLESS YOU SET IT YOURSELF 
      * using the $headers parameter!
      * 
-     * @param string $separation The separation between these two parts.
+     * @param StringHelper $separation The separation between these two parts.
      * @param array  $params     The Build parameters passed to the
      *                           &get() function. See &get for more info.
      * @param array  $headers    The extra headers that should be passed
@@ -734,7 +734,7 @@ class Mail_mime
     /**
      * Writes (appends) the complete e-mail into file.
      * 
-     * @param string $filename  Output file location
+     * @param StringHelper $filename  Output file location
      * @param array  $params    The Build parameters passed to the
      *                          &get() function. See &get for more info.
      * @param array  $headers   The extra headers that should be passed
@@ -786,7 +786,7 @@ class Mail_mime
     /**
      * Writes (appends) the complete e-mail body into file.
      * 
-     * @param string $filename Output file location
+     * @param StringHelper $filename Output file location
      * @param array  $params   The Build parameters passed to the
      *                         &get() function. See &get for more info.
      *
@@ -1085,7 +1085,7 @@ class Mail_mime
      * @param bool  $skip_content Don't return content headers: Content-Type,
      *                            Content-Disposition and Content-Transfer-Encoding
      *
-     * @return string             Plain text headers
+     * @return StringHelper             Plain text headers
      * @access public
      */
     function txtHeaders($xtra_headers = null, $overwrite = false, $skip_content = false)
@@ -1121,7 +1121,7 @@ class Mail_mime
      * Use it to build messages with various content-types e.g. miltipart/raport
      * not supported by _contentHeaders() function.
      *
-     * @param string $type   Type name
+     * @param StringHelper $type   Type name
      * @param array  $params Hash array of header parameters
      *
      * @return void
@@ -1167,7 +1167,7 @@ class Mail_mime
     /**
      * Sets the Subject header
      *
-     * @param string $subject String to set the subject to.
+     * @param StringHelper $subject String to set the subject to.
      *
      * @return void
      * @access public
@@ -1180,7 +1180,7 @@ class Mail_mime
     /**
      * Set an email to the From (the sender) header
      *
-     * @param string $email The email address to use
+     * @param StringHelper $email The email address to use
      *
      * @return void
      * @access public
@@ -1194,7 +1194,7 @@ class Mail_mime
      * Add an email to the To header
      * (multiple calls to this method are allowed)
      *
-     * @param string $email The email direction to add
+     * @param StringHelper $email The email direction to add
      *
      * @return void
      * @access public
@@ -1212,7 +1212,7 @@ class Mail_mime
      * Add an email to the Cc (carbon copy) header
      * (multiple calls to this method are allowed)
      *
-     * @param string $email The email direction to add
+     * @param StringHelper $email The email direction to add
      *
      * @return void
      * @access public
@@ -1230,7 +1230,7 @@ class Mail_mime
      * Add an email to the Bcc (blank carbon copy) header
      * (multiple calls to this method are allowed)
      *
-     * @param string $email The email direction to add
+     * @param StringHelper $email The email direction to add
      *
      * @return void
      * @access public
@@ -1252,9 +1252,9 @@ class Mail_mime
      * encode your recipients before sending to the send
      * function
      *
-     * @param string $recipients A comma-delimited list of recipients
+     * @param StringHelper $recipients A comma-delimited list of recipients
      *
-     * @return string            Encoded data
+     * @return StringHelper            Encoded data
      * @access public
      */
     function encodeRecipients($recipients)
@@ -1302,12 +1302,12 @@ class Mail_mime
     /**
      * Encodes a header as per RFC2047
      *
-     * @param string $name     The header name
-     * @param string $value    The header data to encode
-     * @param string $charset  Character set name
-     * @param string $encoding Encoding name (base64 or quoted-printable)
+     * @param StringHelper $name     The header name
+     * @param StringHelper $value    The header data to encode
+     * @param StringHelper $charset  Character set name
+     * @param StringHelper $encoding Encoding name (base64 or quoted-printable)
      *
-     * @return string          Encoded header data (without a name)
+     * @return StringHelper          Encoded header data (without a name)
      * @access public
      * @since 1.5.3
      */
@@ -1321,9 +1321,9 @@ class Mail_mime
     /**
      * Get file's basename (locale independent) 
      *
-     * @param string $filename Filename
+     * @param StringHelper $filename Filename
      *
-     * @return string          Basename
+     * @return StringHelper          Basename
      * @access private
      */
     function _basename($filename)

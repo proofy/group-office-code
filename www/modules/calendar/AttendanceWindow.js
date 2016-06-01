@@ -28,6 +28,46 @@ GO.calendar.AttendanceWindow = Ext.extend(GO.dialog.TabbedFormDialog, {
 	},
 	buildForm : function(){
 		
+		
+		var reminderValues = [['0', GO.calendar.lang.noReminder]];
+
+		for (var i = 1; i < 60; i++) {
+			reminderValues.push([i, i]);
+		}
+		
+		this.reminderValue = new GO.form.NumberField({
+			decimals:0,
+			name : 'reminder_value',
+//			minValue:1,
+			width : 50,
+			value : GO.calendar.defaultReminderValue
+		});
+
+		this.reminderMultiplier = new Ext.form.ComboBox({
+			hiddenName : 'reminder_multiplier',
+			triggerAction : 'all',
+			editable : false,
+			selectOnFocus : true,
+			width : 148,
+			forceSelection : true,
+			mode : 'local',
+			value : GO.calendar.defaultReminderMultiplier,
+			valueField : 'value',
+			displayField : 'text',
+			store : new Ext.data.SimpleStore({
+				fields : ['value', 'text'],
+				data : [['60', GO.lang.strMinutes],
+				['3600', GO.lang.strHours],
+				['86400', GO.lang.strDays],
+				['604800', GO.lang.strWeeks]
+
+				]
+			}),
+			hideLabel : true,
+			labelSeperator : ''
+		});
+		
+		
 		this.addPanel({
 			cls:'go-form-panel',
 			layout:'form',
@@ -71,7 +111,12 @@ GO.calendar.AttendanceWindow = Ext.extend(GO.dialog.TabbedFormDialog, {
 //			}
 			,this.infoPanel = new Ext.form.FieldSet({
 				title:GO.calendar.lang.eventInfo
-			})]
+			}),
+			{
+				xtype : 'compositefield',
+				fieldLabel : GO.calendar.lang.reminder,
+				items : [this.reminderValue,this.reminderMultiplier]
+			}]
 		});
 	}
 });

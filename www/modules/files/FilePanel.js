@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: FilePanel.js 17206 2014-03-26 12:43:55Z mschering $
+ * @version $Id: FilePanel.js 18392 2014-11-05 11:32:39Z wilmar1980 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -148,6 +148,11 @@ GO.files.FilePanel = Ext.extend(GO.DisplayPanel,{
 					'<tr>'+
 						'<td colspan="2" class="display-panel-heading">'+GO.files.lang.file+': {path}</td>'+
 					'</tr>'+
+					
+					'<tr>'+
+						'<td>ID</td><td>{id}</td>'+
+					'</tr>'+
+					
 					'<tr>'+
 						'<td>'+GO.lang.strType+':</td>'+
 						'<td colspan=><div class="go-grid-icon filetype filetype-{extension}">{type}</div></td>'+						

@@ -108,10 +108,26 @@ Ext.extend(GO.addressbook.ContextMenu, Ext.menu.Menu, {
 			if (!GO.util.empty(selected[i].data.id))
 				ids.push(selected[i].data.id);
 		}
+
+
+		if (!this.batchEditDialog) {
+			this.batchEditDialog = new GO.base.model.BatchEditModelDialog();
+		}
+
+		var editors = {
+			sex: GO.addressbook.SexCombobox,
+			company_id: GO.addressbook.SelectCompany
+		};
 		
-		GO.base.model.showBatchEditModelDialog(this.model_name, ids, this.grid, {
-			sex:GO.addressbook.SexCombobox,
-			company_id:GO.addressbook.SelectCompany
-		},['uuid']);
+		
+		this.fireEvent('batchedit', this, this.model_name, editors);
+		
+		this.batchEditDialog.on('submit', function() {
+			this.grid.getStore().reload();
+		}, this)
+
+		this.batchEditDialog.setModels(this.model_name, ids, 'id', editors, ['uuid']);
+
+		this.batchEditDialog.show();
 	}
 });

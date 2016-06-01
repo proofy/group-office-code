@@ -26,7 +26,7 @@ class MultiSelectGrid {
 	
 	/**
 	 * When the store of the multiselectgrid changed it need a unique prefix for saving
-	 * @var string unique store loading id
+	 * @var StringHelper unique store loading id
 	 */
 	private $_requestParamPrefix='';
 	
@@ -43,12 +43,12 @@ class MultiSelectGrid {
 	 * 
 	 * Create them in \GO\Base\Controller\AbstractModelController::beforeStoreStatement
 	 * 
-	 * @param string $requestParamName The name of the request parameter. It's the id of the MultiSelectGrid in the ExtJS view.
-	 * @param string $modelName Name of the model that the selected ID's belong to.
+	 * @param StringHelper $requestParamName The name of the request parameter. It's the id of the MultiSelectGrid in the ExtJS view.
+	 * @param StringHelper $modelName Name of the model that the selected ID's belong to.
      * @param \GO\Base\Data\AbstractStore $store the store that should be filtered
 	 * @param array $requestParams The request parameters
 	 * @param boolean $checkPermission  Enable permission checking on this model. This makes sure that only 
-	 * @param string $prefix a prefix for the request param that can change every store load
+	 * @param StringHelper $prefix a prefix for the request param that can change every store load
 	 * @param array $extraPks valid pks of models not in the database
 	 * readbable addressbooks are used with contacts for example.
 	 * This will disable acl checking for the contacts query which improves performance.
@@ -79,14 +79,14 @@ class MultiSelectGrid {
 	 * @param boolean $selectAll 
 	 */
 	public function setFindParamsForDefaultSelection(\GO\Base\Db\FindParams $findParams, $selectAll=false){
-
 		if(empty($this->selectedIds)){
 			$findParamsCopy = clone $findParams;
-			$findParamsCopy->ignoreAcl(false);
+			$findParamsCopy->ignoreAcl(false)->debugSql();
 			if(!$selectAll){				
 				
-				$findParamsCopy->limit(1)->single();
-				$model = \GO::getModel($this->_modelName)->find($findParamsCopy);
+				$findParamsCopy->limit(1);
+				$model = \GO::getModel($this->_modelName)->find($findParamsCopy)->fetch();
+
 				if($model)
 					$this->selectedIds=array($model->pk);		
 			}else{
@@ -119,7 +119,7 @@ class MultiSelectGrid {
 		//in the addSelectedToFindCriteria() function. The permissions are checked by 
 		//the following query.
 		
-		if($this->_checkPermissions && $this->selectedIds==""){
+		if($this->_checkPermissions && empty($this->selectedIds)){
 			$stmt = \GO::getModel($this->_modelName)->find();
 			foreach($stmt as $model){
 				$this->selectedIds[]=$model->pk;
@@ -147,8 +147,8 @@ class MultiSelectGrid {
 	 * Should be called in \GO\Base\Controller\AbstractModelController::beforeStoreStatement
 	 * Will be called in \GO\Base\Data\DbStore::multiSelect()
 	 * @param \GO\Base\Db\FindParams $findParams (object reference)
-	 * @param string $columnName database column to match keys to
-	 * @param string $tableAlias table alias of the column to match
+	 * @param StringHelper $columnName database column to match keys to
+	 * @param StringHelper $tableAlias table alias of the column to match
 	 * @param boolean $useAnd use AND when adding where condition
 	 * @param boolean $useNot use NOT when adding where condition
 	 */
@@ -240,7 +240,7 @@ class MultiSelectGrid {
 	 * Should be called in \GO\Base\Controller\AbstractModelController::beforeStoreStatement
 	 * 
 	 * @param \GO\Base\Data\AbstractStore $store
-	 * @param string $titleAttribute 
+	 * @param StringHelper $titleAttribute 
 	 */
 	public function setStoreTitle( $titleAttribute = 'name') {
 //		$titleArray = array();

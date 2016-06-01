@@ -46,16 +46,28 @@ class EventAndTaskReportMailer extends \GO\Base\Cron\AbstractCron {
 	 * $user parameter is null and the run function will be called only once.
 	 * 
 	 * @param \GO\Base\Cron\CronJob $cronJob
-	 * @param \GO\Base\Model\User $user [OPTIONAL]
 	 */
-	public function run(\GO\Base\Cron\CronJob $cronJob,\GO\Base\Model\User $user = null){
+	public function run(\GO\Base\Cron\CronJob $cronJob){
 		
-		\GO::session()->runAsRoot();
-		$pdf = $this->_getUserPdf($user);
-		if($this->_sendEmail($user,$pdf))
-			\GO::debug("CRON MAIL IS SEND!");
-		else
-			\GO::debug("CRON MAIL HAS NOT BEEN SEND!");		
+		foreach ($cronJob->getAllUsers() as $user) {
+			
+			\GO::debug('CRONJOB ('.$this->name.') START FOR '.$user->username.' : '.date('d-m-Y H:i:s'));
+
+			\GO::language()->setLanguage($user->language); // Set the users language
+			\GO::session()->runAsRoot();
+			
+			$pdf = $this->_getUserPdf($user);
+			if($this->_sendEmail($user,$pdf))
+				\GO::debug("CRON MAIL IS SEND!");
+			else
+				\GO::debug("CRON MAIL HAS NOT BEEN SEND!");		
+			
+			\GO::language()->setLanguage(); // Set the admin language
+			
+			\GO::debug('CRONJOB ('.$this->name.') FINSIHED FOR '.$user->username.' : '.date('d-m-Y H:i:s'));
+						
+		}
+		
 	}
 	
 	/**
@@ -233,7 +245,7 @@ class eventAndTaskPdf extends \GO\Base\Util\Pdf {
 
 		$html = '';
 		$html .= '<tcpdf method="renderLine" />';
-		$html .= '<b><font style="font-size:'.$this->_timeFontSize.'px">'.\GO\Base\Util\Date\DateTime::fromUnixtime($event->getAlternateStartTime())->format('H:i').' - '.\GO\Base\Util\Date\DateTime::fromUnixtime($event->getAlternateEndTime())->format('H:i').'</font> <font style="font-size:'.$this->_nameFontSize.'px">'.\GO\Base\Util\String::text_to_html($event->getName(), true).'</font></b>';
+		$html .= '<b><font style="font-size:'.$this->_timeFontSize.'px">'.\GO\Base\Util\Date\DateTime::fromUnixtime($event->getAlternateStartTime())->format('H:i').' - '.\GO\Base\Util\Date\DateTime::fromUnixtime($event->getAlternateEndTime())->format('H:i').'</font> <font style="font-size:'.$this->_nameFontSize.'px">'.\GO\Base\Util\StringHelper::text_to_html($event->getName(), true).'</font></b>';
 		$realEvent = $event->getEvent();
 		if(!empty($realEvent->description))
 			$html .= 	'<br /><font style="font-size:'.$this->_descriptionFontSize.'px">'.$realEvent->getAttribute('description', 'html').'</font>';
@@ -250,7 +262,7 @@ class eventAndTaskPdf extends \GO\Base\Util\Pdf {
 		
 		$html = '';
 		$html .= '<tcpdf method="renderLine" />';
-		$html .= '<b><font style="font-size:'.$this->_nameFontSize.'px">'.\GO\Base\Util\String::text_to_html($task->getAttribute('name', 'html'),true).'</font></b>';
+		$html .= '<b><font style="font-size:'.$this->_nameFontSize.'px">'.\GO\Base\Util\StringHelper::text_to_html($task->getAttribute('name', 'html'),true).'</font></b>';
 		if(!empty($task->description))
 			$html .= 	'<br /><font style="font-size:'.$this->_descriptionFontSize.'px">'.$task->getAttribute('description', 'html').'</font>';
 

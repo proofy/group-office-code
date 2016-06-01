@@ -110,12 +110,35 @@ class SentMailingController extends \GO\Base\Controller\AbstractModelController 
 	}
 
 	private function _launchBatchSend($mailing_id) {
+		
+		$mailing = \GO\Addressbook\Model\SentMailing::model()->findByPk($mailing_id);
+		if (!$mailing)
+			throw new \Exception("Mailing not found!\n");
+
+		$joinCriteria = \GO\Base\Db\FindCriteria::newInstance()->addRawCondition('t.id', 'a.account_id');
+		$findParams = \GO\Base\Db\FindParams::newInstance()
+						->single()
+						->join(\GO\Email\Model\Alias::model()->tableName(), $joinCriteria, 'a')
+						->criteria(\GO\Base\Db\FindCriteria::newInstance()->addCondition('id', $mailing->alias_id, '=', 'a')
+		);
+		
+		$account = \GO\Email\Model\Account::model()->find($findParams);
+		
+		$pwdParam = '';
+
+		if($account  && !empty(\GO::session()->values['emailModule']['smtpPasswords'][$account->id])){
+			$mailing->temp_pass = \GO::session()->values['emailModule']['smtpPasswords'][$account->id];
+			$mailing->save();
+			
+			$pwdParam = '--smtp_password='.\GO::session()->values['emailModule']['smtpPasswords'][$account->id];
+		}
+				
 		$log = \GO::config()->file_storage_path . 'log/mailings/';
 		if (!is_dir($log))
 			mkdir($log, 0755, true);
 
 		$log .= $mailing_id . '.log';
-		$cmd = \GO::config()->cmd_php . ' '.\GO::config()->root_path.'groupofficecli.php -r=addressbook/sentMailing/batchSend -c="' . \GO::config()->get_config_file() . '" --mailing_id=' . $mailing_id . ' >> ' . $log;
+		$cmd = \GO::config()->cmd_php . ' '.\GO::config()->root_path.'groupofficecli.php -r=addressbook/sentMailing/batchSend -c="' . \GO::config()->get_config_file() . '" --mailing_id=' . $mailing_id . ' '.$pwdParam.' >> ' . $log;
 
 		if (!\GO\Base\Util\Common::isWindows())
 			$cmd .= ' 2>&1 &';
@@ -195,6 +218,10 @@ class SentMailingController extends \GO\Base\Controller\AbstractModelController 
 			
 		} else {
 			$account = \GO\Email\Model\Account::model()->find($findParams);
+			
+			if(!$account->store_password && !empty($mailing->temp_pass)){
+				$account->smtp_password = $mailing->temp_pass;
+			}	
 		}
 		
 		$mailer = \GO\Base\Mail\Mailer::newGoInstance(\GO\Email\Transport::newGoInstance($account));
@@ -354,6 +381,12 @@ class SentMailingController extends \GO\Base\Controller\AbstractModelController 
 		}
 
 		$mailing->status = \GO\Addressbook\Model\SentMailing::STATUS_FINISHED;
+		
+		// Unset the temp_pass
+		if(!empty($mailing->temp_pass)){
+			$mailing->temp_pass = "";
+		}
+		
 		$mailing->save();
 
 		echo "Mailing finished at ".\GO\Base\Util\Date::get_timestamp(time())."\n";

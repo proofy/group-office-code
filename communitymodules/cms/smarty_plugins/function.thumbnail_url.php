@@ -14,12 +14,12 @@
  * Purpose:  Substring a string
  *
  * @author   Merijn Schering <mschering@intermesh.nl>
- * @param string
+ * @param StringHelper
  * @param integer
- * @param string
+ * @param StringHelper
  * @param boolean
  * @param boolean
- * @return string
+ * @return StringHelper
  */
 function smarty_function_thumbnail_url($params)
 {

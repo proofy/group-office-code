@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: LookAndFeelPanel.js 16666 2014-01-22 11:22:29Z mschering $
+ * @version $Id: LookAndFeelPanel.js 20022 2016-05-02 12:19:19Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -174,33 +174,84 @@ GO.users.LookAndFeelPanel = function(config)
 
     this.cbMuteNewMailSound,
     {
-			xtype:'xcheckbox',
-			hideLabel: true,
-			boxLabel: GO.users.lang.popupNotification,
-			name: 'popup_reminders'
-		},{
-			xtype:'xcheckbox',
-			hideLabel: true,
-			boxLabel: GO.users.lang.mailReminders,
-			name: 'mail_reminders'
-		},{
-			xtype:'xcheckbox',
-			hideLabel: true,
-			boxLabel: GO.users.lang.showSmilies,
-			name: 'show_smilies'
-		},{
-			xtype:'xcheckbox',
-			hideLabel: true,
-			boxLabel: GO.users.lang.autoPunctuation,
-			name: 'auto_punctuation'
-		},{
-			xtype:'button',
-			style:'margin-top:20px',
-			handler:this.resetState,
-			scope:this,
-			text:GO.users.lang.resetState,
-			anchor:''
-		});
+		xtype:'xcheckbox',
+		hideLabel: true,
+			boxLabel: GO.users.lang.popupReminderNotification,
+		name: 'popup_reminders',
+		listeners: {
+			check: function(cb,checked) {
+				if(checked) {
+					var options = {
+						body: GO.users.lang.desktopNotificationsActive,
+						icon: 'views/Extjs3/themes/Group-Office/images/groupoffice.ico'
+					}
+					// Let's check if the browser supports notifications
+					if (!("Notification" in window)) {
+						// Browser does not support desktop notification and will show a popup instead
+					} else if (Notification.permission !== 'granted' && (Notification.permission !== 'denied' || Notification.permission === "default")) {
+					  Notification.requestPermission(function (permission) {
+						// If the user accepts, let's create a notification
+						if (permission === "granted") {
+						   var notification = new Notification(GO.users.lang.desktopNotificationsActive,options);
+						} else {
+							cb.setValue(false);
+						}
+					  });
+					}
+				} 
+			}
+		}
+		}, {
+		xtype: 'xcheckbox',
+		hideLabel: true,
+		boxLabel: GO.users.lang.popupEmailNotification,
+		name: 'popup_emails',
+		listeners: {
+			check: function (cb, checked) {
+				if (checked) {
+					var options = {
+						body: GO.users.lang.desktopNotificationsActive,
+						icon: 'views/Extjs3/themes/Group-Office/images/groupoffice.ico'
+					}
+					// Let's check if the browser supports notifications
+					if (!("Notification" in window)) {
+						// Browser does not support desktop notification and will show a popup instead
+					} else if (Notification.permission !== 'granted' && (Notification.permission !== 'denied' || Notification.permission === "default")) {
+						Notification.requestPermission(function (permission) {
+							// If the user accepts, let's create a notification
+							if (permission === "granted") {
+								var notification = new Notification(GO.users.lang.desktopNotificationsActive, options);
+							} else {
+								cb.setValue(false);
+							}
+						});
+					}
+				}
+			}
+		}
+	}, {
+		xtype:'xcheckbox',
+		hideLabel: true,
+		boxLabel: GO.users.lang.mailReminders,
+		name: 'mail_reminders'
+	},{
+		xtype:'xcheckbox',
+		hideLabel: true,
+		boxLabel: GO.users.lang.showSmilies,
+		name: 'show_smilies'
+	},{
+		xtype:'xcheckbox',
+		hideLabel: true,
+		boxLabel: GO.users.lang.autoPunctuation,
+		name: 'auto_punctuation'
+	},{
+		xtype:'button',
+		style:'margin-top:20px',
+		handler:this.resetState,
+		scope:this,
+		text:GO.users.lang.resetState,
+		anchor:''
+	});
 	
 	
 	GO.users.LookAndFeelPanel.superclass.constructor.call(this, config);		

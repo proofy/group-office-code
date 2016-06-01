@@ -22,7 +22,7 @@ class VTimezone extends Sabre\VObject\Document {
 	 * By default this object will iterate over its own children, but this can 
 	 * be overridden with the iterator argument
 	 * 
-	 * @param string $name 
+	 * @param StringHelper $name 
 	 * @param Sabre\VObject\ElementList $iterator
 	 */
 	public function __construct() {
@@ -82,18 +82,26 @@ class VTimezone extends Sabre\VObject\Document {
 		}
 
 		$this->tzid = $tz->getName();
-		$this->add("last-modified", "19870101T000000Z");
+	//	$this->add("last-modified", "19870101T000000Z");
+		
+		$rrule = new \Sabre\VObject\Recur\RRuleIterator($STANDARD_RRULE, new \DateTime('1970-01-01 '.substr($STANDARD_TZOFFSETFROM, 1).':00'));
+		$rrule->next();
+		$rrule->next();
 		
 		$this->add($this->createComponent("standard", array(
-				'dtstart'=>"19710101T030000",
+				'dtstart'=>$rrule->current()->format('Ymd\THis'),
 				'rrule'=>$STANDARD_RRULE,
 				'tzoffsetfrom'=>$STANDARD_TZOFFSETFROM. "00",
 				'tzoffsetto' => $STANDARD_TZOFFSETTO . "00"
 
 		)));
 		
+		$rrule = new \Sabre\VObject\Recur\RRuleIterator($DAYLIGHT_RRULE, new \DateTime('1970-01-01 '.substr($DAYLIGHT_TZOFFSETFROM, 1).':00'));
+		$rrule->next();
+		$rrule->next();
+		
 		$this->add($this->createComponent("daylight", array(
-				'dtstart'=>"19710101T020000",
+				'dtstart'=>$rrule->current()->format('Ymd\THis'),
 				'rrule'=>$DAYLIGHT_RRULE,
 				'tzoffsetfrom'=>$DAYLIGHT_TZOFFSETFROM. "00",
 				'tzoffsetto' => $DAYLIGHT_TZOFFSETTO . "00"

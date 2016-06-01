@@ -6,7 +6,7 @@ namespace GO\Addressbook\Controller;
 class AddressbookController extends \GO\Base\Controller\AbstractModelController{
 	
 	protected function beforeStoreStatement(array &$response, array &$params, \GO\Base\Data\AbstractStore &$store, \GO\Base\Db\FindParams $storeParams) {
-		$storeParams->debugSql();
+		
 		$multiSel = new \GO\Base\Component\MultiSelectGrid(
 						'books', 
 						"GO\Addressbook\Model\Addressbook",$store, $params, true);
@@ -55,18 +55,44 @@ class AddressbookController extends \GO\Base\Controller\AbstractModelController{
 	}
 	
 	/**
+	 * Function exporting addressbook contents to VCFs.
+	 * 
+	 * @param array $params 
+	 */
+	public function actionExportVCard($params) {
+		
+		$findParams = \GO\Base\Db\FindParams::loadExportFindParams('contact');
+		
+		$findParams->limit(0);
+		
+		$store = new \GO\Base\Data\DbStore('GO\Addressbook\Model\Contact',new \GO\Base\Data\ColumnModel('GO\Addressbook\Model\Contact'),$params,$findParams);
+		
+		$file = new \GO\Base\Fs\File(\GO::t('contacts','addressbook').'.vcf');
+		\GO\Base\Util\Http::outputDownloadHeaders($file);
+		
+		while($record = $store->nextRecord()){
+			$model = \GO\Addressbook\Model\Contact::model()->findByPk($record['id']);
+			
+			if(!isset($fileStream))
+				$fileStream=fopen('php://output','w+');		
+
+			fwrite($fileStream,$model->toVObject()->serialize());
+		}
+	}
+	
+	/**
 	 * Function exporting addressbook contents to VCFs. Must be called from export.php.
 	 * @param type $params 
 	 */
-	public function exportVCard($params) {
-		$addressbook = \GO\Addressbook\Model\Addressbook::model()->findByPk($params['addressbook_id']);
-		
-		$filename = $addressbook->name.'.vcf';
-		\GO\Base\Util\Http::outputDownloadHeaders(new \GO\Base\FS\File($filename));		
-	
-		foreach ($addressbook->contacts(\GO\Base\Db\FindParams::newInstance()->select('t.*')) as $contact)
-			echo $contact->toVObject()->serialize();
-	}
+//	public function exportVCard($params) {
+//		$addressbook = \GO\Addressbook\Model\Addressbook::model()->findByPk($params['addressbook_id']);
+//		
+//		$filename = $addressbook->name.'.vcf';
+//		\GO\Base\Util\Http::outputDownloadHeaders(new \GO\Base\FS\File($filename));		
+//	
+//		foreach ($addressbook->contacts(\GO\Base\Db\FindParams::newInstance()->select('t.*')) as $contact)
+//			echo $contact->toVObject()->serialize();
+//	}
 	
 	protected function afterSubmit(&$response, &$model, &$params, $modifiedAttributes) {
 		
@@ -316,4 +342,19 @@ class AddressbookController extends \GO\Base\Controller\AbstractModelController{
 		
 		
 	}
+	
+	protected function actionFirstWritableAddressbookId($params) {
+		$addressbookIds = json_decode($params['addressbook_ids']);
+		$firstAddressbookId = !empty($addressbookIds) ? $addressbookIds[0] : -1;
+		foreach ($addressbookIds as $addressbookId) {
+			$addressbookModel = \GO\Addressbook\Model\Addressbook::model()->findByPk($addressbookId);
+			if ($addressbookModel && $addressbookModel->checkPermissionLevel(\GO\Base\Model\Acl::CREATE_PERMISSION)) {
+				$response = array('success'=>true,'data'=>array('addressbook_id'=>$addressbookModel->id));
+				echo json_encode($response); exit();
+			}
+		}
+		$response = array('success'=>true,'data'=>array('addressbook_id'=>$firstAddressbookId));
+		echo json_encode($response);
+	}
+	
 }

@@ -54,13 +54,14 @@ Ext.extend(GO.form.HtmlEditor,Ext.form.HtmlEditor, {
 		GO.form.HtmlEditor.superclass.setValue.call(this, value);
 	},
 	
-	syncValue: function(){
-		//In BasicForm.js this method is called by EXT
-		// When using the editor in sourceEdit then it may not call the syncValue function
-		if(!this.sourceEditMode){			
-			GO.form.HtmlEditor.superclass.syncValue.call(this);
-		}
-	},	
+//	syncValue: function(){
+//		//In BasicForm.js this method is called by EXT
+//		// When using the editor in sourceEdit then it may not call the syncValue function
+//		if(!this.sourceEditMode){			
+//			GO.form.HtmlEditor.superclass.syncValue.call(this);
+//		}
+//	},	
+
 //	correctify: function(full, prefix, letter){
 //		var regex = /([:\?]\s+)(.)/g;
 //		return prefix + letter.toUpperCase();
@@ -175,7 +176,7 @@ Ext.extend(GO.form.HtmlEditor,Ext.form.HtmlEditor, {
 
 	getDocMarkup : function(){
 		var h = Ext.fly(this.iframe).getHeight() - this.iframePad * 2;
-		return String.format('<html><head><style type="text/css">body,p,td,div,span{'+GO.settings.html_editor_font+'};body{border: 0; margin: 0; padding: {0}px; height: {1}px; cursor: text}body p{margin:0px;}</style></head><body></body></html>', this.iframePad, h);
+		return String.format('<html><head><meta name="SKYPE_TOOLBAR" content="SKYPE_TOOLBAR_PARSER_COMPATIBLE" /><style type="text/css">body,p,td,div,span{'+GO.settings.html_editor_font+'};body{border: 0; margin: 0; padding: {0}px; height: {1}px; cursor: text}body p{margin:0px;}</style></head><body></body></html>', this.iframePad, h);
 	},
 	fixKeys : function(){ // load time branching for fastest keydown performance
 		if(Ext.isIE){

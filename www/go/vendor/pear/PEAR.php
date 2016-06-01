@@ -117,7 +117,7 @@ class PEAR
      * Default error handler (callback) for this object, if error mode is
      * PEAR_ERROR_CALLBACK.
      *
-     * @var     string
+     * @var     StringHelper
      * @access  private
      */
     var $_default_error_handler = '';
@@ -125,7 +125,7 @@ class PEAR
     /**
      * Which class to use for error objects.
      *
-     * @var     string
+     * @var     StringHelper
      * @access  private
      */
     var $_error_class = 'PEAR_Error';
@@ -147,7 +147,7 @@ class PEAR
      * $_PEAR_destructor_object_list for destructor emulation if a
      * destructor object exists.
      *
-     * @param string $error_class  (optional) which class to use for
+     * @param StringHelper $error_class  (optional) which class to use for
      *        error objects, defaults to PEAR_Error.
      * @access public
      * @return void
@@ -207,8 +207,8 @@ class PEAR
     * You MUST use a reference, or they will not persist!
     *
     * @access public
-    * @param  string $class  The calling classname, to prevent clashes
-    * @param  string $var    The variable to retrieve.
+    * @param  StringHelper $class  The calling classname, to prevent clashes
+    * @param  StringHelper $var    The variable to retrieve.
     * @return mixed   A reference to the variable. If not set it will be
     *                 auto initialised to NULL.
     */
@@ -494,10 +494,10 @@ class PEAR
      *                  method.  In other error modes this parameter
      *                  is ignored.
      *
-     * @param string $userinfo If you need to pass along for example debug
+     * @param StringHelper $userinfo If you need to pass along for example debug
      *                  information, this parameter is meant for that.
      *
-     * @param string $error_class The returned error object will be
+     * @param StringHelper $error_class The returned error object will be
      *                  instantiated from this class, if specified.
      *
      * @param bool $skipmsg If true, raiseError will only pass error codes,
@@ -576,7 +576,7 @@ class PEAR
      * Simpler form of raiseError with fewer options.  In most cases
      * message, code and userinfo are enough.
      *
-     * @param string $message
+     * @param StringHelper $message
      *
      */
     function &throwError($message = null,
@@ -730,7 +730,7 @@ class PEAR
     * OS independant PHP extension load. Remember to take care
     * on the correct extension name for case sensitive OSes.
     *
-    * @param string $ext The extension name
+    * @param StringHelper $ext The extension name
     * @return bool Success or not on the dl() call
     */
     function loadExtension($ext)
@@ -846,7 +846,7 @@ class PEAR_Error
     /**
      * PEAR_Error constructor
      *
-     * @param string $message  message
+     * @param StringHelper $message  message
      *
      * @param int $code     (optional) error code
      *
@@ -858,7 +858,7 @@ class PEAR_Error
      * PEAR_ERROR_CALLBACK, the callback function or object/method
      * tuple.
      *
-     * @param string $userinfo (optional) additional user/debug info
+     * @param StringHelper $userinfo (optional) additional user/debug info
      *
      * @access public
      *
@@ -971,7 +971,7 @@ class PEAR_Error
     /**
      * Get the error message from an error object.
      *
-     * @return  string  full error message
+     * @return  StringHelper  full error message
      * @access public
      */
     function getMessage()
@@ -1000,7 +1000,7 @@ class PEAR_Error
     /**
      * Get the name of this error/exception.
      *
-     * @return string error/exception name (type)
+     * @return StringHelper error/exception name (type)
      * @access public
      */
     function getType()
@@ -1014,7 +1014,7 @@ class PEAR_Error
     /**
      * Get additional user-supplied information.
      *
-     * @return string user-supplied information
+     * @return StringHelper user-supplied information
      * @access public
      */
     function getUserInfo()
@@ -1028,7 +1028,7 @@ class PEAR_Error
     /**
      * Get additional debug information supplied by the application.
      *
-     * @return string debug information
+     * @return StringHelper debug information
      * @access public
      */
     function getDebugInfo()
@@ -1082,7 +1082,7 @@ class PEAR_Error
     /**
      * Make a string representation of this object.
      *
-     * @return string a string with an object summary
+     * @return StringHelper a string with an object summary
      * @access public
      */
     function toString() {

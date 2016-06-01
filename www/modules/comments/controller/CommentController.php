@@ -10,10 +10,18 @@ class CommentController extends \GO\Base\Controller\AbstractModelController{
 
 	protected function getStoreParams($params){
 
+		$sort = 'ctime';
+		$dir = 'DESC';
+		if(!empty($params['sort'])) {
+			$sort = $params['sort'];
+			$dir = $params['dir'];
+		}
+		
 		return \GO\Base\Db\FindParams::newInstance()
 						->ignoreAcl()	
-						->select('t.*')
-						->order('id','DESC')
+						->select('t.*, category.name as category_name')
+						->order($sort,$dir)
+						->joinRelation('category', 'LEFT')
 						->criteria(
 										\GO\Base\Db\FindCriteria::newInstance()
 											->addCondition('model_id', $params['model_id'])
@@ -23,6 +31,7 @@ class CommentController extends \GO\Base\Controller\AbstractModelController{
 	
 	protected function formatColumns(\GO\Base\Data\ColumnModel $columnModel) {
 		$columnModel->formatColumn('user_name','$model->user->name');
+		$columnModel->formatColumn('category_name','$model->category->name', array(), 'category_name');
 		return parent::formatColumns($columnModel);
 	}
 	
@@ -98,4 +107,32 @@ class CommentController extends \GO\Base\Controller\AbstractModelController{
 //						
 //		return $response;
 	}
+	
+	protected function afterDisplay(&$response, &$model, &$params){
+		
+		$modelType = \GO\Base\Model\ModelType::model()->findByPk($model->model_type_id);
+		
+		$scModel = \GO\Base\Model\SearchCacheRecord::model()->findByPk(array(
+			'model_id'=>$model->model_id,
+			'model_type_id'=>$model->model_type_id
+		));
+		
+		if(!isset($response['data']['parent'])){
+			$response['data']['parent'] = array();
+		}
+		
+		if($scModel){
+			$response['data']['parent']['name'] = $scModel->name;
+		} 
+		
+		$response['data']['parent']['model_type']= $modelType?$modelType->model_name:false;
+		$response['data']['parent']['model_id'] = $model->model_id;
+		
+		$response['data']['comments']= $model->comments;
+		$response['data']['category_name']= $model->category?$model->category->name:'';
+
+		$response['data']['short'] = (strlen($model->comments) > 13) ? substr($model->comments,0,10).'...' : $model->comments;
+		
+		return $response;
+	}	
 }

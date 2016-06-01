@@ -81,25 +81,25 @@ class PHPExcel_Writer_Excel5_Parser
 
 	/**
 	 * The token we are working on.
-	 * @var string
+	 * @var StringHelper
 	 */
 	public $_current_token;
 
 	/**
 	 * The formula to parse
-	 * @var string
+	 * @var StringHelper
 	 */
 	public $_formula;
 
 	/**
 	 * The character ahead of the current char
-	 * @var string
+	 * @var StringHelper
 	 */
 	public $_lookahead;
 
 	/**
 	 * The parse tree to be generated
-	 * @var string
+	 * @var StringHelper
 	 */
 	public $_parse_tree;
 
@@ -590,7 +590,7 @@ class PHPExcel_Writer_Excel5_Parser
 	 * Convert a string token to ptgStr
 	 *
 	 * @access private
-	 * @param string $string A string for conversion to its ptg value.
+	 * @param StringHelper $string A string for conversion to its ptg value.
 	 * @return mixed the converted token on success
 	 */
 	function _convertString($string)
@@ -609,9 +609,9 @@ class PHPExcel_Writer_Excel5_Parser
 	 * args that it takes.
 	 *
 	 * @access private
-	 * @param string  $token    The name of the function for convertion to ptg value.
+	 * @param StringHelper  $token    The name of the function for convertion to ptg value.
 	 * @param integer $num_args The number of arguments the function receives.
-	 * @return string The packed ptg for the function
+	 * @return StringHelper The packed ptg for the function
 	 */
 	function _convertFunction($token, $num_args)
 	{
@@ -670,7 +670,7 @@ class PHPExcel_Writer_Excel5_Parser
 	 * a ptgArea3d.
 	 *
 	 * @access private
-	 * @param string $token An Excel range in the Sheet1!A1:A2 format.
+	 * @param StringHelper $token An Excel range in the Sheet1!A1:A2 format.
 	 * @return mixed The packed ptgArea3d token on success.
 	 */
 	function _convertRange3d($token)
@@ -712,8 +712,8 @@ class PHPExcel_Writer_Excel5_Parser
 	 * Convert an Excel reference such as A1, $B2, C$3 or $D$4 to a ptgRefV.
 	 *
 	 * @access private
-	 * @param string $cell An Excel cell reference
-	 * @return string The cell in packed() format with the corresponding ptg
+	 * @param StringHelper $cell An Excel cell reference
+	 * @return StringHelper The cell in packed() format with the corresponding ptg
 	 */
 	function _convertRef2d($cell)
 	{
@@ -742,7 +742,7 @@ class PHPExcel_Writer_Excel5_Parser
 	 * ptgRef3d.
 	 *
 	 * @access private
-	 * @param string $cell An Excel cell reference
+	 * @param StringHelper $cell An Excel cell reference
 	 * @return mixed The packed ptgRef3d token on success.
 	 */
 	function _convertRef3d($cell)
@@ -843,7 +843,7 @@ class PHPExcel_Writer_Excel5_Parser
 	 * array. It assumes all sheet names given must exist.
 	 *
 	 * @access private
-	 * @param string $ext_ref The name of the external reference
+	 * @param StringHelper $ext_ref The name of the external reference
 	 * @return mixed The reference index in packed() format on success
 	 */
 	function _getRefIndex($ext_ref)
@@ -922,7 +922,7 @@ class PHPExcel_Writer_Excel5_Parser
 	 *
 	 * @access public
 	 * @see PHPExcel_Writer_Excel5_Workbook::addWorksheet()
-	 * @param string  $name  The name of the worksheet being added
+	 * @param StringHelper  $name  The name of the worksheet being added
 	 * @param integer $index The index of the worksheet being added
 	 */
 	function setExtSheet($name, $index)
@@ -934,7 +934,7 @@ class PHPExcel_Writer_Excel5_Parser
 	 * pack() row and column into the required 3 or 4 byte format.
 	 *
 	 * @access private
-	 * @param string $cell The Excel cell reference to be packed
+	 * @param StringHelper $cell The Excel cell reference to be packed
 	 * @return array Array containing the row and column in packed() format
 	 */
 	function _cellToPackedRowcol($cell)
@@ -963,7 +963,7 @@ class PHPExcel_Writer_Excel5_Parser
 	 * Just using maximum col/rows, which is probably not the correct solution
 	 *
 	 * @access private
-	 * @param string $range The Excel range to be packed
+	 * @param StringHelper $range The Excel range to be packed
 	 * @return array Array containing (row1,col1,row2,col2) in packed() format
 	 */
 	function _rangeToPackedRange($range)
@@ -1004,7 +1004,7 @@ class PHPExcel_Writer_Excel5_Parser
 	 * whether the row or column are relative references.
 	 *
 	 * @access private
-	 * @param string $cell The Excel cell reference in A1 format.
+	 * @param StringHelper $cell The Excel cell reference in A1 format.
 	 * @return array
 	 */
 	function _cellToRowcol($cell)
@@ -1197,7 +1197,7 @@ class PHPExcel_Writer_Excel5_Parser
 	 * The parsing method. It parses a formula.
 	 *
 	 * @access public
-	 * @param string $formula The formula to parse, without the initial equal
+	 * @param StringHelper $formula The formula to parse, without the initial equal
 	 *                        sign (=).
 	 * @return mixed true on success
 	 */
@@ -1534,7 +1534,7 @@ class PHPExcel_Writer_Excel5_Parser
 	 *
 	 * @access public
 	 * @param array $tree The optional tree to convert.
-	 * @return string The tree in reverse polish notation
+	 * @return StringHelper The tree in reverse polish notation
 	 */
 	function toReversePolish($tree = array())
 	{

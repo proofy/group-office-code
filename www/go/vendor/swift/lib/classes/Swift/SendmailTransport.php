@@ -20,7 +20,7 @@ class Swift_SendmailTransport extends Swift_Transport_SendmailTransport
     /**
      * Create a new SendmailTransport, optionally using $command for sending.
      *
-     * @param string $command
+     * @param StringHelper $command
      */
     public function __construct($command = '/usr/sbin/sendmail -bs')
     {
@@ -36,7 +36,7 @@ class Swift_SendmailTransport extends Swift_Transport_SendmailTransport
     /**
      * Create a new SendmailTransport instance.
      *
-     * @param string $command
+     * @param StringHelper $command
      *
      * @return Swift_SendmailTransport
      */

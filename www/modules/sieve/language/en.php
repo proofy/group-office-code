@@ -64,9 +64,11 @@ $l["under"]= 'Under';
 $l["over"]= 'Over';
 $l["disabled"]= 'Disabled';
 $l["subjectcontainsnot"]= 'Subject doesn\'t contain';
+$l["bodycontainsnot"]= 'Body doesn\'t contain';
 $l["fromcontainsnot"]= 'Sender doesn\'t contain';
 $l["tocontainsnot"]= 'Recipient doesn\'t contain';
 $l["subjectcontains"]= 'Subject contains';
+$l["bodycontains"]= 'Body contains';
 $l["fromcontains"]= 'Sender contains';
 $l["tocontains"]= 'Recipient contains';
 $l["subjectexistsnot"]= 'Subject doesn\'t exist';
@@ -101,6 +103,7 @@ $l['description']='Manage sieve e-mail filtering rules';
 $l['active']='active';
 $l['standardvacation']='Standard vacation rule';
 $l['standardvacationmessage']='I am on vacation';
+$l['standardvacationsubject']='I am away';
 
 $l['setAction']='Set action';
 $l['setFilter']='Set criterium';
@@ -122,3 +125,24 @@ $l['setRead']='Mark message as read';
 $l['stopEndError'] = 'Stop needs to be on the end!';
 
 $l['body']='Body';
+$l['outOfOffice']='Out of office';
+$l['message']='Message';
+$l['aliasses']='Aliasses';
+$l['schedule']='Schedule';
+
+$l['activateAt']='Activate at';
+$l['deactivateAt']='Deactivate after';
+
+$l['scheduleText']='In here you can schedule when the "Out of office" message needs to be activated.';
+$l['messageText']='Fill in your message in the field below.';
+$l['subjectText']='Fill in the subject of the response in the field below.';
+$l['aliassesText']='Fill in the aliasses on which this message also needs to apply to. If you have multiple aliasses, then separate each alias with a comma (,).';
+$l['activateText']='Activate this filter by checking the checkbox below.';
+
+$l['advancedOptions'] = 'Advanced options';
+
+
+$l['currentdate'] = 'Current Date';
+$l['before'] = 'before';
+$l['is'] = 'is';
+$l['after'] = 'after';

@@ -89,6 +89,7 @@ CREATE TABLE IF NOT EXISTS `ta_tasklists` (
   `user_id` int(11) NOT NULL,
   `acl_id` int(11) NOT NULL,
   `files_folder_id` int(11) NOT NULL DEFAULT '0',
+  `version` INT UNSIGNED NOT NULL DEFAULT '1',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -101,7 +102,7 @@ CREATE TABLE IF NOT EXISTS `ta_tasklists` (
 DROP TABLE IF EXISTS `ta_tasks`;
 CREATE TABLE IF NOT EXISTS `ta_tasks` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `uuid` varchar(100) NOT NULL DEFAULT '',
+  `uuid` varchar(255) CHARACTER SET ascii COLLATE ascii_bin NOT NULL DEFAULT '',
   `tasklist_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `ctime` int(11) NOT NULL,
@@ -125,4 +126,15 @@ CREATE TABLE IF NOT EXISTS `ta_tasks` (
   KEY `list_id` (`tasklist_id`),
   KEY `rrule` (`rrule`),
   KEY `uuid` (`uuid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+
+--
+-- Tabelstructuur voor tabel `su_visible_lists`
+--
+
+CREATE TABLE IF NOT EXISTS `su_visible_lists` (
+  `user_id` int(11) NOT NULL,
+  `tasklist_id` int(11) NOT NULL,
+  PRIMARY KEY  (`user_id`,`tasklist_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

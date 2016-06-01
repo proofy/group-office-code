@@ -8,7 +8,7 @@
  * If you have questions write an e-mail to info@intermesh.nl
  *
  * @package GO.modules.Site
- * @version $Id: Menu.php 16900 2014-02-24 13:31:41Z mschering $
+ * @version $Id: Menu.php 18376 2014-10-31 16:05:27Z wsmits $
  * @copyright Copyright Intermesh BV.
  * @author Wesley Smits wsmits@intermesh.nl
  */
@@ -17,7 +17,7 @@
  * The Menu model
  *
  * @package GO.modules.Site
- * @version $Id: Menu.php 16900 2014-02-24 13:31:41Z mschering $
+ * @version $Id: Menu.php 18376 2014-10-31 16:05:27Z wsmits $
  * @copyright Copyright Intermesh BV.
  * @author Wesley Smits wsmits@intermesh.nl
  *
@@ -77,7 +77,7 @@ class Menu extends \GO\Base\Db\ActiveRecord{
 				'iconCls' => 'go-model-icon-Menu',
 				'text' => $menu->label,
 				'hasChildren' => $hasChildren,
-				'expanded' => !$hasChildren || \Site::isExpandedNode($menu->site_id.'_menu_'.$menu->id),	 
+				'expanded' => !$hasChildren || \GO\Site\Model\Site::isExpandedNode($menu->site_id.'_menu_'.$menu->id),	 
 				'children'=> $hasChildren ? $menu->getMenuChildrenTree():null,
 			 );
 			 $tree[] = $node;
@@ -110,7 +110,7 @@ class Menu extends \GO\Base\Db\ActiveRecord{
 				'iconCls' => 'go-model-icon-Menuitem', 
 				'text' => $child->label,
 				'hasChildren' => $hasChildren,
-				'expanded' => !$hasChildren || \Site::isExpandedNode($this->site_id.'_menu_'.$child->id),	 
+				'expanded' => !$hasChildren || \GO\Site\Model\Site::isExpandedNode($this->site_id.'_menu_'.$child->id),	 
 				'children'=> $hasChildren ? null : $child->getChildrenTree(),
 			);
 			 

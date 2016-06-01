@@ -42,7 +42,7 @@ abstract class Swift_ByteStream_AbstractFilterableInputStream implements Swift_I
     /**
      * Commit the given bytes to the storage medium immediately.
      *
-     * @param string $bytes
+     * @param StringHelper $bytes
      */
     abstract protected function _commit($bytes);
 
@@ -55,7 +55,7 @@ abstract class Swift_ByteStream_AbstractFilterableInputStream implements Swift_I
      * Add a StreamFilter to this InputByteStream.
      *
      * @param Swift_StreamFilter $filter
-     * @param string             $key
+     * @param StringHelper             $key
      */
     public function addFilter(Swift_StreamFilter $filter, $key)
     {
@@ -65,7 +65,7 @@ abstract class Swift_ByteStream_AbstractFilterableInputStream implements Swift_I
     /**
      * Remove an already present StreamFilter based on its $key.
      *
-     * @param string $key
+     * @param StringHelper $key
      */
     public function removeFilter($key)
     {
@@ -75,7 +75,7 @@ abstract class Swift_ByteStream_AbstractFilterableInputStream implements Swift_I
     /**
      * Writes $bytes to the end of the stream.
      *
-     * @param string $bytes
+     * @param StringHelper $bytes
      *
      * @return integer
      *

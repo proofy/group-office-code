@@ -15,9 +15,9 @@
  * @link http://smarty.php.net/manual/en/language.modifier.spacify.php
  *          spacify (Smarty online manual)
  * @author   Monte Ohrt <monte at ohrt dot com>
- * @param string
- * @param string
- * @return string
+ * @param StringHelper
+ * @param StringHelper
+ * @return StringHelper
  */
 function smarty_modifier_spacify($string, $spacify_char = ' ')
 {

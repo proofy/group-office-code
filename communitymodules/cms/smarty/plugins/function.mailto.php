@@ -45,7 +45,7 @@
  * @author   credits to Jason Sweat (added cc, bcc and subject functionality)
  * @param    array
  * @param    Smarty
- * @return   string
+ * @return   StringHelper
  */
 function smarty_function_mailto($params, &$smarty)
 {

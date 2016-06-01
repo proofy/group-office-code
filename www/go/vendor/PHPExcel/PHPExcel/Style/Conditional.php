@@ -72,14 +72,14 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
 	/**
 	 * Text
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_text;
 
 	/**
 	 * Condition
 	 *
-	 * @var string[]
+	 * @var StringHelper[]
 	 */
 	private $_condition = array();
 
@@ -106,7 +106,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
     /**
      * Get Condition type
      *
-     * @return string
+     * @return StringHelper
      */
     public function getConditionType() {
     	return $this->_conditionType;
@@ -115,7 +115,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
     /**
      * Set Condition type
      *
-     * @param string $pValue	PHPExcel_Style_Conditional condition type
+     * @param StringHelper $pValue	PHPExcel_Style_Conditional condition type
      * @return PHPExcel_Style_Conditional
      */
     public function setConditionType($pValue = PHPExcel_Style_Conditional::CONDITION_NONE) {
@@ -126,7 +126,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
     /**
      * Get Operator type
      *
-     * @return string
+     * @return StringHelper
      */
     public function getOperatorType() {
     	return $this->_operatorType;
@@ -135,7 +135,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
     /**
      * Set Operator type
      *
-     * @param string $pValue	PHPExcel_Style_Conditional operator type
+     * @param StringHelper $pValue	PHPExcel_Style_Conditional operator type
      * @return PHPExcel_Style_Conditional
      */
     public function setOperatorType($pValue = PHPExcel_Style_Conditional::OPERATOR_NONE) {
@@ -146,7 +146,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
     /**
      * Get text
      *
-     * @return string
+     * @return StringHelper
      */
     public function getText() {
         return $this->_text;
@@ -155,7 +155,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
     /**
      * Set text
      *
-     * @param string $value
+     * @param StringHelper $value
      * @return PHPExcel_Style_Conditional
      */
     public function setText($value = null) {
@@ -167,7 +167,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      * Get Condition
      *
      * @deprecated Deprecated, use getConditions instead
-     * @return string
+     * @return StringHelper
      */
     public function getCondition() {
     	if (isset($this->_condition[0])) {
@@ -181,7 +181,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
      * Set Condition
      *
      * @deprecated Deprecated, use setConditions instead
-     * @param string $pValue	Condition
+     * @param StringHelper $pValue	Condition
      * @return PHPExcel_Style_Conditional
      */
     public function setCondition($pValue = '') {
@@ -194,7 +194,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
     /**
      * Get Conditions
      *
-     * @return string[]
+     * @return StringHelper[]
      */
     public function getConditions() {
     	return $this->_condition;
@@ -203,7 +203,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
     /**
      * Set Conditions
      *
-     * @param string[] $pValue	Condition
+     * @param StringHelper[] $pValue	Condition
      * @return PHPExcel_Style_Conditional
      */
     public function setConditions($pValue) {
@@ -217,7 +217,7 @@ class PHPExcel_Style_Conditional implements PHPExcel_IComparable
     /**
      * Add Condition
      *
-     * @param string $pValue	Condition
+     * @param StringHelper $pValue	Condition
      * @return PHPExcel_Style_Conditional
      */
     public function addCondition($pValue = '') {

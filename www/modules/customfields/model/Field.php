@@ -22,6 +22,8 @@
  * @property int $max_length
  * @property string $addressbook_ids
  * @property string $extra_options Some types of data fields can have some extra options (use json format for multiple options)
+ * @property string $prefix
+ * @property string $suffix
  */
 
 namespace GO\Customfields\Model;
@@ -117,7 +119,7 @@ class Field extends \GO\Base\Db\ActiveRecord{
 	}
 		
 	public function alterDatabase($wasNew){
-			$table=$this->category->customfieldsTableName();
+		$table=$this->category->customfieldsTableName();
 					
 		if($wasNew){			
 			$sql = "ALTER TABLE `".$table."` ADD `".$this->columnName()."` ".str_replace('%MAX_LENGTH',$this->max_length,$this->customfieldtype->fieldSql()).";";
@@ -229,6 +231,12 @@ class Field extends \GO\Base\Db\ActiveRecord{
 	}
 	
 	protected function beforeSave() {
+		
+		if(!$this->customfieldtype->hasLength()){
+			//user may not set length so take the default
+			$this->max_length = $this->customfieldtype->getMaxLength();
+		}
+		
 		if($this->isNew)
 			$this->sort_index=$this->count();		
 		
@@ -245,7 +253,7 @@ class Field extends \GO\Base\Db\ActiveRecord{
 	 * Get or create field if not exists
 	 * 
 	 * @param int $category_id
-	 * @param string $fieldName
+	 * @param StringHelper $fieldName
 	 * @return \Field 
 	 */
 	public function createIfNotExists($category_id, $fieldName, $createAttributes=array()){
@@ -263,7 +271,14 @@ class Field extends \GO\Base\Db\ActiveRecord{
 	
 	public function checkDatabase() {
 		
-		$this->alterDatabase(false);
+		try{
+			$this->alterDatabase(false);
+		} catch (Exception $ex) {
+			//class doesn't exist?
+			
+			echo "ERROR: ".$ex->getMessage()."\n";
+		}
+		
 		
 		return parent::checkDatabase();
 	}
@@ -294,7 +309,7 @@ class Field extends \GO\Base\Db\ActiveRecord{
 	/**
 	 * Get all customfield models that are attached to the given model.
 	 * 
-	 * @param string $modelName
+	 * @param StringHelper $modelName
 	 * @param int $permissionLevel Set to false to ignore permissions
 	 * @return Field
 	 */

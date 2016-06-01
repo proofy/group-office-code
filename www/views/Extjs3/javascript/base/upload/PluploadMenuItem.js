@@ -53,15 +53,14 @@ GO.base.upload.PluploadMenuItem = Ext.extend(Ext.menu.Item, {
 		GO.base.upload.PluploadMenuItem.superclass.constructor.apply(this, arguments);
 	},
 	lowerMaxFileSize: function(new_max_filesize) {
-		if(new_max_filesize < 0)
-			return;
-		var go_max_filesize = Math.ceil(GO.settings.config.max_file_size/1024/1024);
-		if(new_max_filesize < go_max_filesize) {
-			this.uploadpanel.max_file_size = new_max_filesize+'mb';
-		} else {
-			this.uploadpanel.max_file_size = go_max_filesize+'mb';
-		}
-		this.window.setTitle(" ("+GO.lang.strMax+": "+this.uploadpanel.max_file_size+")");
+		
+		if(new_max_filesize <= 0)
+			new_max_filesize=1;// needs one bytes or plupload doesn't
+		
+		this.uploadpanel.max_file_size = Math.min(new_max_filesize, GO.settings.config.max_file_size);
+		var humanSize = (new_max_filesize==1) ? '0B': GO.util.format.fileSize(this.uploadpanel.max_file_size);
+		
+		this.window.setTitle(" ("+GO.lang.strMax+": "+humanSize+")");
 		if(this.uploadpanel.uploader){
 			this.uploadpanel.uploader.settings.max_file_size = this.uploadpanel.max_file_size;
 		}

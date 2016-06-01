@@ -13,7 +13,7 @@
  */
 
 namespace GO\Dav\Fs;
-
+use Sabre;
 
 class SharedDirectory extends \Sabre\DAV\FS\Directory {
 
@@ -59,7 +59,7 @@ class SharedDirectory extends \Sabre\DAV\FS\Directory {
 	 *
 	 * data is a readable stream resource
 	 *
-	 * @param string $name Name of the file
+	 * @param StringHelper $name Name of the file
 	 * @param resource $data Initial payload
 	 * @return void
 	 */
@@ -71,7 +71,7 @@ class SharedDirectory extends \Sabre\DAV\FS\Directory {
 	/**
 	 * Creates a new subdirectory
 	 *
-	 * @param string $name
+	 * @param StringHelper $name
 	 * @return void
 	 */
 	public function createDirectory($name) {

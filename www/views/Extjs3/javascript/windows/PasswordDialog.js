@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: PasswordDialog.js 15954 2013-10-17 12:04:36Z mschering $
+ * @version $Id: PasswordDialog.js 18111 2014-09-19 09:06:22Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -45,7 +45,7 @@ GO.dialog.PasswordDialog = function(config){
 	GO.dialog.PasswordDialog.superclass.constructor.call(this, {
 		layout: 'fit',				
 		width:400,
-		height:120,
+		height:140,
 		resizable: false,
 		modal:true,
 		closeAction:'hide',

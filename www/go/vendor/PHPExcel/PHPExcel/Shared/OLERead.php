@@ -168,7 +168,7 @@ class PHPExcel_Shared_OLERead {
 	/**
 	 * Extract binary stream data
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getStream($stream)
 	{
@@ -215,7 +215,7 @@ class PHPExcel_Shared_OLERead {
 	 * Read a standard stream (by joining sectors using information from SAT)
 	 *
 	 * @param int $bl Sector ID where the stream starts
-	 * @return string Data for standard stream
+	 * @return StringHelper Data for standard stream
 	 */
 	private function _readData($bl)
 	{
@@ -295,7 +295,7 @@ class PHPExcel_Shared_OLERead {
 	/**
 	 * Read 4 bytes of data at specified position
 	 *
-	 * @param string $data
+	 * @param StringHelper $data
 	 * @param int $pos
 	 * @return int
 	 */

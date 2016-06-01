@@ -10,25 +10,16 @@ GO.files.filesTemplate =
 			'<td class="table_header_links" style="width:100%">' + GO.lang['strName'] + '</td>'+							
 			'<td class="table_header_links" style="white-space:nowrap">' + GO.lang['strMtime'] + '</td>'+
 			'<td class="table_header_links">&nbsp;</td>'+
+			'<td class="table_header_links">&nbsp;</td>'+
 		'</tr>'+
 		'<tpl if="!files.length">'+
-			'<tr><td colspan="4">'+GO.lang.strNoItems+'</td></tr>'+
+			'<tr><td colspan="5">'+GO.lang.strNoItems+'</td></tr>'+
 		'</tpl>'+
 		'<tpl for="files">'+
 			'<tr>'+											
 				'<td>'+
 				'<tpl if="locked_user_id&gt;0"><div class="fs-grid-locked"></tpl>'+
-				'<a class="go-grid-icon filetype filetype-{extension}" href="#" onclick="'+
-
-				'<tpl if="extension!=\'folder\'">'+
-				'GO.linkHandlers[\'GO\\\\\\\\Files\\\\\\\\Model\\\\\\\\File\'].call(this, {id});'+
-				'</tpl>'+
-				'<tpl if="extension==\'folder\'">'+
-				'GO.linkHandlers[\'GO\\\\\\\\Files\\\\\\\\Model\\\\\\\\Folder\'].call(this, {id});'+
-				//'GO.files.openFolder({[this.panel.data.files_folder_id]}, {id});'+
-				'</tpl>'+
-
-				'">{name}</a>'+
+				'<a class="go-grid-icon filetype filetype-{extension}" href="#files_{[xindex-1]}">{name}</a>'+
 				'<tpl if="locked_user_id&gt;0"></div></tpl>'+
 				'</td>'+
 
@@ -45,10 +36,23 @@ GO.files.filesTemplate =
 							'<a style="display:block" class="go-icon btn-edit" href="#files_{[xindex-1]}">&nbsp;</a>'+
 						'</td>'+
 					'</tpl>'+
+					'<td>'+
+						'<a style="display:block" class="go-icon btn-download" href="{[GO.files.filesTemplateConfig.getDownloadUrl(values.id,false)]}">&nbsp;</a>'+
+					'</td>'+
 				'</tpl>'+
 				'<tpl if="extension==\'folder\'">'+
 					'<td style="white-space:nowrap">'+					
-						'<a style="display:block" class="go-icon btn-files" href="#files_{[xindex-1]}">&nbsp;</a>'+					
+						'<a style="display:block" class="go-icon btn-info" href="#" onclick="'+
+
+							'<tpl if="extension!=\'folder\'">'+
+							'GO.linkHandlers[\'GO\\\\\\\\Files\\\\\\\\Model\\\\\\\\File\'].call(this, {id});'+
+							'</tpl>'+
+							'<tpl if="extension==\'folder\'">'+
+							'GO.linkHandlers[\'GO\\\\\\\\Files\\\\\\\\Model\\\\\\\\Folder\'].call(this, {id});'+
+							//'GO.files.openFolder({[this.panel.data.files_folder_id]}, {id});'+
+							'</tpl>'+
+
+						'">&nbsp;</a>'+					
 					'</td>'+
 				'</tpl>'+
 			'</tr>'+
@@ -63,5 +67,16 @@ GO.files.filesTemplateConfig={
 	getPath : function(path)
 	{
 		return path.replace(/\'/g,'\\\'');
+	},
+	getDownloadUrl : function(id,inline){
+
+		if(GO.util.empty(inline)){
+			inline=false;
+		} else {
+			inline=true;
+		}
+		
+		return GO.url("files/file/download",{id:id,inline:inline})
 	}
+	
 };

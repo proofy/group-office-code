@@ -72,7 +72,7 @@ class PHPExcel_Cell
 	/**
 	 *	Type of the cell data
 	 *
-	 *	@var	string
+	 *	@var	StringHelper
 	 */
 	private $_dataType;
 
@@ -153,7 +153,7 @@ class PHPExcel_Cell
 	/**
 	 *	Get cell coordinate column
 	 *
-	 *	@return	string
+	 *	@return	StringHelper
 	 */
 	public function getColumn()
 	{
@@ -173,7 +173,7 @@ class PHPExcel_Cell
 	/**
 	 *	Get cell coordinate
 	 *
-	 *	@return	string
+	 *	@return	StringHelper
 	 */
 	public function getCoordinate()
 	{
@@ -193,7 +193,7 @@ class PHPExcel_Cell
 	/**
 	 *	Get cell value with formatting
 	 *
-	 *	@return	string
+	 *	@return	StringHelper
 	 */
 	public function getFormattedValue()
 	{
@@ -347,7 +347,7 @@ class PHPExcel_Cell
 	/**
 	 *	Get cell data type
 	 *
-	 *	@return string
+	 *	@return StringHelper
 	 */
 	public function getDataType()
 	{
@@ -357,7 +357,7 @@ class PHPExcel_Cell
 	/**
 	 *	Set cell data type
 	 *
-	 *	@param	string $pDataType
+	 *	@param	StringHelper $pDataType
 	 *	@return	PHPExcel_Cell
 	 */
 	public function setDataType($pDataType = PHPExcel_Cell_DataType::TYPE_STRING)
@@ -732,7 +732,7 @@ class PHPExcel_Cell
 	/**
 	 *	Column index from string
 	 *
-	 *	@param	string $pString
+	 *	@param	StringHelper $pString
 	 *	@return	int Column index (base 1 !!!)
 	 */
 	public static function columnIndexFromString($pString = 'A')
@@ -776,7 +776,7 @@ class PHPExcel_Cell
 	 *	String from columnindex
 	 *
 	 *	@param	int $pColumnIndex Column index (base 0 !!!)
-	 *	@return	string
+	 *	@return	StringHelper
 	 */
 	public static function stringFromColumnIndex($pColumnIndex = 0)
 	{
@@ -967,7 +967,7 @@ class PHPExcel_Cell
     /**
      * Convert to string
      *
-     * @return string
+     * @return StringHelper
      */
 	public function __toString()
 	{

@@ -6,7 +6,7 @@
  *
  * If you have questions write an e-mail to info@intermesh.nl
  *
- * @version $Id: SieveGrid.js 15954 2013-10-17 12:04:36Z mschering $
+ * @version $Id: SieveGrid.js 19390 2015-09-10 11:44:35Z wsmits $
  * @copyright Copyright Intermesh
  * @author Wesley Smits <wsmits@intermesh.nl>
  */
@@ -121,7 +121,7 @@ GO.sieve.SieveGrid = function(config){
 		},
 		GO.sieve.lang.filterset,
 		this.selectScript,{
-			iconCls: 'btn-delete',
+			iconCls: 'btn-extra',
 			text: GO.sieve.lang.activate,
 			cls: 'x-btn-text-icon',
 			handler: function(){

@@ -1,5 +1,7 @@
 <?php
 
+namespace GO\Calendar\Model;
+
 /**
  * Copyright Intermesh
  *
@@ -14,34 +16,30 @@
  * @property int $group_id
  * @property int $user_id
  * @property int $acl_id
- * @property string $name
+ * @property StringHelper $name
  * @property int $start_hour
  * @property int $end_hour
- * @property string $background
+ * @property StringHelper $background
  * @property int $time_interval
  * @property boolean $public
  * @property boolean $shared_acl
  * @property boolean $show_bdays
  * @property boolean $show_completed_tasks
- * @property string $comment
+ * @property StringHelper $comment
  * @property int $project_id
  * @property int $tasklist_id
  * @property int $files_folder_id
  * @property boolean $show_holidays
  * @property boolean $enable_ics_import
- * @property string $ics_import_url
+ * @property StringHelper $ics_import_url
+ * @property int $version the amount of updates the calendar has received (will be used a sync token)
  */
-
-
-namespace GO\Calendar\Model;
-
-
 class Calendar extends \GO\Base\Model\AbstractUserDefaultModel {
 	
 	/**
 	 * The default color to display this calendar in the view
 	 * 
-	 * @var string 
+	 * @var StringHelper 
 	 */
 	public $displayColor = false;
 	
@@ -70,6 +68,10 @@ class Calendar extends \GO\Base\Model\AbstractUserDefaultModel {
 	
 	public function customfieldsModel() {
 		return "GO\Calendar\Customfields\Model\Calendar";
+	}
+	
+	static public function versionUp($id) {
+		return \GO::$db->exec('UPDATE cal_calendars SET version = version + 1 WHERE id = '.(int)$id);
 	}
 
 	public function relations() {
@@ -106,7 +108,7 @@ class Calendar extends \GO\Base\Model\AbstractUserDefaultModel {
 	 * Get the color of this calendar from the Calendar_user_Color table.
 	 * 
 	 * @param int $userId
-	 * @return string The color or false if no color is found 
+	 * @return StringHelper The color or false if no color is found 
 	 */
 	public function getColor($userId){
 		$userColor = CalendarUserColor::model()->findByPk(array('calendar_id'=>$this->id,'user_id'=>$userId));
@@ -120,7 +122,7 @@ class Calendar extends \GO\Base\Model\AbstractUserDefaultModel {
 	/**
 	 * Get's a unique URI for the calendar. This is used by CalDAV
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getUri(){
 		return preg_replace('/[^\w-]*/', '', (strtolower(str_replace(' ', '-', $this->name)))).'-'.$this->id;
@@ -233,7 +235,7 @@ class Calendar extends \GO\Base\Model\AbstractUserDefaultModel {
 	/**
 	 * Get the Vobject of this calendar
 	 * 
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function toVObject(){
 
@@ -258,9 +260,22 @@ class Calendar extends \GO\Base\Model\AbstractUserDefaultModel {
 			return $string;
 	}
 	
+	public function getEventsForPeriod($start, $end, $categories = array()) {
+		$criteria = \GO\Base\Db\FindCriteria::newInstance()->addCondition('calendar_id', $this->id);
+		if(!empty($categories))
+			$criteria->addInCondition('category_id', $categories);
+		$params = \GO\Calendar\Model\Event::model()->findCalculatedForPeriod(
+			\GO\Base\Db\FindParams::newInstance()->criteria($criteria)->select(),
+			$start, 
+			$end
+		);
+		
+		return $params;
+	}
+	
 	/**
 	 * Get the url to the published ICS file.
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getPublicIcsUrl(){
 		return \GO::config()->full_url.'public/calendar/'.$this->id.'/calendar.ics';
@@ -268,7 +283,7 @@ class Calendar extends \GO\Base\Model\AbstractUserDefaultModel {
 	
 	/**
 	 * Get the url to the published ICS file.
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getPublicIcsPath(){
 		return \GO::config()->file_storage_path.'public/calendar/'.$this->id.'/calendar.ics';

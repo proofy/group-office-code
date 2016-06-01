@@ -127,7 +127,7 @@ class AutomaticInvoice extends \GO\Base\Db\ActiveRecord {
 	private $_module_prices;
 	/**
 	 * Get the price of a module from the sm_module_prices table
-	 * @param string $module_name the name of the module directory is found in the database
+	 * @param StringHelper $module_name the name of the module directory is found in the database
 	 * @return double price_per_month as specified in the database 
 	 */
 	protected function _getModulePrice($module_name)

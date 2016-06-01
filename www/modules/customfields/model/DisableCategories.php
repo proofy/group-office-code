@@ -52,7 +52,7 @@ class DisableCategories extends \GO\Base\Db\ActiveRecord{
 	/**
 	 * Check if disabling of certain categories is enabled.
 	 * 
-	 * @param string $model_name 
+	 * @param StringHelper $model_name 
 	 * @param int $model_id
 	 * @return boolean 
 	 */

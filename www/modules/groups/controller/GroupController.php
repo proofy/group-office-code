@@ -39,7 +39,7 @@ class GroupController extends \GO\Base\Controller\AbstractModelController {
 		}
 
 		$store = \GO\Base\Data\Store::newInstance(\GO\Base\Model\User::model());
-		$store->getColumnModel()->formatColumn('name', '$model->name', array(), array('first_name', 'last_name'));
+		$store->getColumnModel()->formatColumn('name', '$model->getName()', array(), \GO::user()->sort_name);
 
 		$storeParams = $store->getDefaultParams($params)->joinCustomFields(false);
 

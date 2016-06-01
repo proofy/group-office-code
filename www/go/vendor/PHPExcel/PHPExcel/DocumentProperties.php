@@ -46,14 +46,14 @@ class PHPExcel_DocumentProperties
     /**
      * Creator
      *
-     * @var string
+     * @var StringHelper
      */
     private $_creator    = 'Unknown Creator';
 
     /**
      * LastModifiedBy
      *
-     * @var string
+     * @var StringHelper
      */
     private $_lastModifiedBy;
 
@@ -74,56 +74,56 @@ class PHPExcel_DocumentProperties
     /**
      * Title
      *
-     * @var string
+     * @var StringHelper
      */
     private $_title            = 'Untitled Spreadsheet';
 
     /**
      * Description
      *
-     * @var string
+     * @var StringHelper
      */
     private $_description    = '';
 
     /**
      * Subject
      *
-     * @var string
+     * @var StringHelper
      */
     private $_subject        = '';
 
     /**
      * Keywords
      *
-     * @var string
+     * @var StringHelper
      */
     private $_keywords        = '';
 
     /**
      * Category
      *
-     * @var string
+     * @var StringHelper
      */
     private $_category        = '';
 
     /**
      * Manager
      *
-     * @var string
+     * @var StringHelper
      */
     private $_manager        = '';
 
     /**
      * Company
      *
-     * @var string
+     * @var StringHelper
      */
     private $_company        = 'Microsoft Corporation';
 
     /**
      * Custom Properties
      *
-     * @var string
+     * @var StringHelper
      */
     private $_customProperties    = array();
 
@@ -142,7 +142,7 @@ class PHPExcel_DocumentProperties
     /**
      * Get Creator
      *
-     * @return string
+     * @return StringHelper
      */
     public function getCreator() {
         return $this->_creator;
@@ -151,7 +151,7 @@ class PHPExcel_DocumentProperties
     /**
      * Set Creator
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_DocumentProperties
      */
     public function setCreator($pValue = '') {
@@ -162,7 +162,7 @@ class PHPExcel_DocumentProperties
     /**
      * Get Last Modified By
      *
-     * @return string
+     * @return StringHelper
      */
     public function getLastModifiedBy() {
         return $this->_lastModifiedBy;
@@ -171,7 +171,7 @@ class PHPExcel_DocumentProperties
     /**
      * Set Last Modified By
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_DocumentProperties
      */
     public function setLastModifiedBy($pValue = '') {
@@ -242,7 +242,7 @@ class PHPExcel_DocumentProperties
     /**
      * Get Title
      *
-     * @return string
+     * @return StringHelper
      */
     public function getTitle() {
         return $this->_title;
@@ -251,7 +251,7 @@ class PHPExcel_DocumentProperties
     /**
      * Set Title
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_DocumentProperties
      */
     public function setTitle($pValue = '') {
@@ -262,7 +262,7 @@ class PHPExcel_DocumentProperties
     /**
      * Get Description
      *
-     * @return string
+     * @return StringHelper
      */
     public function getDescription() {
         return $this->_description;
@@ -271,7 +271,7 @@ class PHPExcel_DocumentProperties
     /**
      * Set Description
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_DocumentProperties
      */
     public function setDescription($pValue = '') {
@@ -282,7 +282,7 @@ class PHPExcel_DocumentProperties
     /**
      * Get Subject
      *
-     * @return string
+     * @return StringHelper
      */
     public function getSubject() {
         return $this->_subject;
@@ -291,7 +291,7 @@ class PHPExcel_DocumentProperties
     /**
      * Set Subject
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_DocumentProperties
      */
     public function setSubject($pValue = '') {
@@ -302,7 +302,7 @@ class PHPExcel_DocumentProperties
     /**
      * Get Keywords
      *
-     * @return string
+     * @return StringHelper
      */
     public function getKeywords() {
         return $this->_keywords;
@@ -311,7 +311,7 @@ class PHPExcel_DocumentProperties
     /**
      * Set Keywords
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_DocumentProperties
      */
     public function setKeywords($pValue = '') {
@@ -322,7 +322,7 @@ class PHPExcel_DocumentProperties
     /**
      * Get Category
      *
-     * @return string
+     * @return StringHelper
      */
     public function getCategory() {
         return $this->_category;
@@ -331,7 +331,7 @@ class PHPExcel_DocumentProperties
     /**
      * Set Category
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_DocumentProperties
      */
     public function setCategory($pValue = '') {
@@ -342,7 +342,7 @@ class PHPExcel_DocumentProperties
     /**
      * Get Company
      *
-     * @return string
+     * @return StringHelper
      */
     public function getCompany() {
         return $this->_company;
@@ -351,7 +351,7 @@ class PHPExcel_DocumentProperties
     /**
      * Set Company
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_DocumentProperties
      */
     public function setCompany($pValue = '') {
@@ -362,7 +362,7 @@ class PHPExcel_DocumentProperties
     /**
      * Get Manager
      *
-     * @return string
+     * @return StringHelper
      */
     public function getManager() {
         return $this->_manager;
@@ -371,7 +371,7 @@ class PHPExcel_DocumentProperties
     /**
      * Set Manager
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_DocumentProperties
      */
     public function setManager($pValue = '') {
@@ -391,7 +391,7 @@ class PHPExcel_DocumentProperties
     /**
      * Check if a Custom Property is defined
      *
-     * @param string $propertyName
+     * @param StringHelper $propertyName
      * @return boolean
      */
     public function isCustomPropertySet($propertyName) {
@@ -401,8 +401,8 @@ class PHPExcel_DocumentProperties
     /**
      * Get a Custom Property Value
      *
-     * @param string $propertyName
-     * @return string
+     * @param StringHelper $propertyName
+     * @return StringHelper
      */
     public function getCustomPropertyValue($propertyName) {
         if (isset($this->_customProperties[$propertyName])) {
@@ -414,8 +414,8 @@ class PHPExcel_DocumentProperties
     /**
      * Get a Custom Property Type
      *
-     * @param string $propertyName
-     * @return string
+     * @param StringHelper $propertyName
+     * @return StringHelper
      */
     public function getCustomPropertyType($propertyName) {
         if (isset($this->_customProperties[$propertyName])) {
@@ -427,9 +427,9 @@ class PHPExcel_DocumentProperties
     /**
      * Set a Custom Property
      *
-     * @param string $propertyName
+     * @param StringHelper $propertyName
      * @param mixed $propertyValue
-     * @param string $propertyType
+     * @param StringHelper $propertyType
      * 	 'i'    : Integer
      *   'f' : Floating Point
      *   's' : String

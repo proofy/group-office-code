@@ -569,7 +569,7 @@ class PHPExcel_Style extends PHPExcel_Style_Supervisor implements PHPExcel_IComp
     /**
      * Get hash code
      *
-     * @return string Hash code
+     * @return StringHelper Hash code
      */
     public function getHashCode()
     {

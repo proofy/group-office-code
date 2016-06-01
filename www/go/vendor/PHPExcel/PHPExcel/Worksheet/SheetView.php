@@ -70,7 +70,7 @@ class PHPExcel_Worksheet_SheetView
 	 *
 	 * Valid values range from 10 to 400.
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_sheetviewType		= self::SHEETVIEW_NORMAL;
 
@@ -140,7 +140,7 @@ class PHPExcel_Worksheet_SheetView
 	/**
 	 * Get View
 	 *
-	 * @return string
+	 * @return StringHelper
 	 */
 	public function getView() {
 		return $this->_sheetviewType;
@@ -154,7 +154,7 @@ class PHPExcel_Worksheet_SheetView
 	 *		'pageLayout'		self::SHEETVIEW_PAGE_LAYOUT
 	 *		'pageBreakPreview'	self::SHEETVIEW_PAGE_BREAK_PREVIEW
 	 *
-	 * @param 	string 	$pValue
+	 * @param 	StringHelper 	$pValue
 	 * @throws 	PHPExcel_Exception
 	 * @return PHPExcel_Worksheet_SheetView
 	 */

@@ -34,7 +34,7 @@ class Swift_Mime_Headers_DateHeader extends Swift_Mime_Headers_AbstractHeader
      * ?>
      * </code>
      *
-     * @param string             $name    of Header
+     * @param StringHelper             $name    of Header
      * @param Swift_Mime_Grammar $grammar
      */
     public function __construct($name, Swift_Mime_Grammar $grammar)
@@ -112,7 +112,7 @@ class Swift_Mime_Headers_DateHeader extends Swift_Mime_Headers_AbstractHeader
      *
      * @see toString()
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFieldBody()
     {

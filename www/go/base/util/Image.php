@@ -14,7 +14,7 @@
  * preferences into account.
  *
  * @copyright Copyright Intermesh BV.
- * @version $Id: Image.php 16708 2014-01-24 15:53:48Z mschering $
+ * @version $Id: Image.php 19784 2016-01-26 13:56:16Z michaelhart86 $
  * @package GO.base.util
  */
 
@@ -47,7 +47,7 @@ class Image {
 	/**
 	 * Load an image file
 	 * 
-	 * @param string $filename
+	 * @param StringHelper $filename
 	 * @return boolean
 	 */
 	public function load($filename) {
@@ -139,7 +139,7 @@ class Image {
 	/**
 	 * Save the imaage to a file
 	 * 
-	 * @param string $filename
+	 * @param StringHelper $filename
 	 * @param int $image_type
 	 * @param int $compression
 	 * @param oct $permissions file permissions

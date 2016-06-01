@@ -52,7 +52,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase {
 	/**
 	 * Coordinate address of the currently active Cell
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_currentObjectID = null;
 
@@ -222,7 +222,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase {
 	/**
 	 * Return the cell address of the currently active cell object
 	 *
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public function getCurrentAddress()
 	{
@@ -232,7 +232,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase {
 	/**
 	 * Return the column address of the currently active cell object
 	 *
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public function getCurrentColumn()
 	{
@@ -243,7 +243,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase {
 	/**
 	 * Return the row address of the currently active cell object
 	 *
-	 * @return	string
+	 * @return	StringHelper
 	 */
 	public function getCurrentRow()
 	{
@@ -254,7 +254,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase {
 	/**
 	 * Get highest worksheet column
 	 *
-	 * @return string Highest column name
+	 * @return StringHelper Highest column name
 	 */
 	public function getHighestColumn()
 	{
@@ -277,7 +277,7 @@ abstract class PHPExcel_CachedObjectStorage_CacheBase {
 	/**
 	 * Generate a unique ID for cache referencing
 	 *
-	 * @return string Unique Reference
+	 * @return StringHelper Unique Reference
 	 */
 	protected function _getUniqueID() {
 		if (function_exists('posix_getpid')) {

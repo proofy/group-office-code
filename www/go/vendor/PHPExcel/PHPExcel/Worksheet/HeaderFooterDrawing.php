@@ -38,14 +38,14 @@ class PHPExcel_Worksheet_HeaderFooterDrawing extends PHPExcel_Worksheet_Drawing 
 	/**
 	 * Path
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	private $_path;
 
 	/**
 	 * Name
 	 *
-	 * @var string
+	 * @var StringHelper
 	 */
 	protected $_name;
 
@@ -102,7 +102,7 @@ class PHPExcel_Worksheet_HeaderFooterDrawing extends PHPExcel_Worksheet_Drawing 
     /**
      * Get Name
      *
-     * @return string
+     * @return StringHelper
      */
     public function getName() {
     	return $this->_name;
@@ -111,7 +111,7 @@ class PHPExcel_Worksheet_HeaderFooterDrawing extends PHPExcel_Worksheet_Drawing 
     /**
      * Set Name
      *
-     * @param string $pValue
+     * @param StringHelper $pValue
      * @return PHPExcel_Worksheet_HeaderFooterDrawing
      */
     public function setName($pValue = '') {
@@ -266,7 +266,7 @@ class PHPExcel_Worksheet_HeaderFooterDrawing extends PHPExcel_Worksheet_Drawing 
     /**
      * Get Filename
      *
-     * @return string
+     * @return StringHelper
      */
     public function getFilename() {
     	return basename($this->_path);
@@ -275,7 +275,7 @@ class PHPExcel_Worksheet_HeaderFooterDrawing extends PHPExcel_Worksheet_Drawing 
     /**
      * Get Extension
      *
-     * @return string
+     * @return StringHelper
      */
     public function getExtension() {
         $parts = explode(".", basename($this->_path));
@@ -285,7 +285,7 @@ class PHPExcel_Worksheet_HeaderFooterDrawing extends PHPExcel_Worksheet_Drawing 
     /**
      * Get Path
      *
-     * @return string
+     * @return StringHelper
      */
     public function getPath() {
     	return $this->_path;
@@ -294,7 +294,7 @@ class PHPExcel_Worksheet_HeaderFooterDrawing extends PHPExcel_Worksheet_Drawing 
     /**
      * Set Path
      *
-     * @param 	string 		$pValue			File path
+     * @param 	StringHelper 		$pValue			File path
      * @param 	boolean		$pVerifyFile	Verify file
      * @throws 	PHPExcel_Exception
      * @return PHPExcel_Worksheet_HeaderFooterDrawing

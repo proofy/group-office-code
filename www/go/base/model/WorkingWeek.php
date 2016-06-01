@@ -71,6 +71,22 @@ class WorkingWeek extends \GO\Base\Db\ActiveRecord {
 		
 	}
 	
+	/**
+	 * Get the total amount of hours that are set for a workingweek
+	 * 
+	 * @return double
+	 */
+	public function getTotalHoursForWeek(){
+		 return 
+			$this->su_work_hours + 
+			$this->mo_work_hours +
+			$this->tu_work_hours +
+			$this->we_work_hours +
+			$this->th_work_hours +
+			$this->fr_work_hours +
+			$this->sa_work_hours;		
+	}
+	
 //	private $_leftOverHours=0;
 	
 	public function getNextDate($startDate, $workingHours, &$leftOverHours=0){

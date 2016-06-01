@@ -170,27 +170,6 @@ this.gridPanel.store.on('load', function(store, records, options)
 			
 	}, this);
 			
-	this.gridPanel.store.on('load', function(store){
-		//this.deleteButton.setDisabled(!store.reader.jsonData.data.write_permission);
-		//this.addButton.setDisabled(!store.reader.jsonData.data.write_permission);
-
-		//this.gridPanel.ownerCt.setTitle(store.reader.jsonData.grid_title);
-
-		var found = false
-		for(var i=0; i<this.tasklist_ids.length; i++)
-		{
-			if(this.tasklist_ids[i] == this.taskPanel.data.tasklist_id)
-			{
-				found = true;
-			}
-		}
-		if(!found)
-		{
-			this.taskPanel.reset();
-		}
-		
-	}, this);
-	
 	this.taskPanel = new GO.tasks.TaskPanel({
 		//title:GO.tasks.lang.task,
 		region:'east',
@@ -303,48 +282,51 @@ this.gridPanel.store.on('load', function(store, records, options)
 					this.showAdminDialog();
 				},
 				scope: this
-			},{
-				iconCls: 'btn-export',
-				text: GO.lang.cmdExport,
-				cls: 'x-btn-text-icon',
-				handler:function(){
-//					var config = {};
-//					config.colModel = this.gridPanel.getColumnModel();
-//					config.title = GO.tasks.lang.tasks;
+			},
+//			{
+//				iconCls: 'btn-export',
+//				text: GO.lang.cmdExport,
+//				cls: 'x-btn-text-icon',
+//				handler:function(){
+////					var config = {};
+////					config.colModel = this.gridPanel.getColumnModel();
+////					config.title = GO.tasks.lang.tasks;
+////
+////					var query = this.gridPanel.searchField.getValue();
+////					if(!GO.util.empty(query))
+////					{
+////						config.subtitle= GO.lang.searchQuery+': '+query;
+////					}else
+////					{
+////						config.subtitle='';
+////					}
+////
+////					if(!this.exportDialog)
+////					{
+////						this.exportDialog = new GO.ExportQueryDialog({
+////							query:'get_tasks'
+////						});
+////					}
+////					this.exportDialog.show(config);
 //
-//					var query = this.gridPanel.searchField.getValue();
-//					if(!GO.util.empty(query))
-//					{
-//						config.subtitle= GO.lang.searchQuery+': '+query;
-//					}else
-//					{
-//						config.subtitle='';
-//					}
+//				
+//				if(!this.exportDialog)
+//				{
+//					this.exportDialog = new GO.ExportGridDialog({
+//						url: 'tasks/task/export',
+//						name: 'tasks',
+//						documentTitle:'ExportTask',
+//						colModel: this.gridPanel.getColumnModel()
+//					});
+//				}
+//				
+//				this.exportDialog.show();
 //
-//					if(!this.exportDialog)
-//					{
-//						this.exportDialog = new GO.ExportQueryDialog({
-//							query:'get_tasks'
-//						});
-//					}
-//					this.exportDialog.show(config);
-
-				
-				if(!this.exportDialog)
-				{
-					this.exportDialog = new GO.ExportGridDialog({
-						url: 'tasks/task/export',
-						name: 'tasks',
-						documentTitle:'ExportTask',
-						colModel: this.gridPanel.getColumnModel()
-					});
-				}
-				
-				this.exportDialog.show();
-
-				},
-				scope: this
-			},{
+//				},
+//				scope: this
+//			},
+			this.exportMenu = new GO.base.ExportMenu({className:'GO\\Tasks\\Export\\CurrentGrid'}),
+			{
 				iconCls: 'btn-refresh',
 				text: GO.lang['cmdRefresh'],
 				cls: 'x-btn-text-icon',
@@ -356,6 +338,8 @@ this.gridPanel.store.on('load', function(store, records, options)
 			}
 			]
 		});
+	
+	this.exportMenu.setColumnModel(this.gridPanel.getColumnModel());
 	
 	GO.tasks.MainPanel.superclass.constructor.call(this, config);
 	
@@ -425,9 +409,14 @@ Ext.extend(GO.tasks.MainPanel, Ext.Panel,{
 			success: function(options, response, result)
 			{
 				GO.tasks.categoriesStore.loadData(result.categories);
-				this.taskListsStore.loadData(result.tasklists);				
-				if (!GO.util.empty(result.tasks))
-					this.gridPanel.store.loadData(result.tasks);
+				this.taskListsStore.loadData(result.tasklists);
+				if (!GO.util.empty(result.tasks)){
+					if(result.tasks.success) {
+							this.gridPanel.store.loadData(result.tasks);
+					} else {
+							Ext.Msg.alert(result.tasks.feedback);
+					}
+				}
 			},
 			scope:this
 		});               

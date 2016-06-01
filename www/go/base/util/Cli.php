@@ -55,8 +55,8 @@ class Cli {
 	/**
 	 * Prompt for user input
 	 * 
-	 * @param string $text
-	 * @return string User input
+	 * @param StringHelper $text
+	 * @return StringHelper User input
 	 */
 	public static function passwordPrompt($text){
 		

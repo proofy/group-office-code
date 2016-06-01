@@ -57,7 +57,7 @@ class trendClass
 	/**
 	 * Names of the best-fit trend analysis methods
 	 *
-	 * @var string[]
+	 * @var StringHelper[]
 	 **/
 	private static $_trendTypes = array( self::TREND_LINEAR,
 										 self::TREND_LOGARITHMIC,
@@ -67,7 +67,7 @@ class trendClass
 	/**
 	 * Names of the best-fit trend polynomial orders
 	 *
-	 * @var string[]
+	 * @var StringHelper[]
 	 **/
 	private static $_trendTypePolyOrders = array( self::TREND_POLYNOMIAL_2,
 												  self::TREND_POLYNOMIAL_3,

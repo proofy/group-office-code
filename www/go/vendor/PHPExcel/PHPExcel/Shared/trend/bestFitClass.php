@@ -45,7 +45,7 @@ class PHPExcel_Best_Fit
 	/**
 	 * Algorithm type to use for best-fit
 	 *
-	 * @var	string
+	 * @var	StringHelper
 	 **/
 	protected $_bestFitType			= 'undetermined';
 
@@ -159,7 +159,7 @@ class PHPExcel_Best_Fit
 	 * Return the Equation of the best-fit line
 	 *
 	 * @param	 int		$dp		Number of places of decimal precision to display
-	 * @return	 string
+	 * @return	 StringHelper
 	 */
 	public function getEquation($dp=0) {
 		return False;
@@ -170,7 +170,7 @@ class PHPExcel_Best_Fit
 	 * Return the Slope of the line
 	 *
 	 * @param	 int		$dp		Number of places of decimal precision to display
-	 * @return	 string
+	 * @return	 StringHelper
 	 */
 	public function getSlope($dp=0) {
 		if ($dp != 0) {
@@ -184,7 +184,7 @@ class PHPExcel_Best_Fit
 	 * Return the standard error of the Slope
 	 *
 	 * @param	 int		$dp		Number of places of decimal precision to display
-	 * @return	 string
+	 * @return	 StringHelper
 	 */
 	public function getSlopeSE($dp=0) {
 		if ($dp != 0) {
@@ -198,7 +198,7 @@ class PHPExcel_Best_Fit
 	 * Return the Value of X where it intersects Y = 0
 	 *
 	 * @param	 int		$dp		Number of places of decimal precision to display
-	 * @return	 string
+	 * @return	 StringHelper
 	 */
 	public function getIntersect($dp=0) {
 		if ($dp != 0) {
@@ -212,7 +212,7 @@ class PHPExcel_Best_Fit
 	 * Return the standard error of the Intersect
 	 *
 	 * @param	 int		$dp		Number of places of decimal precision to display
-	 * @return	 string
+	 * @return	 StringHelper
 	 */
 	public function getIntersectSE($dp=0) {
 		if ($dp != 0) {

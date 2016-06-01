@@ -17,12 +17,12 @@
  * @link http://smarty.php.net/manual/en/language.modifier.truncate.php
  *          truncate (Smarty online manual)
  * @author   Monte Ohrt <monte at ohrt dot com>
- * @param string
+ * @param StringHelper
  * @param integer
- * @param string
+ * @param StringHelper
  * @param boolean
  * @param boolean
- * @return string
+ * @return StringHelper
  */
 function smarty_modifier_truncate($string, $length = 80, $etc = '...',
                                   $break_words = false, $middle = false)

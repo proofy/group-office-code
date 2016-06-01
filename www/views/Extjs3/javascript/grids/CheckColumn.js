@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: CheckColumn.js 14816 2013-05-21 08:31:20Z mschering $
+ * @version $Id: CheckColumn.js 19993 2016-04-21 14:48:03Z mschering $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -19,6 +19,7 @@ GO.grid.CheckColumn = Ext.extend(Ext.grid.Column, {
 		initComponent : function(){
 			this.groupable=false;
 			this.menuDisabled=true;
+			this.checkboxClickOnly = false;
 			
 			GO.grid.CheckColumn.superclass.initComponent.call(this);
 		},
@@ -28,12 +29,21 @@ GO.grid.CheckColumn = Ext.extend(Ext.grid.Column, {
      */
     processEvent : function(name, e, grid, rowIndex, colIndex){
         if (name == 'click') {
+					
+						if(this.checkboxClickOnly){
+							
+							var clickedEl = e.getTarget();
+							
+							if(clickedEl.className != 'x-grid3-check-col-on' && clickedEl.className != 'x-grid3-check-col'){
+								return Ext.grid.ActionColumn.superclass.processEvent.apply(this, arguments);
+							}
+						}
+					
             var record = grid.store.getAt(rowIndex);
-						var disabled = record.get(this.disabled_field);
             
-            if (!disabled)
+            if (!this.isDisabled(record))
             {
-           		var newValue = !record.data[this.dataIndex];
+           		var newValue = GO.util.empty(record.data[this.dataIndex])?true:false;
            		record.set(this.dataIndex, newValue);
            		
            		this.fireEvent('change', record, newValue);
@@ -44,17 +54,19 @@ GO.grid.CheckColumn = Ext.extend(Ext.grid.Column, {
             return Ext.grid.ActionColumn.superclass.processEvent.apply(this, arguments);
         }
     },
+		
+		isDisabled: function(record) {
+			return record.get(this.disabled_field);
+		},
 
     renderer : function(v, p, record){
         p.css += ' x-grid3-check-col-td'; 
 				
-				var disabled = record.get(this.disabled_field);
-
         var disabledCls='';
-        if(disabled)
+        if(this.isDisabled(record))
 					disabledCls =' x-item-disabled';
-				
-				return String.format('<div class="x-grid3-check-col{0}'+disabledCls+'">&#160;</div>', v ? '-on' : '');
+		
+				return String.format('<div class="x-grid3-check-col{0}'+disabledCls+'">&#160;</div>', !GO.util.empty(v) ? '-on' : '');
     },
 
     // Deprecate use as a plugin. Remove in 4.0

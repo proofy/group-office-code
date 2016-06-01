@@ -45,7 +45,7 @@ class PHPExcel
     /**
      * Unique ID
      *
-     * @var string
+     * @var StringHelper
      */
     private $_uniqueID;
 
@@ -245,7 +245,7 @@ class PHPExcel
     /**
      * Check if a sheet with a specified name already exists
      *
-     * @param  string $pSheetName  Name of the worksheet to check
+     * @param  StringHelper $pSheetName  Name of the worksheet to check
      * @return boolean
      */
     public function sheetNameExists($pSheetName)
@@ -351,7 +351,7 @@ class PHPExcel
     /**
      * Get sheet by name
      *
-     * @param  string $pName Sheet name
+     * @param  StringHelper $pName Sheet name
      * @return PHPExcel_Worksheet
      */
     public function getSheetByName($pName = '')
@@ -387,7 +387,7 @@ class PHPExcel
     /**
      * Set index for sheet by sheet name.
      *
-     * @param  string $sheetName Sheet name to modify index for
+     * @param  StringHelper $sheetName Sheet name to modify index for
      * @param  int $newIndex New index for the sheet
      * @return New sheet index
      * @throws PHPExcel_Exception
@@ -453,7 +453,7 @@ class PHPExcel
     /**
      * Set active sheet index by name
      *
-     * @param  string $pValue Sheet title
+     * @param  StringHelper $pValue Sheet title
      * @return PHPExcel_Worksheet
      * @throws PHPExcel_Exception
      */
@@ -470,7 +470,7 @@ class PHPExcel
     /**
      * Get sheet names
      *
-     * @return string[]
+     * @return StringHelper[]
      */
     public function getSheetNames()
     {
@@ -545,7 +545,7 @@ class PHPExcel
     /**
      * Get named range
      *
-     * @param  string $namedRange
+     * @param  StringHelper $namedRange
      * @param  PHPExcel_Worksheet|null $pSheet Scope. Use null for global scope
      * @return PHPExcel_NamedRange|null
      */
@@ -570,7 +570,7 @@ class PHPExcel
     /**
      * Remove named range
      *
-     * @param  string  $namedRange
+     * @param  StringHelper  $namedRange
      * @param  PHPExcel_Worksheet|null  $pSheet  Scope: use null for global scope.
      * @return PHPExcel
      */
@@ -648,7 +648,7 @@ class PHPExcel
     /**
      * Get cellXf by hash code
      *
-     * @param  string $pValue
+     * @param  StringHelper $pValue
      * @return PHPExcel_Style|false
      */
     public function getCellXfByHashCode($pValue = '')
@@ -762,7 +762,7 @@ class PHPExcel
     /**
      * Get cellStyleXf by hash code
      *
-     * @param  string $pValue
+     * @param  StringHelper $pValue
      * @return PHPExcel_Style|false
      */
     public function getCellStyleXfByHashCode($pValue = '')
@@ -886,7 +886,7 @@ class PHPExcel
     /**
      * Return the unique ID value assigned to this spreadsheet workbook
      *
-     * @return string
+     * @return StringHelper
      */
     public function getID() {
         return $this->_uniqueID;

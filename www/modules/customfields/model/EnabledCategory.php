@@ -53,7 +53,7 @@ class EnabledCategory extends \GO\Base\Db\ActiveRecord{
 	/**
 	 * Get enabled categories for a model.
 	 * 
-	 * @param string $modelName The name of the model that controls the disabled categories. eg. \GO\Addressbook\Model\Addressbook controls them for \GO\Addressbook\Model\Contact
+	 * @param StringHelper $modelName The name of the model that controls the disabled categories. eg. \GO\Addressbook\Model\Addressbook controls them for \GO\Addressbook\Model\Contact
 	 * @param int $modelId
 	 * @return array 
 	 */

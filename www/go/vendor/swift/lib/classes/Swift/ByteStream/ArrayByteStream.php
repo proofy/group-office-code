@@ -20,7 +20,7 @@ class Swift_ByteStream_ArrayByteStream implements Swift_InputByteStream, Swift_O
     /**
      * The internal stack of bytes.
      *
-     * @var string[]
+     * @var StringHelper[]
      */
     private $_array = array();
 
@@ -74,7 +74,7 @@ class Swift_ByteStream_ArrayByteStream implements Swift_InputByteStream, Swift_O
      *
      * @param integer $length
      *
-     * @return string
+     * @return StringHelper
      */
     public function read($length)
     {
@@ -98,7 +98,7 @@ class Swift_ByteStream_ArrayByteStream implements Swift_InputByteStream, Swift_O
     /**
      * Writes $bytes to the end of the stream.
      *
-     * @param string $bytes
+     * @param StringHelper $bytes
      */
     public function write($bytes)
     {

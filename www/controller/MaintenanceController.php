@@ -7,10 +7,14 @@
 
 namespace GO\Core\Controller;
 
+use Exception;
 use GO;
+use GO\Base\Controller\AbstractController;
 use GO\Base\Db\PDO;
+use PDOException;
+use ReflectionClass;
 
-class MaintenanceController extends \GO\Base\Controller\AbstractController {
+class MaintenanceController extends AbstractController {
 	
 	protected function allowGuests() {
 		return array('upgrade','checkdatabase','servermanagerreport','test','downloadfromshop', 'removeduplicates','buildsearchcache');
@@ -154,9 +158,9 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 		
 	}
 	
-	protected function ignoreAclPermissions() {
-		return array('*');
-	}
+//	protected function ignoreAclPermissions() {
+//		return array('*');
+//	}
 	
 	protected function actionGetNewAcl($params){
 		$acl = new \GO\Base\Model\Acl();
@@ -173,11 +177,12 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 			throw new \GO\Base\Exception\AccessDenied();
 		
 		\GO::session()->runAsRoot();
+
 		
 		\GO\Base\Fs\File::setAllowDeletes(false);
 		//VERY IMPORTANT:
 		\GO\Files\Model\Folder::$deleteInDatabaseOnly=true;
-		GO_Files_Model_File::$deleteInDatabaseOnly=true;
+		\GO\Files\Model\File::$deleteInDatabaseOnly=true;
 		
 		$this->lockAction();
 		
@@ -192,7 +197,7 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 				//"GO\Billing\Model\Order"=>array('order_id','book_id','btime')
 			);
 		
-		
+		echo '<p style="color:red;"><font style="font-size:18px;" >Warning: This script only checks for duplicate items on the displayed columns!</font></p>';
 		
 		foreach($checkModels as $modelName=>$checkFields){
 			
@@ -296,6 +301,8 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 		if(!$this->isCli() && !\GO::modules()->tools && \GO::router()->getControllerAction()!='upgrade')
 			throw new \GO\Base\Exception\AccessDenied();
 		
+		GO::setIgnoreAclPermissions(true);
+		
 		$this->lockAction();
 		
 		if(!$this->isCli()){
@@ -306,9 +313,9 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 		
 		$response = array();
 		
-		if(empty($params['keepexisting']))
-			\GO::getDbConnection()->query('TRUNCATE TABLE go_search_cache');
-		
+//		if(empty($params['keepexisting']))
+//			\GO::getDbConnection()->query('TRUNCATE TABLE go_search_cache');
+//		
 		//inserting is much faster without full text index. It's faster to add it again afterwards.
 //		echo "Dropping full text search index\n";
 //		try{
@@ -317,7 +324,22 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 //			echo $e->getMessage()."\n";
 //		}
 				
-		$models=\GO::findClasses('model');
+		if(!empty($params['modelName'])){
+			$modelName = $params['modelName'];
+			
+			if(empty($params['keepexisting'])){
+				$query = 'DELETE FROM go_search_cache WHERE model_name='.\GO::getDbConnection()->quote($modelName);
+				\GO::getDbConnection()->query($query);
+			}
+
+			$models = array(new ReflectionClass($modelName));
+		} else {
+			if(empty($params['keepexisting']))
+			\GO::getDbConnection()->query('TRUNCATE TABLE go_search_cache');
+			
+			$models=\GO::findClasses('model');
+		}
+		
 		foreach($models as $model){
 			if($model->isSubclassOf("GO\Base\Db\ActiveRecord") && !$model->isAbstract()){
 				echo "Processing ".$model->getName()."\n";
@@ -326,7 +348,9 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 			}
 		}
 		
-		\GO::modules()->callModuleMethod('buildSearchCache', array(&$response));
+		if(empty($params['modelName'])){
+			\GO::modules()->callModuleMethod('buildSearchCache', array(&$response));
+		}
 		
 //		echo "Adding full text search index\n";
 //		\GO::getDbConnection()->query("ALTER TABLE `go_search_cache` ADD FULLTEXT ft_keywords(`name` ,`keywords`);");
@@ -347,6 +371,8 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 
 		if(!$this->isCli() && !\GO::modules()->tools)
 			throw new \GO\Base\Exception\AccessDenied();
+		
+		GO::setIgnoreAclPermissions(true);
 		
 		$this->run("upgrade",$params);		
 		
@@ -432,6 +458,8 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 			
 			echo "Older version of ".\GO::config()->product_name." detected. Preparing database for 4.0 upgrade\n";
 		
+			$queries[]="ALTER TABLE `go_modules` ADD `enabled` BOOLEAN NOT NULL DEFAULT '1'";
+			
 			$queries[]="TRUNCATE TABLE `go_state`";
 			$queries[]="delete from go_settings where name='version'";
 
@@ -440,9 +468,14 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 
 			$queries[]="ALTER TABLE `go_users` ADD `show_smilies` ENUM( '0', '1' ) NOT NULL DEFAULT '1' AFTER `mute_new_mail_sound`";
 			$queries[]="ALTER TABLE `go_users` CHANGE `password` `password` VARCHAR( 100 ) CHARACTER SET utf8 COLLATE utf8_general_ci NULL DEFAULT NULL";
+			
+			$queries[] = "delete from go_modules where id='log';";
+			
+			$queries[] = "ALTER TABLE `em_accounts` ADD INDEX(`acl_id`);";
 
 			foreach($queries as $query){
 				try {
+					echo 'Excuting query: ' . $query . "\n";
 					\GO::getDbConnection()->query($query);
 				} catch (PDOException $e) {
 					echo $e->getMessage() . "\n";
@@ -477,7 +510,9 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 		
 		$this->lockAction();
 		
-		\GO::session()->runAsRoot();
+
+		GO::setIgnoreAclPermissions(true);
+		GO::session()->runAsRoot();
 		
 		\GO::clearCache();
 		
@@ -590,15 +625,17 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 							
 							//if(!$quiet)
 							echo 'Running ' . $updateScript . "\n";
+							flush();
 							if (empty($params['test']))
 								require_once($updateScript);
 						}else {
 							echo 'Excuting query: ' . $query . "\n";
+							flush();
 							if (empty($params['test'])) {
 								try {
 									if(!empty($query))
 										\GO::getDbConnection()->query($query);
-								} catch (\PDOException $e) {
+								} catch (PDOException $e) {
 									//var_dump($e);
 									
 									
@@ -753,7 +790,7 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 	 * files, and echoes the fields that are in one file but not the other as Html.
 	 * @param String $lang1Path Full path to first language file.
 	 * @param String $lang2Path Full path to second language file.
-	 * @return string Html string containing useful information for the user.
+	 * @return StringHelper Html string containing useful information for the user.
 	 */
 	private function _compareLangFiles($lang1Path,$lang2Path) {
 		$outputHtml = '';
@@ -791,7 +828,7 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 	 * into $contentArr.
 	 * @param String $filePath The full path to the file.
 	 * @param Array &$contentArr The array to put the language fields in.
-	 * @return string Output string, possibly containing warnings for the user.
+	 * @return StringHelper Output string, possibly containing warnings for the user.
 	 */
 	private function _langFieldsToArray($filePath,&$contentArr) {
 		$outputString = '';
@@ -891,6 +928,9 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 	
 	protected function actionRemoveOldLangKeys($params){
 		
+		if(!$this->isCli() && !GO::modules()->tools)
+			throw new \GO\Base\Exception\AccessDenied();
+		
 		$files = $this->_getAllLanguageFiles();
 		
 		foreach($files as $file){
@@ -933,7 +973,7 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 //			echo $newData;
 			
 			if(eval(str_replace('<?php', '', $newData))===false)
-				throw new \Exception("Parse error in generated data for ".$file->path());
+				throw new Exception("Parse error in generated data for ".$file->path());
 			
 			$file->putContents($newData);
 		}
@@ -998,7 +1038,12 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 	
 	protected function actionCheckDefaultModels(){
 		
-		\GO::session()->closeWriting();
+		if(!$this->isCli() && !GO::modules()->tools)
+			throw new \GO\Base\Exception\AccessDenied();
+		
+		GO::session()->closeWriting();
+		
+		GO::setIgnoreAclPermissions(true);
 		
 		if(!$this->isCli())			
 			echo '<pre>';
@@ -1023,7 +1068,12 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 	
 	protected function actionRemoveEmptyStuff($params){
 		
-		\GO::session()->closeWriting();
+		if(!$this->isCli() && !GO::modules()->tools)
+			throw new \GO\Base\Exception\AccessDenied();
+		
+		GO::session()->closeWriting();
+
+		GO::setIgnoreAclPermissions(true);
 		
 		if(!$this->isCli())			
 			echo '<pre>';
@@ -1100,11 +1150,15 @@ class MaintenanceController extends \GO\Base\Controller\AbstractController {
 		$stmt = \GO::getDbConnection()->query("SHOW TABLES");
 		$stmt->setFetchMode(PDO::FETCH_NUM);
 		
+		echo '<pre>';
+		
 		foreach($stmt as $record){
 			
 			if($record[0]!='fs_filesearch'){//filesearch requires fulltext index
 				$sql = "ALTER TABLE `".$record[0]."` ENGINE=InnoDB;";
 				echo $sql."\n";
+				
+				GO::getDbConnection()->query($sql);
 			}
 			
 			

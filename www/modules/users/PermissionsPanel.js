@@ -6,7 +6,7 @@
  * 
  * If you have questions write an e-mail to info@intermesh.nl
  * 
- * @version $Id: PermissionsPanel.js 16935 2014-02-28 12:22:42Z mschering $
+ * @version $Id: PermissionsPanel.js 19015 2015-04-21 08:15:50Z michaelhart86 $
  * @copyright Copyright Intermesh
  * @author Merijn Schering <mschering@intermesh.nl>
  */
@@ -54,7 +54,8 @@ GO.users.PermissionsPanel = function(config)
     this.groupMemberStore = new GO.data.JsonStore({
         url:GO.url('users/user/groupStore'),
         baseParams: {
-            user_id: 0
+            user_id: 0,
+			limit: 0
         },
         fields: ['id', 'disabled', 'name', 'selected'],
         root: 'results'
@@ -100,7 +101,7 @@ GO.users.PermissionsPanel = function(config)
         url:GO.url('users/user/visibleGroupStore'),
         baseParams: {
             user_id: -1,
-            task: 'visible'
+			limit: 0
         },
         fields: ['id', 'disabled', 'name', 'selected'],
         root: 'results'

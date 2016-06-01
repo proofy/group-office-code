@@ -1,26 +1,28 @@
 <?php
 
-$l["summary"]= 'Contenido';
-$l["noItems"]= 'No tienen ningún elemento en su inicio.';
-$l["selectPortlet"]= 'Seleccione portlet';
-$l["hotTopics"]= 'Temas';
-$l["enterRssFeed"]= 'Enter URL del feed RSS:';
+$l["noItems"]= 'No se han configurado ítems en la página Sumario.';
+$l["selectPortlet"]= 'Seleccionar ítem';
+$l["enterRssFeed"]= 'Introducir URL del feed RSS:';
 $l["notes"]= 'Notas';
 $l["loadingFeed"]= 'Cargando Feed...';
-$l["goToPost"]= 'Ir a Correos';
 $l["today"]= 'Hoy';
 $l["dueTime"]="Fecha límite";
 $l["title"]="Título";
-$l["manageAnnouncements"]='Administrar comunicaciones';
-$l["webFeeds"]='Administrar webfeeds';
+$l["manageAnnouncements"]='Gestionar Comunicados';
+$l["webFeeds"]='Administrar Feeds RSS';
 $l["type"]='Tipo';
-$l["summaryType"]='Resumen';
-$l["rssFeeds"]='Rss Feeds';
-$l["noRssFeeds"]='Ningun RSS feeds fué agregado.<br />Haga click en el botón de seteo en la esquina superior derecha de esta ventana para agregar RSS feeds';
+$l["summaryType"]='Sumario';
 
-$l['name']='Contenido';
-$l['description']='Por favor, introduzca una descripción';
+$l['description']='Por favor, introducir una descripción';
 $l['default_rss_url']='http://newsrss.bbc.co.uk/rss/newsonline_world_edition/front_page/rss.xml';
 $l['announcement']='Comunicación';
 $l['announcements']='Comunicaciones';
 $l['default_rss_title']='Novedades';
+$l['latestReadAnnouncementRecord']= 'Registro de último comunicado leído';
+$l["selectPortlet"]= 'Seleccionar ítem';
+$l["hotTopics"]= 'Canales RSS';
+$l["noRssFeeds"]='No ha sido configurado ningún feed RSS.<br/>Pulsar en botón de configuración de la esquina superior derecha de esta ventana para añadir canales RSS';
+$l["rssFeeds"]='Canales RSS';
+$l["summary"]= 'Sumario';
+$l['name']='Sumario';
+$l["goToPost"]= 'Ir a la página';

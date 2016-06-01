@@ -235,6 +235,7 @@ GO.email.MailboxContextMenu = Ext.extend(Ext.menu.Menu,{
 								if(GO.emailportlet){
 									GO.emailportlet.foldersStore.load();
 								}
+								this.treePanel.mainPanel.refresh(true);
 							}
 						},
 						count: 1,
